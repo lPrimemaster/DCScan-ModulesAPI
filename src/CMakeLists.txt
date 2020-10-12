@@ -3,9 +3,12 @@
 # Licensed under the MIT License
 
 cmake_minimum_required(VERSION 3.8)
-project(DCSModulesAPI VERSION 1.0.0 DESCRIPTION "DCS Project containing all the control modules as libraries.")
+project(DCSModulesAPI VERSION 1.0.0 DESCRIPTION "DCS sub project containing all the control modules as libraries.")
 
-# =================== #9
+# Change this to shared if you want to build a dynamic library (.dll) specially useful for loading from external programs/scripts.
+set(LIB_TYPE STATIC)
+
+# =================== #
 # Begin Doxygen setup #
 # =================== #
 
@@ -37,7 +40,7 @@ endif (DOXYGEN_FOUND)
 # End Doxygen setup #
 # ================= #
 
-add_library(DCSModuleEngineControl STATIC 
+add_library(DCSModuleEngineControl ${LIB_TYPE} 
 	DCS_EngineControl/placeholder.c)
 
 set_target_properties(DCSModuleEngineControl PROPERTIES
@@ -49,7 +52,6 @@ target_include_directories(DCSModuleEngineControl PRIVATE .)
 # Install directory is not working for now idk why
 set(CMAKE_INSTALL_INCLUDEDIR "include/")
 set(CMAKE_INSTALL_LIBDIR "lib/")
-set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
 message(STATUS "CMake install prefix: ${CMAKE_INSTALL_PREFIX}")
 
 message(STATUS "Lib Install Dir: ${CMAKE_INSTALL_LIBDIR}")
