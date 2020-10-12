@@ -1,11 +1,11 @@
-﻿# Project is migrating to cmake generator
+# Project is migrating to cmake generator
 # (c) 2018 - 2020 César Godinho
 # Licensed under the MIT License
 
 cmake_minimum_required(VERSION 3.8)
 project(DCSModulesAPI VERSION 1.0.0 DESCRIPTION "DCS sub project containing all the control modules as libraries.")
 
-# Change this to shared if you want to build a dynamic library (.dll) specially useful for loading from external programs/scripts.
+# Change this to SHARED if you want to build a dynamic library (.dll) specially useful for loading from external programs/scripts.
 set(LIB_TYPE STATIC)
 
 # =================== #
@@ -19,7 +19,7 @@ option(BUILD_DOC "Build documentation" ON)
 find_package(Doxygen)
 if (DOXYGEN_FOUND)
     # Set input and output files
-    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/../docs/Doxyfile.in)
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/src/docs/Doxyfile.in)
     set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 
     # Request to configure the file
@@ -41,7 +41,7 @@ endif (DOXYGEN_FOUND)
 # ================= #
 
 add_library(DCSModuleEngineControl ${LIB_TYPE} 
-	DCS_EngineControl/placeholder.c)
+	src/DCS_EngineControl/placeholder.c)
 
 set_target_properties(DCSModuleEngineControl PROPERTIES
     VERSION ${PROJECT_VERSION}

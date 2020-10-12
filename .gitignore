@@ -1,3 +1,6 @@
+# Leave visual studio settings out of the way
 .vs/
-out/
+
+# Do not track builds or installations
 [Bb]uild/
+[Ii]nstall/

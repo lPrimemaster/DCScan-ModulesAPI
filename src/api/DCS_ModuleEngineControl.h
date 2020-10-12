@@ -1,5 +1,5 @@
 #pragma once
-#define API _declspec(dllexport)
+#define API __declspec(dllexport)
 
 /**
  * \brief Provide an example
