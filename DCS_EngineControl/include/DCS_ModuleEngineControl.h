@@ -1,9 +1,13 @@
 #pragma once
-
 #ifdef API_EXPORT
-#define API _declspec(dllexport)
+/// \todo Do not define API for Cmake's STATIC lib configuration
+#define DCS_API __declspec(dllexport)
 #else
-#define API __declspec(dllimport)
+#define DCS_API __declspec(dllimport)
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 /**
@@ -20,4 +24,8 @@
  *
  * \date $Date: 2020/10/12$
  */
-API int power2(int x);
+DCS_API int power2(int x);
+
+#ifdef __cplusplus
+}
+#endif

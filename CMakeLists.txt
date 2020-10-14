@@ -6,7 +6,8 @@ cmake_minimum_required(VERSION 3.8)
 project(DCSModulesAPI VERSION 1.0.0 DESCRIPTION "DCS sub project containing all the control modules as libraries.")
 
 # Change this to SHARED if you want to build a dynamic library (.dll) specially useful for loading from external programs/scripts.
-set(LIB_TYPE STATIC)
+# There is the option of using STATIC libraries as well, however they are not supported yet
+set(LIB_TYPE SHARED)
 
 # =================== #
 # Begin Doxygen setup #
@@ -66,11 +67,12 @@ include_directories(
   "${PROJECT_SOURCE_DIR}"   # to find foo/foo.h
   "${PROJECT_BINARY_DIR}")  # to find foo/config.h
 
-# Add sub-directories
+# Add sub-directories (These are the libraries basically)
 add_subdirectory(DCS_EngineControl)
 
-# The interesting stuff goes here
-# ===============================
+# ========================== #
+# Begin Cmake package config #
+# ========================== #
 
 # Add all targets to the build-tree export set
 export(TARGETS DCSModuleEngineControl
@@ -104,27 +106,3 @@ install(FILES
 # Install the export set for use with the install-tree
 install(EXPORT DCSModulesAPITargets DESTINATION
   "${INSTALL_CMAKE_DIR}" COMPONENT dev)
-
-
-# OLD CODE
-#add_library(DCSModuleEngineControl ${LIB_TYPE} 
-#	src/DCS_EngineControl/placeholder.c)
-
-#set_target_properties(DCSModuleEngineControl PROPERTIES
-#    VERSION ${PROJECT_VERSION}
-#    SOVERSION 1)
-
-#target_include_directories(DCSModuleEngineControl PRIVATE .)
-
-# Install directory is not working for now idk why
-#set(CMAKE_INSTALL_INCLUDEDIR "include/")
-#set(CMAKE_INSTALL_LIBDIR "lib/")
-#message(STATUS "CMake install prefix: ${CMAKE_INSTALL_PREFIX}")
-
-#message(STATUS "Lib Install Dir: ${CMAKE_INSTALL_LIBDIR}")
-#install(TARGETS DCSModuleEngineControl
-#    DESTINATION ${CMAKE_INSTALL_LIBDIR})
-
-#message(STATUS "Include Install Dir: ${CMAKE_INSTALL_INCLUDEDIR}")
-#install(FILES src/api/DCS_ModuleEngineControl.h
-#	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
