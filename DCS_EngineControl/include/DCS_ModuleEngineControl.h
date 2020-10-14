@@ -1,5 +1,10 @@
 #pragma once
-#define API __declspec(dllexport)
+
+#ifdef API_EXPORT
+#define API _declspec(dllexport)
+#else
+#define API __declspec(dllimport)
+#endif
 
 /**
  * \brief Provide an example
