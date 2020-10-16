@@ -14,4 +14,4 @@ if(NOT TARGET foo AND NOT DCSModulesAPI_BINARY_DIR)
 endif()
 
 # These are IMPORTED targets created by DCSModulesAPITargets.cmake
-set(DCSMODULESAPI_LIBRARIES DCSModuleEngineControl)
+set(DCSMODULESAPI_LIBRARIES DCSModuleEngineControl DCSModuleUtils)

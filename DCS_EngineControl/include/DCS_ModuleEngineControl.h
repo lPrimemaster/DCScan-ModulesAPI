@@ -1,14 +1,5 @@
 #pragma once
-#ifdef API_EXPORT
-/// \todo Do not define API for Cmake's STATIC lib configuration
-#define DCS_API __declspec(dllexport)
-#else
-#define DCS_API __declspec(dllimport)
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "../../config/exports.h"
 
 /**
  * \brief Provide an example
@@ -26,6 +17,3 @@ extern "C" {
  */
 DCS_API int power2(int x);
 
-#ifdef __cplusplus
-}
-#endif

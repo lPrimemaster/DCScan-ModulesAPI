@@ -69,13 +69,14 @@ include_directories(
 
 # Add sub-directories (These are the libraries basically)
 add_subdirectory(DCS_EngineControl)
+add_subdirectory(DCS_Utils)
 
 # ========================== #
 # Begin Cmake package config #
 # ========================== #
 
 # Add all targets to the build-tree export set
-export(TARGETS DCSModuleEngineControl
+export(TARGETS DCSModuleEngineControl DCSModuleUtils
   FILE "${PROJECT_BINARY_DIR}/DCSModulesAPITargets.cmake")
 
 # Export the package for use from the build-tree
@@ -106,3 +107,5 @@ install(FILES
 # Install the export set for use with the install-tree
 install(EXPORT DCSModulesAPITargets DESTINATION
   "${INSTALL_CMAKE_DIR}" COMPONENT dev)
+
+install(DIRECTORY config  DESTINATION "${INSTALL_INCLUDE_DIR}/../")
