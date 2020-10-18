@@ -8,9 +8,11 @@ message(STATUS "LIBRARY TYPE SET TO: ${LIB_TYPE}")
 message(STATUS "LIBRARY INSTALL BIN LOCATION: ${INSTALL_LIB_DIR}")
 
 add_library(DCSModuleUtils ${LIB_TYPE}
+  src/internal.cpp
   src/timer.cpp
   src/String.cpp
   include/DCS_ModuleUtils.h
+  include/internal.h
   ../config/exports.h
   #config.h.in
   )

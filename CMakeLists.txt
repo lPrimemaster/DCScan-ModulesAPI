@@ -5,6 +5,9 @@
 cmake_minimum_required(VERSION 3.8)
 project(DCSModulesAPI VERSION 1.0.0 DESCRIPTION "DCS sub project containing all the control modules as libraries.")
 
+# Disable MSVC nasty deprecations
+add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+
 # Change this to SHARED if you want to build a dynamic library (.dll) specially useful for loading from external programs/scripts.
 # There is the option of using STATIC libraries as well, however they are not supported yet
 set(LIB_TYPE SHARED)

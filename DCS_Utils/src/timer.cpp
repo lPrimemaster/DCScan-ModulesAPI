@@ -1,4 +1,5 @@
 #include "../include/DCS_ModuleUtils.h"
+#include "../include/internal.h"
 #include <string>
 
 const DCS::Utils::String DCS::Timer::Timestamp::to_string() const
@@ -22,15 +23,21 @@ const DCS::Utils::String DCS::Timer::Timestamp::to_string() const
 DCS::Timer::SystemTimer DCS::Timer::New()
 {
 	auto now = std::chrono::steady_clock::now();
+	GenericHandle hnd = AllocateGenericHandle(sizeof(now), &now);
 	auto st = SystemTimer();
-	st.point = now;
+	st.point = hnd;
 	return st;
+}
+
+void DCS::Timer::Delete(SystemTimer timer)
+{
+	FreeGenericHandle(timer.point);
 }
 
 DCS::Timer::Timestamp DCS::Timer::GetTimestamp(SystemTimer timer)
 {
 	auto now = std::chrono::steady_clock::now();
-	auto ns = now - timer.point;
+	auto ns = now - *reinterpret_cast<std::chrono::time_point<std::chrono::steady_clock>*>(timer.point);
 
 	auto h = std::chrono::duration_cast<std::chrono::hours>(ns);
 	auto m = std::chrono::duration_cast<std::chrono::minutes>(ns);
@@ -59,7 +66,7 @@ DCS::Timer::Timestamp DCS::Timer::GetTimestamp(SystemTimer timer)
 DCS::Utils::String DCS::Timer::GetTimestampString(SystemTimer timer)
 {
 	auto now = std::chrono::steady_clock::now();
-	auto ns = now - timer.point;
+	auto ns = now - *reinterpret_cast<std::chrono::time_point<std::chrono::steady_clock>*>(timer.point);
 
 	std::string ts;
 
@@ -87,5 +94,5 @@ DCS::Utils::String DCS::Timer::GetTimestampString(SystemTimer timer)
 DCS::i64 DCS::Timer::GetNanoseconds(SystemTimer timer)
 {
 	auto now = std::chrono::steady_clock::now();
-	return (now - timer.point).count();
+	return (now - *reinterpret_cast<std::chrono::time_point<std::chrono::steady_clock>*>(timer.point)).count();
 }

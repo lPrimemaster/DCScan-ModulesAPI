@@ -29,6 +29,8 @@ namespace DCS
 	typedef float f32; ///< Equivalent to float.
 	typedef double f64; ///< Equivalent to double.
 
+	typedef void* GenericHandle;
+
 	namespace Utils
 	{
 		/**
@@ -80,7 +82,7 @@ namespace DCS
 		 */
 		struct DCS_API SystemTimer
 		{
-			std::chrono::time_point<std::chrono::steady_clock> point;
+			GenericHandle point;
 		};
 
 		/**
@@ -106,6 +108,11 @@ namespace DCS
 		 * \brief Creates a new SystemTimer.
 		 */
 		DCS_API SystemTimer New();
+
+		/**
+		 * \brief Deletes a SystemTimer.
+		 */
+		DCS_API void Delete(SystemTimer timer);
 
 		/**
 		 * \brief Gives a timestamp relative to timer in Timestamp format.
