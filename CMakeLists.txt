@@ -74,6 +74,10 @@ include_directories(
 add_subdirectory(DCS_EngineControl)
 add_subdirectory(DCS_Utils)
 
+# Add testing subdirectory
+enable_testing()
+add_subdirectory(tests)
+
 # ========================== #
 # Begin Cmake package config #
 # ========================== #
