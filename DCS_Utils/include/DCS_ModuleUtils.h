@@ -2,17 +2,22 @@
 #include "../../config/exports.h"
 #include <iostream>
 #include <chrono>
+#include <mutex>
+#include <map>
 
 /**
  * @file
  * 
  * \brief Container for all the exported symbols that fall in the Utils category.
  * 
+ * Also contains library common code.
+ * 
  * \author Cesar Godinho
  *
  * \version 1.0
  *
  * \date 2020/10/16
+ * $Modified: 2020/10/19$
  */
 
 namespace DCS
@@ -29,6 +34,9 @@ namespace DCS
 	typedef float f32; ///< Equivalent to float.
 	typedef double f64; ///< Equivalent to double.
 
+	/**
+	 * \brief A generic opaque handle that is only meaningful for the API.
+	 */
 	typedef void* GenericHandle;
 
 	namespace Utils
@@ -36,14 +44,65 @@ namespace DCS
 		/**
 		 * \brief This class enables writing to a single (or multiple) buffer(s) for logging.
 		 * Thread-safe.
+		 * 
+		 * \todo Add Deinit static method.
+		 * \todo Make the output redirectable (for stderr or stdout for example).
 		 */
-		class DCS_API Logger
+		class Logger
 		{
-			static void Debug(const char* msg);
-			static void Message(const char* msg);
-			static void Warning(const char* msg);
-			static void Error(const char* msg);
-			static void Critical(const char* msg);
+		public:
+			/**
+			 * \brief Contains the possible verbosity levels for the Logger.
+			 * 
+			 * Passing a value to Logger::Init will prevent lower priority messages from being displayed in the console.
+			 * The file output (Logger::handle) is not affected by this, printing every event.
+			 */
+			enum class Verbosity
+			{
+				CRITICAL, ///< Enables console output only for critical messages. 
+				ERROR,    ///< Enables console output for error and higher priority messages. 
+				WARNING,  ///< Enables console output for warning and higher priority messages. 
+				MESSAGE,  ///< Enables console output for status and higher priority messages. 
+				DEBUG     ///< Enables console output for debug and higher priority messages.
+			};
+
+			/**
+			 * \brief Initialize the Logger system. Call only once.
+			 */
+			static DCS_API void Init(Verbosity level, FILE* handle = nullptr);
+
+			/**
+			 * \brief Emit a debug message.
+			 */
+			static DCS_API void Debug(const char* msg);
+
+			/**
+			 * \brief Emit a status message.
+			 */
+			static DCS_API void Message(const char* msg);
+
+			/**
+			 * \brief Emit a warning message.
+			 */
+			static DCS_API void Warning(const char* msg);
+
+			/**
+			 * \brief Emit an error message.
+			 */
+			static DCS_API void Error(const char* msg);
+
+			/**
+			 * \brief Emit a critical error message.
+			 */
+			static DCS_API void Critical(const char* msg);
+
+		private:
+			static void WriteData(std::string buffer[], Verbosity v);
+
+			static Verbosity verbosity_level;
+			static std::string timestamp();
+			static FILE* handle;
+			static std::mutex _log_mtx;
 		};
 
 
@@ -138,5 +197,4 @@ namespace DCS
 		 */
 		DCS_API i64 GetNanoseconds(SystemTimer timer);
 	}
-
 }

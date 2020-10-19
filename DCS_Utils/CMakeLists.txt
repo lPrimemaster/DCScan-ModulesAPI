@@ -8,6 +8,7 @@ message(STATUS "LIBRARY TYPE SET TO: ${LIB_TYPE}")
 message(STATUS "LIBRARY INSTALL BIN LOCATION: ${INSTALL_LIB_DIR}")
 
 add_library(DCSModuleUtils ${LIB_TYPE}
+  src/Logger.cpp
   src/internal.cpp
   src/timer.cpp
   src/String.cpp

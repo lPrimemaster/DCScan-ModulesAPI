@@ -4,6 +4,7 @@
 
 int test()
 {
+	DCS_START_TEST;
 	using namespace DCS::Timer;
 	using namespace std::chrono_literals;
 
@@ -16,11 +17,13 @@ int test()
 
 	Delete(timer);
 
-	std::cout << "Expected 100ms... => Got " << ts.millis << "ms" << std::endl;
-	std::cout << "Total => " << ts.to_string().c_str() << std::endl;
+	// Ensure ms total precision
+	DCS_ASSERT_EQ(ts.millis, 100);
 
 	// Ensure <5us precision
-	return DCS_ASSERT_EQ(ts.millis, 100) && DCS_ASSERT_LEQ(ts.micros, 5);
+	DCS_ASSERT_LEQ(ts.micros, 5);
+
+	DCS_RETURN_TEST;
 }
 
 int main()

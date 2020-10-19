@@ -5,44 +5,19 @@
 cmake_minimum_required(VERSION 3.8)
 project(DCSModulesAPI VERSION 1.0.0 DESCRIPTION "DCS sub project containing all the control modules as libraries.")
 
+set(CMAKE_LIBS_SOURCE_DIR "")
+
+function(add_libTargetSubDir sd)
+  set(CMAKE_LIBS_SOURCE_DIR ${CMAKE_LIBS_SOURCE_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/${sd}" PARENT_SCOPE)
+  add_subdirectory(${sd})
+endfunction()
+
 # Disable MSVC nasty deprecations
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
 # Change this to SHARED if you want to build a dynamic library (.dll) specially useful for loading from external programs/scripts.
 # There is the option of using STATIC libraries as well, however they are not supported yet
 set(LIB_TYPE SHARED)
-
-# =================== #
-# Begin Doxygen setup #
-# =================== #
-
-# First we can indicate the documentation build as an option and set it to ON by default
-option(BUILD_DOC "Build documentation" ON)
-
-# Check if Doxygen is installed
-find_package(Doxygen)
-if (DOXYGEN_FOUND)
-    # Set input and output files
-    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in)
-    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-
-    # Request to configure the file
-    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
-    message(STATUS "Doxygen build started ${DOXYGEN_IN} ${DOXYGEN_OUT}")
-
-    # Note the option ALL which allows to build the docs together with the application
-    add_custom_target( doc_doxygen ALL
-        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        COMMENT "Generating API documentation with Doxygen"
-        VERBATIM )
-else (DOXYGEN_FOUND)
-  message(WARNING "Doxygen needs to be installed to generate the doxygen documentation")
-endif (DOXYGEN_FOUND)
-
-# ================= #
-# End Doxygen setup #
-# ================= #
 
 # Offer the user the choice of overriding the installation directories
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
@@ -71,12 +46,56 @@ include_directories(
   "${PROJECT_BINARY_DIR}")  # to find foo/config.h
 
 # Add sub-directories (These are the libraries basically)
-add_subdirectory(DCS_EngineControl)
-add_subdirectory(DCS_Utils)
+add_libTargetSubDir(DCS_EngineControl)
+add_libTargetSubDir(DCS_Utils)
+
+string (REPLACE ";" " " CMAKE_LIBS_SOURCE_DIR "${CMAKE_LIBS_SOURCE_DIR}")
+
+# =================== #
+# Begin Doxygen setup #
+# =================== #
+
+# First we can indicate the documentation build as an option and set it to ON by default
+option(BUILD_DOC "Build documentation" ON)
+
+# Check if Doxygen is installed
+find_package(Doxygen)
+if (DOXYGEN_FOUND)
+    # Set input and output files
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in)
+    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+
+    # Request to configure the file
+    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+    message(STATUS "Doxygen build started ${DOXYGEN_IN} ${DOXYGEN_OUT}")
+
+    # Note the option ALL which allows to build the docs together with the application
+    #add_custom_target( doc_doxygen ALL
+    #   COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+    #   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    #   COMMENT "Generating API documentation with Doxygen"
+    #   VERBATIM 
+	#	)
+
+	execute_process(
+		COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+		OUTPUT_QUIET
+	)
+else (DOXYGEN_FOUND)
+  message(WARNING "Doxygen needs to be installed to generate the doxygen documentation")
+endif (DOXYGEN_FOUND)
+
+# ================= #
+# End Doxygen setup #
+# ================= #
 
 # Add testing subdirectory
 enable_testing()
+# Do not add to doxygen target
 add_subdirectory(tests)
+
+message(STATUS "CML Sources: ${CMAKE_LIBS_SOURCE_DIR}")
 
 # ========================== #
 # Begin Cmake package config #

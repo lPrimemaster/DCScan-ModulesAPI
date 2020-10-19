@@ -1,4 +1,6 @@
 :: Build file for all the DCSModules targets.
+:: TODO - Enable ninja generator as well.
+:: Only MSBuild supported for now.
 @echo off
 SET result="FALSE"
 IF "%~1"=="" GOTO errorNA
@@ -22,6 +24,7 @@ IF "%result%"==""TRUE"" (
 	mkdir build
 	cd /D "%~dp0/build"
 	cmake ..
+	:: Make msbuild's verbosity level quiet maybe ??
 	cmake --build . --target %1 --config Release -- /nologo /verbosity:minimal /maxcpucount
 	IF errorlevel 1 GOTO errEnd
 	GOTO sucEnd

@@ -2,24 +2,19 @@
   "configurations": [
     {
       "name": "Release",
-      "generator": "Ninja",
+      "generator": "Visual Studio 16 2019 Win64",
       "configurationType": "Release",
       "inheritEnvironments": [ "msvc_x64" ],
-      "buildRoot": "${projectDir}\\build\\${name}",
+      "buildRoot": "${projectDir}\\build",
       "installRoot": "${projectDir}\\install\\${name}",
       "cmakeCommandArgs": "",
-      "buildCommandArgs": "-v",
+      "buildCommandArgs": "",
       "ctestCommandArgs": "",
       "variables": [
         {
-          "name": "CMAKE_INSTALL_PREFIX",
-          "value": "H:/Data/C++/DCScan-ModulesAPI/install/Release",
-          "type": "PATH"
-        },
-        {
-          "name": "CMAKE_BUILD_TYPE",
-          "value": "Release",
-          "type": "STRING"
+          "name": "CMAKE_MAKE_PROGRAM",
+          "value": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
+          "type": "FILEPATH"
         }
       ]
     },
