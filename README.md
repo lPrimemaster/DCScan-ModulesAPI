@@ -5,7 +5,8 @@ You can view the GUI source code (which implements these binaries) at the [DCSca
 
 ## Documentation
 #### Locally
-Documentation for the DCScan API is available by downloading and building this project (see [Building](#building)). The docs should be automatically generated using Doxygen in the chosen build folder in html and LaTeX formats.
+Documentation for the DCScan API is automatically generated and made available by downloading and building this project (see [Building](#building)). The docs are generated using Doxygen in the chosen build folder in html and LaTeX formats.
+> :book: To successfully generate the documentation automatically you should have Doxygen installed when building.
 #### Online
 It will also be available in a github.io, automatically deployed using some sort of continuous integration (see [this](https://gist.github.com/vidavidorra/548ffbcdae99d752da02)).
 
