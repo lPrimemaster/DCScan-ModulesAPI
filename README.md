@@ -30,6 +30,11 @@ build RUN_TESTS
 ```
 ### Advanced Mode
 A more powerful way to build DCScan-ModulesAPI is by running CMake on your own, using a custom generator (like `ninja` for example). These features should work, although untested. Use at own risk.
+In the main directory of the project run:
+```shell
+cmake CMakeLists.txt
+```
+After this you can compile the binaries with whatever project CMake generated for you.
 
 ## Using the libraries
 If you're compiling these library on their own, chances are you'd like to use them wherever to interact with the system trough a third party script or binary. There multiple options available are displayed in detail below.
