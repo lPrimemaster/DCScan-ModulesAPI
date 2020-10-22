@@ -26,7 +26,11 @@ To build DCScan-ModulesAPI is as simple as running the `build.cmd` from console 
 ##### Example
 This will build all the libraries and run their respective tests:
 ```shell
-cd repo_location
+# Clone the repo
+git clone https://github.com/lPrimemaster/DCScan-ModulesAPI.git
+cd DCScan-ModulesAPI
+
+# Build the libraries
 build ALL_BUILD
 build RUN_TESTS
 ```
