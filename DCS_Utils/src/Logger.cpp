@@ -35,10 +35,10 @@ void DCS::Utils::Logger::WriteData(std::string buffer[], Verbosity v)
 {
 	const std::lock_guard<std::mutex> lock(_log_mtx);
 
-	// Only display message on cerr if verbosity is less or equal than set value.
+	// Only display message on cout/cerr if verbosity is less or equal than set value.
 	if (v <= verbosity_level)
 	{
-		// Buffer is already newline terminated
+		// Buffer is not newline terminated
 		std::cout << buffer[1] << std::endl;
 	}
 
@@ -60,14 +60,14 @@ void DCS::Utils::Logger::Init(Verbosity level, FILE* handle)
 
 	Logger::handle = handle;
 
-	// Disable this behaviour later on program end
+	//TODO: Disable this behaviour later on program end
 }
 
 void DCS::Utils::Logger::Debug(const char* msg)
 {
 	std::string s[] = {
 		"[" + timestamp() + "][DEBUG/INFO]: " + msg, // Color Stripped buffer
-		LOGGER_GREY "[" + timestamp() + "][DEBUG/INFO]: " + msg + LOGGER_DEFAULT // Color Normal buffer
+		LOGGER_GREY + s[0] + LOGGER_DEFAULT // Color Normal buffer
 	};
 	WriteData(s, Verbosity::DEBUG);
 }
@@ -76,7 +76,7 @@ void DCS::Utils::Logger::Message(const char* msg)
 {
 	std::string s[] = {
 		"[" + timestamp() + "][MESSAGE]: " + msg, // Color Stripped buffer
-		LOGGER_BLUE "[" + timestamp() + "][MESSAGE]: " + msg + LOGGER_DEFAULT // Color Normal buffer
+		LOGGER_BLUE + s[0] + LOGGER_DEFAULT // Color Normal buffer
 	};
 	WriteData(s, Verbosity::MESSAGE);
 }
@@ -85,7 +85,7 @@ void DCS::Utils::Logger::Warning(const char* msg)
 {
 	std::string s[] = {
 		"[" + timestamp() + "][WARN]: " + msg, // Color Stripped buffer
-		LOGGER_ORANGE "[" + timestamp() + "][WARN]: " + msg + LOGGER_DEFAULT // Color Normal buffer
+		LOGGER_ORANGE + s[0] + LOGGER_DEFAULT // Color Normal buffer
 	};
 	WriteData(s, Verbosity::WARNING);
 }
@@ -94,7 +94,7 @@ void DCS::Utils::Logger::Error(const char* msg)
 {
 	std::string s[] = {
 		"[" + timestamp() + "][ERROR]: " + msg, // Color Stripped buffer
-		LOGGER_RED "[" + timestamp() + "][ERROR]: " + msg + LOGGER_DEFAULT // Color Normal buffer
+		LOGGER_BOLD LOGGER_RED + s[0] + LOGGER_DEFAULT // Color Normal buffer
 	};
 #undef ERROR
 	WriteData(s, Verbosity::ERROR);
@@ -105,7 +105,7 @@ void DCS::Utils::Logger::Critical(const char* msg)
 {
 	std::string s[] = {
 		"[" + timestamp() + "][CRITICAL]: " + msg, // Color Stripped buffer
-		LOGGER_BOLD LOGGER_RED "[" + timestamp() + "][CRITICAL]: " + msg + LOGGER_DEFAULT // Color Normal buffer
+		LOGGER_RED + s[0] + LOGGER_DEFAULT // Color Normal buffer
 	};
 	WriteData(s, Verbosity::CRITICAL);
 }

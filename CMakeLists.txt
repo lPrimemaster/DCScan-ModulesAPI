@@ -48,6 +48,7 @@ include_directories(
 # Add sub-directories (These are the libraries basically)
 add_libTargetSubDir(DCS_EngineControl)
 add_libTargetSubDir(DCS_Utils)
+add_libTargetSubDir(DCS_Core)
 
 string (REPLACE ";" " " CMAKE_LIBS_SOURCE_DIR "${CMAKE_LIBS_SOURCE_DIR}")
 
