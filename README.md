@@ -12,7 +12,7 @@ It will also be available in a github.io, automatically deployed using some sort
 
 ## Building
 
-> :warning: DCScan-ModulesAPI is only available for windows, since a few functionalities are platform dependent. **Compiling for any other operating system will fail.**
+> :warning: DCScan-ModulesAPI is only available for windows, since a few functionalities are platform dependent. **Compiling for any other operating system will most likely fail.**
 
 ### Simple Mode
 To build DCScan-ModulesAPI is as simple as running the `build.cmd` from console with one of the following arguments:
@@ -22,6 +22,12 @@ To build DCScan-ModulesAPI is as simple as running the `build.cmd` from console 
 | INSTALL   | Installs the DCScan-ModulesAPI compiled dependencies on a default directory and registers their location in windows registry, so CMake can locate the package with `find_package()` in config mode (see more [here](https://cmake.org/cmake/help/latest/command/find_package.html)). This is particularly useful if compiling another C++ binary with CMake (see [Using the libraries](#using-the-libraries)).
 | CLEAN     | Deletes all build files.
 | RUN_TESTS | Builds the test package and runs all tests for the API.          |
+
+##### Available cmake options
+
+|   Option    | Default | Description |
+|-------------|---------|-------------|
+| BUILD_TESTS |   OFF   | Enables building tests in the build stage. **DO NOT** build the release version with this option ON, it will expose unecessary internal functions to the API. |
 
 ##### Example
 This will build all the libraries and run their respective tests:
@@ -34,6 +40,9 @@ cd DCScan-ModulesAPI
 build ALL_BUILD "-DBUILD_TESTS=ON"
 build RUN_TESTS
 ```
+> :warning: **DO NOT** build the release version with "-DBUILD_TESTS=ON" (see [here](#available-cmake-options)). Use it only for testing.
+
+
 ### Advanced Mode
 A more powerful way to build DCScan-ModulesAPI is by running CMake on your own, using a custom generator (like `ninja` for example). These features should work, although untested. Use at own risk.
 In the main directory of the project run:
