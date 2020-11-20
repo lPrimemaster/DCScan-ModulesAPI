@@ -37,8 +37,7 @@ git clone https://github.com/lPrimemaster/DCScan-ModulesAPI.git
 cd DCScan-ModulesAPI
 
 # Build the libraries
-build ALL_BUILD "-DBUILD_TESTS=ON"
-build RUN_TESTS
+build ALL_BUILD "-DBUILD_TESTS=ON" && build RUN_TESTS
 ```
 > :warning: **DO NOT** build the release version with "-DBUILD_TESTS=ON" (see [here](#available-cmake-options)). Use it only for testing.
 
