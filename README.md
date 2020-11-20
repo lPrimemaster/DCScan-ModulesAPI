@@ -18,7 +18,7 @@ It will also be available in a github.io, automatically deployed using some sort
 To build DCScan-ModulesAPI is as simple as running the `build.cmd` from console with one of the following arguments:
 | Argument  |                            Description                           |
 |-----------|------------------------------------------------------------------|
-| ALL_BUILD | Builds all the libraries as dll's inside a folder named `build`. If not configured, runs the CMake generator for Visual Studio. |
+| ALL_BUILD | Builds all the libraries as dll's inside a folder named `build`. If not configured, runs the CMake generator for Visual Studio. This command supports a second argument that specifies cmake's aditional parameters, like options. See [example](#example) for more details. |
 | INSTALL   | Installs the DCScan-ModulesAPI compiled dependencies on a default directory and registers their location in windows registry, so CMake can locate the package with `find_package()` in config mode (see more [here](https://cmake.org/cmake/help/latest/command/find_package.html)). This is particularly useful if compiling another C++ binary with CMake (see [Using the libraries](#using-the-libraries)).
 | CLEAN     | Deletes all build files.
 | RUN_TESTS | Builds the test package and runs all tests for the API.          |
@@ -31,7 +31,7 @@ git clone https://github.com/lPrimemaster/DCScan-ModulesAPI.git
 cd DCScan-ModulesAPI
 
 # Build the libraries
-build ALL_BUILD
+build ALL_BUILD "-DBUILD_TESTS=ON"
 build RUN_TESTS
 ```
 ### Advanced Mode
