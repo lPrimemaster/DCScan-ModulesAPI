@@ -23,4 +23,13 @@ void DCS::Threading::JoinPool(TPool* pool)
 	{
 		w.join();
 	}
+	pool->workers.clear();
+}
+
+void DCS::Threading::DestroyPool(TPool* pool)
+{
+	if (!pool->workers.size())
+		delete pool;
+	else
+		DCS::Utils::Logger::Warning("Cannot destroy TPool object while working async. Maybe missing a DCS::Threading::JoinPool(TPool*) call.");
 }

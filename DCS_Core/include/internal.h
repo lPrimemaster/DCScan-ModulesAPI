@@ -12,9 +12,6 @@ namespace DCS
 {
 	namespace Memory
 	{
-		/**
-		 * \brief Holds data pointer and data pointer information for linear memory pools.
-		 */
 		struct LinearDataPointer
 		{
 			char* data_start = nullptr;
@@ -47,5 +44,7 @@ namespace DCS
 		DCS_INTERNAL_TEST TPool* CreatePersistentThread(u16 size, std::vector<std::function<void(std::mutex*, std::condition_variable*, std::array<std::atomic_int, 16>*)>> workers);
 
 		DCS_INTERNAL_TEST void JoinPool(TPool* pool);
+
+		DCS_INTERNAL_TEST void DestroyPool(TPool* pool);
 	}
 }

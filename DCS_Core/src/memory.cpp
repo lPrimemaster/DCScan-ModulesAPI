@@ -27,10 +27,7 @@ DCS::Memory::LinearAllocator::LinearAllocator(u64 size, u64 align)
 	}
 	else
 	{
-		/// \todo Create a method for this
-		char msg[256];
-		sprintf(msg, "Successfully created linear allocator. (size=%llu,align=%llu)", size, align);
-		Utils::Logger::Debug(msg);
+		Utils::Logger::Debug("Successfully created linear allocator. (size=%llu,align=%llu)", size, align);
 	}
 
 	buffer.alignment = align;

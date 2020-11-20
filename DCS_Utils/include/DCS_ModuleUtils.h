@@ -73,28 +73,38 @@ namespace DCS
 
 			/**
 			 * \brief Emit a debug message.
+			 * 
+			 * Uses printf like formating.
 			 */
-			static DCS_API void Debug(const char* msg);
+			static DCS_API void Debug(const char* msg, ...);
 
 			/**
 			 * \brief Emit a status message.
+			 * 
+			 * Uses printf like formating.
 			 */
-			static DCS_API void Message(const char* msg);
+			static DCS_API void Message(const char* msg, ...);
 
 			/**
 			 * \brief Emit a warning message.
+			 * 
+			 * Uses printf like formating.
 			 */
-			static DCS_API void Warning(const char* msg);
+			static DCS_API void Warning(const char* msg, ...);
 
 			/**
 			 * \brief Emit an error message.
+			 * 
+			 * Uses printf like formating.
 			 */
-			static DCS_API void Error(const char* msg);
+			static DCS_API void Error(const char* msg, ...);
 
 			/**
 			 * \brief Emit a critical error message.
+			 * 
+			 * Uses printf like formating.
 			 */
-			static DCS_API void Critical(const char* msg);
+			static DCS_API void Critical(const char* msg, ...);
 
 		private:
 			static void WriteData(std::string buffer[], Verbosity v);

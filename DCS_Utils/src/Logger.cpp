@@ -62,38 +62,77 @@ void DCS::Utils::Logger::Init(Verbosity level, FILE* handle)
 
 	//TODO: Disable this behaviour later on program end
 }
-
-void DCS::Utils::Logger::Debug(const char* msg)
+void DCS::Utils::Logger::Debug(const char* msg, ...)
 {
+	size_t size = strlen(msg);
+	if (size > 2048) 
+		DCS::Utils::Logger::Error("Logger output is limited to 2048 bytes per call. Output might be different from expected.");
+
+	char buffer[2048];
+	va_list args;
+	va_start(args, msg);
+	vsprintf(buffer, msg, args);
+	va_end(args);
+
 	std::string s[] = {
-		"[" + timestamp() + "][DEBUG/INFO]: " + msg, // Color Stripped buffer
+		"[" + timestamp() + "][DEBUG/INFO]: " + buffer, // Color Stripped buffer
 		LOGGER_GREY + s[0] + LOGGER_DEFAULT // Color Normal buffer
 	};
 	WriteData(s, Verbosity::DEBUG);
 }
 
-void DCS::Utils::Logger::Message(const char* msg)
+void DCS::Utils::Logger::Message(const char* msg, ...)
 {
+	size_t size = strlen(msg);
+	if (size > 2048)
+		DCS::Utils::Logger::Error("Logger output is limited to 2048 bytes per call. Output might be different from expected.");
+
+	char buffer[2048];
+	va_list args;
+	va_start(args, msg);
+	vsprintf(buffer, msg, args);
+	va_end(args);
+
 	std::string s[] = {
-		"[" + timestamp() + "][MESSAGE]: " + msg, // Color Stripped buffer
+		"[" + timestamp() + "][MESSAGE]: " + buffer, // Color Stripped buffer
 		LOGGER_BLUE + s[0] + LOGGER_DEFAULT // Color Normal buffer
 	};
 	WriteData(s, Verbosity::MESSAGE);
 }
 
-void DCS::Utils::Logger::Warning(const char* msg)
+void DCS::Utils::Logger::Warning(const char* msg, ...)
 {
+	size_t size = strlen(msg);
+	if (size > 2048)
+		DCS::Utils::Logger::Error("Logger output is limited to 2048 bytes per call. Output might be different from expected.");
+
+	char buffer[2048];
+	va_list args;
+	va_start(args, msg);
+	vsprintf(buffer, msg, args);
+	va_end(args);
+
 	std::string s[] = {
-		"[" + timestamp() + "][WARN]: " + msg, // Color Stripped buffer
+		"[" + timestamp() + "][WARN]: " + buffer, // Color Stripped buffer
 		LOGGER_ORANGE + s[0] + LOGGER_DEFAULT // Color Normal buffer
 	};
 	WriteData(s, Verbosity::WARNING);
 }
 
-void DCS::Utils::Logger::Error(const char* msg)
+void DCS::Utils::Logger::Error(const char* msg, ...)
 {
+	size_t size = strlen(msg);
+	if (size > 2048)
+		DCS::Utils::Logger::Error("Logger output is limited to 2048 bytes per call. Output might be different from expected.");
+
+	char buffer[2048];
+	va_list args;
+	va_start(args, msg);
+	vsprintf(buffer, msg, args);
+	va_end(args);
+
 	std::string s[] = {
-		"[" + timestamp() + "][ERROR]: " + msg, // Color Stripped buffer
+		"[" + timestamp() + "][ERROR]: " + buffer, // Color Stripped buffer
 		LOGGER_BOLD LOGGER_RED + s[0] + LOGGER_DEFAULT // Color Normal buffer
 	};
 #undef ERROR
@@ -101,10 +140,20 @@ void DCS::Utils::Logger::Error(const char* msg)
 #define ERROR 0
 }
 
-void DCS::Utils::Logger::Critical(const char* msg)
+void DCS::Utils::Logger::Critical(const char* msg, ...)
 {
+	size_t size = strlen(msg);
+	if (size > 2048)
+		DCS::Utils::Logger::Error("Logger output is limited to 2048 bytes per call. Output might be different from expected.");
+
+	char buffer[2048];
+	va_list args;
+	va_start(args, msg);
+	vsprintf(buffer, msg, args);
+	va_end(args);
+
 	std::string s[] = {
-		"[" + timestamp() + "][CRITICAL]: " + msg, // Color Stripped buffer
+		"[" + timestamp() + "][CRITICAL]: " + buffer, // Color Stripped buffer
 		LOGGER_RED + s[0] + LOGGER_DEFAULT // Color Normal buffer
 	};
 	WriteData(s, Verbosity::CRITICAL);
