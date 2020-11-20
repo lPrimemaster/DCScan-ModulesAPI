@@ -5,12 +5,25 @@
 SET result="FALSE"
 IF "%~1"=="" GOTO errorNA
 
-IF NOT "%~2"=="" echo [1mThis command only supports one argument. Multiple provided. Ignoring...[0m
+SET ab="FASLE"
+SET rtests="FALSE"
 
-IF /I "%~1" == "ALL_BUILD" (SET result="TRUE")
+IF /I "%~1" == "ALL_BUILD" (
+	SET result="TRUE"
+	SET ab="TRUE"
+)
 IF /I "%~1" == "INSTALL"   (SET result="TRUE")
-IF /I "%~1" == "RUN_TESTS" (SET result="TRUE")
+IF /I "%~1" == "RUN_TESTS" (
+	SET result="TRUE"
+	SET rtests="TRUE"
+)
 IF /I "%~1" == "CLEAN"     (SET result="CLEAN")
+
+IF "%ab%"==""FALSE"" (
+	IF NOT "%~2"=="" (
+		echo [1mThis command only supports one argument. Multiple provided. Ignoring...[0m
+	)
+)
 
 IF "%result%"==""CLEAN"" (
 	cd /D "%~dp0"
@@ -23,7 +36,7 @@ IF "%result%"==""TRUE"" (
 	echo [92mBUILD STARTED.[0m
 	mkdir build
 	cd /D "%~dp0/build"
-	cmake ..
+	cmake "%~2" ..
 	:: Make msbuild's verbosity level quiet maybe ??
 	cmake --build . --target %1 --config Release -- /nologo /verbosity:minimal /maxcpucount
 	IF errorlevel 1 GOTO errEnd
@@ -43,12 +56,17 @@ GOTO errEnd
 
 :errEnd
 echo.
-echo [91mBUILD FAILED.[0m
+IF "%rtests%"==""TRUE"" (
+	echo [91mTESTING FAILED.[0m
+) ELSE echo [91mBUILD FAILED.[0m
+
 GOTO end
 
 :sucEnd
 echo.
-echo [92mBUILD SUCCEEDED.[0m
+IF "%rtests%"==""TRUE"" (
+	echo [92mTESTING SUCCEEDED.[0m
+) ELSE echo [92mBUILD SUCCEEDED.[0m
 
 :end
 cd /D "%~dp0"

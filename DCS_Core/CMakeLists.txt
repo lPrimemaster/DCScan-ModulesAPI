@@ -9,6 +9,7 @@ message(STATUS "LIBRARY INSTALL BIN LOCATION: ${INSTALL_LIB_DIR}")
 
 add_library(DCSModuleCore ${LIB_TYPE}
   src/memory.cpp
+  src/threading.cpp
   ../config/exports.h
   include/internal.h
   include/DCS_ModuleCore.h

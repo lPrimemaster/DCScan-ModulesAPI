@@ -15,6 +15,14 @@ endfunction()
 # Disable MSVC nasty deprecations
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
+# Enable testing (DISABLE THIS FOR RELEASE)
+
+option(BUILD_TESTS "Build tests" OFF)
+
+if(BUILD_TESTS)
+  add_definitions(-DENABLE_TESTING)
+endif()
+
 # Change this to SHARED if you want to build a dynamic library (.dll) specially useful for loading from external programs/scripts.
 # There is the option of using STATIC libraries as well, however they are not supported yet
 set(LIB_TYPE SHARED)
@@ -91,10 +99,12 @@ endif (DOXYGEN_FOUND)
 # End Doxygen setup #
 # ================= #
 
-# Add testing subdirectory
-enable_testing()
-# Do not add to doxygen target
-add_subdirectory(tests)
+if(BUILD_TESTS)
+  # Add testing subdirectory
+  enable_testing()
+  # Do not add to doxygen target
+  add_subdirectory(tests)
+endif()
 
 message(STATUS "CML Sources: ${CMAKE_LIBS_SOURCE_DIR}")
 

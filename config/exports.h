@@ -37,3 +37,9 @@
 //#define DCS_API extern "C" __declspec(dllimport)
 //#endif
 #endif
+
+#ifdef ENABLE_TESTING
+#define DCS_INTERNAL_TEST DCS_API
+#else
+#define DCS_INTERNAL_TEST
+#endif
