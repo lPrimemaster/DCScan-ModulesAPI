@@ -3,6 +3,17 @@
 #include "../../DCS_Utils/include/DCS_ModuleUtils.h"
 #include "../../DCS_Core/include/internal.h"
 
+/**
+ * @file
+ * \brief Exposes core functionalities of the API to the end user.
+ *
+ * \author Cesar Godinho
+ *
+ * \version 1.0 $Revision: 1.1 $
+ *
+ * \date $Date: 2020/11/26$
+ */
+
 namespace DCS
 {
 	namespace Memory
@@ -10,9 +21,9 @@ namespace DCS
 		/**
 		 * \brief Linearly allocates memory for a single use.
 		 * 
-		 * Can be resused upon reset. Can't be realoc'ed.
+		 * Can be reused upon reset. Can't be realoc'ed.
 		 */
-		struct DCS_API LinearAllocator
+		class DCS_API LinearAllocator
 		{
 		public:
 			/**
@@ -71,6 +82,9 @@ namespace DCS
 
 	namespace Threading
 	{
-		const i16 GetMaxHardwareConcurrency();
+		/**
+		 * \brief Get current machine maximum hardware concurrency (Number of physical threads supported by the current implementation).
+		 */
+		const DCS_API u16 GetMaxHardwareConcurrency();
 	}
 }

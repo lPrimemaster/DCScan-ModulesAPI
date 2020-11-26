@@ -123,14 +123,26 @@ namespace DCS
 		{
 		public:
 			String() = default;
+
+			/**
+			 * \brief Create a String object from pointer.
+			 */
 			String(const char* text);
 			~String();
 
+			/**
+			 * \brief Returns size of the string
+			 * \return str size.
+			 */
 			inline const size_t size() const
 			{
 				return buffer_size;
 			}
 
+			/**
+			 * \brief Converts a String object to const char* raw pointer
+			 * \return buffer.
+			 */
 			inline const char* c_str() const
 			{
 				return buffer;
@@ -151,7 +163,7 @@ namespace DCS
 		 */
 		struct DCS_API SystemTimer
 		{
-			GenericHandle point;
+			GenericHandle point; ///< Represents a time point.
 		};
 
 		/**
@@ -159,12 +171,12 @@ namespace DCS
 		 */
 		struct DCS_API Timestamp
 		{
-			i16 hour = 0;
-			i16 min = 0;
-			i16 sec = 0;
-			i16 millis = 0;
-			i16 micros = 0;
-			i16 nanos = 0;
+			i16 hour = 0; ///< Timestamp value: hours.
+			i16 min = 0; ///< Timestamp value: minutes.
+			i16 sec = 0; ///< Timestamp value: seconds.
+			i16 millis = 0; ///< Timestamp value: milliseconds.
+			i16 micros = 0; ///< Timestamp value: microseconds.
+			i16 nanos = 0; ///< Timestamp value: nanoseconds.
 
 			/**
 			 * \brief Converts a Timestamp to string format.

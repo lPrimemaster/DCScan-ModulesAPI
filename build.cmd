@@ -36,7 +36,7 @@ IF "%result%"==""TRUE"" (
 	echo [92mBUILD STARTED.[0m
 	mkdir build
 	cd /D "%~dp0/build"
-	cmake "%~2" ..
+	cmake %~2 ..
 	:: Make msbuild's verbosity level quiet maybe ??
 	cmake --build . --target %1 --config Release -- /nologo /verbosity:minimal /maxcpucount
 	IF errorlevel 1 GOTO errEnd

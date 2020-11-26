@@ -18,9 +18,16 @@ add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 # Enable testing (DISABLE THIS FOR RELEASE)
 
 option(BUILD_TESTS "Build tests" OFF)
+option(INTERNAL_DOCS "Generate internal documentation" OFF)
 
 if(BUILD_TESTS)
   add_definitions(-DENABLE_TESTING)
+endif()
+
+if(INTERNAL_DOCS)
+  set(ENABLE_INTERNAL_DOCS "YES")
+else()
+  set(ENABLE_INTERNAL_DOCS "NO")
 endif()
 
 # Change this to SHARED if you want to build a dynamic library (.dll) specially useful for loading from external programs/scripts.

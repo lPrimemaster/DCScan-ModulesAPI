@@ -15,5 +15,5 @@
  *
  * \date $Date: 2020/10/12$
  */
-DCS_API int power2(int x);
+
 

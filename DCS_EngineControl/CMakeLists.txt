@@ -8,10 +8,14 @@ message(STATUS "LIBRARY TYPE SET TO: ${LIB_TYPE}")
 message(STATUS "LIBRARY INSTALL BIN LOCATION: ${INSTALL_LIB_DIR}")
 
 add_library(DCSModuleEngineControl ${LIB_TYPE}
-  src/placeholder.c
+  src/serial_win.cpp
   include/DCS_ModuleEngineControl.h
+  include/internal.h
   ../config/exports.h
-  ) 
+  )
+
+
+target_link_libraries(DCSModuleEngineControl DCSModuleUtils)
 
 set_target_properties(DCSModuleEngineControl PROPERTIES
   PUBLIC_HEADER "include/DCS_ModuleEngineControl.h"

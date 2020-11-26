@@ -1,4 +1,5 @@
 #include "../../DCS_Core/include/internal.h"
+#include "../../DCS_Core/include/DCS_ModuleCore.h"
 #include "../include/DCS_Assert.h"
 #include <chrono>
 
@@ -44,7 +45,6 @@ void worker1(std::mutex* lock, std::condition_variable* signal, std::array<std::
 	signal->wait(l, [&] { return flags->at(0).load() == 1; });
 
 	DCS::Utils::Logger::Debug("Sample worker1 received data.");
-
 }
 
 int test()
@@ -53,9 +53,26 @@ int test()
 
 	using namespace DCS::Threading;
 
-	TPool* pool = CreatePersistentThread(2, { worker0, worker1 });
+	TPool* pool = CreatePersistentPool(2, { worker0, worker1 });
 
 	JoinPool(pool);
+
+	DCS_ASSERT_EQ(pool->flags.at(0).load(), 1);
+
+	DestroyPool(pool);
+
+	TPool* pool_large_fail = CreatePersistentPool(GetMaxHardwareConcurrency() + 1, 
+		{ worker0, worker1, worker1, worker1, worker1, worker1, worker1, worker1, 
+		worker1, worker1, worker1, worker1, worker1, worker1, worker1, worker1,
+		worker1, worker1, worker1, worker1 });
+
+	DCS_ASSERT_EQ(GetPoolWorkCount(pool_large_fail), GetMaxHardwareConcurrency());
+
+	JoinPool(pool_large_fail);
+
+	DCS_ASSERT_EQ(pool_large_fail->flags.at(0).load(), 1);
+
+	DestroyPool(pool_large_fail);
 
 	DCS_RETURN_TEST;
 }
@@ -63,5 +80,4 @@ int test()
 int main()
 {
 	return test();
-	//return 0;
 }
