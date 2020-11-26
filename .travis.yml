@@ -9,9 +9,9 @@ branches:
 # Environment variables
 env:
   global:
-    - GH_REPO_NAME: DCSModules-API
+    - GH_REPO_NAME: DCScan-ModulesAPI
     - DOXYFILE: $TRAVIS_BUILD_DIR/Doxyfile
-    - GH_REPO_REF: github.com/lPrimemaster/DCSModules-API.git
+    - GH_REPO_REF: github.com/lPrimemaster/DCScan-ModulesAPI.git
 
 # Install dependencies
 addons:
