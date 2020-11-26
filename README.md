@@ -28,6 +28,7 @@ To build DCScan-ModulesAPI is as simple as running the `build.cmd` from console 
 |   Option    | Default | Description |
 |-------------|---------|-------------|
 | BUILD_TESTS |   OFF   | Enables building tests in the build stage. **DO NOT** build the release version with this option ON, it will expose unecessary internal functions to the API. |
+| INTERNAL_DOCS | OFF   | Enables internal documentation of the API. This is specially usefull if you wish to fiddle with the internal code for further implementation. Note that this documentation might be not as detailed as the one available with the exposed API. |
 
 ##### Example
 This will build all the libraries and run their respective tests:
