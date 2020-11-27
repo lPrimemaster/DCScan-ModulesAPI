@@ -2,6 +2,7 @@
 A  set of libraries used to implement functionalities over a Double Crystal Spectrometer acquisition system.
 You can view the GUI source code (which implements these binaries) at the [DCScan-GUI](http://github.com/lPrimemaster/DCScan-GUI) repository.
 
+![TCI](https://travis-ci.org/lPrimemaster/DCScan-ModulesAPI.svg?branch=master)
 
 ## Documentation
 #### Locally
