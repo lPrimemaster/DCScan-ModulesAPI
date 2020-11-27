@@ -1,39 +1,28 @@
-# This will run on Travis' 'new' container-based infrastructure
-
+# This is the required part containing the build step for gatsby
 language: cpp
 os: linux
 
+dependencies:
+    - doxygen
+    - cmake
 
-# Blacklist
-branches:
-  except:
-    - gh-pages
-
-# Environment variables
-env:
-  global:
-    - GH_REPO_NAME: DCScan-ModulesAPI
-    - DOXYFILE: $TRAVIS_BUILD_DIR/Doxyfile
-    - GH_REPO_REF: github.com/lPrimemaster/DCScan-ModulesAPI.git
-
-# Install dependencies
-addons:
-  apt:
-    packages:
-      - doxygen
-      - doxygen-doc
-      - doxygen-latex
-      - doxygen-gui
-      - graphviz
-      - cmake
-
-# Build your code e.g. by calling make
 script:
-  - chmod +x config.sh
   - ./config.sh
 
-# Generate and deploy documentation
-after_success:
-  - cd $TRAVIS_BUILD_DIR
-  - chmod +x generateDocumentationAndDeploy.sh
-  - ./generateDocumentationAndDeploy.sh
+# Here is the magic part
+deploy:
+  # Use Github pages deploy process
+  provider: pages
+  # Keep builded pages
+  skip-cleanup: true
+  # Directory where your generated files are located
+  local_dir: docs/html
+  # Github security/auth token
+  github-token: $GH_REPO_TOKEN
+  # Incremental commit to keep old build/files from previous deployments
+  keep-history: true
+  # Git branch on which it should deploy (master, gh-pages, foo...)
+  target_branch: gh-pages
+  on:
+    # Which branch on commit/push will trigger deployment
+    branch: master
