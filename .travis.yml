@@ -13,6 +13,7 @@ addons:
       - cmake
 
 script:
+  - chmod +x config.sh
   - ./config.sh
 
 # Here is the magic part
