@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>DCSModulesAPI: File Members</title>
+<title>DCSModulesAPI: config/exports.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -64,17 +64,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li class="current"><a href="globals.html"><span>File&#160;Members</span></a></li>
+      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
-  <div id="navrow3" class="tabs2">
-    <ul class="tablist">
-      <li class="current"><a href="globals.html"><span>All</span></a></li>
-      <li><a href="globals_func.html"><span>Functions</span></a></li>
-      <li><a href="globals_defs.html"><span>Macros</span></a></li>
-    </ul>
-  </div>
-</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -89,15 +81,46 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_9f351d46ce3cc29445a41dc3a31e6919.html">config</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#define-members">Macros</a>  </div>
+  <div class="headertitle">
+<div class="title">exports.h File Reference</div>  </div>
+</div><!--header-->
 <div class="contents">
-<div class="textblock">Here is a list of all documented file members with links to the documentation:</div><ul>
-<li>AllocateGenericHandle()
-: <a class="el" href="_d_c_s___utils_2include_2internal_8h.html#a1874c6c88596d308a31b0f87ec6213ba">internal.h</a>
-</li>
-<li>DCS_API
-: <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">exports.h</a>
-</li>
-</ul>
+
+<p><a href="exports_8h_source.html">Go to the source code of this file.</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a240a0f4545ac093f1b6795229b386fb8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a>&#160;&#160;&#160;__declspec(dllimport)</td></tr>
+<tr class="memdesc:a240a0f4545ac093f1b6795229b386fb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the export interface acessible via the dll.  <a href="#a240a0f4545ac093f1b6795229b386fb8">More...</a><br /></td></tr>
+<tr class="separator:a240a0f4545ac093f1b6795229b386fb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67c09fac060b3dbcd04e20442c9578b2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a67c09fac060b3dbcd04e20442c9578b2"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>DCS_INTERNAL_TEST</b></td></tr>
+<tr class="separator:a67c09fac060b3dbcd04e20442c9578b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="a240a0f4545ac093f1b6795229b386fb8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DCS_API&#160;&#160;&#160;__declspec(dllimport)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Defines the export interface acessible via the dll. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>Do not define API for Cmake's STATIC lib configuration </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
