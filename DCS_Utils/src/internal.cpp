@@ -5,10 +5,13 @@ DCS::GenericHandle AllocateGenericHandle(DCS::u16 size, DCS::GenericHandle obj)
 	DCS::GenericHandle hnd = malloc(size);
 	if (!hnd)
 	{
-		///\todo LOG ERROR
+		DCS::Utils::Logger::Error("Could not allocate GenericHandle. Maybe ran out of memory?");
 		return nullptr;
 	}
 	memcpy(hnd, obj, size);
+
+	DCS::Utils::Logger::Debug("Sucess allocating GenericHandle %x (size=%u)", obj, size);
+
 	return hnd;
 }
 
@@ -17,5 +20,6 @@ void FreeGenericHandle(DCS::GenericHandle hnd)
 	if (hnd)
 	{
 		free(hnd);
+		DCS::Utils::Logger::Debug("Sucess deallocating GenericHandle %x", hnd);
 	}
 }

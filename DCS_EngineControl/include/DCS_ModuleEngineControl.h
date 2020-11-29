@@ -2,6 +2,7 @@
 #include "../../config/exports.h"
 
 /**
+ * @file
  * \brief Provide an example
  *
  * This class is meant as an example. It is not useful by itself
@@ -16,4 +17,11 @@
  * \date $Date: 2020/10/12$
  */
 
+namespace DCS
+{
+	namespace Control
+	{
+
+	}
+}
 
