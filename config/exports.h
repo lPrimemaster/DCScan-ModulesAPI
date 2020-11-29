@@ -18,7 +18,7 @@
 
 #ifdef API_EXPORT
 /**
- * \brief Defines the export interface acessible via the dll.
+ * \brief Defines the export interface acessible via the dll-interface.
  * \todo Do not define API for Cmake's STATIC lib configuration
  */
 //#ifdef __cplusplus
@@ -29,7 +29,7 @@
 #else
 //#ifdef __cplusplus
 /**
- * \brief Defines the export interface acessible via the dll.
+ * \brief Defines the export interface acessible via the dll-interface.
  * \todo Do not define API for Cmake's STATIC lib configuration
  */
 #define DCS_API __declspec(dllimport)
@@ -39,7 +39,23 @@
 #endif
 
 #ifdef ENABLE_TESTING
+/**
+ * \brief Defines the export interface acessible via the dll-interface applicable for internal functions only.
+ * 
+ * This is used to expose certain internal features for testing, 
+ * declarations with this specifier will not be exported to the
+ * final built shared library.
+ * \todo Do not define API for Cmake's STATIC lib configuration
+ */
 #define DCS_INTERNAL_TEST DCS_API
 #else
+/**
+ * \brief Defines the export interface acessible via the dll-interface applicable for internal functions only.
+ *
+ * This is used to expose certain internal features for testing,
+ * declarations with this specifier will not be exported to the
+ * final built shared library.
+ * \todo Do not define API for Cmake's STATIC lib configuration
+ */
 #define DCS_INTERNAL_TEST
 #endif
