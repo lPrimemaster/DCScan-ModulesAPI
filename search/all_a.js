@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['nanos',['nanos',['../struct_d_c_s_1_1_timer_1_1_timestamp.html#aff37e590a73bbb3d86d00e0b759855ce',1,'DCS::Timer::Timestamp']]],
-  ['new',['New',['../class_d_c_s_1_1_memory_1_1_linear_allocator.html#aef190e45d49fc3b29a3d0375025c5190',1,'DCS::Memory::LinearAllocator::New()'],['../_d_c_s___module_utils_8h.html#a5c8842e2cdb201bed6bd5ada5ce71384',1,'DCS::Timer::New()']]]
+  ['message',['Message',['../class_d_c_s_1_1_utils_1_1_logger.html#a063360f13c156c13ff5ee85dde3c37c7',1,'DCS::Utils::Logger::Message(const char *msg,...)'],['../class_d_c_s_1_1_utils_1_1_logger.html#a7eb79910957b75fadd68b38039e2c4bda90791ed805bd5b00d78527d39d9ef7e4',1,'DCS::Utils::Logger::MESSAGE()']]],
+  ['micros',['micros',['../struct_d_c_s_1_1_timer_1_1_timestamp.html#ab1feb5def8038ad87cd6c24cd5f09d7e',1,'DCS::Timer::Timestamp']]],
+  ['millis',['millis',['../struct_d_c_s_1_1_timer_1_1_timestamp.html#a3949df670a7d46b729b0d0daff9de6ec',1,'DCS::Timer::Timestamp']]],
+  ['min',['min',['../struct_d_c_s_1_1_timer_1_1_timestamp.html#a6dcba3e4ede6de8c94ad3d9ab8b6608b',1,'DCS::Timer::Timestamp']]]
 ];

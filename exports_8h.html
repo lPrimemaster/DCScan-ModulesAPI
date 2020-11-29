@@ -41,6 +41,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -99,10 +100,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a240a0f4545ac093f1b6795229b386fb8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a>&#160;&#160;&#160;__declspec(dllimport)</td></tr>
-<tr class="memdesc:a240a0f4545ac093f1b6795229b386fb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the export interface acessible via the dll.  <a href="#a240a0f4545ac093f1b6795229b386fb8">More...</a><br /></td></tr>
+<tr class="memdesc:a240a0f4545ac093f1b6795229b386fb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the export interface acessible via the dll-interface.  <a href="#a240a0f4545ac093f1b6795229b386fb8">More...</a><br /></td></tr>
 <tr class="separator:a240a0f4545ac093f1b6795229b386fb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67c09fac060b3dbcd04e20442c9578b2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a67c09fac060b3dbcd04e20442c9578b2"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>DCS_INTERNAL_TEST</b></td></tr>
+<tr class="memitem:a67c09fac060b3dbcd04e20442c9578b2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a></td></tr>
+<tr class="memdesc:a67c09fac060b3dbcd04e20442c9578b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the export interface acessible via the dll-interface applicable for internal functions only.  <a href="#a67c09fac060b3dbcd04e20442c9578b2">More...</a><br /></td></tr>
 <tr class="separator:a67c09fac060b3dbcd04e20442c9578b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
@@ -116,8 +117,23 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Defines the export interface acessible via the dll. </p>
+<p>Defines the export interface acessible via the dll-interface. </p>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>Do not define API for Cmake's STATIC lib configuration </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a67c09fac060b3dbcd04e20442c9578b2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DCS_INTERNAL_TEST</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Defines the export interface acessible via the dll-interface applicable for internal functions only. </p>
+<p>This is used to expose certain internal features for testing, declarations with this specifier will not be exported to the final built shared library. </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Do not define API for Cmake's STATIC lib configuration </dd></dl>
 
 </div>
 </div>

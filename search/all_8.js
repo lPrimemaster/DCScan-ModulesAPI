@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['linearallocator',['LinearAllocator',['../class_d_c_s_1_1_memory_1_1_linear_allocator.html',1,'DCS::Memory']]],
-  ['lineardatapointer',['LinearDataPointer',['../struct_d_c_s_1_1_memory_1_1_linear_data_pointer.html',1,'DCS::Memory']]],
-  ['logger',['Logger',['../class_d_c_s_1_1_utils_1_1_logger.html',1,'DCS::Utils']]]
+  ['joinpool',['JoinPool',['../_d_c_s___core_2include_2internal_8h.html#a5b0da48fd08a5de7c3d8acdc2f9b142f',1,'DCS::Threading']]]
 ];

@@ -41,6 +41,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -109,10 +110,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_memory_1_1_linear_data_pointer.html">DCS::Memory::LinearDataPointer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct to store data linearly.  <a href="struct_d_c_s_1_1_memory_1_1_linear_data_pointer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_threading_1_1_t_signal.html">DCS::Threading::TSignal</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_threading_1_1_t_pool.html">DCS::Threading::TPool</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A struct that holds data for a worker thread pool.  <a href="struct_d_c_s_1_1_threading_1_1_t_pool.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
@@ -123,19 +126,70 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad7cb5bc0a6b00a32ba19b1f35b4d8f08"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad7cb5bc0a6b00a32ba19b1f35b4d8f08"></a>
-DCS_INTERNAL_TEST TPool *&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Threading::CreatePersistentPool</b> (u16 size, std::vector&lt; std::function&lt; void(std::mutex *, std::condition_variable *, std::array&lt; std::atomic_int, 16 &gt; *)&gt;&gt; workers)</td></tr>
+<tr class="memitem:ad7cb5bc0a6b00a32ba19b1f35b4d8f08"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> TPool *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___core_2include_2internal_8h.html#ad7cb5bc0a6b00a32ba19b1f35b4d8f08">DCS::Threading::CreatePersistentPool</a> (u16 size, std::vector&lt; std::function&lt; void(std::mutex *, std::condition_variable *, std::array&lt; std::atomic_int, 16 &gt; *)&gt;&gt; workers)</td></tr>
+<tr class="memdesc:ad7cb5bc0a6b00a32ba19b1f35b4d8f08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a fixed size thread pool.  <a href="_d_c_s___core_2include_2internal_8h.html#ad7cb5bc0a6b00a32ba19b1f35b4d8f08">More...</a><br /></td></tr>
 <tr class="separator:ad7cb5bc0a6b00a32ba19b1f35b4d8f08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b0da48fd08a5de7c3d8acdc2f9b142f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5b0da48fd08a5de7c3d8acdc2f9b142f"></a>
-DCS_INTERNAL_TEST void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Threading::JoinPool</b> (TPool *pool)</td></tr>
+<tr class="memitem:a5b0da48fd08a5de7c3d8acdc2f9b142f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___core_2include_2internal_8h.html#a5b0da48fd08a5de7c3d8acdc2f9b142f">DCS::Threading::JoinPool</a> (TPool *pool)</td></tr>
+<tr class="memdesc:a5b0da48fd08a5de7c3d8acdc2f9b142f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Joins all threads inside a thread pool.  <a href="_d_c_s___core_2include_2internal_8h.html#a5b0da48fd08a5de7c3d8acdc2f9b142f">More...</a><br /></td></tr>
 <tr class="separator:a5b0da48fd08a5de7c3d8acdc2f9b142f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61e8ee60c92b56992513f8dcd3c22352"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a61e8ee60c92b56992513f8dcd3c22352"></a>
-DCS_INTERNAL_TEST u64&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Threading::GetPoolWorkCount</b> (TPool *pool)</td></tr>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> u64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___core_2include_2internal_8h.html#a61e8ee60c92b56992513f8dcd3c22352">DCS::Threading::GetPoolWorkCount</a> (TPool *pool)</td></tr>
+<tr class="memdesc:a61e8ee60c92b56992513f8dcd3c22352"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the worker size of a <a class="el" href="struct_d_c_s_1_1_threading_1_1_t_pool.html" title="A struct that holds data for a worker thread pool. ">TPool</a>. <br /></td></tr>
 <tr class="separator:a61e8ee60c92b56992513f8dcd3c22352"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa585ed5596a4bd5925c407e1eb74569"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaa585ed5596a4bd5925c407e1eb74569"></a>
-DCS_INTERNAL_TEST void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Threading::DestroyPool</b> (TPool *pool)</td></tr>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___core_2include_2internal_8h.html#aaa585ed5596a4bd5925c407e1eb74569">DCS::Threading::DestroyPool</a> (TPool *pool)</td></tr>
+<tr class="memdesc:aaa585ed5596a4bd5925c407e1eb74569"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deletes all data and workers associated with a certain <a class="el" href="struct_d_c_s_1_1_threading_1_1_t_pool.html" title="A struct that holds data for a worker thread pool. ">TPool</a> object. <br /></td></tr>
 <tr class="separator:aaa585ed5596a4bd5925c407e1eb74569"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="file_ad7cb5bc0a6b00a32ba19b1f35b4d8f08"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_d_c_s_1_1_threading_1_1_t_pool.html">DCS::Threading::TPool</a> * DCS::Threading::CreatePersistentPool </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="_d_c_s___module_utils_8h.html#ac215e7108c06e55c9e0aea914c7f4bc8">u16</a>&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; std::function&lt; void(std::mutex *, std::condition_variable *, std::array&lt; std::atomic_int, 16 &gt; *)&gt;&gt;&#160;</td>
+          <td class="paramname"><em>workers</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates a fixed size thread pool. </p>
+<p>All the passed functions are immutable in this mode. Making it perfect for long term jobs with repeating tasks. </p>
+
+</div>
+</div>
+<a class="anchor" id="file_a5b0da48fd08a5de7c3d8acdc2f9b142f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DCS::Threading::JoinPool </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_d_c_s_1_1_threading_1_1_t_pool.html">TPool</a> *&#160;</td>
+          <td class="paramname"><em>pool</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Joins all threads inside a thread pool. </p>
+<p>Refer to std::thread::join(). </p>
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

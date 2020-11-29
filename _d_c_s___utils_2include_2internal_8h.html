@@ -41,6 +41,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -93,9 +94,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">internal.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>Exposes internal functionalities of the Utils namespace.  
-<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="_d_c_s___module_utils_8h_source.html">DCS_ModuleUtils.h</a>&quot;</code><br />
 </div>
 <p><a href="_d_c_s___utils_2include_2internal_8h_source.html">Go to the source code of this file.</a></p>
@@ -103,18 +101,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a1874c6c88596d308a31b0f87ec6213ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_d_c_s___module_utils_8h.html#af50c71871a414fd3366f16b0fd38face">DCS::GenericHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___utils_2include_2internal_8h.html#a1874c6c88596d308a31b0f87ec6213ba">AllocateGenericHandle</a> (<a class="el" href="_d_c_s___module_utils_8h.html#ac215e7108c06e55c9e0aea914c7f4bc8">DCS::u16</a> size, <a class="el" href="_d_c_s___module_utils_8h.html#af50c71871a414fd3366f16b0fd38face">DCS::GenericHandle</a> obj=nullptr)</td></tr>
+<tr class="memdesc:a1874c6c88596d308a31b0f87ec6213ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a opaque generic handle only usefull to the API.  <a href="#a1874c6c88596d308a31b0f87ec6213ba">More...</a><br /></td></tr>
 <tr class="separator:a1874c6c88596d308a31b0f87ec6213ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ab646b69d71ebcd03c43aee918b291b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4ab646b69d71ebcd03c43aee918b291b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>FreeGenericHandle</b> (<a class="el" href="_d_c_s___module_utils_8h.html#af50c71871a414fd3366f16b0fd38face">DCS::GenericHandle</a> hnd)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___utils_2include_2internal_8h.html#a4ab646b69d71ebcd03c43aee918b291b">FreeGenericHandle</a> (<a class="el" href="_d_c_s___module_utils_8h.html#af50c71871a414fd3366f16b0fd38face">DCS::GenericHandle</a> hnd)</td></tr>
+<tr class="memdesc:a4ab646b69d71ebcd03c43aee918b291b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frees a generic handle's memory. <br /></td></tr>
 <tr class="separator:a4ab646b69d71ebcd03c43aee918b291b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Exposes internal functionalities of the Utils namespace. </p>
-<dl class="section author"><dt>Author</dt><dd>Cesar Godinho</dd></dl>
-<dl class="section version"><dt>Version</dt><dd>1.0</dd></dl>
-<dl class="section date"><dt>Date</dt><dd></dd></dl>
-<dl class="section rcs"><dt>Date</dt><dd>2020/11/01</dd></dl>
-</div><h2 class="groupheader">Function Documentation</h2>
+<h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a1874c6c88596d308a31b0f87ec6213ba"></a>
 <div class="memitem">
 <div class="memproto">
@@ -138,7 +132,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>FreeGenericHandle</b>
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>LOG ERROR </dd></dl>
+
+<p>Creates a opaque generic handle only usefull to the API. </p>
+<p>This is usefull for passing STL pointers to the client to hold API states. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>LOG ERROR </dd></dl>
 
 </div>
 </div>

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>DCSModulesAPI: DCS_EngineControl/include/internal.h File Reference</title>
+<title>DCSModulesAPI: serial Namespace Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -41,9 +41,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
+      <li class="current"><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
-      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -64,8 +64,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
+      <li><a href="namespaces.html"><span>Namespace&#160;List</span></a></li>
+      <li><a href="namespacemembers.html"><span>Namespace&#160;Members</span></a></li>
     </ul>
   </div>
 <!-- window showing the filter options -->
@@ -82,58 +82,47 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_0473930c92d1e72fc9441e8553c6358d.html">DCS_EngineControl</a></li><li class="navelem"><a class="el" href="dir_5e84a863293331b0d15cbfa368ca0777.html">include</a></li>  </ul>
-</div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">internal.h File Reference</div>  </div>
+<div class="title">serial Namespace Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;../include/DCS_ModuleEngineControl.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="_d_c_s___module_utils_8h_source.html">../../DCS_Utils/include/DCS_ModuleUtils.h</a>&quot;</code><br />
-<code>#include &lt;Windows.h&gt;</code><br />
-</div>
-<p><a href="_d_c_s___engine_control_2include_2internal_8h_source.html">Go to the source code of this file.</a></p>
+
+<p>Serial Control.  
+<a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structserial_1_1_serial_args.html">serial::SerialArgs</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structserial_1_1_serial_args.html">SerialArgs</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">All serial arguments for windows manipulation.  <a href="structserial_1_1_serial_args.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceserial"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceserial.html">serial</a></td></tr>
-<tr class="memdesc:namespaceserial"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serial Control. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a54446ab3acc3a161cba5b72c19d648a7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a54446ab3acc3a161cba5b72c19d648a7"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> HANDLE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceserial.html#a54446ab3acc3a161cba5b72c19d648a7">serial::init_handle</a> (LPCSTR portName, DWORD rwAccess, SerialArgs args)</td></tr>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> HANDLE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceserial.html#a54446ab3acc3a161cba5b72c19d648a7">init_handle</a> (LPCSTR portName, DWORD rwAccess, <a class="el" href="structserial_1_1_serial_args.html">SerialArgs</a> args)</td></tr>
 <tr class="memdesc:a54446ab3acc3a161cba5b72c19d648a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialized COM HANDLE with params. <br /></td></tr>
 <tr class="separator:a54446ab3acc3a161cba5b72c19d648a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aced0fa8757d5930fdcd05fe5eb367e48"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aced0fa8757d5930fdcd05fe5eb367e48"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> BOOL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceserial.html#aced0fa8757d5930fdcd05fe5eb367e48">serial::write_bytes</a> (HANDLE hComm, LPCSTR charArray, DWORD NbytesToWrite)</td></tr>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> BOOL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceserial.html#aced0fa8757d5930fdcd05fe5eb367e48">write_bytes</a> (HANDLE hComm, LPCSTR charArray, DWORD NbytesToWrite)</td></tr>
 <tr class="memdesc:aced0fa8757d5930fdcd05fe5eb367e48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes to COM HANDLE with params. <br /></td></tr>
 <tr class="separator:aced0fa8757d5930fdcd05fe5eb367e48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6cc2ae5eaf743055e15210cf360445b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad6cc2ae5eaf743055e15210cf360445b"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> BOOL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceserial.html#ad6cc2ae5eaf743055e15210cf360445b">serial::read_bytes</a> (HANDLE hComm, LPTSTR buffer, DWORD bufferSize, LPDWORD readBufferSize)</td></tr>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> BOOL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceserial.html#ad6cc2ae5eaf743055e15210cf360445b">read_bytes</a> (HANDLE hComm, LPTSTR buffer, DWORD bufferSize, LPDWORD readBufferSize)</td></tr>
 <tr class="memdesc:ad6cc2ae5eaf743055e15210cf360445b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads from COM HANDLE with params. <br /></td></tr>
 <tr class="separator:ad6cc2ae5eaf743055e15210cf360445b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b280d9f886cecdd2d8e2b990b591f89"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8b280d9f886cecdd2d8e2b990b591f89"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> BOOL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceserial.html#a8b280d9f886cecdd2d8e2b990b591f89">serial::close_handle</a> (HANDLE hComm)</td></tr>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> BOOL&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceserial.html#a8b280d9f886cecdd2d8e2b990b591f89">close_handle</a> (HANDLE hComm)</td></tr>
 <tr class="memdesc:a8b280d9f886cecdd2d8e2b990b591f89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes COM HANDLE. <br /></td></tr>
 <tr class="separator:a8b280d9f886cecdd2d8e2b990b591f89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Serial Control. </p>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

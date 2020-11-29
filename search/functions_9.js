@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['size',['size',['../class_d_c_s_1_1_utils_1_1_string.html#ab9172edee1ff0e8ea4f7edcbcda0f79f',1,'DCS::Utils::String']]],
-  ['string',['String',['../class_d_c_s_1_1_utils_1_1_string.html#a2500ea75abfeb8a6c36fe59594bcfdfa',1,'DCS::Utils::String']]]
+  ['new',['New',['../class_d_c_s_1_1_memory_1_1_linear_allocator.html#aef190e45d49fc3b29a3d0375025c5190',1,'DCS::Memory::LinearAllocator::New()'],['../_d_c_s___module_utils_8h.html#a5c8842e2cdb201bed6bd5ada5ce71384',1,'DCS::Timer::New()']]]
 ];
