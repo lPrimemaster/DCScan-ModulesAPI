@@ -14,6 +14,7 @@
  */
 
 /**
+ * \internal
  * \brief Creates a opaque generic handle only usefull to the API.
  * 
  * This is usefull for passing STL pointers to the client to hold API states.
@@ -21,6 +22,7 @@
 DCS::GenericHandle AllocateGenericHandle(DCS::u16 size, DCS::GenericHandle obj = nullptr);
 
 /**
+ * \internal
  * \brief Frees a generic handle's memory.
  */
 void FreeGenericHandle(DCS::GenericHandle hnd);

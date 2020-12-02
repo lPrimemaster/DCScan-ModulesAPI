@@ -26,6 +26,7 @@ namespace DCS
 	namespace Memory
 	{
 		/**
+		 * \internal
 		 * \brief Struct to store data linearly
 		 * 
 		 * Works as memory storage for the LinearAlocator.
@@ -52,6 +53,7 @@ namespace DCS
 		};
 
 		/**
+		 * \internal
 		 * \brief A struct that holds data for a worker thread pool.
 		 */
 		struct DCS_INTERNAL_TEST TPool
@@ -63,6 +65,7 @@ namespace DCS
 		};
 
 		/**
+		 * \internal
 		 * \brief Creates a fixed size thread pool.
 		 * 
 		 * All the passed functions are immutable in this mode. Making it perfect for long term 
@@ -71,6 +74,7 @@ namespace DCS
 		DCS_INTERNAL_TEST TPool* CreatePersistentPool(u16 size, std::vector<std::function<void(std::mutex*, std::condition_variable*, std::array<std::atomic_int, 16>*)>> workers);
 
 		/**
+		 * \internal
 		 * \brief Joins all threads inside a thread pool.
 		 * 
 		 * Refer to std::thread::join().
@@ -78,11 +82,13 @@ namespace DCS
 		DCS_INTERNAL_TEST void JoinPool(TPool* pool);
 
 		/**
+		 * \internal
 		 * \brief Get the worker size of a TPool.
 		 */
 		DCS_INTERNAL_TEST u64 GetPoolWorkCount(TPool* pool);
 
 		/**
+		 * \internal
 		 * \brief Deletes all data and workers associated with
 		 * a certain TPool object.
 		 */
