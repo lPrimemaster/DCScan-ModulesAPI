@@ -64,6 +64,7 @@ include_directories(
 add_libTargetSubDir(DCS_EngineControl)
 add_libTargetSubDir(DCS_Utils)
 add_libTargetSubDir(DCS_Core)
+set(CONF_TARGETS DCSModuleEngineControl DCSModuleUtils DCSModuleCore)
 
 string (REPLACE ";" " " CMAKE_LIBS_SOURCE_DIR "${CMAKE_LIBS_SOURCE_DIR}")
 
@@ -120,7 +121,7 @@ message(STATUS "CML Sources: ${CMAKE_LIBS_SOURCE_DIR}")
 # ========================== #
 
 # Add all targets to the build-tree export set
-export(TARGETS DCSModuleEngineControl DCSModuleUtils
+export(TARGETS ${CONF_TARGETS}
   FILE "${PROJECT_BINARY_DIR}/DCSModulesAPITargets.cmake")
 
 # Export the package for use from the build-tree
@@ -152,4 +153,4 @@ install(FILES
 install(EXPORT DCSModulesAPITargets DESTINATION
   "${INSTALL_CMAKE_DIR}" COMPONENT dev)
 
-install(DIRECTORY config  DESTINATION "${INSTALL_INCLUDE_DIR}/../")
+install(DIRECTORY config  DESTINATION "${INSTALL_INCLUDE_DIR}")

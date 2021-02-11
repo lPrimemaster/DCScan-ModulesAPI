@@ -1,7 +1,6 @@
 #pragma once
 #include "../../config/exports.h"
 #include "../../DCS_Utils/include/DCS_ModuleUtils.h"
-#include "../../DCS_Core/include/internal.h"
 
 /**
  * @file
@@ -19,6 +18,21 @@ namespace DCS
 	namespace Memory
 	{
 		/**
+		 * \internal
+		 * \brief Struct to store data linearly
+		 *
+		 * Works as memory storage for the LinearAlocator.
+		 */
+		struct LinearDataPointer
+		{
+			char* data_start = nullptr;
+			char* data = nullptr;
+			u64 size;
+			u64 usedSize;
+			u64 alignment;
+		};
+
+		/**
 		 * \brief Linearly allocates memory for a single use.
 		 * 
 		 * Can be reused upon reset. Can't be realoc'ed.
@@ -31,7 +45,7 @@ namespace DCS
 			 * \param size Size of the linear pool to alocate
 			 * \param align Align the data to align-bits. (Currently disabled.)
 			 */
-			static LinearAllocator New(u64 size, u64 align = 1);
+			LinearAllocator(u64 size, u64 align);
 
 			/**
 			 * \brief Allocates a new section of the pool for a new type T.
@@ -41,7 +55,24 @@ namespace DCS
 			template<typename T, typename... Args>
 			T* allocate(Args... args)
 			{
-				T* rb = new(buffer.data) T(args...);
+				buffer.usedSize += sizeof(T);
+
+				if (buffer.usedSize > buffer.size)
+				{
+					buffer.usedSize -= sizeof(T);
+					DCS::Utils::Logger::Critical("Allocating %u bytes would result in buffer overrun. [Available: %u]", sizeof(T), buffer.size - buffer.usedSize);
+					return nullptr;
+				}
+
+				T* rb = nullptr;
+				rb = new(buffer.data) T(args...);
+
+				if (rb == nullptr)
+				{
+					DCS::Utils::Logger::Critical("Failed to allocated %u bytes in allocator.", sizeof(T));
+					return nullptr;
+				}
+
 				buffer.data += sizeof(T);
 				return rb;
 			}
@@ -53,7 +84,24 @@ namespace DCS
 			template<typename T>
 			T* allocate()
 			{
-				T* rb = new(buffer.data) T();
+				buffer.usedSize += sizeof(T);
+
+				if (buffer.usedSize > buffer.size)
+				{
+					buffer.usedSize -= sizeof(T);
+					DCS::Utils::Logger::Critical("Allocating %u bytes would result in buffer overrun. [Available: %u]", sizeof(T), buffer.size - buffer.usedSize);
+					return nullptr;
+				}
+
+				T* rb = nullptr;
+				rb = new(buffer.data) T();
+
+				if (rb == nullptr)
+				{
+					DCS::Utils::Logger::Critical("Failed to allocated %u bytes in allocator.", sizeof(T));
+					return nullptr;
+				}
+
 				buffer.data += sizeof(T);
 				return rb;
 			}
@@ -71,9 +119,6 @@ namespace DCS
 			 * Effectively setting memory usage to zero.
 			 */
 			void reset();
-
-		private:
-			LinearAllocator(u64 size, u64 align);
 
 		private:
 			LinearDataPointer buffer;

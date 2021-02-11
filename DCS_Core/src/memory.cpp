@@ -32,21 +32,18 @@ DCS::Memory::LinearAllocator::LinearAllocator(u64 size, u64 align)
 
 	buffer.alignment = align;
 	buffer.size = size;
+	buffer.usedSize = 0;
 }
 
 void DCS::Memory::LinearAllocator::release()
 {
 	//aligned_free(buffer.data_start);
+	buffer.usedSize = 0;
 	free(buffer.data_start);
 }
 
 void DCS::Memory::LinearAllocator::reset()
 {
+	buffer.usedSize = 0;
 	buffer.data = buffer.data_start;
-}
-
-DCS::Memory::LinearAllocator DCS::Memory::LinearAllocator::New(u64 size, u64 align)
-{
-	LinearAllocator la(size, align);
-	return la;
 }

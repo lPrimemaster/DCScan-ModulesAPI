@@ -15,6 +15,9 @@
 std::mutex DCS::Utils::Logger::_log_mtx;
 FILE* DCS::Utils::Logger::handle = nullptr;
 DCS::Utils::Logger::Verbosity DCS::Utils::Logger::verbosity_level = DCS::Utils::Logger::Verbosity::DEBUG;
+DCS::Utils::Logger::Options DCS::Utils::Logger::options = DCS::Utils::Logger::Options::ENABLE_COLOR;
+DCS::Utils::Logger::WriteNotifyCallback DCS::Utils::Logger::writenotify = nullptr;
+void* DCS::Utils::Logger::obj = nullptr;
 
 std::string DCS::Utils::Logger::timestamp()
 {
@@ -39,17 +42,38 @@ void DCS::Utils::Logger::WriteData(std::string buffer[], Verbosity v)
 	if (v <= verbosity_level)
 	{
 		// Buffer is not newline terminated
-		std::cout << buffer[1] << std::endl;
+		if(options == Options::ENABLE_COLOR)
+			std::cout << buffer[1] << std::endl;
+		else
+			std::cout << buffer[0] << std::endl;
 	}
 
 	// If there is a file to write the data to...
 	if (handle)
 	{
-		fwrite(buffer[0].c_str(), sizeof(char), buffer[0].size(), handle);
+		fwrite((buffer[0] + '\n').c_str(), sizeof(char), buffer[0].size()+1, handle);
+	}
+
+	// Send a message to the client with the latest log message
+	if (writenotify != nullptr)
+	{
+		if (obj != nullptr)
+		{
+			writenotify(buffer[0].c_str(), obj);
+		}
+		else
+		{
+			writenotify(buffer[0].c_str(), nullptr);
+		}
 	}
 }
 
-void DCS::Utils::Logger::Init(Verbosity level, FILE* handle)
+void DCS::Utils::Logger::Settings(Options opt)
+{
+	options = opt;
+}
+
+void DCS::Utils::Logger::Init(Verbosity level, DCS::Utils::String file)
 {
 	verbosity_level = level;
 	DWORD dwMode;
@@ -58,10 +82,22 @@ void DCS::Utils::Logger::Init(Verbosity level, FILE* handle)
 	dwMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 	SetConsoleMode(outHandle, dwMode);
 
-	Logger::handle = handle;
+	Logger::handle = fopen(file.c_str(), "w");
 
 	//TODO: Disable this behaviour later on program end
 }
+
+void DCS::Utils::Logger::Destroy()
+{
+	fclose(Logger::handle);
+}
+
+void DCS::Utils::Logger::SetLogWriteCallback(DCS::Utils::Logger::WriteNotifyCallback wnc, void* obj)
+{
+	writenotify = wnc;
+	Logger::obj = obj;
+}
+
 void DCS::Utils::Logger::Debug(const char* msg, ...)
 {
 	size_t size = strlen(msg);

@@ -42,6 +42,45 @@ namespace DCS
 	namespace Utils
 	{
 		/**
+		 * \brief A wrapper class used to export a simple string to the client side.
+		 */
+		class DCS_API String
+		{
+		public:
+			String() = default;
+
+			/**
+			 * \brief Create a String object from pointer.
+			 */
+			String(const char* text);
+			String(const String& s);
+
+			~String();
+
+			/**
+			 * \brief Returns size of the string
+			 * \return str size.
+			 */
+			inline const size_t size() const
+			{
+				return buffer_size;
+			}
+
+			/**
+			 * \brief Converts a String object to const char* raw pointer
+			 * \return buffer.
+			 */
+			inline const char* c_str() const
+			{
+				return buffer;
+			}
+
+		private:
+			size_t buffer_size = 0;
+			char* buffer = nullptr;
+		};
+
+		/**
 		 * \brief This class enables writing to a single (or multiple) buffer(s) for logging.
 		 * Thread-safe.
 		 * 
@@ -50,6 +89,9 @@ namespace DCS
 		 */
 		class Logger
 		{
+		private:
+			typedef void (*WriteNotifyCallback)(DCS::Utils::String string, void*);
+
 		public:
 			/**
 			 * \brief Contains the possible verbosity levels for the Logger.
@@ -67,9 +109,28 @@ namespace DCS
 			};
 
 			/**
+			 * \brief Contains the possible Logger custom options.
+			 */
+			enum class Options
+			{
+				ENABLE_COLOR, ///< Enables console output with colors.
+				DISABLE_COLOR ///< Disables console output with colors.
+			};
+
+			/**
 			 * \brief Initialize the Logger system. Call only once.
 			 */
-			static DCS_API void Init(Verbosity level, FILE* handle = nullptr);
+			static DCS_API void Init(Verbosity level, DCS::Utils::String file = "default_log.log");
+
+			/**
+			 * \brief Destroy the Logger system. Call only once.
+			 */
+			static DCS_API void Destroy();
+
+			/**
+			 * \brief Sets the callback to be called when a log is made. Then sends the text to the client.
+			 */
+			static DCS_API void SetLogWriteCallback(WriteNotifyCallback wnc, void* obj = nullptr);
 
 			/**
 			 * \brief Emit a debug message.
@@ -106,51 +167,22 @@ namespace DCS
 			 */
 			static DCS_API void Critical(const char* msg, ...);
 
+			/**
+			 * \brief Changes Logger Options.
+			 */
+			static DCS_API void Settings(Options opt);
+
 		private:
 			static void WriteData(std::string buffer[], Verbosity v);
 
+			static WriteNotifyCallback writenotify;
+			static void* obj;
+
 			static Verbosity verbosity_level;
+			static Options options;
 			static std::string timestamp();
 			static FILE* handle;
 			static std::mutex _log_mtx;
-		};
-
-
-		/**
-		 * \brief A wrapper class used to export a simple string to the client side.
-		 */
-		class DCS_API String
-		{
-		public:
-			String() = default;
-
-			/**
-			 * \brief Create a String object from pointer.
-			 */
-			String(const char* text);
-			~String();
-
-			/**
-			 * \brief Returns size of the string
-			 * \return str size.
-			 */
-			inline const size_t size() const
-			{
-				return buffer_size;
-			}
-
-			/**
-			 * \brief Converts a String object to const char* raw pointer
-			 * \return buffer.
-			 */
-			inline const char* c_str() const
-			{
-				return buffer;
-			}
-
-		private:
-			size_t buffer_size = 0;
-			char* buffer = nullptr;
 		};
 	}
 

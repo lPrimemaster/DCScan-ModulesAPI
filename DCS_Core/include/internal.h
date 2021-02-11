@@ -23,23 +23,6 @@
  */
 namespace DCS
 {
-	namespace Memory
-	{
-		/**
-		 * \internal
-		 * \brief Struct to store data linearly
-		 * 
-		 * Works as memory storage for the LinearAlocator.
-		 */
-		struct LinearDataPointer
-		{
-			char* data_start = nullptr;
-			char* data = nullptr;
-			u64 size;
-			u64 alignment;
-		};
-	}
-
 	namespace Threading
 	{
 		struct TSignal

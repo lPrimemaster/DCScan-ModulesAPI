@@ -20,8 +20,8 @@ int test()
 	// Ensure ms total precision
 	DCS_ASSERT_EQ(ts.millis, 100);
 
-	// Ensure <5us precision
-	DCS_ASSERT_LEQ(ts.micros, 5);
+	// Ensure <100us precision
+	DCS_ASSERT_LEQ(ts.micros, 100);
 
 	DCS_RETURN_TEST;
 }
