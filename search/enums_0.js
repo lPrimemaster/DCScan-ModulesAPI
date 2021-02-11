@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['verbosity',['Verbosity',['../class_d_c_s_1_1_utils_1_1_logger.html#a7eb79910957b75fadd68b38039e2c4bd',1,'DCS::Utils::Logger']]]
+  ['options',['Options',['../class_d_c_s_1_1_utils_1_1_logger.html#ae34ad54d6c13829913a8082aecf111fe',1,'DCS::Utils::Logger']]]
 ];
