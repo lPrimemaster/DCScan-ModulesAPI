@@ -23,25 +23,50 @@ namespace DCS
 {
 	namespace Network
 	{
+		/**
+		 * \internal.
+		 * \brief Holds windows WSA data.
+		 */
 		struct DCS_INTERNAL_TEST WindowsSocketInformation
 		{
 			WSADATA wsa;
 		};
 
+		/**
+		 * \internal.
+		 * \brief Initializes windows WinSock2.
+		 */
 		DCS_INTERNAL_TEST WindowsSocketInformation InitWinSock();
 
+		/**
+		 * \internal.
+		 * \brief Cleans up windows WinSock2.
+		 */
 		DCS_INTERNAL_TEST void CleanupWinSock(SOCKET* open_sockets, u16 num_sockets);
 
+
+		/**
+		 * \internal.
+		 * \brief Creates a server socket.
+		 */
 		DCS_INTERNAL_TEST SOCKET CreateServerSocket(i32 listen_port);
 
+		/**
+		 * \internal.
+		 * \brief Allow server socket to start listenning.
+		 */
 		DCS_INTERNAL_TEST void ServerListen(SOCKET server);
 
+		/**
+		 * \internal.
+		 * \brief Allow server socket to accept inbound connections.
+		 */
 		DCS_INTERNAL_TEST SOCKET ServerAcceptConnection(SOCKET server);
 
+		/**
+		 * \internal.
+		 * \brief Allow server to receive data from a client socket.
+		 */
 		DCS_INTERNAL_TEST i64 ServerReceiveData(SOCKET client, char* buffer, i16 buff_len);
-
-		//DCS_INTERNAL_TEST void ServerSendData(SOCKET client, char* buffer, u64 buff_len);
-
-		//DCS_INTERNAL_TEST void CreateClientSocket(i32 port);
 	}
 }

@@ -13,6 +13,9 @@
  * \date $Date: 2021/02/22$
  */
 
+/**
+ * \todo Make all the connections / sockets secure with simple RSA hashing or using openSSL TLS
+ */
 namespace Network
 {
 
