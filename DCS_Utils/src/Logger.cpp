@@ -46,25 +46,25 @@ void DCS::Utils::Logger::WriteData(std::string buffer[], Verbosity v)
 			std::cout << buffer[1] << std::endl;
 		else
 			std::cout << buffer[0] << std::endl;
+
+		// Send a message to the client with the latest log message
+		if (writenotify != nullptr)
+		{
+			if (obj != nullptr)
+			{
+				writenotify(buffer[0].c_str(), obj);
+			}
+			else
+			{
+				writenotify(buffer[0].c_str(), nullptr);
+			}
+		}
 	}
 
 	// If there is a file to write the data to...
 	if (handle)
 	{
 		fwrite((buffer[0] + '\n').c_str(), sizeof(char), buffer[0].size()+1, handle);
-	}
-
-	// Send a message to the client with the latest log message
-	if (writenotify != nullptr)
-	{
-		if (obj != nullptr)
-		{
-			writenotify(buffer[0].c_str(), obj);
-		}
-		else
-		{
-			writenotify(buffer[0].c_str(), nullptr);
-		}
 	}
 }
 

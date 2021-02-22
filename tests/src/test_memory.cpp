@@ -9,7 +9,7 @@ int test()
 
 	DCS::u64 size = 2 * sizeof(int);
 
-	LinearAllocator la = LinearAllocator::New(size);
+	LinearAllocator la(size, 0);
 
 	int* a = la.allocate<int>(3);
 	int* b = la.allocate<int>(4);

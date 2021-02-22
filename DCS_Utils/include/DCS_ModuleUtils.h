@@ -4,6 +4,7 @@
 #include <chrono>
 #include <mutex>
 #include <map>
+#include <string>
 
 /**
  * @file
@@ -64,6 +65,12 @@ namespace DCS
 			inline const size_t size() const
 			{
 				return buffer_size;
+			}
+
+			template<typename T>
+			static inline const String From(T val)
+			{
+				return String(std::to_string(val).c_str());
 			}
 
 			/**

@@ -61,10 +61,11 @@ include_directories(
   "${PROJECT_BINARY_DIR}")  # to find foo/config.h
 
 # Add sub-directories (These are the libraries basically)
+add_libTargetSubDir(DCS_Network)
 add_libTargetSubDir(DCS_EngineControl)
 add_libTargetSubDir(DCS_Utils)
 add_libTargetSubDir(DCS_Core)
-set(CONF_TARGETS DCSModuleEngineControl DCSModuleUtils DCSModuleCore)
+set(CONF_TARGETS DCSModuleEngineControl DCSModuleUtils DCSModuleCore DCSModuleNetwork)
 
 string (REPLACE ";" " " CMAKE_LIBS_SOURCE_DIR "${CMAKE_LIBS_SOURCE_DIR}")
 
