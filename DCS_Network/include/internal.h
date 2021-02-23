@@ -17,7 +17,6 @@
  *
  * \date $Date: 2021/02/22$
  */
-using Logger = DCS::Utils::Logger;
 
 namespace DCS
 {
@@ -42,7 +41,7 @@ namespace DCS
 		 * \internal.
 		 * \brief Cleans up windows WinSock2.
 		 */
-		DCS_INTERNAL_TEST void CleanupWinSock(SOCKET* open_sockets, u16 num_sockets);
+		DCS_INTERNAL_TEST void CleanupWinSock();
 
 
 		/**
@@ -65,8 +64,35 @@ namespace DCS
 
 		/**
 		 * \internal.
+		 * \brief Closes a socket connection.
+		 */
+		DCS_INTERNAL_TEST void CloseSocketConnection(SOCKET client);
+
+		/**
+		 * \internal.
+		 * \brief Checks a socket status.
+		 */
+		DCS_INTERNAL_TEST bool ValidateSocket(SOCKET s);
+
+		/**
+		 * \internal.
 		 * \brief Allow server to receive data from a client socket.
 		 */
 		DCS_INTERNAL_TEST i64 ServerReceiveData(SOCKET client, char* buffer, i16 buff_len);
+
+		/**
+		 * \internal.
+		 * \brief Allow server to send data trought a client socket.
+		 */
+		DCS_INTERNAL_TEST i64 ServerSendData(SOCKET client, char* buffer, i16 buff_len);
+
+		/**
+		 * \internal.
+		 * \brief Allow server to send data trought a client socket using OOB data.
+		 * 
+		 * This can be used when a message sent to the server is of high priority, 
+		 * such as a remote emergency shutdown.
+		 */
+		DCS_INTERNAL_TEST i64 ServerSendPriorityData(SOCKET client, char* buffer, i16 buff_len);
 	}
 }

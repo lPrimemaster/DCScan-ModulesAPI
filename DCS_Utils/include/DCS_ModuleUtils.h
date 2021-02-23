@@ -13,6 +13,8 @@
  * 
  * Also contains library common code.
  * 
+ * \todo Make the String class callable with a C-interface (for python eg.)
+ * 
  * \author Cesar Godinho
  *
  * \version 1.0
@@ -37,6 +39,8 @@ namespace DCS
 
 	/**
 	 * \brief A generic opaque handle that is only meaningful for the API.
+	 * 
+	 * \todo Maybe change this to intptr?
 	 */
 	typedef void* GenericHandle;
 

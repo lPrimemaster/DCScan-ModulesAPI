@@ -11,6 +11,7 @@ message(STATUS "LIBRARY INSTALL BIN LOCATION: ${INSTALL_LIB_DIR}")
 
 add_library(DCSModuleNetwork ${LIB_TYPE}
   src/socket.cpp
+  src/server.cpp
   ../config/exports.h
   include/internal.h
   include/DCS_ModuleNetwork.h

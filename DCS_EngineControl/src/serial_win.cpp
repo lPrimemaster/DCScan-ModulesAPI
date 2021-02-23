@@ -18,7 +18,7 @@
 #define SERIAL_DEFAULT_READ_BUFFER_SIZE 256
 #define SERIAL_DEFAULT_READ_RX_EOF '\n'
 
-HANDLE serial::init_handle(LPCSTR portName, DWORD rwAccess, SerialArgs args)
+HANDLE DCS::Serial::init_handle(LPCSTR portName, DWORD rwAccess, SerialArgs args)
 {
 	//HANDLE of the COMport device [serial init]
 	HANDLE hComm = CreateFile(portName, rwAccess, 0, NULL, OPEN_EXISTING, 0, NULL);
@@ -98,7 +98,7 @@ HANDLE serial::init_handle(LPCSTR portName, DWORD rwAccess, SerialArgs args)
 	return hComm;
 }
 
-BOOL serial::write_bytes(HANDLE hComm, LPCSTR charArray, DWORD NbytesToWrite)
+BOOL DCS::Serial::write_bytes(HANDLE hComm, LPCSTR charArray, DWORD NbytesToWrite)
 {
 	//Check if the handle is in fact valid
 	if (hComm == INVALID_HANDLE_VALUE)
@@ -127,7 +127,7 @@ BOOL serial::write_bytes(HANDLE hComm, LPCSTR charArray, DWORD NbytesToWrite)
 
 }
 
-BOOL serial::read_bytes(HANDLE hComm, LPTSTR buffer, DWORD bufferSize, LPDWORD readBufferSize)
+BOOL DCS::Serial::read_bytes(HANDLE hComm, LPTSTR buffer, DWORD bufferSize, LPDWORD readBufferSize)
 {
 	//Check if the handle is in fact valid
 	if (hComm == INVALID_HANDLE_VALUE)
@@ -232,7 +232,7 @@ BOOL serial::read_bytes(HANDLE hComm, LPTSTR buffer, DWORD bufferSize, LPDWORD r
 	return TRUE;
 }
 
-BOOL serial::close_handle(HANDLE hComm)
+BOOL DCS::Serial::close_handle(HANDLE hComm)
 {
 	DCS::Utils::Logger::Debug("Serial: Closing handle %x", hComm);
 	return CloseHandle(hComm);
