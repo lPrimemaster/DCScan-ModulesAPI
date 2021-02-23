@@ -44,6 +44,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="examples.html"><span>Examples</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -90,7 +91,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">internal.h File Reference</div>  </div>
@@ -104,29 +104,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structserial_1_1_serial_args.html">serial::SerialArgs</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:namespaceserial"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceserial.html">serial</a></td></tr>
-<tr class="memdesc:namespaceserial"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serial Control. <br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_serial_1_1_serial_args.html">DCS::Serial::SerialArgs</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a54446ab3acc3a161cba5b72c19d648a7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a54446ab3acc3a161cba5b72c19d648a7"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> HANDLE&#160;</td><td class="memItemRight" valign="bottom"><b>serial::init_handle</b> (LPCSTR portName, DWORD rwAccess, SerialArgs args)</td></tr>
-<tr class="separator:a54446ab3acc3a161cba5b72c19d648a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aced0fa8757d5930fdcd05fe5eb367e48"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aced0fa8757d5930fdcd05fe5eb367e48"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> BOOL&#160;</td><td class="memItemRight" valign="bottom"><b>serial::write_bytes</b> (HANDLE hComm, LPCSTR charArray, DWORD NbytesToWrite)</td></tr>
-<tr class="separator:aced0fa8757d5930fdcd05fe5eb367e48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6cc2ae5eaf743055e15210cf360445b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad6cc2ae5eaf743055e15210cf360445b"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> BOOL&#160;</td><td class="memItemRight" valign="bottom"><b>serial::read_bytes</b> (HANDLE hComm, LPTSTR buffer, DWORD bufferSize, LPDWORD readBufferSize)</td></tr>
-<tr class="separator:ad6cc2ae5eaf743055e15210cf360445b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b280d9f886cecdd2d8e2b990b591f89"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8b280d9f886cecdd2d8e2b990b591f89"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> BOOL&#160;</td><td class="memItemRight" valign="bottom"><b>serial::close_handle</b> (HANDLE hComm)</td></tr>
-<tr class="separator:a8b280d9f886cecdd2d8e2b990b591f89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d014cc5f1a09579e8c829ec0a5ca4da"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4d014cc5f1a09579e8c829ec0a5ca4da"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> HANDLE&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Serial::init_handle</b> (LPCSTR portName, DWORD rwAccess, SerialArgs args)</td></tr>
+<tr class="separator:a4d014cc5f1a09579e8c829ec0a5ca4da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a686fa55fb92281eb747ba8e5434aee4d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a686fa55fb92281eb747ba8e5434aee4d"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> BOOL&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Serial::write_bytes</b> (HANDLE hComm, LPCSTR charArray, DWORD NbytesToWrite)</td></tr>
+<tr class="separator:a686fa55fb92281eb747ba8e5434aee4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07176209f5c26a6303bdf3519e41e1e2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a07176209f5c26a6303bdf3519e41e1e2"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> BOOL&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Serial::read_bytes</b> (HANDLE hComm, LPTSTR buffer, DWORD bufferSize, LPDWORD readBufferSize)</td></tr>
+<tr class="separator:a07176209f5c26a6303bdf3519e41e1e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1eed66851ebc6df4fa8f3d239b23c11b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1eed66851ebc6df4fa8f3d239b23c11b"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> BOOL&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Serial::close_handle</b> (HANDLE hComm)</td></tr>
+<tr class="separator:a1eed66851ebc6df4fa8f3d239b23c11b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

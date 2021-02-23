@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>DCSModulesAPI: DCS_Network/include/internal.h File Reference</title>
+<title>DCSModulesAPI: DCS::Network Namespace Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -41,9 +41,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li><a href="namespaces.html"><span>Namespaces</span></a></li>
+      <li class="current"><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
-      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -65,8 +65,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
+      <li><a href="namespaces.html"><span>Namespace&#160;List</span></a></li>
+      <li><a href="namespacemembers.html"><span>Namespace&#160;Members</span></a></li>
     </ul>
   </div>
 <!-- window showing the filter options -->
@@ -85,71 +85,82 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_5d3903fedc388dde14ae6c19ede1eae6.html">DCS_Network</a></li><li class="navelem"><a class="el" href="dir_51b885feb853fb5c95a055963001f39a.html">include</a></li>  </ul>
+<li class="navelem"><b>DCS</b></li><li class="navelem"><a class="el" href="namespace_d_c_s_1_1_network.html">Network</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">internal.h File Reference</div>  </div>
+<div class="title">DCS::Network Namespace Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="_d_c_s___module_utils_8h_source.html">../../DCS_Utils/include/DCS_ModuleUtils.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_d_c_s___module_core_8h_source.html">../../DCS_Core/include/DCS_ModuleCore.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_d_c_s___module_network_8h_source.html">DCS_ModuleNetwork.h</a>&quot;</code><br />
-<code>#include &lt;WinSock2.h&gt;</code><br />
-<code>#include &lt;ws2tcpip.h&gt;</code><br />
-</div>
-<p><a href="_d_c_s___network_2include_2internal_8h_source.html">Go to the source code of this file.</a></p>
+
+<p>Network control using sockets.  
+<a href="#details">More...</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_network_1_1_windows_socket_information.html">DCS::Network::WindowsSocketInformation</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespace_d_c_s_1_1_network"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network.html">DCS::Network</a></td></tr>
-<tr class="memdesc:namespace_d_c_s_1_1_network"><td class="mdescLeft">&#160;</td><td class="mdescRight">Network control using sockets. <br /></td></tr>
+<tr class="memitem:namespace_d_c_s_1_1_network_1_1_server"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html">Server</a></td></tr>
+<tr class="memdesc:namespace_d_c_s_1_1_network_1_1_server"><td class="mdescLeft">&#160;</td><td class="mdescRight">Server handling features. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_network_1_1_windows_socket_information.html">WindowsSocketInformation</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a9bee27a48f2a0c02394bbe5a1af82e74"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9bee27a48f2a0c02394bbe5a1af82e74"></a>
+typedef <a class="el" href="_d_c_s___module_utils_8h.html#af50c71871a414fd3366f16b0fd38face">DCS::GenericHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a></td></tr>
+<tr class="memdesc:a9bee27a48f2a0c02394bbe5a1af82e74"><td class="mdescLeft">&#160;</td><td class="mdescRight">A generic socket. <br /></td></tr>
+<tr class="separator:a9bee27a48f2a0c02394bbe5a1af82e74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaedc47fdc016b067aced9bfd9ff8da4b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaedc47fdc016b067aced9bfd9ff8da4b"></a>
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network.html#aaedc47fdc016b067aced9bfd9ff8da4b">OnDataReceivedCallback</a>) (const char *data, <a class="el" href="_d_c_s___module_utils_8h.html#a7b0a8f6b03fef5436d1a2b804219776f">DCS::i64</a> size, <a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> client)</td></tr>
+<tr class="memdesc:aaedc47fdc016b067aced9bfd9ff8da4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The callback prototype to use on <a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#ac715e021f8269960d5465caaae403af5" title="Starts the thread for the server and waits for client data. ">Server::StartThread(Socket, OnDataReceivedCallback)</a>. <br /></td></tr>
+<tr class="separator:aaedc47fdc016b067aced9bfd9ff8da4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aad01942475a987dda0b5112b04380fa0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aad01942475a987dda0b5112b04380fa0"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> WindowsSocketInformation&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Network::InitWinSock</b> ()</td></tr>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> <a class="el" href="struct_d_c_s_1_1_network_1_1_windows_socket_information.html">WindowsSocketInformation</a>&#160;</td><td class="memItemRight" valign="bottom"><b>InitWinSock</b> ()</td></tr>
 <tr class="separator:aad01942475a987dda0b5112b04380fa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd8c0df0c989589fee77d55b9f307444"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acd8c0df0c989589fee77d55b9f307444"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Network::CleanupWinSock</b> ()</td></tr>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>CleanupWinSock</b> ()</td></tr>
 <tr class="separator:acd8c0df0c989589fee77d55b9f307444"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab30f6b7afbfeb7f6a210eb06ce4758a3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab30f6b7afbfeb7f6a210eb06ce4758a3"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> SOCKET&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Network::CreateServerSocket</b> (i32 listen_port)</td></tr>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> SOCKET&#160;</td><td class="memItemRight" valign="bottom"><b>CreateServerSocket</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a> listen_port)</td></tr>
 <tr class="separator:ab30f6b7afbfeb7f6a210eb06ce4758a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9836a088b8b20c8b9bdb820687eb4458"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9836a088b8b20c8b9bdb820687eb4458"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Network::ServerListen</b> (SOCKET server)</td></tr>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>ServerListen</b> (SOCKET server)</td></tr>
 <tr class="separator:a9836a088b8b20c8b9bdb820687eb4458"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a644676ae7f5bb9d11830a1a26ff502c3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a644676ae7f5bb9d11830a1a26ff502c3"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> SOCKET&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Network::ServerAcceptConnection</b> (SOCKET server)</td></tr>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> SOCKET&#160;</td><td class="memItemRight" valign="bottom"><b>ServerAcceptConnection</b> (SOCKET server)</td></tr>
 <tr class="separator:a644676ae7f5bb9d11830a1a26ff502c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49e9457940960bcba9168fddbaec12ec"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a49e9457940960bcba9168fddbaec12ec"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Network::CloseSocketConnection</b> (SOCKET client)</td></tr>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>CloseSocketConnection</b> (SOCKET client)</td></tr>
 <tr class="separator:a49e9457940960bcba9168fddbaec12ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f86a57899a95fe38673eaa30ab9be8e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9f86a57899a95fe38673eaa30ab9be8e"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> bool&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Network::ValidateSocket</b> (SOCKET s)</td></tr>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> bool&#160;</td><td class="memItemRight" valign="bottom"><b>ValidateSocket</b> (SOCKET s)</td></tr>
 <tr class="separator:a9f86a57899a95fe38673eaa30ab9be8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20f760d6535f20b77268553381a55703"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a20f760d6535f20b77268553381a55703"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> i64&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Network::ServerReceiveData</b> (SOCKET client, char *buffer, i16 buff_len)</td></tr>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> <a class="el" href="_d_c_s___module_utils_8h.html#a7b0a8f6b03fef5436d1a2b804219776f">i64</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ServerReceiveData</b> (SOCKET client, char *buffer, <a class="el" href="_d_c_s___module_utils_8h.html#a571f34ffc57206a78807236972e170ab">i16</a> buff_len)</td></tr>
 <tr class="separator:a20f760d6535f20b77268553381a55703"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff1282b194f876550071ed09acdd5afd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aff1282b194f876550071ed09acdd5afd"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> i64&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Network::ServerSendData</b> (SOCKET client, char *buffer, i16 buff_len)</td></tr>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> <a class="el" href="_d_c_s___module_utils_8h.html#a7b0a8f6b03fef5436d1a2b804219776f">i64</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ServerSendData</b> (SOCKET client, char *buffer, <a class="el" href="_d_c_s___module_utils_8h.html#a571f34ffc57206a78807236972e170ab">i16</a> buff_len)</td></tr>
 <tr class="separator:aff1282b194f876550071ed09acdd5afd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acaff2c7e873a8aaa319f304266b39e92"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acaff2c7e873a8aaa319f304266b39e92"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> i64&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Network::ServerSendPriorityData</b> (SOCKET client, char *buffer, i16 buff_len)</td></tr>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> <a class="el" href="_d_c_s___module_utils_8h.html#a7b0a8f6b03fef5436d1a2b804219776f">i64</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ServerSendPriorityData</b> (SOCKET client, char *buffer, <a class="el" href="_d_c_s___module_utils_8h.html#a571f34ffc57206a78807236972e170ab">i16</a> buff_len)</td></tr>
 <tr class="separator:acaff2c7e873a8aaa319f304266b39e92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Network control using sockets. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>Make all the connections / sockets secure with simple RSA hashing or using openSSL TLS </dd></dl>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

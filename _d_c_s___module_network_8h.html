@@ -44,6 +44,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="examples.html"><span>Examples</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -89,13 +90,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">DCS_ModuleNetwork.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Exposes <a class="el" href="namespace_network.html">Network</a> functionalities of the API to the end user.  
+<p>Exposes Network functionalities of the API to the end user.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="exports_8h_source.html">../../config/exports.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_d_c_s___module_utils_8h_source.html">../../DCS_Utils/include/DCS_ModuleUtils.h</a>&quot;</code><br />
@@ -104,11 +107,44 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
-<tr class="memitem:namespace_network"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_network.html">Network</a></td></tr>
+<tr class="memitem:namespace_d_c_s_1_1_network"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network.html">DCS::Network</a></td></tr>
+<tr class="memdesc:namespace_d_c_s_1_1_network"><td class="mdescLeft">&#160;</td><td class="mdescRight">Network control using sockets. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespace_d_c_s_1_1_network_1_1_server"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html">DCS::Network::Server</a></td></tr>
+<tr class="memdesc:namespace_d_c_s_1_1_network_1_1_server"><td class="mdescLeft">&#160;</td><td class="mdescRight">Server handling features. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a9bee27a48f2a0c02394bbe5a1af82e74"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9bee27a48f2a0c02394bbe5a1af82e74"></a>
+typedef <a class="el" href="_d_c_s___module_utils_8h.html#af50c71871a414fd3366f16b0fd38face">DCS::GenericHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">DCS::Network::Socket</a></td></tr>
+<tr class="memdesc:a9bee27a48f2a0c02394bbe5a1af82e74"><td class="mdescLeft">&#160;</td><td class="mdescRight">A generic socket. <br /></td></tr>
+<tr class="separator:a9bee27a48f2a0c02394bbe5a1af82e74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaedc47fdc016b067aced9bfd9ff8da4b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaedc47fdc016b067aced9bfd9ff8da4b"></a>
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network.html#aaedc47fdc016b067aced9bfd9ff8da4b">DCS::Network::OnDataReceivedCallback</a>) (const char *data, <a class="el" href="_d_c_s___module_utils_8h.html#a7b0a8f6b03fef5436d1a2b804219776f">DCS::i64</a> size, Socket client)</td></tr>
+<tr class="memdesc:aaedc47fdc016b067aced9bfd9ff8da4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The callback prototype to use on <a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#ac715e021f8269960d5465caaae403af5" title="Starts the thread for the server and waits for client data. ">Server::StartThread(Socket, OnDataReceivedCallback)</a>. <br /></td></tr>
+<tr class="separator:aaedc47fdc016b067aced9bfd9ff8da4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:ada3e15191106ec84ff8ddad986a1a696"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> Socket&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#ada3e15191106ec84ff8ddad986a1a696">DCS::Network::Server::Create</a> (<a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">DCS::i32</a> port)</td></tr>
+<tr class="memdesc:ada3e15191106ec84ff8ddad986a1a696"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a server Socket with a port.  <a href="namespace_d_c_s_1_1_network_1_1_server.html#ada3e15191106ec84ff8ddad986a1a696">More...</a><br /></td></tr>
+<tr class="separator:ada3e15191106ec84ff8ddad986a1a696"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7fbc6cf8c12bcefd41b259c507a09f96"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> Socket&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#a7fbc6cf8c12bcefd41b259c507a09f96">DCS::Network::Server::WaitForConnection</a> (Socket server)</td></tr>
+<tr class="memdesc:a7fbc6cf8c12bcefd41b259c507a09f96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for a client connection on a valid server Socket, blocking code execution on the running thread.  <a href="namespace_d_c_s_1_1_network_1_1_server.html#a7fbc6cf8c12bcefd41b259c507a09f96">More...</a><br /></td></tr>
+<tr class="separator:a7fbc6cf8c12bcefd41b259c507a09f96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac715e021f8269960d5465caaae403af5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#ac715e021f8269960d5465caaae403af5">DCS::Network::Server::StartThread</a> (Socket client, OnDataReceivedCallback drc)</td></tr>
+<tr class="memdesc:ac715e021f8269960d5465caaae403af5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the thread for the server and waits for client data.  <a href="namespace_d_c_s_1_1_network_1_1_server.html#ac715e021f8269960d5465caaae403af5">More...</a><br /></td></tr>
+<tr class="separator:ac715e021f8269960d5465caaae403af5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf715d6d99c119efeaf4ede42d9651eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#acf715d6d99c119efeaf4ede42d9651eb">DCS::Network::Server::StopThread</a> (Socket client)</td></tr>
+<tr class="memdesc:acf715d6d99c119efeaf4ede42d9651eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the thread for the server and shuts down the socket.  <a href="namespace_d_c_s_1_1_network_1_1_server.html#acf715d6d99c119efeaf4ede42d9651eb">More...</a><br /></td></tr>
+<tr class="separator:acf715d6d99c119efeaf4ede42d9651eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba63563fc6dc00d88a271c89f93ab7d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#aba63563fc6dc00d88a271c89f93ab7d8">DCS::Network::Server::SendData</a> (Socket client, const char *data, <a class="el" href="_d_c_s___module_utils_8h.html#a7b0a8f6b03fef5436d1a2b804219776f">DCS::i64</a> size)</td></tr>
+<tr class="memdesc:aba63563fc6dc00d88a271c89f93ab7d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends data to the client.  <a href="namespace_d_c_s_1_1_network_1_1_server.html#aba63563fc6dc00d88a271c89f93ab7d8">More...</a><br /></td></tr>
+<tr class="separator:aba63563fc6dc00d88a271c89f93ab7d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Exposes <a class="el" href="namespace_network.html">Network</a> functionalities of the API to the end user. </p>
+<div class="textblock"><p>Exposes Network functionalities of the API to the end user. </p>
 <dl class="section author"><dt>Author</dt><dd>Cesar Godinho</dd></dl>
 <dl class="section version"><dt>Version</dt><dd>1.0</dd></dl>
 <dl class="section date"><dt>Date</dt><dd></dd></dl>
