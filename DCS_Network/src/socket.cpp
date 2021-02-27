@@ -107,6 +107,8 @@ SOCKET DCS::Network::ServerAcceptConnection(SOCKET server)
 		return INVALID_SOCKET;
 	}
 
+	Logger::Warning("Established connection with client...");
+	Logger::Warning("Closing server socket...");
 	closesocket(server);
 
 	return client;
@@ -123,9 +125,9 @@ bool DCS::Network::ValidateSocket(SOCKET s)
 	return s != INVALID_SOCKET;
 }
 
-DCS::i64 DCS::Network::ServerReceiveData(SOCKET client, char* buffer, i16 buff_len)
+DCS::i64 DCS::Network::ServerReceiveData(SOCKET client, unsigned char* buffer, i16 buff_len)
 {
-	int iResult = recv(client, buffer, buff_len, 0);
+	int iResult = recv(client, (char*)buffer, buff_len, 0);
 
 	if (iResult > 0)
 	{
@@ -157,9 +159,9 @@ DCS::i64 DCS::Network::ServerReceiveData(SOCKET client, char* buffer, i16 buff_l
 	}
 }
 
-static DCS::i64 SendGenericData(SOCKET client, char* buffer, DCS::i16 buff_len, int flags)
+static DCS::i64 SendGenericData(SOCKET client, const unsigned char* buffer, DCS::i16 buff_len, int flags)
 {
-	int iSResult = send(client, buffer, buff_len, flags);
+	int iSResult = send(client, (const char*)buffer, buff_len, flags);
 
 	if (iSResult > 0)
 	{
@@ -176,12 +178,12 @@ static DCS::i64 SendGenericData(SOCKET client, char* buffer, DCS::i16 buff_len, 
 	}
 }
 
-DCS::i64 DCS::Network::ServerSendData(SOCKET client, char* buffer, i16 buff_len)
+DCS::i64 DCS::Network::ServerSendData(SOCKET client, const unsigned char* buffer, i16 buff_len)
 {
 	return SendGenericData(client, buffer, buff_len, 0);
 }
 
-DCS::i64 DCS::Network::ServerSendPriorityData(SOCKET client, char* buffer, i16 buff_len)
+DCS::i64 DCS::Network::ServerSendPriorityData(SOCKET client, const unsigned char* buffer, i16 buff_len)
 {
 	return SendGenericData(client, buffer, buff_len, MSG_OOB);
 }

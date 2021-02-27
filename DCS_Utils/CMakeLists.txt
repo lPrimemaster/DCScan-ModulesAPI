@@ -15,7 +15,6 @@ add_library(DCSModuleUtils ${LIB_TYPE}
   include/DCS_ModuleUtils.h
   include/internal.h
   ../config/exports.h
-  #config.h.in
   )
 
 set_target_properties(DCSModuleUtils PROPERTIES

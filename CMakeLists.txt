@@ -2,8 +2,10 @@
 # (c) 2018 - 2020 César Godinho
 # Licensed under the MIT License
 
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10)
 project(DCSModulesAPI VERSION 1.0.0 DESCRIPTION "DCS sub project containing all the control modules as libraries.")
+
+set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_LIBS_SOURCE_DIR "")
 

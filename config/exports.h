@@ -1,25 +1,14 @@
 #pragma once
-//#ifdef API_EXPORT
-//
-//#ifdef __cplusplus
-//#define DCS_API_C extern "C" __declspec(dllexport)
-//#else
-//#define DCS_API_C
-//#endif
-//#else
-//#ifdef __cplusplus
-//#define DCS_API_C extern "C" __declspec(dllimport)
-//#else
-//#define DCS_API_C
-//#endif
-//#endif
 
 /** @file */
+
+#define DCS_REGISTER_CALL
 
 #ifdef API_EXPORT
 /**
  * \brief Defines the export interface acessible via the dll-interface.
  * \todo Do not define API for Cmake's STATIC lib configuration
+ * \todo Use Boost.Python to export to python via ctypes
  */
 //#ifdef __cplusplus
 #define DCS_API __declspec(dllexport)

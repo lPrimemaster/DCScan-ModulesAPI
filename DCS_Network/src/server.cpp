@@ -36,41 +36,41 @@ void DCS::Network::Server::StartThread(Socket client, OnDataReceivedCallback drc
 		{
 			server_running.store(true);
 			server_thread = new std::thread([=]()->void {
-				std::vector<std::string> total;
-				char buffer[512] = { 0 };
+				std::vector<const unsigned char*> total;
+				total.reserve(10);
+				unsigned char buffer[512] = { 0 };
+				unsigned char* data = new unsigned char[4096];
 				size_t recv_sz;
-				u16 offset;
+				size_t total_size = 0;
 
-				do
+				if (data != nullptr)
 				{
-					recv_sz = ServerReceiveData(target_client, buffer, 512);
-					if (recv_sz < 1) break;
-
-					// Check if data is null terminated
-					if (buffer[recv_sz - 1] == '\0') offset = 1; else offset = 0;
-
-					//Check if data ended via token -> \r\n
-					if (buffer[recv_sz - offset - 1] == '\n' && buffer[recv_sz - offset - 2] == '\r')
+					do
 					{
-						total.push_back(std::string(buffer, recv_sz - offset - 2)); // Ignore the \r\n token
-						std::string full_message = "";
-						for (auto str : total)
+						recv_sz = ServerReceiveData(target_client, buffer, 512);
+						if (recv_sz < 1) break;
+
+						// Check if data is 0xFF terminated
+						if (buffer[recv_sz - 1] == 0xFF)
 						{
-							full_message += str;
+							memcpy(data + total_size, buffer, recv_sz);
+							total_size += recv_sz;
+
+							// Do something with the received data via callback
+							drc(data, (i16)total_size, client);
+
+							total_size = 0;
+						}
+						else
+						{
+							memcpy(data + total_size, buffer, recv_sz);
+							total_size += recv_sz;
 						}
 
-						// Do something with the received data via callback
-						drc(full_message.c_str(), full_message.size(), client);
-
-						total.clear();
-					}
-					else
-					{
-						total.push_back(std::string(buffer, recv_sz)); // Data might not be null terminated
-					}
-
-				} while (recv_sz > 0);
-				server_running.store(false);
+					} while (recv_sz > 0);
+					server_running.store(false);
+					delete[] data;
+				}
 				});
 			if (server_thread == nullptr)
 			{
@@ -84,14 +84,17 @@ void DCS::Network::Server::StartThread(Socket client, OnDataReceivedCallback drc
 	}
 }
 
-void DCS::Network::Server::StopThread(Socket client)
+void DCS::Network::Server::StopThread(Socket client, StopMode mode)
 {
 	if (server_thread != nullptr)
 	{
-		if (server_running.load())
+		if (mode == StopMode::WAIT)
 		{
-			CloseSocketConnection((SOCKET)client);
+			while (server_running.load())
+				std::this_thread::yield();
 		}
+
+		CloseSocketConnection((SOCKET)client);
 
 		Logger::Debug("Stopping server thread...");
 
@@ -112,7 +115,7 @@ void DCS::Network::Server::StopThread(Socket client)
 	}
 }
 
-void DCS::Network::Server::SendData(Socket client, const char* data, DCS::i64 size)
+void DCS::Network::Server::SendData(Socket client, const unsigned char* data, DCS::i16 size)
 {
-
+	ServerSendData((SOCKET)client, data, size);
 }

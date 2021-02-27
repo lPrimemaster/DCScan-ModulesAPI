@@ -13,7 +13,6 @@ add_library(DCSModuleCore ${LIB_TYPE}
   ../config/exports.h
   include/internal.h
   include/DCS_ModuleCore.h
-  #config.h.in
   )
 
 target_link_libraries(DCSModuleCore DCSModuleUtils)

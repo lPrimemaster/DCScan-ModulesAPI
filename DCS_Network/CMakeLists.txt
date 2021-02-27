@@ -12,10 +12,13 @@ message(STATUS "LIBRARY INSTALL BIN LOCATION: ${INSTALL_LIB_DIR}")
 add_library(DCSModuleNetwork ${LIB_TYPE}
   src/socket.cpp
   src/server.cpp
+
+  ../config/registry.cpp
   ../config/exports.h
+  ../config/registry.h
+
   include/internal.h
   include/DCS_ModuleNetwork.h
-  #config.h.in
   )
 
 target_link_libraries(DCSModuleNetwork DCSModuleCore DCSModuleUtils ws2_32)

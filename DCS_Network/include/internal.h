@@ -78,13 +78,13 @@ namespace DCS
 		 * \internal.
 		 * \brief Allow server to receive data from a client socket.
 		 */
-		DCS_INTERNAL_TEST i64 ServerReceiveData(SOCKET client, char* buffer, i16 buff_len);
+		DCS_INTERNAL_TEST i64 ServerReceiveData(SOCKET client, unsigned char* buffer, i16 buff_len);
 
 		/**
 		 * \internal.
 		 * \brief Allow server to send data trought a client socket.
 		 */
-		DCS_INTERNAL_TEST i64 ServerSendData(SOCKET client, char* buffer, i16 buff_len);
+		DCS_INTERNAL_TEST i64 ServerSendData(SOCKET client, const unsigned char* buffer, i16 buff_len);
 
 		/**
 		 * \internal.
@@ -93,6 +93,6 @@ namespace DCS
 		 * This can be used when a message sent to the server is of high priority, 
 		 * such as a remote emergency shutdown.
 		 */
-		DCS_INTERNAL_TEST i64 ServerSendPriorityData(SOCKET client, char* buffer, i16 buff_len);
+		DCS_INTERNAL_TEST i64 ServerSendPriorityData(SOCKET client, const unsigned char* buffer, i16 buff_len);
 	}
 }

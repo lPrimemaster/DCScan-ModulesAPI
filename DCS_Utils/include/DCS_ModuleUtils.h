@@ -29,8 +29,8 @@ namespace DCS
 	typedef unsigned long long u64; ///< Equivalent to uint_64t.
 	typedef signed long i32; ///< Equivalent to int_32t.
 	typedef unsigned long u32; ///< Equivalent to uint_32t.
-	typedef signed i16; ///< Equivalent to int_16t.
-	typedef unsigned u16; ///< Equivalent to uint_16t.
+	typedef short i16; ///< Equivalent to int_16t.
+	typedef unsigned short u16; ///< Equivalent to uint_16t.
 	typedef signed char i8; ///< Equivalent to int_8t.
 	typedef unsigned char u8; ///< Equivalent to uint_8t.
 
@@ -197,6 +197,10 @@ namespace DCS
 		};
 	}
 
+	/**
+	 * \brief Timing related utilities.
+	 * \todo Refactor codebase to classes
+	 */
 	namespace Timer
 	{
 		/**
