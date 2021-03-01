@@ -84,13 +84,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><dl class="reflist">
-<dt><a class="anchor" id="_todo000006"></a>Member <a class="el" href="_d_c_s___module_utils_8h.html#af50c71871a414fd3366f16b0fd38face">DCS::GenericHandle</a>  </dt>
+<dt><a class="anchor" id="_todo000008"></a>Member <a class="el" href="_d_c_s___module_utils_8h.html#af50c71871a414fd3366f16b0fd38face">DCS::GenericHandle</a>  </dt>
 <dd>Maybe change this to intptr?  </dd>
 <dt><a class="anchor" id="_todo000003"></a>Namespace <a class="el" href="namespace_d_c_s_1_1_network.html">DCS::Network</a>  </dt>
 <dd>Make all the connections / sockets secure with simple RSA hashing or using openSSL TLS  </dd>
-<dt><a class="anchor" id="_todo000004"></a>Member <a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#aba63563fc6dc00d88a271c89f93ab7d8">DCS::Network::Server::SendData</a>  (Socket client, const char *data, DCS::i64 size)</dt>
-<dd>implement  </dd>
-<dt><a class="anchor" id="_todo000007"></a>Class <a class="el" href="class_d_c_s_1_1_utils_1_1_logger.html">DCS::Utils::Logger</a>  </dt>
+<dt><a class="anchor" id="_todo000006"></a>Member <a class="el" href="namespace_d_c_s_1_1_network_1_1_client.html#a6b693ccf208d6f094bd2850ebc97e62e">DCS::Network::Client::SendData</a>  (Socket s, const unsigned char *data, DCS::i32 size)</dt>
+<dd>Make SendData read a schedulable queue thus sending data indirectly via other threads.  </dd>
+<dt><a class="anchor" id="_todo000004"></a>Namespace <a class="el" href="namespace_d_c_s_1_1_network_1_1_messaging.html">DCS::Network::Messaging</a>  </dt>
+<dd>Finish this documentation, use a custom msg read callback  </dd>
+<dt><a class="anchor" id="_todo000005"></a>Member <a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#a4cdade6e93a1c96c0c355bf2ab0dd49f">DCS::Network::Server::SendData</a>  (Socket client, const unsigned char *data, DCS::i32 size)</dt>
+<dd>Make SendData read a schedulable queue thus sending data indirectly via other threads.  </dd>
+<dt><a class="anchor" id="_todo000009"></a>Namespace <a class="el" href="namespace_d_c_s_1_1_timer.html">DCS::Timer</a>  </dt>
+<dd>Refactor codebase to classes  </dd>
+<dt><a class="anchor" id="_todo000010"></a>Class <a class="el" href="class_d_c_s_1_1_utils_1_1_logger.html">DCS::Utils::Logger</a>  </dt>
 <dd><p class="startdd">Add Deinit static method. </p>
 <p class="enddd">Make the output redirectable (for stderr or stdout for example).  </p>
 </dd>
@@ -98,7 +104,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <dd>Do not define API for Cmake's STATIC lib configuration  </dd>
 <dt><a class="anchor" id="_todo000002"></a>Member <a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a>  </dt>
 <dd>Do not define API for Cmake's STATIC lib configuration  </dd>
-<dt><a class="anchor" id="_todo000005"></a>File <a class="el" href="_d_c_s___module_utils_8h.html">DCS_ModuleUtils.h</a>  </dt>
+<dt><a class="anchor" id="_todo000007"></a>File <a class="el" href="_d_c_s___module_utils_8h.html">DCS_ModuleUtils.h</a>  </dt>
 <dd>Make the <a class="el" href="class_d_c_s_1_1_utils_1_1_string.html" title="A wrapper class used to export a simple string to the client side. ">String</a> class callable with a C-interface (for python eg.)</dd>
 </dl>
 </div></div><!-- contents -->

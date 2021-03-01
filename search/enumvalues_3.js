@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['message',['MESSAGE',['../class_d_c_s_1_1_utils_1_1_logger.html#a7eb79910957b75fadd68b38039e2c4bda90791ed805bd5b00d78527d39d9ef7e4',1,'DCS::Utils::Logger']]]
+  ['immediate',['IMMEDIATE',['../namespace_d_c_s_1_1_network_1_1_server.html#a54b94216894bb328a3567a7ed62c2cf3ae35884a2445bc4ae2df52f188763273c',1,'DCS::Network::Server']]]
 ];

@@ -90,6 +90,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">DCS::Network::Server Namespace Reference</div>  </div>
@@ -99,35 +100,74 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>Server handling features.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a54b94216894bb328a3567a7ed62c2cf3"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#a54b94216894bb328a3567a7ed62c2cf3">StopMode</a> { <a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#a54b94216894bb328a3567a7ed62c2cf3ae35884a2445bc4ae2df52f188763273c">StopMode::IMMEDIATE</a>, 
+<a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#a54b94216894bb328a3567a7ed62c2cf3ad5cc6a0064b5c25ba37826aa3fda910c">StopMode::WAIT</a>
+ }<tr class="memdesc:a54b94216894bb328a3567a7ed62c2cf3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dictates how the server thread should stop.  <a href="namespace_d_c_s_1_1_network_1_1_server.html#a54b94216894bb328a3567a7ed62c2cf3">More...</a><br /></td></tr>
+</td></tr>
+<tr class="separator:a54b94216894bb328a3567a7ed62c2cf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ada3e15191106ec84ff8ddad986a1a696"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#ada3e15191106ec84ff8ddad986a1a696">Create</a> (<a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">DCS::i32</a> port)</td></tr>
-<tr class="memdesc:ada3e15191106ec84ff8ddad986a1a696"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a server Socket with a port.  <a href="#ada3e15191106ec84ff8ddad986a1a696">More...</a><br /></td></tr>
-<tr class="separator:ada3e15191106ec84ff8ddad986a1a696"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0cc3b70261336d61074e07f36a1cb94a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#a0cc3b70261336d61074e07f36a1cb94a">Create</a> (<a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a> port)</td></tr>
+<tr class="memdesc:a0cc3b70261336d61074e07f36a1cb94a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a server Socket with a port.  <a href="#a0cc3b70261336d61074e07f36a1cb94a">More...</a><br /></td></tr>
+<tr class="separator:a0cc3b70261336d61074e07f36a1cb94a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7fbc6cf8c12bcefd41b259c507a09f96"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#a7fbc6cf8c12bcefd41b259c507a09f96">WaitForConnection</a> (<a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> server)</td></tr>
 <tr class="memdesc:a7fbc6cf8c12bcefd41b259c507a09f96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for a client connection on a valid server Socket, blocking code execution on the running thread.  <a href="#a7fbc6cf8c12bcefd41b259c507a09f96">More...</a><br /></td></tr>
 <tr class="separator:a7fbc6cf8c12bcefd41b259c507a09f96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac715e021f8269960d5465caaae403af5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#ac715e021f8269960d5465caaae403af5">StartThread</a> (<a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> client, <a class="el" href="namespace_d_c_s_1_1_network.html#aaedc47fdc016b067aced9bfd9ff8da4b">OnDataReceivedCallback</a> drc)</td></tr>
+<tr class="memitem:ac715e021f8269960d5465caaae403af5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#ac715e021f8269960d5465caaae403af5">StartThread</a> (<a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> client, <a class="el" href="namespace_d_c_s_1_1_network.html#aa6902b46d3bd56212c45d6bca826a303">OnDataReceivedCallback</a> drc)</td></tr>
 <tr class="memdesc:ac715e021f8269960d5465caaae403af5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the thread for the server and waits for client data.  <a href="#ac715e021f8269960d5465caaae403af5">More...</a><br /></td></tr>
 <tr class="separator:ac715e021f8269960d5465caaae403af5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf715d6d99c119efeaf4ede42d9651eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#acf715d6d99c119efeaf4ede42d9651eb">StopThread</a> (<a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> client)</td></tr>
-<tr class="memdesc:acf715d6d99c119efeaf4ede42d9651eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the thread for the server and shuts down the socket.  <a href="#acf715d6d99c119efeaf4ede42d9651eb">More...</a><br /></td></tr>
-<tr class="separator:acf715d6d99c119efeaf4ede42d9651eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba63563fc6dc00d88a271c89f93ab7d8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#aba63563fc6dc00d88a271c89f93ab7d8">SendData</a> (<a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> client, const char *data, <a class="el" href="_d_c_s___module_utils_8h.html#a7b0a8f6b03fef5436d1a2b804219776f">DCS::i64</a> size)</td></tr>
-<tr class="memdesc:aba63563fc6dc00d88a271c89f93ab7d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends data to the client.  <a href="#aba63563fc6dc00d88a271c89f93ab7d8">More...</a><br /></td></tr>
-<tr class="separator:aba63563fc6dc00d88a271c89f93ab7d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a012a35b8d7ecbdaf52f65fea44df6e75"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#a012a35b8d7ecbdaf52f65fea44df6e75">StopThread</a> (<a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> client, <a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#a54b94216894bb328a3567a7ed62c2cf3">StopMode</a> mode=<a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#a54b94216894bb328a3567a7ed62c2cf3ae35884a2445bc4ae2df52f188763273c">StopMode::IMMEDIATE</a>)</td></tr>
+<tr class="memdesc:a012a35b8d7ecbdaf52f65fea44df6e75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the thread for the server and shuts down the socket.  <a href="#a012a35b8d7ecbdaf52f65fea44df6e75">More...</a><br /></td></tr>
+<tr class="separator:a012a35b8d7ecbdaf52f65fea44df6e75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cdade6e93a1c96c0c355bf2ab0dd49f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#a4cdade6e93a1c96c0c355bf2ab0dd49f">SendData</a> (<a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> client, const unsigned char *data, <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">DCS::i32</a> size)</td></tr>
+<tr class="memdesc:a4cdade6e93a1c96c0c355bf2ab0dd49f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends data to the client.  <a href="#a4cdade6e93a1c96c0c355bf2ab0dd49f">More...</a><br /></td></tr>
+<tr class="separator:a4cdade6e93a1c96c0c355bf2ab0dd49f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Server handling features. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="ada3e15191106ec84ff8ddad986a1a696"></a>
+</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+<a class="anchor" id="a54b94216894bb328a3567a7ed62c2cf3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#a54b94216894bb328a3567a7ed62c2cf3">DCS::Network::Server::StopMode</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Dictates how the server thread should stop. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="a54b94216894bb328a3567a7ed62c2cf3ae35884a2445bc4ae2df52f188763273c"></a>IMMEDIATE&#160;</td><td class="fielddoc">
+<p>Stop server thread without waiting for the client to disconnect (force shutdown server-side). </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a54b94216894bb328a3567a7ed62c2cf3ad5cc6a0064b5c25ba37826aa3fda910c"></a>WAIT&#160;</td><td class="fielddoc">
+<p>Stop server after waiting for the client to disconnect. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a0cc3b70261336d61074e07f36a1cb94a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">DCS::Network::Socket</a> DCS::Network::Server::Create </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">DCS::i32</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a>&#160;</td>
           <td class="paramname"><em>port</em></td><td>)</td>
           <td></td>
         </tr>
@@ -146,7 +186,7 @@ Functions</h2></td></tr>
 </dl>
 </div>
 </div>
-<a class="anchor" id="aba63563fc6dc00d88a271c89f93ab7d8"></a>
+<a class="anchor" id="a4cdade6e93a1c96c0c355bf2ab0dd49f"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -159,13 +199,13 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
+          <td class="paramtype">const unsigned char *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="_d_c_s___module_utils_8h.html#a7b0a8f6b03fef5436d1a2b804219776f">DCS::i64</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">DCS::i32</a>&#160;</td>
           <td class="paramname"><em>size</em>&#160;</td>
         </tr>
         <tr>
@@ -177,16 +217,16 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Sends data to the client. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>implement </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>Make SendData read a schedulable queue thus sending data indirectly via other threads. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">client</td><td>Client Socket. </td></tr>
+    <tr><td class="paramname">client</td><td><a class="el" href="namespace_d_c_s_1_1_network_1_1_client.html" title="Client handling features. ">Client</a> Socket. </td></tr>
     <tr><td class="paramname">data</td><td>Text/binary data to send. </td></tr>
     <tr><td class="paramname">size</td><td>Size of the data sent. </td></tr>
   </table>
   </dd>
 </dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="sockets_2echo_server_8cpp-example.html#a4">sockets/echo_server.cpp</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="sockets_2echo_server_8cpp-example.html#a3">sockets/echo_server.cpp</a>.</dd>
 </dl>
 </div>
 </div>
@@ -203,7 +243,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespace_d_c_s_1_1_network.html#aaedc47fdc016b067aced9bfd9ff8da4b">OnDataReceivedCallback</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="namespace_d_c_s_1_1_network.html#aa6902b46d3bd56212c45d6bca826a303">OnDataReceivedCallback</a>&#160;</td>
           <td class="paramname"><em>drc</em>&#160;</td>
         </tr>
         <tr>
@@ -215,11 +255,11 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Starts the thread for the server and waits for client data. </p>
-<p>The client is responsible for making the first request. Data can be sent via the OnDataReceivedCallback callback function (see <a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#aba63563fc6dc00d88a271c89f93ab7d8" title="Sends data to the client. ">SendData(Socket, const char*, DCS::i64)</a>)</p>
+<p>The client is responsible for making the first request. Data can be sent via the OnDataReceivedCallback callback function (see <a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#a4cdade6e93a1c96c0c355bf2ab0dd49f" title="Sends data to the client. ">SendData(Socket, const unsigned char*, DCS::i32)</a>)</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">client</td><td>The client connection Socket. </td></tr>
-    <tr><td class="paramname">drc</td><td>The function to be called when a full message is received. Expects text data. A lambda expression can be used as the callback, provided it does not capture. </td></tr>
+    <tr><td class="paramname">drc</td><td>The function to be called when a full message is received. A lambda expression can be used as the callback, provided it does not capture. </td></tr>
   </table>
   </dd>
 </dl>
@@ -227,7 +267,7 @@ Functions</h2></td></tr>
 </dl>
 </div>
 </div>
-<a class="anchor" id="acf715d6d99c119efeaf4ede42d9651eb"></a>
+<a class="anchor" id="a012a35b8d7ecbdaf52f65fea44df6e75"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -235,8 +275,18 @@ Functions</h2></td></tr>
           <td class="memname">void DCS::Network::Server::StopThread </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a>&#160;</td>
-          <td class="paramname"><em>client</em></td><td>)</td>
+          <td class="paramname"><em>client</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#a54b94216894bb328a3567a7ed62c2cf3">StopMode</a>&#160;</td>
+          <td class="paramname"><em>mode</em> = <code><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#a54b94216894bb328a3567a7ed62c2cf3ae35884a2445bc4ae2df52f188763273c">StopMode::IMMEDIATE</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -248,7 +298,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl><dt><b>Examples: </b></dt><dd><a class="el" href="sockets_2echo_server_8cpp-example.html#a5">sockets/echo_server.cpp</a>.</dd>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="sockets_2echo_server_8cpp-example.html#a4">sockets/echo_server.cpp</a>.</dd>
 </dl>
 </div>
 </div>

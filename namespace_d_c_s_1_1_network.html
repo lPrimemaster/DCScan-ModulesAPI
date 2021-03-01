@@ -104,6 +104,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
+<tr class="memitem:namespace_d_c_s_1_1_network_1_1_client"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_client.html">Client</a></td></tr>
+<tr class="memdesc:namespace_d_c_s_1_1_network_1_1_client"><td class="mdescLeft">&#160;</td><td class="mdescRight">Client handling features. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespace_d_c_s_1_1_network_1_1_messaging"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_messaging.html">Messaging</a></td></tr>
+<tr class="memdesc:namespace_d_c_s_1_1_network_1_1_messaging"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles default messaging via a simple protocol. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespace_d_c_s_1_1_network_1_1_server"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html">Server</a></td></tr>
 <tr class="memdesc:namespace_d_c_s_1_1_network_1_1_server"><td class="mdescLeft">&#160;</td><td class="mdescRight">Server handling features. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -119,10 +125,10 @@ Typedefs</h2></td></tr>
 typedef <a class="el" href="_d_c_s___module_utils_8h.html#af50c71871a414fd3366f16b0fd38face">DCS::GenericHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a></td></tr>
 <tr class="memdesc:a9bee27a48f2a0c02394bbe5a1af82e74"><td class="mdescLeft">&#160;</td><td class="mdescRight">A generic socket. <br /></td></tr>
 <tr class="separator:a9bee27a48f2a0c02394bbe5a1af82e74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaedc47fdc016b067aced9bfd9ff8da4b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaedc47fdc016b067aced9bfd9ff8da4b"></a>
-typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network.html#aaedc47fdc016b067aced9bfd9ff8da4b">OnDataReceivedCallback</a>) (const char *data, <a class="el" href="_d_c_s___module_utils_8h.html#a7b0a8f6b03fef5436d1a2b804219776f">DCS::i64</a> size, <a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> client)</td></tr>
-<tr class="memdesc:aaedc47fdc016b067aced9bfd9ff8da4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The callback prototype to use on <a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#ac715e021f8269960d5465caaae403af5" title="Starts the thread for the server and waits for client data. ">Server::StartThread(Socket, OnDataReceivedCallback)</a>. <br /></td></tr>
-<tr class="separator:aaedc47fdc016b067aced9bfd9ff8da4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6902b46d3bd56212c45d6bca826a303"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa6902b46d3bd56212c45d6bca826a303"></a>
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network.html#aa6902b46d3bd56212c45d6bca826a303">OnDataReceivedCallback</a>) (const unsigned char *data, <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">DCS::i32</a> size, <a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> client)</td></tr>
+<tr class="memdesc:aa6902b46d3bd56212c45d6bca826a303"><td class="mdescLeft">&#160;</td><td class="mdescRight">The callback prototype to use on <a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#ac715e021f8269960d5465caaae403af5" title="Starts the thread for the server and waits for client data. ">Server::StartThread(Socket, OnDataReceivedCallback)</a>. <br /></td></tr>
+<tr class="separator:aa6902b46d3bd56212c45d6bca826a303"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -135,6 +141,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ab30f6b7afbfeb7f6a210eb06ce4758a3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab30f6b7afbfeb7f6a210eb06ce4758a3"></a>
 <a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> SOCKET&#160;</td><td class="memItemRight" valign="bottom"><b>CreateServerSocket</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a> listen_port)</td></tr>
 <tr class="separator:ab30f6b7afbfeb7f6a210eb06ce4758a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98076334019cde1cc458b3a58e4e09a4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a98076334019cde1cc458b3a58e4e09a4"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> SOCKET&#160;</td><td class="memItemRight" valign="bottom"><b>CreateClientSocket</b> (const char *host, <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a> port)</td></tr>
+<tr class="separator:a98076334019cde1cc458b3a58e4e09a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9836a088b8b20c8b9bdb820687eb4458"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9836a088b8b20c8b9bdb820687eb4458"></a>
 <a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>ServerListen</b> (SOCKET server)</td></tr>
 <tr class="separator:a9836a088b8b20c8b9bdb820687eb4458"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -147,15 +156,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a9f86a57899a95fe38673eaa30ab9be8e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9f86a57899a95fe38673eaa30ab9be8e"></a>
 <a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> bool&#160;</td><td class="memItemRight" valign="bottom"><b>ValidateSocket</b> (SOCKET s)</td></tr>
 <tr class="separator:a9f86a57899a95fe38673eaa30ab9be8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20f760d6535f20b77268553381a55703"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a20f760d6535f20b77268553381a55703"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> <a class="el" href="_d_c_s___module_utils_8h.html#a7b0a8f6b03fef5436d1a2b804219776f">i64</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ServerReceiveData</b> (SOCKET client, char *buffer, <a class="el" href="_d_c_s___module_utils_8h.html#a571f34ffc57206a78807236972e170ab">i16</a> buff_len)</td></tr>
-<tr class="separator:a20f760d6535f20b77268553381a55703"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff1282b194f876550071ed09acdd5afd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aff1282b194f876550071ed09acdd5afd"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> <a class="el" href="_d_c_s___module_utils_8h.html#a7b0a8f6b03fef5436d1a2b804219776f">i64</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ServerSendData</b> (SOCKET client, char *buffer, <a class="el" href="_d_c_s___module_utils_8h.html#a571f34ffc57206a78807236972e170ab">i16</a> buff_len)</td></tr>
-<tr class="separator:aff1282b194f876550071ed09acdd5afd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acaff2c7e873a8aaa319f304266b39e92"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acaff2c7e873a8aaa319f304266b39e92"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> <a class="el" href="_d_c_s___module_utils_8h.html#a7b0a8f6b03fef5436d1a2b804219776f">i64</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ServerSendPriorityData</b> (SOCKET client, char *buffer, <a class="el" href="_d_c_s___module_utils_8h.html#a571f34ffc57206a78807236972e170ab">i16</a> buff_len)</td></tr>
-<tr class="separator:acaff2c7e873a8aaa319f304266b39e92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac61a9fb3a8f8acef72acc30a3d22d354"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac61a9fb3a8f8acef72acc30a3d22d354"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ReceiveData</b> (SOCKET client, unsigned char *buffer, <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a> buff_len)</td></tr>
+<tr class="separator:ac61a9fb3a8f8acef72acc30a3d22d354"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a13d7de8e61016a4205ce865e9b6eea"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5a13d7de8e61016a4205ce865e9b6eea"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a>&#160;</td><td class="memItemRight" valign="bottom"><b>SendData</b> (SOCKET client, const unsigned char *buffer, <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a> buff_len)</td></tr>
+<tr class="separator:a5a13d7de8e61016a4205ce865e9b6eea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93d6668a323d113798b18182885ea7bf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a93d6668a323d113798b18182885ea7bf"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a>&#160;</td><td class="memItemRight" valign="bottom"><b>SendPriorityData</b> (SOCKET client, const unsigned char *buffer, <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a> buff_len)</td></tr>
+<tr class="separator:a93d6668a323d113798b18182885ea7bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Network control using sockets. </p>

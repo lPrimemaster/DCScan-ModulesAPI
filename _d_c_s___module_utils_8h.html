@@ -91,6 +91,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -124,6 +126,33 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a timestamp divided fieldwise.  <a href="struct_d_c_s_1_1_timer_1_1_timestamp.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespace_d_c_s_1_1_timer"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_timer.html">DCS::Timer</a></td></tr>
+<tr class="memdesc:namespace_d_c_s_1_1_timer"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timing related utilities. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a1b5c91338adc24c4b64469a23cd31be5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1b5c91338adc24c4b64469a23cd31be5"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>LOG_LVL</b>(lvl,  msg, ...)&#160;&#160;&#160;DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, __VA_ARGS__)</td></tr>
+<tr class="separator:a1b5c91338adc24c4b64469a23cd31be5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c01521cd0033d3db4fb914d19865125"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5c01521cd0033d3db4fb914d19865125"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>LOG_DEBUG</b>(msg, ...)&#160;&#160;&#160;LOG_LVL(Debug, msg, __VA_ARGS__)</td></tr>
+<tr class="separator:a5c01521cd0033d3db4fb914d19865125"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a696667e92e9d8f7f2fdfa75cb514b1ee"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a696667e92e9d8f7f2fdfa75cb514b1ee"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>LOG_MESSAGE</b>(msg, ...)&#160;&#160;&#160;LOG_LVL(Message, msg, __VA_ARGS__)</td></tr>
+<tr class="separator:a696667e92e9d8f7f2fdfa75cb514b1ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a203d27f91125d1d538cd25b1bb9e5d7f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a203d27f91125d1d538cd25b1bb9e5d7f"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>LOG_WARNING</b>(msg, ...)&#160;&#160;&#160;LOG_LVL(Warning, msg, __VA_ARGS__)</td></tr>
+<tr class="separator:a203d27f91125d1d538cd25b1bb9e5d7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9c73bc78b8b2564e47a037b5a6ca226"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad9c73bc78b8b2564e47a037b5a6ca226"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>LOG_ERROR</b>(msg, ...)&#160;&#160;&#160;LOG_LVL(Error, msg, __VA_ARGS__)</td></tr>
+<tr class="separator:ad9c73bc78b8b2564e47a037b5a6ca226"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a956b19ae40fe2daa6711f788e85f869f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a956b19ae40fe2daa6711f788e85f869f"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>LOG_CRITICAL</b>(msg, ...)&#160;&#160;&#160;LOG_LVL(Critical, msg, __VA_ARGS__)</td></tr>
+<tr class="separator:a956b19ae40fe2daa6711f788e85f869f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:a7b0a8f6b03fef5436d1a2b804219776f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7b0a8f6b03fef5436d1a2b804219776f"></a>
@@ -142,14 +171,14 @@ typedef signed long&#160;</td><td class="memItemRight" valign="bottom"><a class=
 typedef unsigned long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___module_utils_8h.html#ab177e2c530f560400a67535bcb757ab1">DCS::u32</a></td></tr>
 <tr class="memdesc:ab177e2c530f560400a67535bcb757ab1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equivalent to uint_32t. <br /></td></tr>
 <tr class="separator:ab177e2c530f560400a67535bcb757ab1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a571f34ffc57206a78807236972e170ab"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a571f34ffc57206a78807236972e170ab"></a>
-typedef signed&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___module_utils_8h.html#a571f34ffc57206a78807236972e170ab">DCS::i16</a></td></tr>
-<tr class="memdesc:a571f34ffc57206a78807236972e170ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equivalent to int_16t. <br /></td></tr>
-<tr class="separator:a571f34ffc57206a78807236972e170ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac215e7108c06e55c9e0aea914c7f4bc8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac215e7108c06e55c9e0aea914c7f4bc8"></a>
-typedef unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___module_utils_8h.html#ac215e7108c06e55c9e0aea914c7f4bc8">DCS::u16</a></td></tr>
-<tr class="memdesc:ac215e7108c06e55c9e0aea914c7f4bc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equivalent to uint_16t. <br /></td></tr>
-<tr class="separator:ac215e7108c06e55c9e0aea914c7f4bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac95d0a235c82511842298f67408d7433"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac95d0a235c82511842298f67408d7433"></a>
+typedef short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___module_utils_8h.html#ac95d0a235c82511842298f67408d7433">DCS::i16</a></td></tr>
+<tr class="memdesc:ac95d0a235c82511842298f67408d7433"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equivalent to int_16t. <br /></td></tr>
+<tr class="separator:ac95d0a235c82511842298f67408d7433"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0397607df3bf36ef7b9afaa963f80c1b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0397607df3bf36ef7b9afaa963f80c1b"></a>
+typedef unsigned short&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___module_utils_8h.html#a0397607df3bf36ef7b9afaa963f80c1b">DCS::u16</a></td></tr>
+<tr class="memdesc:a0397607df3bf36ef7b9afaa963f80c1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equivalent to uint_16t. <br /></td></tr>
+<tr class="separator:a0397607df3bf36ef7b9afaa963f80c1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1429129a80d5de72dd07278f97a75664"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1429129a80d5de72dd07278f97a75664"></a>
 typedef signed char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___module_utils_8h.html#a1429129a80d5de72dd07278f97a75664">DCS::i8</a></td></tr>
 <tr class="memdesc:a1429129a80d5de72dd07278f97a75664"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equivalent to int_8t. <br /></td></tr>
@@ -173,27 +202,27 @@ typedef double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a5c8842e2cdb201bed6bd5ada5ce71384"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5c8842e2cdb201bed6bd5ada5ce71384"></a>
-<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> SystemTimer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___module_utils_8h.html#a5c8842e2cdb201bed6bd5ada5ce71384">DCS::Timer::New</a> ()</td></tr>
+<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> SystemTimer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_timer.html#a5c8842e2cdb201bed6bd5ada5ce71384">DCS::Timer::New</a> ()</td></tr>
 <tr class="memdesc:a5c8842e2cdb201bed6bd5ada5ce71384"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="struct_d_c_s_1_1_timer_1_1_system_timer.html" title="Holds data about when a timer was first created. ">SystemTimer</a>. <br /></td></tr>
 <tr class="separator:a5c8842e2cdb201bed6bd5ada5ce71384"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2570944c17768aaa330f9c39889e10fe"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2570944c17768aaa330f9c39889e10fe"></a>
-<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___module_utils_8h.html#a2570944c17768aaa330f9c39889e10fe">DCS::Timer::Delete</a> (SystemTimer timer)</td></tr>
+<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_timer.html#a2570944c17768aaa330f9c39889e10fe">DCS::Timer::Delete</a> (SystemTimer timer)</td></tr>
 <tr class="memdesc:a2570944c17768aaa330f9c39889e10fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deletes a <a class="el" href="struct_d_c_s_1_1_timer_1_1_system_timer.html" title="Holds data about when a timer was first created. ">SystemTimer</a>. <br /></td></tr>
 <tr class="separator:a2570944c17768aaa330f9c39889e10fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe8c5f76582cc4bd70cf5385d14ab0c1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> Timestamp&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___module_utils_8h.html#abe8c5f76582cc4bd70cf5385d14ab0c1">DCS::Timer::GetTimestamp</a> (SystemTimer timer)</td></tr>
-<tr class="memdesc:abe8c5f76582cc4bd70cf5385d14ab0c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives a timestamp relative to timer in <a class="el" href="struct_d_c_s_1_1_timer_1_1_timestamp.html" title="Represents a timestamp divided fieldwise. ">Timestamp</a> format.  <a href="_d_c_s___module_utils_8h.html#abe8c5f76582cc4bd70cf5385d14ab0c1">More...</a><br /></td></tr>
+<tr class="memitem:abe8c5f76582cc4bd70cf5385d14ab0c1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> Timestamp&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_timer.html#abe8c5f76582cc4bd70cf5385d14ab0c1">DCS::Timer::GetTimestamp</a> (SystemTimer timer)</td></tr>
+<tr class="memdesc:abe8c5f76582cc4bd70cf5385d14ab0c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives a timestamp relative to timer in <a class="el" href="struct_d_c_s_1_1_timer_1_1_timestamp.html" title="Represents a timestamp divided fieldwise. ">Timestamp</a> format.  <a href="namespace_d_c_s_1_1_timer.html#abe8c5f76582cc4bd70cf5385d14ab0c1">More...</a><br /></td></tr>
 <tr class="separator:abe8c5f76582cc4bd70cf5385d14ab0c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0c3497e8178789b11dd211f69ec8604"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> Utils::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___module_utils_8h.html#ac0c3497e8178789b11dd211f69ec8604">DCS::Timer::GetTimestampString</a> (SystemTimer timer)</td></tr>
-<tr class="memdesc:ac0c3497e8178789b11dd211f69ec8604"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives a timestamp relative to timer in <a class="el" href="class_d_c_s_1_1_utils_1_1_string.html" title="A wrapper class used to export a simple string to the client side. ">Utils::String</a> format.  <a href="_d_c_s___module_utils_8h.html#ac0c3497e8178789b11dd211f69ec8604">More...</a><br /></td></tr>
+<tr class="memitem:ac0c3497e8178789b11dd211f69ec8604"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> Utils::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_timer.html#ac0c3497e8178789b11dd211f69ec8604">DCS::Timer::GetTimestampString</a> (SystemTimer timer)</td></tr>
+<tr class="memdesc:ac0c3497e8178789b11dd211f69ec8604"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives a timestamp relative to timer in <a class="el" href="class_d_c_s_1_1_utils_1_1_string.html" title="A wrapper class used to export a simple string to the client side. ">Utils::String</a> format.  <a href="namespace_d_c_s_1_1_timer.html#ac0c3497e8178789b11dd211f69ec8604">More...</a><br /></td></tr>
 <tr class="separator:ac0c3497e8178789b11dd211f69ec8604"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a576497a2da0f79c39b1947abe65eceac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> i64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___module_utils_8h.html#a576497a2da0f79c39b1947abe65eceac">DCS::Timer::GetNanoseconds</a> (SystemTimer timer)</td></tr>
-<tr class="memdesc:a576497a2da0f79c39b1947abe65eceac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives number of nanoseconds passed relative to timer.  <a href="_d_c_s___module_utils_8h.html#a576497a2da0f79c39b1947abe65eceac">More...</a><br /></td></tr>
+<tr class="memitem:a576497a2da0f79c39b1947abe65eceac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> i64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_timer.html#a576497a2da0f79c39b1947abe65eceac">DCS::Timer::GetNanoseconds</a> (SystemTimer timer)</td></tr>
+<tr class="memdesc:a576497a2da0f79c39b1947abe65eceac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives number of nanoseconds passed relative to timer.  <a href="namespace_d_c_s_1_1_timer.html#a576497a2da0f79c39b1947abe65eceac">More...</a><br /></td></tr>
 <tr class="separator:a576497a2da0f79c39b1947abe65eceac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Container for all the exported symbols that fall in the Utils category. </p>
 <p>Also contains library common code.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>Make the String class callable with a C-interface (for python eg.)</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>Make the String class callable with a C-interface (for python eg.)</dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Cesar Godinho</dd></dl>
 <dl class="section version"><dt>Version</dt><dd>1.0</dd></dl>
 <dl class="section date"><dt>Date</dt><dd>2020/10/16 </dd></dl>
@@ -210,83 +239,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>A generic opaque handle that is only meaningful for the API. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>Maybe change this to intptr? </dd></dl>
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="file_a576497a2da0f79c39b1947abe65eceac"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="_d_c_s___module_utils_8h.html#a7b0a8f6b03fef5436d1a2b804219776f">DCS::i64</a> DCS::Timer::GetNanoseconds </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_d_c_s_1_1_timer_1_1_system_timer.html">SystemTimer</a>&#160;</td>
-          <td class="paramname"><em>timer</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Gives number of nanoseconds passed relative to timer. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">timer</td><td>Relative point to measure. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Number of nanoseconds stored in a DCS::i64. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="file_abe8c5f76582cc4bd70cf5385d14ab0c1"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="struct_d_c_s_1_1_timer_1_1_timestamp.html">DCS::Timer::Timestamp</a> DCS::Timer::GetTimestamp </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_d_c_s_1_1_timer_1_1_system_timer.html">SystemTimer</a>&#160;</td>
-          <td class="paramname"><em>timer</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Gives a timestamp relative to timer in <a class="el" href="struct_d_c_s_1_1_timer_1_1_timestamp.html" title="Represents a timestamp divided fieldwise. ">Timestamp</a> format. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">timer</td><td>Relative point to measure. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="struct_d_c_s_1_1_timer_1_1_timestamp.html" title="Represents a timestamp divided fieldwise. ">Timestamp</a>. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="file_ac0c3497e8178789b11dd211f69ec8604"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="class_d_c_s_1_1_utils_1_1_string.html">DCS::Utils::String</a> DCS::Timer::GetTimestampString </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_d_c_s_1_1_timer_1_1_system_timer.html">SystemTimer</a>&#160;</td>
-          <td class="paramname"><em>timer</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Gives a timestamp relative to timer in <a class="el" href="class_d_c_s_1_1_utils_1_1_string.html" title="A wrapper class used to export a simple string to the client side. ">Utils::String</a> format. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">timer</td><td>Relative point to measure. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_d_c_s_1_1_utils_1_1_string.html" title="A wrapper class used to export a simple string to the client side. ">Utils::String</a> timestamp [XXh XXm XXs XXms XXus XXns]. </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo:</a></b></dt><dd>Maybe change this to intptr? </dd></dl>
 
 </div>
 </div>
