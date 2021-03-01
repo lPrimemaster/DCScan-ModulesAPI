@@ -23,11 +23,11 @@ DCS::Memory::LinearAllocator::LinearAllocator(u64 size, u64 align)
 	buffer.data = buffer.data_start = (char*)malloc(size);
 	if (buffer.data_start == nullptr)
 	{
-		Utils::Logger::Error("Failed to create linear allocator.");
+		LOG_ERROR("Failed to create linear allocator.");
 	}
 	else
 	{
-		Utils::Logger::Debug("Successfully created linear allocator. (size=%llu,align=%llu)", size, align);
+		LOG_DEBUG("Successfully created linear allocator. (size=%llu,align=%llu)", size, align);
 	}
 
 	buffer.alignment = align;

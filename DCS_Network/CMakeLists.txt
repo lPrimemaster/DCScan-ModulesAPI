@@ -7,11 +7,14 @@ add_definitions(-DAPI_EXPORT)
 message(STATUS "LIBRARY TYPE SET TO: ${LIB_TYPE}")
 message(STATUS "LIBRARY INSTALL BIN LOCATION: ${INSTALL_LIB_DIR}")
 
+set_pretty_filenames()
+
 #find_package(OpenSSL REQUIRED)
 
 add_library(DCSModuleNetwork ${LIB_TYPE}
   src/socket.cpp
   src/server.cpp
+  src/client.cpp
 
   ../config/registry.cpp
   ../config/exports.h

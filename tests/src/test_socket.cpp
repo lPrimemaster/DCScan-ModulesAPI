@@ -12,9 +12,8 @@ int testInternal()
 	DCS_START_TEST;
 
 	using namespace DCS::Network;
-	using namespace DCS::Utils;
 
-	Logger::Message("This test requires python3.");
+	LOG_MESSAGE("This test requires python3.");
 
 	std::atomic<int> ready = 0;
 
@@ -33,7 +32,6 @@ PORT = 15777        # The port used by the server
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 	s.connect((HOST, PORT))
 	s.sendall(b'this has to hash the same thing...\0')
-	s.sendall(b'\xFF')
 		)";
 
 		FILE* f = fopen("Release/test_socket_endpoint.py", "w");
@@ -62,8 +60,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
 	do
 	{
-		recv_sz = ServerReceiveData(client, buffer, 256);
-		Logger::Debug("Bytes[%d]\tData[%s]", recv_sz, (char*)buffer);
+		recv_sz = ReceiveData(client, buffer, 256);
+		LOG_DEBUG("Bytes[%d]\tData[%s]", recv_sz, (char*)buffer);
 	} while (recv_sz > 0);
 
 	CloseSocketConnection(client);
@@ -88,7 +86,6 @@ int test()
 	DCS_START_TEST;
 
 	using namespace DCS::Network;
-	using namespace DCS::Utils;
 
 	
 
@@ -104,12 +101,12 @@ PORT = 15777        # The port used by the server
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 	s.connect((HOST, PORT))
+	s.sendall(b'\x0C\x00\x00\x00') # 12 bytes incoming
 	s.sendall(b'abc')
 	s.sendall(b'def')
 	time.sleep(0.5)
 	s.sendall(b'ghi')
-	s.sendall(b'jkl\0')
-	s.sendall(b'\xFF')
+	s.sendall(b'jkl')
 		)";
 
 		FILE* f = fopen("Release/test_socket_endpoint2.py", "w");
@@ -130,9 +127,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 	ready.store(1);
 	Socket client = Server::WaitForConnection(s);
 
-	Server::StartThread(client, [](const unsigned char* data, DCS::i16 size, Socket client)->void {
-		Logger::Debug("Received data: %s", (char*)data);
-		fdata = std::string((char*)data);
+	Server::StartThread(client, [](const unsigned char* data, DCS::i32 size, Socket client)->void {
+		LOG_DEBUG("Received data: %s", (char*)data);
+		fdata = std::string((char*)data, size);
 		ready.store(0);
 		});
 
@@ -145,7 +142,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
 	std::hash<std::string> hasher;
 
-	DCS_ASSERT_EQ(hasher(fdata), hasher("abcdefghijkl\0"));
+	DCS_ASSERT_EQ(hasher(fdata), hasher("abcdefghijkl"));
 
 	DCS_RETURN_TEST;
 }

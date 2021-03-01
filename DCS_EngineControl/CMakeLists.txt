@@ -7,6 +7,8 @@ add_definitions(-DAPI_EXPORT)
 message(STATUS "LIBRARY TYPE SET TO: ${LIB_TYPE}")
 message(STATUS "LIBRARY INSTALL BIN LOCATION: ${INSTALL_LIB_DIR}")
 
+set_pretty_filenames()
+
 add_library(DCSModuleEngineControl ${LIB_TYPE}
   src/serial_win.cpp
   include/DCS_ModuleEngineControl.h

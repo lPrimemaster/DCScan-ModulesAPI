@@ -17,12 +17,14 @@ print('Processing files...')
 pp.pprint(filenames)
 print('\n\n')
 
-# TODO : Make this token an argument
-token = 'DCS_REGISTER_CALL'
+# TODO : Make this token_call an argument
+token_call = 'DCS_REGISTER_CALL'
+token_type = 'DCS_REGISTER_TYPE'
 
 # TODO : Document (remember default parameters cannot be used [value must be passed via args])
 
 func = []
+return_type = []
 header_def = []
 args_name = []
 
@@ -73,15 +75,29 @@ for fnm in filenames:
 				if(len(f_prefix) > 0):
 					scope = f_prefix[-1]
 
-		if v.startswith(token):
+		if v.startswith(token_call):
 			# Get function name with scope
 			func.append('::'.join(f_prefix) + '::' + v.split('(', 1)[0].split(' ')[-1])
+
+			# Get function return type
+			rtype = v.split('(', 1)[0].split(' ')[:-1]
+			for remove_element in ['static', token_call, 'DCS_API']:
+				if remove_element in rtype:
+					rtype.remove(remove_element)
+			if 'void' not in rtype:
+				return_type.append(' '.join(rtype))
+			else:
+				return_type.append('')
 
 			# Get function arguments name
 			args_name.append([' '.join(x.split(' ')[:-1]) for x in [y.strip() for y in v.split('(', 1)[-1].split(',')]])
 
 			# Get function header dep
 			header_def.append(fnm)
+
+		if v.startswith(token_type):
+			v.split(' ')[:-1]
+
 
 
 print('Processing functions:')
@@ -107,6 +123,7 @@ DEC = '''
 
 $0
 
+#define SV_CALL_NULL 0x0
 $1
 
 #define SV_ARG_int8   0x0
@@ -119,7 +136,7 @@ namespace DCS {
 
 	/**
 	 * \\brief Class responsible for registering any function calls that might be
-	 * requested via tcp/ip. This hash table is auto generated via the ''' + token + ''' token.
+	 * requested via tcp/ip. This hash table is auto generated via the ''' + token_call + ''' token_call.
 	 * Any function declarated with it shall be registered in the hash table and called with
 	 * Registry::Execute*() functions.
 	 *
@@ -127,35 +144,36 @@ namespace DCS {
 	class Registry {
 	public:
 		struct SVParams;
+		struct SVReturn;
 
 		static const u16 Get(const char* func_signature)
 		{
-			u16 val = -1;
+			u16 val = 0;
 			auto it = id.find(func_signature);
 			if (it != id.end())
 				val = it->second;
 			else
-				DCS::Utils::Logger::Error("Function signature (%s) not found.", func_signature);
+				LOG_ERROR("Function signature (%s) not found.", func_signature);
 			return val;
 		}
 
-		static DCS_API void Execute(SVParams params);
+		static DCS_API SVReturn Execute(SVParams params);
 
-		static DCS_API const SVParams GetParamsFromData(const unsigned char* payload, i16 size);
+		static DCS_API const SVParams GetParamsFromData(const unsigned char* payload, i32 size);
 	private:
 		template<typename T>
-		static inline T convert_from_byte(const unsigned char* data, i16 offset, i16 size)
+		static inline T convert_from_byte(const unsigned char* data, i32 offset, i32 size)
 		{
 			if(offset >= size)
 			{
-				DCS::Utils::Logger::Error("Data conversion overflow.");
+				LOG_ERROR("Data conversion overflow.");
 				return T();
 			}
 
 			return *((T*)(data + offset));
 		}
 
-		inline static std::unordered_map<const char*,u16> id = 
+		inline static std::unordered_map<const char*, u16> id = 
 		{
 			$2
 		};
@@ -166,32 +184,79 @@ namespace DCS {
 		public:
 			friend class Registry;
 
-			const i8 getOpcode() const
+			const u8 getOpcode() const
 			{
 				return opcode;
 			}
 
-			const i16 getFunccode() const
+			const u16 getFunccode() const
 			{
 				return fcode;
 			}
 
 			template<typename T>
-			const T getArg(i32 i) const
+			const T getArg(u64 i) const
 			{
-				return std::any_cast<T>(args.at(i));
+				T rv;
+				try 
+				{
+				    rv = std::any_cast<T>(args.at(i));
+				}
+				catch(const std::bad_any_cast& e) 
+				{
+					LOG_ERROR("Bad SVParams getArg(%d) %s.", i, e.what());
+				}
+				return rv;
 			}
 
 		private:
-			SVParams(i8 oc, i16 fc, std::vector<std::any> args) : opcode(oc), fcode(fc), args(args) {  }
+			SVParams(u8 oc, u16 fc, std::vector<std::any> args) : opcode(oc), fcode(fc), args(args) {  }
 
 		private:
 
-			i8 opcode;
-			i16 fcode;
+			u8 opcode;
+			u16 fcode;
 #pragma warning( push )
 #pragma warning( disable : 4251 )
 			std::vector<std::any> args;
+#pragma warning( pop )
+		};
+
+		struct DCS_API SVReturn
+		{
+		public:
+			friend class Registry;
+
+			template<typename T>
+			T cast() const
+			{
+				T rv;
+				try 
+				{
+				    rv = std::any_cast<T>(value);
+				}
+				catch(const std::bad_any_cast& e) 
+				{
+					LOG_ERROR("Bad SVReturn cast %s.", e.what());
+				}
+				return rv;
+			}
+
+		private:
+			SVReturn(std::any value) : value(value) {  }
+			SVReturn() {  }
+
+			template<typename T>
+			SVReturn& operator=(T&& val)
+			{
+				value = val;
+				return *this;
+			}
+
+		private:
+	#pragma warning( push )
+#pragma warning( disable : 4251 )
+			std::any value;
 #pragma warning( pop )
 		};
 	};
@@ -199,19 +264,12 @@ namespace DCS {
 '''
 
 DEF = '''
-////////////////////////////////////////
-//    THIS FILE WAS AUTOGENERATED     //
-//  ANY MODIFICATIONS WILL BE ERASED  //
-////////////////////////////////////////
-// Generated by the DCS pre-processor //
-////////////////////////////////////////
-
 #include "registry.h"
 
-const DCS::Registry::SVParams DCS::Registry::GetParamsFromData(const unsigned char* payload, i16 size)
+const DCS::Registry::SVParams DCS::Registry::GetParamsFromData(const unsigned char* payload, i32 size)
 {
-	i8  op_code   = convert_from_byte<i8>(payload, 0, size);  // First byte
-	i16 func_code = convert_from_byte<i16>(payload, 1, size); // Second byte
+	u8  op_code   = convert_from_byte<u8>(payload, 0, size);  // First byte
+	u16 func_code = convert_from_byte<u16>(payload, 1, size); // Second byte
 	std::vector<std::any> args;
 
 	// 0000 0000 | 0000 0000 0000 0000 | 0000 0000 ...
@@ -219,13 +277,14 @@ const DCS::Registry::SVParams DCS::Registry::GetParamsFromData(const unsigned ch
 	// (Opcode )   (     FuncCode    )   (   Args  ...
 
 	// Evaluate arguments
-	for(i16 it = 3; it < size;)
+	for(i32 it = 3; it < size;)
 	{
-		i8 arg_type = convert_from_byte<i8>(payload, it++, size);
+		u8 arg_type = convert_from_byte<u8>(payload, it++, size);
 
 		// TODO : Auto generate for any argument
 		switch(arg_type)
 		{
+		$0
 		case SV_ARG_int8:
 			args.push_back(convert_from_byte<i8>(payload, it, size));
 			it += sizeof(i8);
@@ -243,48 +302,57 @@ const DCS::Registry::SVParams DCS::Registry::GetParamsFromData(const unsigned ch
 	return DCS::Registry::SVParams(op_code, func_code, args);
 }
 
-// TODO : error directive if parameter is not registered via token 
-void DCS::Registry::Execute(DCS::Registry::SVParams params)
+// TODO : error directive if parameter is not registered via token_call 
+DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 {
+	SVReturn ret; // A generic return type container
 	switch(params.getFunccode())
 	{
-	$0
-	default:
-		DCS::Utils::Logger::Error("Function call id (%d) not found.", params.getFunccode());
+	case SV_CALL_NULL:
+		LOG_ERROR("Function call from SVParams is illegal. Funccode not in hash table");
+		LOG_ERROR("Maybe function signature naming is wrong?");
 		break;
+	$1
+	default:
+		__assume(0); // Hint the compiler to optimize a jump table even further disregarding func_code checks
 	}
+	return ret;
 }
 
 '''
 
 switch = []
+switch_type = []
 
-with open(curr_dir + '/config/registry.h', 'w') as f:
-	f.write(HEADER)
+hdef = []
+defines = []
 
-	hdef = []
-	defines = []
-	
-	registry = []
-	number = 0
+registry = []
+number = 1
 
-	for hd in header_def:
-		hdef.append('#include "' + hd + '"')
+for hd in header_def:
+	hdef.append('#include "' + hd + '"')
 
-	for sig in func:
-		definition = 'SV_CALL_' + sig.replace('::', '_')
-		defines.append('#define ' + definition + ' ' + hex(number))
+for sig in func:
+	definition = 'SV_CALL_' + sig.replace('::', '_')
+	defines.append('#define ' + definition + ' ' + hex(number))
 
-		fargs_casted = []
-		anumber = 0
-		for a in args_name[number]:
+	fargs_casted = []
+	anumber = 0
+
+	if args_name[number-1][0]:
+		for a in args_name[number-1]:
 			fargs_casted.append('params.getArg<' + a + '>(' + str(anumber) + ')')
 			anumber += 1
 
-		switch.append('case ' + definition + ':\n\t\t' + 
-			sig + '(' + ',\n\t\t\t'.join(fargs_casted) + ');\n\t\tbreak;' )
-		registry.append('{"' + sig + '", ' + hex(number) + '}')
-		number += 1
+	switch.append('case ' + definition + ':\n\t\t' + 
+		('' if not return_type[number-1] else 'ret = ') +
+		sig + '(' + ',\n\t\t\t'.join(fargs_casted) + ');\n\t\tbreak;' )
+	registry.append('{"' + sig + '", ' + hex(number) + '}')
+	number += 1
+
+with open(curr_dir + '/config/registry.h', 'w') as f:
+	f.write(HEADER)
 
 	DEC = DEC.replace('$0', '\n'.join(hdef))
 	DEC = DEC.replace('$1', '\n'.join(defines))
@@ -293,7 +361,9 @@ with open(curr_dir + '/config/registry.h', 'w') as f:
 	f.write(DEC)
 
 with open(curr_dir + '/config/registry.cpp', 'w') as f:
+	f.write(HEADER)
 
-	DEF = DEF.replace('$0', '\n\t\t\t'.join(switch))
+	DEF = DEF.replace('$0', '\n\t\t\t'.join(switch_type))
+	DEF = DEF.replace('$1', '\n\t\t\t'.join(switch))
 
 	f.write(DEF)

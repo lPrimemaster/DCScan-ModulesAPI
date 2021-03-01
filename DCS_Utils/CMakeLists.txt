@@ -7,6 +7,8 @@ add_definitions(-DAPI_EXPORT)
 message(STATUS "LIBRARY TYPE SET TO: ${LIB_TYPE}")
 message(STATUS "LIBRARY INSTALL BIN LOCATION: ${INSTALL_LIB_DIR}")
 
+set_pretty_filenames()
+
 add_library(DCSModuleUtils ${LIB_TYPE}
   src/Logger.cpp
   src/internal.cpp

@@ -6,13 +6,13 @@
 int main()
 {
 	using namespace DCS::Network; // For Server and Socket
-	using namespace DCS::Utils;   // For Logger
+
 	Socket s = Server::Create(15777);
 
 	// This waits for a client to connect (blocking)
 	Socket client = Server::WaitForConnection(s);
-	Server::StartThread(client, [](const char* data, DCS::i64 size, Socket client)->void {	
-		Logger::Debug("Received data: %s", data);	
+	Server::StartThread(client, [](const char* data, DCS::i32 size, Socket client)->void {	
+		LOG_DEBUG("Received data: %s", data);	
 		Server::SendData(client, data, size);		
 		});
 	// Will run indefinitely until client disconnect, or...

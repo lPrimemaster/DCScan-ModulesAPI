@@ -7,11 +7,11 @@ int test()
 
 	DCS::Utils::Logger::Init(DCS::Utils::Logger::Verbosity::DEBUG);
 	
-	DCS::Utils::Logger::Debug("Testing output to console and file.");
-	DCS::Utils::Logger::Message("Testing output to console and file.");
-	DCS::Utils::Logger::Warning("Testing output to console and file.");
-	DCS::Utils::Logger::Error("Testing output to console and file.");
-	DCS::Utils::Logger::Critical("Testing output to console and file.");
+	LOG_DEBUG("Testing output to console and file.");
+	LOG_MESSAGE("Testing output to console and file.");
+	LOG_WARNING("Testing output to console and file.");
+	LOG_ERROR("Testing output to console and file.");
+	LOG_CRITICAL("Testing output to console and file.");
 
 	DCS_RETURN_TEST;
 }

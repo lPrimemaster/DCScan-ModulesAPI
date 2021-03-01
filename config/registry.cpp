@@ -8,10 +8,10 @@
 
 #include "registry.h"
 
-const DCS::Registry::SVParams DCS::Registry::GetParamsFromData(const unsigned char* payload, i16 size)
+const DCS::Registry::SVParams DCS::Registry::GetParamsFromData(const unsigned char* payload, i32 size)
 {
-	i8  op_code   = convert_from_byte<i8>(payload, 0, size);  // First byte
-	i16 func_code = convert_from_byte<i16>(payload, 1, size); // Second byte
+	u8  op_code   = convert_from_byte<u8>(payload, 0, size);  // First byte
+	u16 func_code = convert_from_byte<u16>(payload, 1, size); // Second byte
 	std::vector<std::any> args;
 
 	// 0000 0000 | 0000 0000 0000 0000 | 0000 0000 ...
@@ -19,13 +19,14 @@ const DCS::Registry::SVParams DCS::Registry::GetParamsFromData(const unsigned ch
 	// (Opcode )   (     FuncCode    )   (   Args  ...
 
 	// Evaluate arguments
-	for(i16 it = 3; it < size;)
+	for(i32 it = 3; it < size;)
 	{
-		i8 arg_type = convert_from_byte<i8>(payload, it++, size);
+		u8 arg_type = convert_from_byte<u8>(payload, it++, size);
 
 		// TODO : Auto generate for any argument
 		switch(arg_type)
 		{
+		
 		case SV_ARG_int8:
 			args.push_back(convert_from_byte<i8>(payload, it, size));
 			it += sizeof(i8);
@@ -43,18 +44,22 @@ const DCS::Registry::SVParams DCS::Registry::GetParamsFromData(const unsigned ch
 	return DCS::Registry::SVParams(op_code, func_code, args);
 }
 
-void DCS::Registry::Execute(DCS::Registry::SVParams params)
+// TODO : error directive if parameter is not registered via token_call 
+DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 {
+	SVReturn ret; // A generic return type container
 	switch(params.getFunccode())
 	{
-	case SV_CALL_DCS_Network_Server_SendData:
-		DCS::Network::Server::SendData(params.getArg<DCS::Network::Socket>(0),
-			params.getArg<const unsigned char*>(1),
-			params.getArg<DCS::i16>(2));
+	case SV_CALL_NULL:
+		LOG_ERROR("Function call from SVParams is illegal. Funccode not in hash table");
+		LOG_ERROR("Maybe function signature naming is wrong?");
+		break;
+	case SV_CALL_DCS_Threading_GetMaxHardwareConcurrency:
+		ret = DCS::Threading::GetMaxHardwareConcurrency();
 		break;
 	default:
-		DCS::Utils::Logger::Error("Function call id (%d) not found.", params.getFunccode());
-		break;
+		__assume(0); // Hint the compiler to optimize a jump table even further disregarding func_code checks
 	}
+	return ret;
 }
 

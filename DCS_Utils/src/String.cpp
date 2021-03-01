@@ -8,7 +8,7 @@ DCS::Utils::String::String(const char* text)
 
 	if (buffer == nullptr)
 	{
-		std::cerr << "Failed to allocate string memory." << std::endl;
+		LOG_ERROR("Failed to allocate string memory.");
 	}
 	else
 	{
@@ -26,7 +26,7 @@ DCS::Utils::String::String(const String& s)
 
 	if (buffer == nullptr)
 	{
-		std::cerr << "Failed to allocate string memory." << std::endl;
+		LOG_ERROR("Failed to allocate string memory.");
 	}
 	else
 	{

@@ -13,9 +13,10 @@
 #include <any>
 #include "../DCS_Utils/include/DCS_ModuleUtils.h"
 
-#include "H:\Data\C++\DCScan-ModulesAPI\DCS_Network\include\DCS_ModuleNetwork.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
 
-#define SV_CALL_DCS_Network_Server_SendData 0x0
+#define SV_CALL_NULL 0x0
+#define SV_CALL_DCS_Threading_GetMaxHardwareConcurrency 0x1
 
 #define SV_ARG_int8   0x0
 #define SV_ARG_float  0x1
@@ -27,7 +28,7 @@ namespace DCS {
 
 	/**
 	 * \brief Class responsible for registering any function calls that might be
-	 * requested via tcp/ip. This hash table is auto generated via the DCS_REGISTER_CALL token.
+	 * requested via tcp/ip. This hash table is auto generated via the DCS_REGISTER_CALL token_call.
 	 * Any function declarated with it shall be registered in the hash table and called with
 	 * Registry::Execute*() functions.
 	 *
@@ -35,37 +36,38 @@ namespace DCS {
 	class Registry {
 	public:
 		struct SVParams;
+		struct SVReturn;
 
 		static const u16 Get(const char* func_signature)
 		{
-			u16 val = -1;
+			u16 val = 0;
 			auto it = id.find(func_signature);
 			if (it != id.end())
 				val = it->second;
 			else
-				DCS::Utils::Logger::Error("Function signature (%s) not found.", func_signature);
+				LOG_ERROR("Function signature (%s) not found.", func_signature);
 			return val;
 		}
 
-		static DCS_API void Execute(SVParams params);
+		static DCS_API SVReturn Execute(SVParams params);
 
-		static DCS_API const SVParams GetParamsFromData(const unsigned char* payload, i16 size);
+		static DCS_API const SVParams GetParamsFromData(const unsigned char* payload, i32 size);
 	private:
 		template<typename T>
-		static inline T convert_from_byte(const unsigned char* data, i16 offset, i16 size)
+		static inline T convert_from_byte(const unsigned char* data, i32 offset, i32 size)
 		{
 			if(offset >= size)
 			{
-				DCS::Utils::Logger::Error("Data conversion overflow.");
+				LOG_ERROR("Data conversion overflow.");
 				return T();
 			}
 
 			return *((T*)(data + offset));
 		}
 
-		inline static std::unordered_map<const char*,u16> id = 
+		inline static std::unordered_map<const char*, u16> id = 
 		{
-			{"DCS::Network::Server::SendData", 0x0}
+			{"DCS::Threading::GetMaxHardwareConcurrency", 0x1}
 		};
 
 	public:
@@ -74,32 +76,79 @@ namespace DCS {
 		public:
 			friend class Registry;
 
-			const i8 getOpcode() const
+			const u8 getOpcode() const
 			{
 				return opcode;
 			}
 
-			const i16 getFunccode() const
+			const u16 getFunccode() const
 			{
 				return fcode;
 			}
 
 			template<typename T>
-			const T getArg(i32 i) const
+			const T getArg(u64 i) const
 			{
-				return std::any_cast<T>(args.at(i));
+				T rv;
+				try 
+				{
+				    rv = std::any_cast<T>(args.at(i));
+				}
+				catch(const std::bad_any_cast& e) 
+				{
+					LOG_ERROR("Bad SVParams getArg(%d) %s.", i, e.what());
+				}
+				return rv;
 			}
 
 		private:
-			SVParams(i8 oc, i16 fc, std::vector<std::any> args) : opcode(oc), fcode(fc), args(args) {  }
+			SVParams(u8 oc, u16 fc, std::vector<std::any> args) : opcode(oc), fcode(fc), args(args) {  }
 
 		private:
 
-			i8 opcode;
-			i16 fcode;
+			u8 opcode;
+			u16 fcode;
 #pragma warning( push )
 #pragma warning( disable : 4251 )
 			std::vector<std::any> args;
+#pragma warning( pop )
+		};
+
+		struct DCS_API SVReturn
+		{
+		public:
+			friend class Registry;
+
+			template<typename T>
+			T cast() const
+			{
+				T rv;
+				try 
+				{
+				    rv = std::any_cast<T>(value);
+				}
+				catch(const std::bad_any_cast& e) 
+				{
+					LOG_ERROR("Bad SVReturn cast %s.", e.what());
+				}
+				return rv;
+			}
+
+		private:
+			SVReturn(std::any value) : value(value) {  }
+			SVReturn() {  }
+
+			template<typename T>
+			SVReturn& operator=(T&& val)
+			{
+				value = val;
+				return *this;
+			}
+
+		private:
+	#pragma warning( push )
+#pragma warning( disable : 4251 )
+			std::any value;
 #pragma warning( pop )
 		};
 	};

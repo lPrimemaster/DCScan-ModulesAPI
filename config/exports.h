@@ -3,6 +3,7 @@
 /** @file */
 
 #define DCS_REGISTER_CALL
+#define DCS_REGISTER_TYPE
 
 #ifdef API_EXPORT
 /**

@@ -25,13 +25,13 @@ HANDLE DCS::Serial::init_handle(LPCSTR portName, DWORD rwAccess, SerialArgs args
 
 	if (hComm == INVALID_HANDLE_VALUE)
 	{
-		DCS::Utils::Logger::Critical("Serial: Port %s error. Not opened.", portName);
-		DCS::Utils::Logger::Critical("Serial: Extended error: %u", GetLastError());
+		LOG_CRITICAL("Serial: Port %s error. Not opened.", portName);
+		LOG_CRITICAL("Serial: Extended error: %u", GetLastError());
 		return INVALID_HANDLE_VALUE;
 	}
 	else
 	{
-		DCS::Utils::Logger::Debug("Serial: Port %s opened.", portName);
+		LOG_DEBUG("Serial: Port %s opened.", portName);
 	}
 
 	DCB dcbSerialParams = { 0 };
@@ -40,7 +40,7 @@ HANDLE DCS::Serial::init_handle(LPCSTR portName, DWORD rwAccess, SerialArgs args
 	BOOL status = GetCommState(hComm, &dcbSerialParams); //Get the serial parameters
 
 	if (status == FALSE)
-		DCS::Utils::Logger::Warning("Serial: GetCommState() error. Using default or suplied values instead.");
+		LOG_WARNING("Serial: GetCommState() error. Using default or suplied values instead.");
 
 	/* Defaults - BDR: 921.6kBd - BSZ: 8bits - SBT: OneStop - PAR: NoParity - EOFC: Carriage return */
 	dcbSerialParams.BaudRate = args.baudRate ? args.baudRate : (dcbSerialParams.BaudRate ? dcbSerialParams.BaudRate : SERIAL_DEFAULT_BAUD);
@@ -53,22 +53,22 @@ HANDLE DCS::Serial::init_handle(LPCSTR portName, DWORD rwAccess, SerialArgs args
 
 	if (status == FALSE)
 	{
-		DCS::Utils::Logger::Warning("Serial: SetCommState() error. Using default values, if applicable.");
-		DCS::Utils::Logger::Warning("Serial: Set COM DCB Structure Fail. Using intrinsic values, if applicable.");
-		DCS::Utils::Logger::Warning("       Baudrate = %d", dcbSerialParams.BaudRate);
-		DCS::Utils::Logger::Warning("		ByteSize = %d", dcbSerialParams.ByteSize);
-		DCS::Utils::Logger::Warning("		StopBits = %d", dcbSerialParams.StopBits);
-		DCS::Utils::Logger::Warning("		Parity   = %d", dcbSerialParams.Parity);
-		DCS::Utils::Logger::Warning("		EOFChar  = %d", dcbSerialParams.EofChar);
+		LOG_WARNING("Serial: SetCommState() error. Using default values, if applicable.");
+		LOG_WARNING("Serial: Set COM DCB Structure Fail. Using intrinsic values, if applicable.");
+		LOG_WARNING("       Baudrate = %d", dcbSerialParams.BaudRate);
+		LOG_WARNING("		ByteSize = %d", dcbSerialParams.ByteSize);
+		LOG_WARNING("		StopBits = %d", dcbSerialParams.StopBits);
+		LOG_WARNING("		Parity   = %d", dcbSerialParams.Parity);
+		LOG_WARNING("		EOFChar  = %d", dcbSerialParams.EofChar);
 	}
 	else
 	{
-		DCS::Utils::Logger::Debug("Serial: Set COM DCB Structure Success.");
-		DCS::Utils::Logger::Debug("		Baudrate = %d", dcbSerialParams.BaudRate);
-		DCS::Utils::Logger::Debug("		ByteSize = %d", dcbSerialParams.ByteSize);
-		DCS::Utils::Logger::Debug("		StopBits = %d", dcbSerialParams.StopBits);
-		DCS::Utils::Logger::Debug("		Parity   = %d", dcbSerialParams.Parity);
-		DCS::Utils::Logger::Debug("		EOFChar  = %d", dcbSerialParams.EofChar);
+		LOG_DEBUG("Serial: Set COM DCB Structure Success.");
+		LOG_DEBUG("		Baudrate = %d", dcbSerialParams.BaudRate);
+		LOG_DEBUG("		ByteSize = %d", dcbSerialParams.ByteSize);
+		LOG_DEBUG("		StopBits = %d", dcbSerialParams.StopBits);
+		LOG_DEBUG("		Parity   = %d", dcbSerialParams.Parity);
+		LOG_DEBUG("		EOFChar  = %d", dcbSerialParams.EofChar);
 	}
 
 	COMMTIMEOUTS timeouts = { 0 };
@@ -85,15 +85,15 @@ HANDLE DCS::Serial::init_handle(LPCSTR portName, DWORD rwAccess, SerialArgs args
 		status = SetCommTimeouts(hComm, &timeouts);
 		if (status == FALSE)
 		{
-			DCS::Utils::Logger::Error("Serial: SetCommTimeouts() error. Using no values for timeouts.");
+			LOG_ERROR("Serial: SetCommTimeouts() error. Using no values for timeouts.");
 		}
 		else
 		{
-			DCS::Utils::Logger::Debug("Serial: Set port timeouts successfull.");
+			LOG_DEBUG("Serial: Set port timeouts successfull.");
 		}
 	}
 
-	DCS::Utils::Logger::Debug("Serial: Connection initialized successfully.");
+	LOG_DEBUG("Serial: Connection initialized successfully.");
 
 	return hComm;
 }
@@ -103,7 +103,7 @@ BOOL DCS::Serial::write_bytes(HANDLE hComm, LPCSTR charArray, DWORD NbytesToWrit
 	//Check if the handle is in fact valid
 	if (hComm == INVALID_HANDLE_VALUE)
 	{
-		DCS::Utils::Logger::Critical("Serial: HANDLE %u is invalid.\n", (uintptr_t)hComm);
+		LOG_CRITICAL("Serial: HANDLE %u is invalid.\n", (uintptr_t)hComm);
 		return FALSE;
 	}
 
@@ -114,14 +114,14 @@ BOOL DCS::Serial::write_bytes(HANDLE hComm, LPCSTR charArray, DWORD NbytesToWrit
 
 	if (status == FALSE)
 	{
-		DCS::Utils::Logger::Critical("Serial: Tx of data failed.");
-		DCS::Utils::Logger::Critical("		Serial port = %u", (uintptr_t)hComm);
-		DCS::Utils::Logger::Critical("		Serial data = %s", charArray);
-		DCS::Utils::Logger::Critical("		Error       = %u", GetLastError());
+		LOG_CRITICAL("Serial: Tx of data failed.");
+		LOG_CRITICAL("		Serial port = %u", (uintptr_t)hComm);
+		LOG_CRITICAL("		Serial data = %s", charArray);
+		LOG_CRITICAL("		Error       = %u", GetLastError());
 		return FALSE;
 	}
 
-	DCS::Utils::Logger::Debug("Serial: Tx of data succeded. [%ull bytes written]", NbytesWritten);
+	LOG_DEBUG("Serial: Tx of data succeded. [%ull bytes written]", NbytesWritten);
 
 	return TRUE;
 
@@ -132,7 +132,7 @@ BOOL DCS::Serial::read_bytes(HANDLE hComm, LPTSTR buffer, DWORD bufferSize, LPDW
 	//Check if the handle is in fact valid
 	if (hComm == INVALID_HANDLE_VALUE)
 	{
-		DCS::Utils::Logger::Critical("Serial: HANDLE %u is invalid.", (uintptr_t)hComm);
+		LOG_CRITICAL("Serial: HANDLE %u is invalid.", (uintptr_t)hComm);
 		return FALSE;
 	}
 
@@ -144,8 +144,8 @@ BOOL DCS::Serial::read_bytes(HANDLE hComm, LPTSTR buffer, DWORD bufferSize, LPDW
 
 	if (status == FALSE)
 	{
-		DCS::Utils::Logger::Critical("Serial: SetCommMask() error. Event %d might be invalid.", EV_RXCHAR);
-		DCS::Utils::Logger::Critical("Serial: Extended error: %u", GetLastError());
+		LOG_CRITICAL("Serial: SetCommMask() error. Event %d might be invalid.", EV_RXCHAR);
+		LOG_CRITICAL("Serial: Extended error: %u", GetLastError());
 		return FALSE;
 	}
 
@@ -154,8 +154,8 @@ BOOL DCS::Serial::read_bytes(HANDLE hComm, LPTSTR buffer, DWORD bufferSize, LPDW
 
 	if (status == FALSE)
 	{
-		DCS::Utils::Logger::Critical("Serial: WaitCommEvent() error.");
-		DCS::Utils::Logger::Critical("Serial: Extended error: %u", GetLastError());
+		LOG_CRITICAL("Serial: WaitCommEvent() error.");
+		LOG_CRITICAL("Serial: Extended error: %u", GetLastError());
 		return FALSE;
 	}
 
@@ -186,24 +186,24 @@ BOOL DCS::Serial::read_bytes(HANDLE hComm, LPTSTR buffer, DWORD bufferSize, LPDW
 
 	if (i == SERIAL_DEFAULT_READ_BUFFER_SIZE && localSerialBuffer[SERIAL_DEFAULT_READ_BUFFER_SIZE - 1] != SERIAL_DEFAULT_READ_RX_EOF)
 	{
-		DCS::Utils::Logger::Error("Serial: Rx of data incomplete.");
-		DCS::Utils::Logger::Error("		Read Buffer Size = %d", SERIAL_DEFAULT_READ_BUFFER_SIZE);
-		DCS::Utils::Logger::Error("		Received Size    = %d", excess + i);
-		DCS::Utils::Logger::Error("		Ignoring Size    = %d", excess);
-		DCS::Utils::Logger::Error("		Received Bytes   = %s", localSerialBuffer);
-		DCS::Utils::Logger::Error("		Terminated       = %s", "False");
+		LOG_ERROR("Serial: Rx of data incomplete.");
+		LOG_ERROR("		Read Buffer Size = %d", SERIAL_DEFAULT_READ_BUFFER_SIZE);
+		LOG_ERROR("		Received Size    = %d", excess + i);
+		LOG_ERROR("		Ignoring Size    = %d", excess);
+		LOG_ERROR("		Received Bytes   = %s", localSerialBuffer);
+		LOG_ERROR("		Terminated       = %s", "False");
 		return FALSE;
 	}
 
 	if (status == FALSE)
 	{
-		DCS::Utils::Logger::Error("Serial: Rx of data failed.");
-		DCS::Utils::Logger::Error("Serial: Extended error: %u", GetLastError());
-		DCS::Utils::Logger::Error("		Read Buffer Size = %d", SERIAL_DEFAULT_READ_BUFFER_SIZE);
-		DCS::Utils::Logger::Error("		Received Size    = %d", excess + i);
-		DCS::Utils::Logger::Error("		Ignoring Size    = %d", excess);
-		DCS::Utils::Logger::Error("		Received Bytes   = %s", localSerialBuffer);
-		DCS::Utils::Logger::Error("		Terminated       = %s", localSerialBuffer[last] == '\n' ? "True" : "False");
+		LOG_ERROR("Serial: Rx of data failed.");
+		LOG_ERROR("Serial: Extended error: %u", GetLastError());
+		LOG_ERROR("		Read Buffer Size = %d", SERIAL_DEFAULT_READ_BUFFER_SIZE);
+		LOG_ERROR("		Received Size    = %d", excess + i);
+		LOG_ERROR("		Ignoring Size    = %d", excess);
+		LOG_ERROR("		Received Bytes   = %s", localSerialBuffer);
+		LOG_ERROR("		Terminated       = %s", localSerialBuffer[last] == '\n' ? "True" : "False");
 		return FALSE;
 	}
 
@@ -220,20 +220,20 @@ BOOL DCS::Serial::read_bytes(HANDLE hComm, LPTSTR buffer, DWORD bufferSize, LPDW
 	}
 	else
 	{
-		DCS::Utils::Logger::Error("Serial: Rx copy of data failed.\n");
-		DCS::Utils::Logger::Error("Serial: Size of user buffer is too small.\n");
-		DCS::Utils::Logger::Error("		Read Buffer Size = %d\n", SERIAL_DEFAULT_READ_BUFFER_SIZE);
-		DCS::Utils::Logger::Error("		User Buffer Size = %d\n", bufferSize);
+		LOG_ERROR("Serial: Rx copy of data failed.\n");
+		LOG_ERROR("Serial: Size of user buffer is too small.\n");
+		LOG_ERROR("		Read Buffer Size = %d\n", SERIAL_DEFAULT_READ_BUFFER_SIZE);
+		LOG_ERROR("		User Buffer Size = %d\n", bufferSize);
 		return FALSE;
 	}
 
-	DCS::Utils::Logger::Debug("Serial: Rx of data succeded. [%d bytes read]", last);
+	LOG_DEBUG("Serial: Rx of data succeded. [%d bytes read]", last);
 
 	return TRUE;
 }
 
 BOOL DCS::Serial::close_handle(HANDLE hComm)
 {
-	DCS::Utils::Logger::Debug("Serial: Closing handle %x", hComm);
+	LOG_DEBUG("Serial: Closing handle %x", hComm);
 	return CloseHandle(hComm);
 }

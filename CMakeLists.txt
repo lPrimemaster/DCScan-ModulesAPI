@@ -17,8 +17,21 @@ endfunction()
 # Disable MSVC nasty deprecations
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
-# Enable testing (DISABLE THIS FOR RELEASE)
+function(set_pretty_filenames)
+	string(LENGTH "${CMAKE_CURRENT_SOURCE_DIR}/" SOURCE_PATH_SIZE)
+	add_definitions("-DSOURCE_PATH_SIZE=${SOURCE_PATH_SIZE}")
+endfunction()
 
+set_pretty_filenames()
+
+#file(GLOB_RECURSE files "*.cpp" "*.h")
+#foreach(f IN ${files})
+#	string(LENGTH "${CMAKE_SOURCE_DIR}/" SOURCE_PATH_SIZE)
+#	set_source_files_properties(f COMPILE_DEFINITIONS __SPS__=SOURCE_PATH_SIZE)
+#endforeach()
+
+
+# Enable testing (DISABLE THIS FOR RELEASE)
 option(BUILD_TESTS "Build tests" OFF)
 option(INTERNAL_DOCS "Generate internal documentation" OFF)
 
@@ -156,4 +169,4 @@ install(FILES
 install(EXPORT DCSModulesAPITargets DESTINATION
   "${INSTALL_CMAKE_DIR}" COMPONENT dev)
 
-install(DIRECTORY config  DESTINATION "${INSTALL_INCLUDE_DIR}")
+install(DIRECTORY config  DESTINATION "${INSTALL_INCLUDE_DIR}" FILES_MATCHING PATTERN "*.h")

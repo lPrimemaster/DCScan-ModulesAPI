@@ -23,6 +23,13 @@
  * $Modified: 2020/10/19$
  */
 
+#define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, __VA_ARGS__)
+#define LOG_DEBUG(msg, ...) LOG_LVL(Debug, msg, __VA_ARGS__)
+#define LOG_MESSAGE(msg, ...) LOG_LVL(Message, msg, __VA_ARGS__)
+#define LOG_WARNING(msg, ...) LOG_LVL(Warning, msg, __VA_ARGS__)
+#define LOG_ERROR(msg, ...) LOG_LVL(Error, msg, __VA_ARGS__)
+#define LOG_CRITICAL(msg, ...) LOG_LVL(Critical, msg, __VA_ARGS__)
+
 namespace DCS
 {
 	typedef signed long long i64; ///< Equivalent to int_64t.
@@ -148,35 +155,35 @@ namespace DCS
 			 * 
 			 * Uses printf like formating.
 			 */
-			static DCS_API void Debug(const char* msg, ...);
+			static DCS_API void Debug(const char* file, const char* msg, ...);
 
 			/**
 			 * \brief Emit a status message.
 			 * 
 			 * Uses printf like formating.
 			 */
-			static DCS_API void Message(const char* msg, ...);
+			static DCS_API void Message(const char* file, const char* msg, ...);
 
 			/**
 			 * \brief Emit a warning message.
 			 * 
 			 * Uses printf like formating.
 			 */
-			static DCS_API void Warning(const char* msg, ...);
+			static DCS_API void Warning(const char* file, const char* msg, ...);
 
 			/**
 			 * \brief Emit an error message.
 			 * 
 			 * Uses printf like formating.
 			 */
-			static DCS_API void Error(const char* msg, ...);
+			static DCS_API void Error(const char* file, const char* msg, ...);
 
 			/**
 			 * \brief Emit a critical error message.
 			 * 
 			 * Uses printf like formating.
 			 */
-			static DCS_API void Critical(const char* msg, ...);
+			static DCS_API void Critical(const char* file, const char* msg, ...);
 
 			/**
 			 * \brief Changes Logger Options.

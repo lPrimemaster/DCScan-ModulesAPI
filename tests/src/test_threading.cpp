@@ -11,12 +11,12 @@ void worker0(std::mutex* lock, std::condition_variable* signal, std::array<std::
 
 	std::this_thread::sleep_for(200ms);
 
-	DCS::Utils::Logger::Debug("Sample worker0 thread spawned");
+	LOG_DEBUG("Sample worker0 thread spawned");
 	std::unique_lock<std::mutex> l(*lock);
 
 	std::this_thread::sleep_for(1s);
 
-	DCS::Utils::Logger::Debug("Sample worker0 thread flag data as 2.");
+	LOG_DEBUG("Sample worker0 thread flag data as 2.");
 	flags->at(0).store(2);
 
 	l.unlock();
@@ -27,7 +27,7 @@ void worker0(std::mutex* lock, std::condition_variable* signal, std::array<std::
 
 	l.lock();
 
-	DCS::Utils::Logger::Debug("Sample worker0 thread flag data as 1.");
+	LOG_DEBUG("Sample worker0 thread flag data as 1.");
 	flags->at(0).store(1);
 
 	l.unlock();
@@ -36,15 +36,15 @@ void worker0(std::mutex* lock, std::condition_variable* signal, std::array<std::
 
 void worker1(std::mutex* lock, std::condition_variable* signal, std::array<std::atomic_int, 16>* flags)
 {
-	DCS::Utils::Logger::Debug("Sample worker1 thread spawned");
+	LOG_DEBUG("Sample worker1 thread spawned");
 
 	std::unique_lock<std::mutex> l(*lock);
 
-	DCS::Utils::Logger::Debug("Sample worker1 waiting for data.");
+	LOG_DEBUG("Sample worker1 waiting for data.");
 
 	signal->wait(l, [&] { return flags->at(0).load() == 1; });
 
-	DCS::Utils::Logger::Debug("Sample worker1 received data.");
+	LOG_DEBUG("Sample worker1 received data.");
 }
 
 int test()

@@ -60,7 +60,7 @@ namespace DCS
 				if (buffer.usedSize > buffer.size)
 				{
 					buffer.usedSize -= sizeof(T);
-					DCS::Utils::Logger::Critical("Allocating %u bytes would result in buffer overrun. [Available: %u]", sizeof(T), buffer.size - buffer.usedSize);
+					LOG_CRITICAL("Allocating %u bytes would result in buffer overrun. [Available: %u]", sizeof(T), buffer.size - buffer.usedSize);
 					return nullptr;
 				}
 
@@ -69,7 +69,7 @@ namespace DCS
 
 				if (rb == nullptr)
 				{
-					DCS::Utils::Logger::Critical("Failed to allocated %u bytes in allocator.", sizeof(T));
+					LOG_CRITICAL("Failed to allocated %u bytes in allocator.", sizeof(T));
 					return nullptr;
 				}
 
@@ -89,7 +89,7 @@ namespace DCS
 				if (buffer.usedSize > buffer.size)
 				{
 					buffer.usedSize -= sizeof(T);
-					DCS::Utils::Logger::Critical("Allocating %u bytes would result in buffer overrun. [Available: %u]", sizeof(T), buffer.size - buffer.usedSize);
+					LOG_CRITICAL("Allocating %u bytes would result in buffer overrun. [Available: %u]", sizeof(T), buffer.size - buffer.usedSize);
 					return nullptr;
 				}
 
@@ -98,7 +98,7 @@ namespace DCS
 
 				if (rb == nullptr)
 				{
-					DCS::Utils::Logger::Critical("Failed to allocated %u bytes in allocator.", sizeof(T));
+					LOG_CRITICAL("Failed to allocated %u bytes in allocator.", sizeof(T));
 					return nullptr;
 				}
 
@@ -130,6 +130,7 @@ namespace DCS
 		/**
 		 * \brief Get current machine maximum hardware concurrency (Number of physical threads supported by the current implementation).
 		 */
+		DCS_REGISTER_CALL
 		const DCS_API u16 GetMaxHardwareConcurrency();
 	}
 }

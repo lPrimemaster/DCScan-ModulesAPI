@@ -17,12 +17,12 @@ DCS::Threading::TPool* DCS::Threading::CreatePersistentPool(u16 size, std::vecto
 	if (size > GetMaxHardwareConcurrency())
 	{
 		isize = GetMaxHardwareConcurrency();
-		DCS::Utils::Logger::Warning("Attempt to create a thread_pool with size > max_physical_threads");
-		DCS::Utils::Logger::Warning("Creating %d threads instead.", isize);
-		DCS::Utils::Logger::Critical("Discarded last %d workers from TPool %x!", workers.size() - isize, pool);
+		LOG_WARNING("Attempt to create a thread_pool with size > max_physical_threads");
+		LOG_WARNING("Creating %d threads instead.", isize);
+		LOG_CRITICAL("Discarded last %d workers from TPool %x!", workers.size() - isize, pool);
 	}
 
-	DCS::Utils::Logger::Debug("Initialized persistent threads. (size=%d)", isize);
+	LOG_DEBUG("Initialized persistent threads. (size=%d)", isize);
 
 	for (u16 i = 0; i < isize; i++)
 		pool->workers.push_back(std::thread(workers[i], &pool->lock, &pool->signal, &pool->flags));
@@ -48,9 +48,9 @@ void DCS::Threading::DestroyPool(TPool* pool)
 {
 	if (!pool->workers.size())
 	{
-		DCS::Utils::Logger::Debug("Deleted pool object %x.", pool);
+		LOG_DEBUG("Deleted pool object %x.", pool);
 		delete pool;
 	}
 	else
-		DCS::Utils::Logger::Warning("Cannot destroy TPool object (%x) while working async. Maybe missing a DCS::Threading::JoinPool(TPool*) call.", pool);
+		LOG_WARNING("Cannot destroy TPool object (%x) while working async. Maybe missing a DCS::Threading::JoinPool(TPool*) call.", pool);
 }
