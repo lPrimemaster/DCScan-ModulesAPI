@@ -100,12 +100,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:af69b60bcf9d6c402ab0b123fe0a625f1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af69b60bcf9d6c402ab0b123fe0a625f1"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>DCS_REGISTER_CALL</b></td></tr>
-<tr class="separator:af69b60bcf9d6c402ab0b123fe0a625f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d7ab0bf60577ae2c6cc6f55474719a6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4d7ab0bf60577ae2c6cc6f55474719a6"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>DCS_REGISTER_TYPE</b></td></tr>
-<tr class="separator:a4d7ab0bf60577ae2c6cc6f55474719a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a454934597ef43cc74a7244a392fb110d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exports_8h.html#a454934597ef43cc74a7244a392fb110d">DCS_REGISTER_CALL</a>(...)</td></tr>
+<tr class="memdesc:a454934597ef43cc74a7244a392fb110d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append this definition before function declarations to register it as a tcp connection callable. First param is the return type, the following params are argument types (if existent).  <a href="#a454934597ef43cc74a7244a392fb110d">More...</a><br /></td></tr>
+<tr class="separator:a454934597ef43cc74a7244a392fb110d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a240a0f4545ac093f1b6795229b386fb8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a>&#160;&#160;&#160;__declspec(dllimport)</td></tr>
 <tr class="memdesc:a240a0f4545ac093f1b6795229b386fb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the export interface acessible via the dll-interface.  <a href="#a240a0f4545ac093f1b6795229b386fb8">More...</a><br /></td></tr>
 <tr class="separator:a240a0f4545ac093f1b6795229b386fb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,6 +139,26 @@ Macros</h2></td></tr>
 <p>Defines the export interface acessible via the dll-interface applicable for internal functions only. </p>
 <p>This is used to expose certain internal features for testing, declarations with this specifier will not be exported to the final built shared library. </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Do not define API for Cmake's STATIC lib configuration </dd></dl>
 
+</div>
+</div>
+<a class="anchor" id="a454934597ef43cc74a7244a392fb110d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DCS_REGISTER_CALL</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Append this definition before function declarations to register it as a tcp connection callable. First param is the return type, the following params are argument types (if existent). </p>
+<p>After running the DCS Preprocessor, integer codes (as well as macro definitions) should be generated for each function registered.</p>
+<p>Note that the parameters name should be written in full, regardless of the current scope. See last example.</p>
+<p>Examples: </p><div class="fragment"><div class="line"><a class="code" href="exports_8h.html#a454934597ef43cc74a7244a392fb110d">DCS_REGISTER_CALL</a>(<span class="keywordtype">void</span>, <span class="keywordtype">int</span>)</div><div class="line">void funcInt(<span class="keywordtype">int</span> x);</div><div class="line"></div><div class="line"><a class="code" href="exports_8h.html#a454934597ef43cc74a7244a392fb110d">DCS_REGISTER_CALL</a>(<span class="keywordtype">void</span>)</div><div class="line"><span class="keywordtype">void</span> func();</div><div class="line"></div><div class="line"><a class="code" href="exports_8h.html#a454934597ef43cc74a7244a392fb110d">DCS_REGISTER_CALL</a>(<span class="keywordtype">int</span>, <a class="code" href="namespace_d_c_s.html">DCS</a>::i8)</div><div class="line"><span class="keywordtype">int</span> <a class="code" href="namespace_d_c_s.html">DCS</a>::example_func(i8 val);</div></div><!-- fragment --> 
 </div>
 </div>
 </div><!-- contents -->

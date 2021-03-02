@@ -7,6 +7,7 @@ var searchData=
   ['dcs_5fmoduleenginecontrol_2eh',['DCS_ModuleEngineControl.h',['../_d_c_s___module_engine_control_8h.html',1,'']]],
   ['dcs_5fmodulenetwork_2eh',['DCS_ModuleNetwork.h',['../_d_c_s___module_network_8h.html',1,'']]],
   ['dcs_5fmoduleutils_2eh',['DCS_ModuleUtils.h',['../_d_c_s___module_utils_8h.html',1,'']]],
+  ['dcs_5fregister_5fcall',['DCS_REGISTER_CALL',['../exports_8h.html#a454934597ef43cc74a7244a392fb110d',1,'exports.h']]],
   ['debug',['DEBUG',['../class_d_c_s_1_1_utils_1_1_logger.html#a7eb79910957b75fadd68b38039e2c4bdadc30ec20708ef7b0f641ef78b7880a15',1,'DCS::Utils::Logger::DEBUG()'],['../class_d_c_s_1_1_utils_1_1_logger.html#a974e93099cd6d2dc2abd4229e4264ca7',1,'DCS::Utils::Logger::Debug(const char *file, const char *msg,...)']]],
   ['delete',['Delete',['../namespace_d_c_s_1_1_timer.html#a2570944c17768aaa330f9c39889e10fe',1,'DCS::Timer']]],
   ['destroy',['Destroy',['../class_d_c_s_1_1_utils_1_1_logger.html#af88d3f142c2a46877046e2339c80de35',1,'DCS::Utils::Logger']]],
