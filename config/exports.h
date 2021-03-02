@@ -2,8 +2,29 @@
 
 /** @file */
 
-#define DCS_REGISTER_CALL
-#define DCS_REGISTER_TYPE
+/**
+ * \brief Append this definition before function declarations to register it as a tcp connection
+ * callable. First param is the return type, the following params are argument types (if existent).
+ * 
+ * After running the DCS Preprocessor, integer codes (as well as macro definitions) should be generated for each
+ * function registered.
+ * 
+ * Note that the parameters name should be written in full, regardless of the current scope.
+ * See last example.
+ * 
+ * Examples:
+ * \code{.cpp}
+ * DCS_REGISTER_CALL(void, int)
+ * void funcInt(int x);
+ * 
+ * DCS_REGISTER_CALL(void)
+ * void func();
+ * 
+ * DCS_REGISTER_CALL(int, DCS::i8)
+ * int DCS::example_func(i8 val);
+ * \endcode
+ */
+#define DCS_REGISTER_CALL(...)
 
 #ifdef API_EXPORT
 /**

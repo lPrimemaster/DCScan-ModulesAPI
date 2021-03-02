@@ -9,12 +9,12 @@ void worker0(std::mutex* lock, std::condition_variable* signal, std::array<std::
 {
 	flags->at(0).store(0);
 
-	std::this_thread::sleep_for(200ms);
+	std::this_thread::sleep_for(100ms);
 
 	LOG_DEBUG("Sample worker0 thread spawned");
 	std::unique_lock<std::mutex> l(*lock);
 
-	std::this_thread::sleep_for(1s);
+	std::this_thread::sleep_for(100ms);
 
 	LOG_DEBUG("Sample worker0 thread flag data as 2.");
 	flags->at(0).store(2);
@@ -23,7 +23,7 @@ void worker0(std::mutex* lock, std::condition_variable* signal, std::array<std::
 	signal->notify_all();
 
 
-	std::this_thread::sleep_for(1s);
+	std::this_thread::sleep_for(100ms);
 
 	l.lock();
 

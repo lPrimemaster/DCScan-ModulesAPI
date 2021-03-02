@@ -15,16 +15,16 @@ int test()
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		Socket c = Client::Connect("127.0.0.1", 15777);
 
-		Client::SendData(c, (const unsigned char*)"\x05\x00\x00\x00", 4);
-		Client::SendData(c, (const unsigned char*)"\x03", 1);
-		Client::SendData(c, (const unsigned char*)"\x01\x00", 2);
-		Client::SendData(c, (const unsigned char*)"\x00\xFF", 2);
+		Client::SendData(c, (const unsigned char*)"\x05\x00\x00\x00", 4); // Send Msg size
+		Client::SendData(c, (const unsigned char*)"\x03", 1); // Opcode = 3
+		Client::SendData(c, (const unsigned char*)"\x01\x00", 2); // Fcode = 1
+		Client::SendData(c, (const unsigned char*)"\x00\xFF", 2); // Param 0 -> i8(-1)
 
 		Client::StartThread(c, [](const unsigned char* data, DCS::i32 size, Socket client)->void {
 				LOG_DEBUG("[Client] Received data: %s", data);
 		});
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+		std::this_thread::sleep_for(std::chrono::milliseconds(250));
 
 		Client::StopThread(c);
 	});

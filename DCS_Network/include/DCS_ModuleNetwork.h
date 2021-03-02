@@ -176,7 +176,7 @@ namespace DCS
 			{
 				NO_OP,     ///< Ping the server only.
 				REQUEST,   ///< Request something to server.
-				SUB_EVT,   ///< Subscribe to a server-side value(s) change.
+				SUB_EVT,   ///< Subscribe to a server-side event.
 				UNSUB_EVT  ///< Unsubscribe from a previously subscribed event.
 			};
 		}

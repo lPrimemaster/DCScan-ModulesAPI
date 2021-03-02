@@ -130,7 +130,7 @@ namespace DCS
 		/**
 		 * \brief Get current machine maximum hardware concurrency (Number of physical threads supported by the current implementation).
 		 */
-		DCS_REGISTER_CALL
+		DCS_REGISTER_CALL(DCS::u16)
 		const DCS_API u16 GetMaxHardwareConcurrency();
 	}
 }
