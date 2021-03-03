@@ -3,6 +3,11 @@
 #include "../include/DCS_ModuleCore.h"
 #include "../include/internal.h"
 
+const int DCS::Threading::addInt(int a, int b)
+{
+	return a + b;
+}
+
 const DCS::u16 DCS::Threading::GetMaxHardwareConcurrency()
 {
 	return std::thread::hardware_concurrency();

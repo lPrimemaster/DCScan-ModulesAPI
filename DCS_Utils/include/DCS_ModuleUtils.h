@@ -1,3 +1,6 @@
+#ifndef _DCS_UTILS_H
+#define _DCS_UTILS_H
+
 #pragma once
 #include "../../config/exports.h"
 #include <iostream>
@@ -23,7 +26,13 @@
  * $Modified: 2020/10/19$
  */
 
+
+#ifdef SOURCE_PATH_SIZE
 #define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, __VA_ARGS__)
+#else 
+#define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__, msg, __VA_ARGS__)
+#endif
+
 #define LOG_DEBUG(msg, ...) LOG_LVL(Debug, msg, __VA_ARGS__)
 #define LOG_MESSAGE(msg, ...) LOG_LVL(Message, msg, __VA_ARGS__)
 #define LOG_WARNING(msg, ...) LOG_LVL(Warning, msg, __VA_ARGS__)
@@ -274,3 +283,5 @@ namespace DCS
 		DCS_API i64 GetNanoseconds(SystemTimer timer);
 	}
 }
+
+#endif _DCS_UTILS_H

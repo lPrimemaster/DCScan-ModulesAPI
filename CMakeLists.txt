@@ -123,6 +123,18 @@ endif (DOXYGEN_FOUND)
 # End Doxygen setup #
 # ================= #
 
+# ===================== #
+# Start DCSGen.py setup #
+# ===================== #
+
+# Tell CMake to run python from the directory where this CMakeLists file exists.
+execute_process(COMMAND python DCSGen.py
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+
+# =================== #
+# End DCSGen.py setup #
+# =================== #
+
 if(BUILD_TESTS)
   # Add testing subdirectory
   enable_testing()
@@ -169,4 +181,4 @@ install(FILES
 install(EXPORT DCSModulesAPITargets DESTINATION
   "${INSTALL_CMAKE_DIR}" COMPONENT dev)
 
-install(DIRECTORY config  DESTINATION "${INSTALL_INCLUDE_DIR}" FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY config DESTINATION "${INSTALL_INCLUDE_DIR}" FILES_MATCHING PATTERN "*.h")

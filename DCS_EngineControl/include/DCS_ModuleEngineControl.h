@@ -1,3 +1,6 @@
+#ifndef _DCS_CORE_H
+#define _DCS_CORE_H
+
 #pragma once
 #include "../../config/exports.h"
 
@@ -25,3 +28,4 @@ namespace DCS
 	}
 }
 
+#endif _DCS_CORE_H

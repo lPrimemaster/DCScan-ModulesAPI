@@ -1,3 +1,6 @@
+#ifndef _DCS_CORE_H
+#define _DCS_CORE_H
+
 #pragma once
 #include "../../config/exports.h"
 #include "../../DCS_Utils/include/DCS_ModuleUtils.h"
@@ -132,5 +135,10 @@ namespace DCS
 		 */
 		DCS_REGISTER_CALL(DCS::u16)
 		const DCS_API u16 GetMaxHardwareConcurrency();
+
+		DCS_REGISTER_CALL(int, int, int)
+		const DCS_API int addInt(int a, int b);
 	}
 }
+
+#endif _DCS_CORE_H

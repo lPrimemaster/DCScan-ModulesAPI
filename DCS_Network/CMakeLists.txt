@@ -15,6 +15,7 @@ add_library(DCSModuleNetwork ${LIB_TYPE}
   src/socket.cpp
   src/server.cpp
   src/client.cpp
+  src/message.cpp
 
   ../config/registry.cpp
   ../config/exports.h

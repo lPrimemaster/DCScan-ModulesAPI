@@ -7,6 +7,7 @@
 #include <ws2tcpip.h>
 
 #include <atomic>
+#include <queue>
 
 /**
  * @file
@@ -33,14 +34,14 @@ namespace DCS
 			WSADATA wsa;
 		};
 
-		inline static WindowsSocketInformation* wsi = nullptr;
+		inline static bool is_inited = false;
 		inline static std::atomic<i32> instances = 0;
 
 		/**
 		 * \internal.
 		 * \brief Initializes windows WinSock2.
 		 */
-		DCS_INTERNAL_TEST WindowsSocketInformation InitWinSock();
+		DCS_INTERNAL_TEST WSADATA InitWinSock();
 
 		/**
 		 * \internal.
@@ -105,5 +106,25 @@ namespace DCS
 		 * such as a remote emergency shutdown.
 		 */
 		DCS_INTERNAL_TEST i32 SendPriorityData(SOCKET client, const unsigned char* buffer, i32 buff_len);
+
+		namespace Message
+		{
+#pragma pack(push, 1)
+			// TODO : Consider using this as a Message for both client and server (part of the API)
+			struct DCS_INTERNAL_TEST DefaultMessage
+			{
+				u8 op;
+				i64 size;
+				u8* ptr;
+			};
+#pragma pack(pop)
+
+			DCS_INTERNAL_TEST DefaultMessage Alloc(i32 size);
+			DCS_INTERNAL_TEST void Set(DefaultMessage& msg, u8* data);
+			DCS_INTERNAL_TEST void Set(DefaultMessage& msg, u8 opcode, u8* data);
+			DCS_INTERNAL_TEST void Delete(DefaultMessage msg);
+
+			DCS_INTERNAL_TEST void ScheduleTransmission(DefaultMessage msg);
+		}
 	}
 }

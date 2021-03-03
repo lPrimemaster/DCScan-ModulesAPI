@@ -99,7 +99,8 @@ for fnm in filenames:
 
 
 			# Get function header dep
-			header_def.append(fnm)
+			if fnm not in header_def:
+				header_def.append(fnm)
 
 
 
@@ -132,6 +133,9 @@ $1
 #define SV_ARG_NULL 0x0
 $2
 
+#define SV_RET_VOID 0x0
+$3
+
 namespace DCS {
 
 	/**
@@ -161,7 +165,6 @@ namespace DCS {
 
 		static DCS_API SVReturn Execute(SVParams params);
 
-		static DCS_API const SVParams GetParamsFromData(const unsigned char* payload, i32 size);
 	private:
 		template<typename T>
 		static inline T convert_from_byte(const unsigned char* data, i32 offset, i32 size)
@@ -175,22 +178,26 @@ namespace DCS {
 			return *((T*)(data + offset));
 		}
 
+		template<typename T>
+		static inline void convert_to_byte(T value, unsigned char* buffer, i32 offset, i32 size)
+		{
+			if(offset >= size)
+			{
+				LOG_ERROR("Data conversion overflow.");
+				return;
+			}
+			memcpy(&buffer[offset], (unsigned char*)&value, sizeof(T));
+		}
+
 		inline static std::unordered_map<const char*, u16> id = 
 		{
-			$3
+			$4
 		};
 
 	public:
 		struct DCS_API SVParams
 		{
 		public:
-			friend class Registry;
-
-			const u8 getOpcode() const
-			{
-				return opcode;
-			}
-
 			const u16 getFunccode() const
 			{
 				return fcode;
@@ -211,12 +218,37 @@ namespace DCS {
 				return rv;
 			}
 
-		private:
-			SVParams(u8 oc, u16 fc, std::vector<std::any> args) : opcode(oc), fcode(fc), args(args) {  }
+			static const SVParams GetParamsFromData(const unsigned char* payload, i32 size);
+
+			template<typename... Args>
+			static i32 GetDataFromParams(unsigned char* buffer, u16 fcode, Args... args)
+			{
+				std::vector<std::any> p = {args...};
+				i32 it = sizeof(u16);
+				memcpy(buffer, &fcode, sizeof(u16));
+
+				switch(fcode)
+				{
+					$5
+					//case CALL1:
+					//	i32 it = 0;
+					//	auto A0_v = std::any_cast<p0Type>(p.at(0));
+					//	u8   A0_t = p0Type_define;
+					//	cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(p0Type), it);
+					//	...
+					//	break;
+				}
+
+				return it;
+			}
 
 		private:
+			SVParams(u16 fc, std::vector<std::any> args) : fcode(fc), args(args) {  }
 
-			u8 opcode;
+		private:
+			static void cpyArgToBuffer(unsigned char* buffer, u8* value, u8 type, i32 argSize, i32& it);
+
+		private:
 			u16 fcode;
 #pragma warning( push )
 #pragma warning( disable : 4251 )
@@ -224,43 +256,13 @@ namespace DCS {
 #pragma warning( pop )
 		};
 
+#pragma pack(push, 1)
 		struct DCS_API SVReturn
 		{
-		public:
-			friend class Registry;
-
-			template<typename T>
-			T cast() const
-			{
-				T rv;
-				try 
-				{
-				    rv = std::any_cast<T>(value);
-				}
-				catch(const std::bad_any_cast& e) 
-				{
-					LOG_ERROR("Bad SVReturn cast %s.", e.what());
-				}
-				return rv;
-			}
-
-		private:
-			SVReturn(std::any value) : value(value) {  }
-			SVReturn() {  }
-
-			template<typename T>
-			SVReturn& operator=(T&& val)
-			{
-				value = val;
-				return *this;
-			}
-
-		private:
-	#pragma warning( push )
-#pragma warning( disable : 4251 )
-			std::any value;
-#pragma warning( pop )
+			i8 type;
+			u8 ptr[1024];
 		};
+#pragma pack(pop)
 	};
 }
 '''
@@ -268,38 +270,38 @@ namespace DCS {
 DEF = '''
 #include "registry.h"
 
-const DCS::Registry::SVParams DCS::Registry::GetParamsFromData(const unsigned char* payload, i32 size)
+const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const unsigned char* payload, i32 size)
 {
-	u8  op_code   = convert_from_byte<u8>(payload, 0, size);  // First byte
-	u16 func_code = convert_from_byte<u16>(payload, 1, size); // Second byte
+	u16 func_code = convert_from_byte<u16>(payload, 0, size); // First byte
 	std::vector<std::any> args;
 
-	// 0000 0000 | 0000 0000 0000 0000 | 0000 0000 ...
-	// 0		   1		 2			 3         ...
-	// (Opcode )   (     FuncCode    )   (   Args  ...
+	// 0000 0000 0000 0000 | 0000 0000 ...
+	// 0		 1			 2         ...
+	// (    FuncCode     )   (   Args  ...
 
 	// Evaluate arguments
-	for(i32 it = 3; it < size;)
+	for(i32 it = 2; it < size;)
 	{
 		u8 arg_type = convert_from_byte<u8>(payload, it++, size);
 
 		switch(arg_type)
 		{
 		case SV_ARG_NULL:
-			LOG_ERROR("Arg type not recognized.");
+			//LOG_ERROR("Arg type not recognized.");
 			break;
 		$0
 		default:
 			__assume(0); // Hint the compiler to optimize a jump table even further disregarding arg_code checks
 		}
 	}
-	return DCS::Registry::SVParams(op_code, func_code, args);
+	return DCS::Registry::SVParams(func_code, args);
 }
 
 // TODO : error directive if parameter is not registered via token_call 
 DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 {
 	SVReturn ret; // A generic return type container
+	ret.type = SV_RET_VOID;
 	switch(params.getFunccode())
 	{
 	case SV_CALL_NULL:
@@ -313,14 +315,23 @@ DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 	return ret;
 }
 
+void DCS::Registry::SVParams::cpyArgToBuffer(unsigned char* buffer, u8* value, u8 type, i32 argSize, i32& it)
+{
+	memcpy(buffer + it, &type, sizeof(u8)); it += sizeof(u8);
+	memcpy(buffer + it, value, argSize); it += argSize;
+}
+
 '''
 
 switch = []
 switch_type = []
 
+switch_reverse = []
+
 hdef = []
 defines = []
 arg_defines = []
+rtype_defines = []
 
 registry = []
 number = 1
@@ -328,6 +339,25 @@ number = 1
 for hd in header_def:
 	hdef.append('#include "' + hd + '"')
 
+for rt in list(filter(None, list(set(return_type)))):
+	definition = 'SV_RET_' + rt.replace('::', '_')
+	rtype_defines.append('#define ' + definition + ' ' + hex(number))
+	number += 1
+
+# Concat arg_types and remove empty str ('') (if exists)
+arg_defines = list(filter(None, list(set(sum(args_name, [])))))
+dn = 1
+arg_def_all = []
+if(len(arg_defines) > 0):
+	for a in arg_defines:
+		arg_def = 'SV_ARG_' + a.replace('::', '_')
+		arg_def_all.append('#define ' + arg_def + ' ' + hex(dn))
+		switch_type.append('case ' + arg_def + ':\n\t\t\t' + 
+			'args.push_back(convert_from_byte<' + a + '>(payload, it, size));\n\t\t\t' + 
+			'it += sizeof(' + a + ');\n\t\t\t' + 'break;')
+		dn += 1
+
+number = 1
 for sig in func:
 	definition = 'SV_CALL_' + sig.replace('::', '_')
 	defines.append('#define ' + definition + ' ' + hex(number))
@@ -340,25 +370,35 @@ for sig in func:
 			fargs_casted.append('params.getArg<' + a + '>(' + str(anumber) + ')')
 			anumber += 1
 
-	switch.append('case ' + definition + ':\n\t\t' + 
-		('' if not return_type[number-1] else 'ret = ') +
-		sig + '(' + ',\n\t\t\t'.join(fargs_casted) + ');\n\t\tbreak;' )
+	rt_size = 'sizeof(' + return_type[number-1] + ')'
+
+	switch.append('case ' + definition + ':\n\t{\n\t\t' + 
+		('' if not return_type[number-1] else return_type[number-1] + ' local = ') +
+		sig + '(' + ',\n\t\t\t'.join(fargs_casted) + ');\n\t\tif(' + rt_size + 
+		' > 1024) LOG_ERROR("SVReturn value < ' + rt_size + '.");\n\t\t' +
+		'memcpy(ret.ptr, &local, ' + rt_size + ');\n\t\tret.type = SV_RET_' + 
+		return_type[number-1].replace('::', '_') + ';\n\t\tbreak;\n\t}')
+
+	# i32 it = 0;
+	# auto A0_v = std::any_cast<p0Type>(p.at(0));
+	# u8   A0_t = p0Type_define;
+	# cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(p0Type), it);
+
+	anumber = 0
+	switch_reverse_args = []
+	if args_name[number-1][0]:
+		for a in args_name[number-1]:
+			switch_reverse_args.append('auto A' + str(anumber) + 
+				'_v = std::any_cast<' + a + '>(p.at(' + str(anumber) + '));\n\t\t\t\t\t\t' + 
+				'u8   A' + str(anumber) + '_t = ' + 'SV_ARG_' + a.replace('::', '_') + ';\n\t\t\t\t\t\t' +
+				'cpyArgToBuffer(buffer, (u8*)&A' + str(anumber) + '_v, A' + str(anumber) + '_t, sizeof(' + a + '), it);')
+			anumber += 1
+
+		switch_reverse.append('case ' + definition + ':\n\t\t\t\t\t{\n\t\t\t\t\t\t' + 
+			'\n\t\t\t\t\t\t'.join(switch_reverse_args) + '\n\t\t\t\t\t\tbreak;\n\t\t\t\t\t}')
+
 	registry.append('{"' + sig + '", ' + hex(number) + '}')
 	number += 1
-
-# Concat arg_types and remove empty str ('') (if exists)
-arg_defines = list(filter(None, list(set(sum(args_name, [])))))
-
-dn = 1
-arg_def_all = []
-if(len(arg_defines) > 0):
-	for a in arg_defines:
-		arg_def = 'SV_ARG_' + a.replace('::', '_')
-		arg_def_all.append('#define ' + arg_def + ' ' + hex(dn))
-		switch_type.append('case ' + arg_def + ':\n\t\t\t' + 
-			'args.push_back(convert_from_byte<' + a + '>(payload, it, size));\n\t\t\t' + 
-			'it += sizeof(' + a + ');\n\t\t\t' + 'break;')
-		dn += 1
 
 
 with open(curr_dir + '/config/registry.h', 'w') as f:
@@ -367,7 +407,9 @@ with open(curr_dir + '/config/registry.h', 'w') as f:
 	DEC = DEC.replace('$0', '\n'.join(hdef)) 			# Place necessary func call headers
 	DEC = DEC.replace('$1', '\n'.join(defines)) 		# Place func call codes definitions
 	DEC = DEC.replace('$2', '\n'.join(arg_def_all)) 	# Place func arg registry codes definitions
-	DEC = DEC.replace('$3', ',\n\t\t\t'.join(registry)) # Register function signatures in unordered_map
+	DEC = DEC.replace('$3', '\n'.join(rtype_defines)) 	# Place func return type registry codes definitions
+	DEC = DEC.replace('$4', ',\n\t\t\t'.join(registry)) # Register function signatures in unordered_map
+	DEC = DEC.replace('$5', '\n\t\t\t'.join(switch_reverse))
 
 	f.write(DEC)
 
@@ -375,6 +417,6 @@ with open(curr_dir + '/config/registry.cpp', 'w') as f:
 	f.write(HEADER)
 
 	DEF = DEF.replace('$0', '\n\t\t'.join(switch_type)) # Add registered types to parameter cast switch
-	DEF = DEF.replace('$1', '\n\t\t\t'.join(switch))	# Add registered functions to func call switch
+	DEF = DEF.replace('$1', '\n\t'.join(switch))	# Add registered functions to func call switch
 
 	f.write(DEF)

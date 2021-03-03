@@ -7,38 +7,41 @@
 
 #include "registry.h"
 
-const DCS::Registry::SVParams DCS::Registry::GetParamsFromData(const unsigned char* payload, i32 size)
+const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const unsigned char* payload, i32 size)
 {
-	u8  op_code   = convert_from_byte<u8>(payload, 0, size);  // First byte
-	u16 func_code = convert_from_byte<u16>(payload, 1, size); // Second byte
+	u16 func_code = convert_from_byte<u16>(payload, 0, size); // First byte
 	std::vector<std::any> args;
 
-	// 0000 0000 | 0000 0000 0000 0000 | 0000 0000 ...
-	// 0		   1		 2			 3         ...
-	// (Opcode )   (     FuncCode    )   (   Args  ...
+	// 0000 0000 0000 0000 | 0000 0000 ...
+	// 0		 1			 2         ...
+	// (    FuncCode     )   (   Args  ...
 
 	// Evaluate arguments
-	for(i32 it = 3; it < size;)
+	for(i32 it = 2; it < size;)
 	{
 		u8 arg_type = convert_from_byte<u8>(payload, it++, size);
 
 		switch(arg_type)
 		{
 		case SV_ARG_NULL:
-			LOG_ERROR("Arg type not recognized.");
+			//LOG_ERROR("Arg type not recognized.");
 			break;
-		
+		case SV_ARG_int:
+			args.push_back(convert_from_byte<int>(payload, it, size));
+			it += sizeof(int);
+			break;
 		default:
 			__assume(0); // Hint the compiler to optimize a jump table even further disregarding arg_code checks
 		}
 	}
-	return DCS::Registry::SVParams(op_code, func_code, args);
+	return DCS::Registry::SVParams(func_code, args);
 }
 
 // TODO : error directive if parameter is not registered via token_call 
 DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 {
 	SVReturn ret; // A generic return type container
+	ret.type = SV_RET_VOID;
 	switch(params.getFunccode())
 	{
 	case SV_CALL_NULL:
@@ -46,11 +49,31 @@ DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 		LOG_ERROR("Maybe function signature naming is wrong?");
 		break;
 	case SV_CALL_DCS_Threading_GetMaxHardwareConcurrency:
-		ret = DCS::Threading::GetMaxHardwareConcurrency();
+	{
+		DCS::u16 local = DCS::Threading::GetMaxHardwareConcurrency();
+		if(sizeof(DCS::u16) > 1024) LOG_ERROR("SVReturn value < sizeof(DCS::u16).");
+		memcpy(ret.ptr, &local, sizeof(DCS::u16));
+		ret.type = SV_RET_DCS_u16;
 		break;
+	}
+	case SV_CALL_DCS_Threading_addInt:
+	{
+		int local = DCS::Threading::addInt(params.getArg<int>(0),
+			params.getArg<int>(1));
+		if(sizeof(int) > 1024) LOG_ERROR("SVReturn value < sizeof(int).");
+		memcpy(ret.ptr, &local, sizeof(int));
+		ret.type = SV_RET_int;
+		break;
+	}
 	default:
 		__assume(0); // Hint the compiler to optimize a jump table even further disregarding func_code checks
 	}
 	return ret;
+}
+
+void DCS::Registry::SVParams::cpyArgToBuffer(unsigned char* buffer, u8* value, u8 type, i32 argSize, i32& it)
+{
+	memcpy(buffer + it, &type, sizeof(u8)); it += sizeof(u8);
+	memcpy(buffer + it, value, argSize); it += argSize;
 }
 

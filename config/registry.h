@@ -16,9 +16,14 @@
 
 #define SV_CALL_NULL 0x0
 #define SV_CALL_DCS_Threading_GetMaxHardwareConcurrency 0x1
+#define SV_CALL_DCS_Threading_addInt 0x2
 
 #define SV_ARG_NULL 0x0
+#define SV_ARG_int 0x1
 
+#define SV_RET_VOID 0x0
+#define SV_RET_DCS_u16 0x1
+#define SV_RET_int 0x2
 
 namespace DCS {
 
@@ -49,7 +54,6 @@ namespace DCS {
 
 		static DCS_API SVReturn Execute(SVParams params);
 
-		static DCS_API const SVParams GetParamsFromData(const unsigned char* payload, i32 size);
 	private:
 		template<typename T>
 		static inline T convert_from_byte(const unsigned char* data, i32 offset, i32 size)
@@ -63,22 +67,27 @@ namespace DCS {
 			return *((T*)(data + offset));
 		}
 
+		template<typename T>
+		static inline void convert_to_byte(T value, unsigned char* buffer, i32 offset, i32 size)
+		{
+			if(offset >= size)
+			{
+				LOG_ERROR("Data conversion overflow.");
+				return;
+			}
+			memcpy(&buffer[offset], (unsigned char*)&value, sizeof(T));
+		}
+
 		inline static std::unordered_map<const char*, u16> id = 
 		{
-			{"DCS::Threading::GetMaxHardwareConcurrency", 0x1}
+			{"DCS::Threading::GetMaxHardwareConcurrency", 0x1},
+			{"DCS::Threading::addInt", 0x2}
 		};
 
 	public:
 		struct DCS_API SVParams
 		{
 		public:
-			friend class Registry;
-
-			const u8 getOpcode() const
-			{
-				return opcode;
-			}
-
 			const u16 getFunccode() const
 			{
 				return fcode;
@@ -99,12 +108,46 @@ namespace DCS {
 				return rv;
 			}
 
-		private:
-			SVParams(u8 oc, u16 fc, std::vector<std::any> args) : opcode(oc), fcode(fc), args(args) {  }
+			static const SVParams GetParamsFromData(const unsigned char* payload, i32 size);
+
+			template<typename... Args>
+			static i32 GetDataFromParams(unsigned char* buffer, u16 fcode, Args... args)
+			{
+				std::vector<std::any> p = {args...};
+				i32 it = sizeof(u16);
+				memcpy(buffer, &fcode, sizeof(u16));
+
+				switch(fcode)
+				{
+					case SV_CALL_DCS_Threading_addInt:
+					{
+						auto A0_v = std::any_cast<int>(p.at(0));
+						u8   A0_t = SV_ARG_int;
+						cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(int), it);
+						auto A1_v = std::any_cast<int>(p.at(1));
+						u8   A1_t = SV_ARG_int;
+						cpyArgToBuffer(buffer, (u8*)&A1_v, A1_t, sizeof(int), it);
+						break;
+					}
+					//case CALL1:
+					//	i32 it = 0;
+					//	auto A0_v = std::any_cast<p0Type>(p.at(0));
+					//	u8   A0_t = p0Type_define;
+					//	cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(p0Type), it);
+					//	...
+					//	break;
+				}
+
+				return it;
+			}
 
 		private:
+			SVParams(u16 fc, std::vector<std::any> args) : fcode(fc), args(args) {  }
 
-			u8 opcode;
+		private:
+			static void cpyArgToBuffer(unsigned char* buffer, u8* value, u8 type, i32 argSize, i32& it);
+
+		private:
 			u16 fcode;
 #pragma warning( push )
 #pragma warning( disable : 4251 )
@@ -112,42 +155,12 @@ namespace DCS {
 #pragma warning( pop )
 		};
 
+#pragma pack(push, 1)
 		struct DCS_API SVReturn
 		{
-		public:
-			friend class Registry;
-
-			template<typename T>
-			T cast() const
-			{
-				T rv;
-				try 
-				{
-				    rv = std::any_cast<T>(value);
-				}
-				catch(const std::bad_any_cast& e) 
-				{
-					LOG_ERROR("Bad SVReturn cast %s.", e.what());
-				}
-				return rv;
-			}
-
-		private:
-			SVReturn(std::any value) : value(value) {  }
-			SVReturn() {  }
-
-			template<typename T>
-			SVReturn& operator=(T&& val)
-			{
-				value = val;
-				return *this;
-			}
-
-		private:
-	#pragma warning( push )
-#pragma warning( disable : 4251 )
-			std::any value;
-#pragma warning( pop )
+			i8 type;
+			u8 ptr[1024];
 		};
+#pragma pack(pop)
 	};
 }

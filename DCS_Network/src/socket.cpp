@@ -1,10 +1,37 @@
 #include "../include/internal.h"
+#include "../include/DCS_ModuleNetwork.h"
 
-DCS::Network::WindowsSocketInformation DCS::Network::InitWinSock()
+void DCS::Network::Init()
 {
-	WindowsSocketInformation wsi;
+	if (!is_inited)
+	{
+		is_inited = true;
+		InitWinSock();
+	}
+	// Silently ignore
+}
+
+bool DCS::Network::GetStatus()
+{
+	return is_inited;
+}
+
+void DCS::Network::Destroy()
+{
+	if (is_inited)
+	{
+		is_inited = false;
+		CleanupWinSock();
+	}
+	// Silently ignore
+}
+
+
+WSADATA DCS::Network::InitWinSock()
+{
+	WSADATA wsa;
 	
-	int iResult = WSAStartup(MAKEWORD(2,2), &(wsi.wsa));
+	int iResult = WSAStartup(MAKEWORD(2,2), &wsa);
 
 	if (iResult != 0)
 	{
@@ -14,7 +41,7 @@ DCS::Network::WindowsSocketInformation DCS::Network::InitWinSock()
 	{
 		LOG_DEBUG("Windows socket implementation (WSA) initialized.");
 	}
-	return wsi;
+	return wsa;
 }
 
 void DCS::Network::CleanupWinSock()
