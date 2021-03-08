@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['sec',['sec',['../struct_d_c_s_1_1_timer_1_1_timestamp.html#a2f1de6e1e98cecdb3155f2be44712e91',1,'DCS::Timer::Timestamp']]],
-  ['sub_5fevt',['SUB_EVT',['../_d_c_s___module_network_8h.html#a9b876408d322b6e1ada07e936d4d18b7',1,'DCS_ModuleNetwork.h']]]
+  ['request',['REQUEST',['../_d_c_s___module_network_8h.html#aaccab1096d0e9b16a9e83b33b651b746',1,'DCS_ModuleNetwork.h']]],
+  ['response',['RESPONSE',['../_d_c_s___module_network_8h.html#af52ef75def26a0bb543c6be27853724d',1,'DCS_ModuleNetwork.h']]]
 ];

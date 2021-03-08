@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ondatareceivedcallback',['OnDataReceivedCallback',['../namespace_d_c_s_1_1_network.html#aa6902b46d3bd56212c45d6bca826a303',1,'DCS::Network']]]
+  ['socket',['Socket',['../namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74',1,'DCS::Network']]]
 ];

@@ -107,8 +107,8 @@ Namespaces</h2></td></tr>
 <tr class="memitem:namespace_d_c_s_1_1_network_1_1_client"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_client.html">Client</a></td></tr>
 <tr class="memdesc:namespace_d_c_s_1_1_network_1_1_client"><td class="mdescLeft">&#160;</td><td class="mdescRight">Client handling features. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:namespace_d_c_s_1_1_network_1_1_messaging"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_messaging.html">Messaging</a></td></tr>
-<tr class="memdesc:namespace_d_c_s_1_1_network_1_1_messaging"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles default messaging via a simple protocol. <br /></td></tr>
+<tr class="memitem:namespace_d_c_s_1_1_network_1_1_message"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html">Message</a></td></tr>
+<tr class="memdesc:namespace_d_c_s_1_1_network_1_1_message"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles default messaging via a simple protocol. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:namespace_d_c_s_1_1_network_1_1_server"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html">Server</a></td></tr>
 <tr class="memdesc:namespace_d_c_s_1_1_network_1_1_server"><td class="mdescLeft">&#160;</td><td class="mdescRight">Server handling features. <br /></td></tr>
@@ -125,16 +125,21 @@ Typedefs</h2></td></tr>
 typedef <a class="el" href="_d_c_s___module_utils_8h.html#af50c71871a414fd3366f16b0fd38face">DCS::GenericHandle</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a></td></tr>
 <tr class="memdesc:a9bee27a48f2a0c02394bbe5a1af82e74"><td class="mdescLeft">&#160;</td><td class="mdescRight">A generic socket. <br /></td></tr>
 <tr class="separator:a9bee27a48f2a0c02394bbe5a1af82e74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6902b46d3bd56212c45d6bca826a303"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa6902b46d3bd56212c45d6bca826a303"></a>
-typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network.html#aa6902b46d3bd56212c45d6bca826a303">OnDataReceivedCallback</a>) (const unsigned char *data, <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">DCS::i32</a> size, <a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> client)</td></tr>
-<tr class="memdesc:aa6902b46d3bd56212c45d6bca826a303"><td class="mdescLeft">&#160;</td><td class="mdescRight">The callback prototype to use on <a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#ac715e021f8269960d5465caaae403af5" title="Starts the thread for the server and waits for client data. ">Server::StartThread(Socket, OnDataReceivedCallback)</a>. <br /></td></tr>
-<tr class="separator:aa6902b46d3bd56212c45d6bca826a303"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aad01942475a987dda0b5112b04380fa0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aad01942475a987dda0b5112b04380fa0"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> <a class="el" href="struct_d_c_s_1_1_network_1_1_windows_socket_information.html">WindowsSocketInformation</a>&#160;</td><td class="memItemRight" valign="bottom"><b>InitWinSock</b> ()</td></tr>
-<tr class="separator:aad01942475a987dda0b5112b04380fa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c640d619f8c1de773b10f6a61c648c0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5c640d619f8c1de773b10f6a61c648c0"></a>
+<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>Init</b> ()</td></tr>
+<tr class="separator:a5c640d619f8c1de773b10f6a61c648c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b64be5bb5bda3891c650696cbe68d83"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6b64be5bb5bda3891c650696cbe68d83"></a>
+<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><b>GetStatus</b> ()</td></tr>
+<tr class="separator:a6b64be5bb5bda3891c650696cbe68d83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4377e00fb3bb6e4123deaa437e9c2f73"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4377e00fb3bb6e4123deaa437e9c2f73"></a>
+<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>Destroy</b> ()</td></tr>
+<tr class="separator:a4377e00fb3bb6e4123deaa437e9c2f73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6a2c14173b0549a8686f7bea25d7a61"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac6a2c14173b0549a8686f7bea25d7a61"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> WSADATA&#160;</td><td class="memItemRight" valign="bottom"><b>InitWinSock</b> ()</td></tr>
+<tr class="separator:ac6a2c14173b0549a8686f7bea25d7a61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd8c0df0c989589fee77d55b9f307444"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acd8c0df0c989589fee77d55b9f307444"></a>
 <a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>CleanupWinSock</b> ()</td></tr>
 <tr class="separator:acd8c0df0c989589fee77d55b9f307444"><td class="memSeparator" colspan="2">&#160;</td></tr>

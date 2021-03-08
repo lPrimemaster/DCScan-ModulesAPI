@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['nanos',['nanos',['../struct_d_c_s_1_1_timer_1_1_timestamp.html#aff37e590a73bbb3d86d00e0b759855ce',1,'DCS::Timer::Timestamp']]],
-  ['no_5fop',['NO_OP',['../_d_c_s___module_network_8h.html#a43ee249e304e084ebc44226769eff196',1,'DCS_ModuleNetwork.h']]]
+  ['micros',['micros',['../struct_d_c_s_1_1_timer_1_1_timestamp.html#ab1feb5def8038ad87cd6c24cd5f09d7e',1,'DCS::Timer::Timestamp']]],
+  ['millis',['millis',['../struct_d_c_s_1_1_timer_1_1_timestamp.html#a3949df670a7d46b729b0d0daff9de6ec',1,'DCS::Timer::Timestamp']]],
+  ['min',['min',['../struct_d_c_s_1_1_timer_1_1_timestamp.html#a6dcba3e4ede6de8c94ad3d9ab8b6608b',1,'DCS::Timer::Timestamp']]]
 ];

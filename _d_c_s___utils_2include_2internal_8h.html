@@ -90,15 +90,27 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">internal.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="_d_c_s___module_utils_8h_source.html">DCS_ModuleUtils.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_d_c_s___network_2include_2internal_8h_source.html">../../DCS_Network/include/internal.h</a>&quot;</code><br />
+<code>#include &lt;queue&gt;</code><br />
+<code>#include &lt;mutex&gt;</code><br />
+<code>#include &lt;condition_variable&gt;</code><br />
 </div>
 <p><a href="_d_c_s___utils_2include_2internal_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_c_s_1_1_utils_1_1_s_message_queue.html">DCS::Utils::SMessageQueue</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_c_s_1_1_utils_1_1_byte_queue.html">DCS::Utils::ByteQueue</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a1874c6c88596d308a31b0f87ec6213ba"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1874c6c88596d308a31b0f87ec6213ba"></a>
@@ -107,6 +119,10 @@ Functions</h2></td></tr>
 <tr class="memitem:a4ab646b69d71ebcd03c43aee918b291b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4ab646b69d71ebcd03c43aee918b291b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>FreeGenericHandle</b> (<a class="el" href="_d_c_s___module_utils_8h.html#af50c71871a414fd3366f16b0fd38face">DCS::GenericHandle</a> hnd)</td></tr>
 <tr class="separator:a4ab646b69d71ebcd03c43aee918b291b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affa20738d5a602c6b293c8942e9a8289"><td class="memTemplParams" colspan="2"><a class="anchor" id="affa20738d5a602c6b293c8942e9a8289"></a>
+template&lt;typename E &gt; </td></tr>
+<tr class="memitem:affa20738d5a602c6b293c8942e9a8289"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>DCS::Utils::toUnderlyingType</b> (E e)</td></tr>
+<tr class="separator:affa20738d5a602c6b293c8942e9a8289"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

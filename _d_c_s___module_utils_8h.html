@@ -135,7 +135,7 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a1b5c91338adc24c4b64469a23cd31be5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1b5c91338adc24c4b64469a23cd31be5"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>LOG_LVL</b>(lvl,  msg, ...)&#160;&#160;&#160;DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, __VA_ARGS__)</td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>LOG_LVL</b>(lvl,  msg, ...)&#160;&#160;&#160;DCS::Utils::Logger::lvl(__FILE__, msg, __VA_ARGS__)</td></tr>
 <tr class="separator:a1b5c91338adc24c4b64469a23cd31be5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c01521cd0033d3db4fb914d19865125"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5c01521cd0033d3db4fb914d19865125"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>LOG_DEBUG</b>(msg, ...)&#160;&#160;&#160;LOG_LVL(Debug, msg, __VA_ARGS__)</td></tr>
@@ -222,7 +222,7 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Container for all the exported symbols that fall in the Utils category. </p>
 <p>Also contains library common code.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>Make the String class callable with a C-interface (for python eg.)</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>Make the String class callable with a C-interface (for python eg.)</dd></dl>
 <dl class="section author"><dt>Author</dt><dd>Cesar Godinho</dd></dl>
 <dl class="section version"><dt>Version</dt><dd>1.0</dd></dl>
 <dl class="section date"><dt>Date</dt><dd>2020/10/16 </dd></dl>
@@ -239,7 +239,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>A generic opaque handle that is only meaningful for the API. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo:</a></b></dt><dd>Maybe change this to intptr? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>Maybe change this to intptr? </dd></dl>
 
 </div>
 </div>

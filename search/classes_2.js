@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['serialargs',['SerialArgs',['../struct_d_c_s_1_1_serial_1_1_serial_args.html',1,'DCS::Serial']]],
-  ['string',['String',['../class_d_c_s_1_1_utils_1_1_string.html',1,'DCS::Utils']]],
-  ['svparams',['SVParams',['../struct_d_c_s_1_1_registry_1_1_s_v_params.html',1,'DCS::Registry']]],
-  ['svreturn',['SVReturn',['../struct_d_c_s_1_1_registry_1_1_s_v_return.html',1,'DCS::Registry']]],
-  ['systemtimer',['SystemTimer',['../struct_d_c_s_1_1_timer_1_1_system_timer.html',1,'DCS::Timer']]]
+  ['linearallocator',['LinearAllocator',['../class_d_c_s_1_1_memory_1_1_linear_allocator.html',1,'DCS::Memory']]],
+  ['lineardatapointer',['LinearDataPointer',['../struct_d_c_s_1_1_memory_1_1_linear_data_pointer.html',1,'DCS::Memory']]],
+  ['logger',['Logger',['../class_d_c_s_1_1_utils_1_1_logger.html',1,'DCS::Utils']]]
 ];
