@@ -17,13 +17,15 @@
 #define SV_CALL_NULL 0x0
 #define SV_CALL_DCS_Threading_GetMaxHardwareConcurrency 0x1
 #define SV_CALL_DCS_Threading_addInt 0x2
+#define SV_CALL_DCS_Threading_displayFloat 0x3
 
 #define SV_ARG_NULL 0x0
 #define SV_ARG_int 0x1
+#define SV_ARG_float 0x2
 
 #define SV_RET_VOID 0x0
-#define SV_RET_DCS_u16 0x1
-#define SV_RET_int 0x2
+#define SV_RET_int 0x1
+#define SV_RET_DCS_u16 0x2
 
 namespace DCS {
 
@@ -81,7 +83,8 @@ namespace DCS {
 		inline static std::unordered_map<const char*, u16> id = 
 		{
 			{"DCS::Threading::GetMaxHardwareConcurrency", 0x1},
-			{"DCS::Threading::addInt", 0x2}
+			{"DCS::Threading::addInt", 0x2},
+			{"DCS::Threading::displayFloat", 0x3}
 		};
 
 	public:
@@ -129,13 +132,17 @@ namespace DCS {
 						cpyArgToBuffer(buffer, (u8*)&A1_v, A1_t, sizeof(int), it);
 						break;
 					}
-					//case CALL1:
-					//	i32 it = 0;
-					//	auto A0_v = std::any_cast<p0Type>(p.at(0));
-					//	u8   A0_t = p0Type_define;
-					//	cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(p0Type), it);
-					//	...
-					//	break;
+					case SV_CALL_DCS_Threading_displayFloat:
+					{
+						auto A0_v = std::any_cast<float>(p.at(0));
+						u8   A0_t = SV_ARG_float;
+						cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(float), it);
+						break;
+					}
+					default:
+						LOG_ERROR("GetDataFromParams() function code (fcode) not found.");
+						LOG_ERROR("Maybe function signature naming is invalid, or function does not take any arguments.");
+						break;
 				}
 
 				return it;

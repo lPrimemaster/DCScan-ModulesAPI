@@ -136,8 +136,13 @@ namespace DCS
 		DCS_REGISTER_CALL(DCS::u16)
 		const DCS_API u16 GetMaxHardwareConcurrency();
 
+
+		// TODO : Remove these testing functions
 		DCS_REGISTER_CALL(int, int, int)
 		const DCS_API int addInt(int a, int b);
+
+		DCS_REGISTER_CALL(void, float)
+		DCS_API void displayFloat(float v);
 	}
 }
 

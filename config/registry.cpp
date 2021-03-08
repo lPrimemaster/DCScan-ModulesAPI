@@ -24,11 +24,15 @@ const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const u
 		switch(arg_type)
 		{
 		case SV_ARG_NULL:
-			//LOG_ERROR("Arg type not recognized.");
+			LOG_ERROR("Arg type not recognized.");
 			break;
 		case SV_ARG_int:
 			args.push_back(convert_from_byte<int>(payload, it, size));
 			it += sizeof(int);
+			break;
+		case SV_ARG_float:
+			args.push_back(convert_from_byte<float>(payload, it, size));
+			it += sizeof(float);
 			break;
 		default:
 			__assume(0); // Hint the compiler to optimize a jump table even further disregarding arg_code checks
@@ -47,6 +51,7 @@ DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 	case SV_CALL_NULL:
 		LOG_ERROR("Function call from SVParams is illegal. Funccode not in hash table.");
 		LOG_ERROR("Maybe function signature naming is wrong?");
+		LOG_ERROR("Prefere SV_CALL defines to string names to avoid errors.");
 		break;
 	case SV_CALL_DCS_Threading_GetMaxHardwareConcurrency:
 	{
@@ -63,6 +68,11 @@ DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 		if(sizeof(int) > 1024) LOG_ERROR("SVReturn value < sizeof(int).");
 		memcpy(ret.ptr, &local, sizeof(int));
 		ret.type = SV_RET_int;
+		break;
+	}
+	case SV_CALL_DCS_Threading_displayFloat:
+	{
+		DCS::Threading::displayFloat(params.getArg<float>(0));
 		break;
 	}
 	default:

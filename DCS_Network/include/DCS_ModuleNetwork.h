@@ -106,15 +106,18 @@ namespace DCS
 			 */
 			enum class DCS_API Operation
 			{
-				NO_OP,     ///< Ping the server only.
-				REQUEST,   ///< Request a function call to the server.
-				RESPONSE,  ///< Send back a response to the client.
-				SUB_EVT,   ///< Subscribe to a server-side event.
-				UNSUB_EVT, ///< Unsubscribe from a previously subscribed event.
-				DATA       ///< Send or receive data only.
+				NO_OP = 0,			///< Ping the server only.
+				REQUEST = 1,		///< Request a function call to the server.
+									// 2 and 3 reserved
+				RESPONSE = 4,		///< Send back a response to the client.
+									// 5 and 6 reserved
+				SUB_EVT = 7,		///< Subscribe to a server-side event.
+				UNSUB_EVT,			///< Unsubscribe from a previously subscribed event.
+				DATA				///< Send or receive data only.
 			};
 
 			DCS_API void SendAsync(Operation op, u8* data, i32 size);
+			DCS_API Registry::SVReturn SendSync(Operation op, u8* data, i32 size);
 		}
 	}
 }

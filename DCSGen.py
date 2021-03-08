@@ -230,13 +230,10 @@ namespace DCS {
 				switch(fcode)
 				{
 					$5
-					//case CALL1:
-					//	i32 it = 0;
-					//	auto A0_v = std::any_cast<p0Type>(p.at(0));
-					//	u8   A0_t = p0Type_define;
-					//	cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(p0Type), it);
-					//	...
-					//	break;
+					default:
+						LOG_ERROR("GetDataFromParams() function code (fcode) not found.");
+						LOG_ERROR("Maybe function signature naming is invalid, or function does not take any arguments.");
+						break;
 				}
 
 				return it;
@@ -287,7 +284,7 @@ const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const u
 		switch(arg_type)
 		{
 		case SV_ARG_NULL:
-			//LOG_ERROR("Arg type not recognized.");
+			LOG_ERROR("Arg type not recognized.");
 			break;
 		$0
 		default:
@@ -307,6 +304,7 @@ DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 	case SV_CALL_NULL:
 		LOG_ERROR("Function call from SVParams is illegal. Funccode not in hash table.");
 		LOG_ERROR("Maybe function signature naming is wrong?");
+		LOG_ERROR("Prefere SV_CALL defines to string names to avoid errors.");
 		break;
 	$1
 	default:
@@ -374,10 +372,11 @@ for sig in func:
 
 	switch.append('case ' + definition + ':\n\t{\n\t\t' + 
 		('' if not return_type[number-1] else return_type[number-1] + ' local = ') +
-		sig + '(' + ',\n\t\t\t'.join(fargs_casted) + ');\n\t\tif(' + rt_size + 
+		sig + '(' + ',\n\t\t\t'.join(fargs_casted) + ');' + 
+		('' if not return_type[number-1] else ('\n\t\tif(' + rt_size + 
 		' > 1024) LOG_ERROR("SVReturn value < ' + rt_size + '.");\n\t\t' +
 		'memcpy(ret.ptr, &local, ' + rt_size + ');\n\t\tret.type = SV_RET_' + 
-		return_type[number-1].replace('::', '_') + ';\n\t\tbreak;\n\t}')
+		return_type[number-1].replace('::', '_') + ';')) + '\n\t\tbreak;\n\t}')
 
 	# i32 it = 0;
 	# auto A0_v = std::any_cast<p0Type>(p.at(0));
@@ -409,7 +408,7 @@ with open(curr_dir + '/config/registry.h', 'w') as f:
 	DEC = DEC.replace('$2', '\n'.join(arg_def_all)) 	# Place func arg registry codes definitions
 	DEC = DEC.replace('$3', '\n'.join(rtype_defines)) 	# Place func return type registry codes definitions
 	DEC = DEC.replace('$4', ',\n\t\t\t'.join(registry)) # Register function signatures in unordered_map
-	DEC = DEC.replace('$5', '\n\t\t\t'.join(switch_reverse))
+	DEC = DEC.replace('$5', '\n\t\t\t\t\t'.join(switch_reverse))
 
 	f.write(DEC)
 

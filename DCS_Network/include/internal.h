@@ -35,7 +35,6 @@ namespace DCS
 		};
 
 		inline static bool is_inited = false;
-		inline static std::atomic<i32> instances = 0;
 
 		/**
 		 * \internal.
@@ -109,20 +108,47 @@ namespace DCS
 
 		namespace Message
 		{
+			// Internal messages configuration
 #pragma pack(push, 1)
-			// TODO : Consider using this as a Message for both client and server (part of the API)
+
+#define MESSAGE_XTRA_SPACE 9
 			struct DCS_INTERNAL_TEST DefaultMessage
 			{
 				u8 op;
+				u64 id; // used for sync call message identify
 				i64 size;
 				u8* ptr;
 			};
 #pragma pack(pop)
 
+			extern std::mutex message_m;
+			extern std::condition_variable lsync;
+			extern DefaultMessage lmessage;
+
+			enum class DCS_INTERNAL_TEST InternalOperation
+			{
+				NO_OP = 0,			///< Ping the server only.
+				SYNC_REQUEST = 2,   ///< Request a synchronous function call to the server, waiting for the result.
+				ASYNC_REQUEST = 3,  ///< Request an asynchronous function call to the server.
+				SYNC_RESPONSE = 5,	///< Send back a sync response to the client.
+				ASYNC_RESPONSE = 6,	///< Send back an async response to the client.
+				SUB_EVT,			///< Subscribe to a server-side event.
+				UNSUB_EVT,			///< Unsubscribe from a previously subscribed event.
+				DATA				///< Send or receive data only.
+			};
+
+			// TODO : This will no longer work if the SVReturn uses pointers instead of full data
+			DCS_INTERNAL_TEST Registry::SVReturn WaitForId(u64 id);
+			DCS_INTERNAL_TEST void SetMsgIdCondition(DefaultMessage& msg);
+
 			DCS_INTERNAL_TEST DefaultMessage Alloc(i32 size);
-			DCS_INTERNAL_TEST void Set(DefaultMessage& msg, u8* data);
-			DCS_INTERNAL_TEST void Set(DefaultMessage& msg, u8 opcode, u8* data);
-			DCS_INTERNAL_TEST void Delete(DefaultMessage msg);
+
+			DCS_INTERNAL_TEST void SetCopyIdAndCode(DefaultMessage& msg, u8* data);
+			DCS_INTERNAL_TEST void SetCopyId(DefaultMessage& msg, u8 opcode, u64 id, u8* data);
+			DCS_INTERNAL_TEST void SetNew(DefaultMessage& msg, u8 opcode, u8* data);
+
+			DCS_INTERNAL_TEST DefaultMessage Copy(DefaultMessage& msg);
+			DCS_INTERNAL_TEST void Delete(DefaultMessage& msg);
 
 			DCS_INTERNAL_TEST void ScheduleTransmission(DefaultMessage msg);
 		}

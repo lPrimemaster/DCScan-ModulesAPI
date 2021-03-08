@@ -10,6 +10,9 @@ static DCS::Utils::SMessageQueue inbound_data_queue;
 static std::thread* server_send_thread = nullptr;
 static DCS::Utils::SMessageQueue outbound_data_queue;
 
+constexpr DCS::u64 ib_buff_size = 4096;
+static DCS::Utils::ByteQueue inbound_bytes(ib_buff_size);
+
 static std::atomic<bool> server_running = false;
 
 DCS::Network::Socket DCS::Network::Server::Create(i32 port)
@@ -41,113 +44,88 @@ void DCS::Network::Server::StartThread(Socket client)
 		if (server_receive_thread == nullptr)
 		{
 			server_running.store(true);
-			instances++;
-			server_receive_thread = new std::thread([=]()->void {
-				unsigned char buffer[512] = { 0 };
-				unsigned char* data = new unsigned char[4096]; // TODO : Move this out of here, what if data_sz > 4096 ???
-				i32 recv_sz = 1;
-				i32 total_size = 0;
 
-				if (data != nullptr)
+			std::thread* decode_msg = new std::thread([=]()->void {
+				
+				unsigned char buffer[ib_buff_size] = { 0 };
+
+				while (server_running.load() || inbound_bytes.count() > 0)
 				{
-					while (recv_sz > 0 && server_running.load())
+					u64 sz = inbound_bytes.fetchNextMsg(buffer);
+					
+					auto msg = Message::Alloc(sz);
+
+					// Push message to buffer
+					Message::SetCopyIdAndCode(msg, buffer);
+
+					// Decide what to do with the data
+					switch (static_cast<Message::InternalOperation>(msg.op))
 					{
-						unsigned char packet_size[sizeof(i32)]; // TODO : Stop assuming size of msg comes in a packet
-						i32 resize_sz = 0;
+					case DCS::Network::Message::InternalOperation::NO_OP:
+						// TODO : Ping back 1 byte
+						break;
+					case DCS::Network::Message::InternalOperation::ASYNC_REQUEST:
+					{
+						// Execute request locally
+						DCS::Registry::SVReturn r = DCS::Registry::Execute(DCS::Registry::SVParams::GetParamsFromData(msg.ptr, (i32)msg.size));
 
-						recv_sz = ReceiveData(target_client, buffer, 512);
-						if (recv_sz < 1)
+						// Send the return value if it exists
+						if (r.type != SV_RET_VOID)
 						{
-							server_running.store(false);
-							delete[] data;
-							return;
-						}
-
-						memcpy(packet_size, buffer, sizeof(i32));
-
-						i32 msg_size = *(i32*)packet_size;
-						Message::DefaultMessage msg = Message::Alloc(msg_size);
-
-						i32 left = recv_sz - sizeof(i32);
-						if (left > 0)
-						{
-							memcpy(data, buffer + sizeof(i32), left);
-							total_size += left;
-						}
-
-						LOG_DEBUG("[Server Receive] Expecting %d bytes.", msg_size);
-
-						msg_size -= left;
-
-						while (msg_size > 0)
-						{
-							recv_sz = ReceiveData(target_client, buffer, 512);
-							if (recv_sz < 1)
-							{
-								server_running.store(false);
-								delete[] data;
-								data = nullptr;
-								return;
-							}
-
-							LOG_DEBUG("Server recv[%d]", recv_sz);
-							for (int i = 0; i < recv_sz; i++)
-								LOG_DEBUG("0x%02x", buffer[i]);
-
-							msg_size -= recv_sz;
-
-							if (msg_size < 0)
-							{
-								LOG_WARNING("Message is longer than expected. Discarding...");
-								LOG_WARNING("Sending messages too fast is a known bug."
-									" If this is the case, consider waiting at least 10 ms between msgs.");
-								resize_sz = -msg_size;
-							}
-
-							i32 cpy_sz = recv_sz - resize_sz;
-
-							memcpy(data + total_size, buffer, cpy_sz);
-							total_size += cpy_sz;
-						}
-
-						// Push message to buffer
-						Message::Set(msg, data);
-
-						//inbound_data_queue.push(msg);
-
-						// Decide what to do with the data
-						switch (static_cast<Message::Operation>(msg.op))
-						{
-						case DCS::Network::Message::Operation::NO_OP:
-							// TODO : Ping back 1 byte
-							break;
-						case DCS::Network::Message::Operation::REQUEST:
-							// For testing remove from here
-							DCS::Registry::SVReturn r = DCS::Registry::Execute(DCS::Registry::SVParams::GetParamsFromData(msg.ptr, msg.size));
-							LOG_DEBUG("Value: %d", *(int*)r.ptr);
-							auto dm = Message::Alloc(1026);
-							Message::Set(dm, msg.op, (u8*)&r);
+							//LOG_DEBUG("Server Value: %d [type %d]", *(u16*)r.ptr, r.type);
+							auto dm = Message::Alloc(sizeof(r) + MESSAGE_XTRA_SPACE);
+							Message::SetCopyId(dm,
+								DCS::Utils::toUnderlyingType(Message::InternalOperation::ASYNC_RESPONSE), 
+								msg.id, 
+								(u8*)&r);
 							outbound_data_queue.push(dm);
-							break;
-						case DCS::Network::Message::Operation::SUB_EVT:
-							break;
-						case DCS::Network::Message::Operation::UNSUB_EVT:
-							break;
-						default:
-							break;
 						}
+					}
+					break;
+					case DCS::Network::Message::InternalOperation::SYNC_REQUEST:
+					{
+						// Execute request locally
+						DCS::Registry::SVReturn r = DCS::Registry::Execute(DCS::Registry::SVParams::GetParamsFromData(msg.ptr, (i32)msg.size));
 
-						Message::Delete(msg); // TODO : Remove this from here
-						
-						total_size = 0;
+						// Send the return value if it exists
+						if (r.type != SV_RET_VOID)
+						{
+							//LOG_DEBUG("Server Value: %d [type %d]", *(u16*)r.ptr, r.type);
+							auto dm = Message::Alloc(sizeof(r) + MESSAGE_XTRA_SPACE);
+							Message::SetCopyId(dm, 
+								DCS::Utils::toUnderlyingType(Message::InternalOperation::SYNC_RESPONSE), 
+								msg.id,
+								(u8*)&r);
+							outbound_data_queue.push(dm);
+						}
+					}
+					break;
+					case DCS::Network::Message::InternalOperation::SUB_EVT:
+						break;
+					case DCS::Network::Message::InternalOperation::UNSUB_EVT:
+						break;
+					default:
+						break;
 					}
 
-					if (data != nullptr)
-						delete[] data;
-					server_running.store(false);
-					instances--;
+					Message::Delete(msg);
 				}
-				});
+			});
+
+			server_receive_thread = new std::thread([=]()->void {
+				constexpr u64 buff_size = 512;
+				unsigned char buffer[buff_size] = { 0 };
+				i32 recv_sz = 1;
+
+				while (recv_sz > 0 && server_running.load())
+				{
+					recv_sz = ReceiveData(target_client, buffer, buff_size);
+
+					if (recv_sz > 0) inbound_bytes.addBytes(buffer, recv_sz);
+				}
+				server_running.store(false);
+				decode_msg->join();
+			});
 			if (server_receive_thread == nullptr)
 			{
 				LOG_ERROR("Could not allocate server_receive_thread thread.");
@@ -166,12 +144,16 @@ void DCS::Network::Server::StartThread(Socket client)
 				{
 					auto to_send = outbound_data_queue.pop();
 
-					i32 full_size = (i32)(to_send.size + 1);
-					DCS::Network::SendData(target_client, (const u8*)&full_size, 4);
-					DCS::Network::SendData(target_client, (const u8*)&to_send.op, 1);
-					DCS::Network::SendData(target_client, (const u8*)to_send.ptr, to_send.size);
-
-					Message::Delete(to_send);
+					// To protect SendData against notify_unblock()
+					if (to_send.ptr != nullptr)
+					{
+						i32 full_size = (i32)(to_send.size + MESSAGE_XTRA_SPACE);
+						DCS::Network::SendData(target_client, (const u8*)&full_size, 4);
+						DCS::Network::SendData(target_client, (const u8*)&to_send.op, 1);
+						DCS::Network::SendData(target_client, (const u8*)&to_send.id, 8);
+						DCS::Network::SendData(target_client, (const u8*)to_send.ptr, (i32)to_send.size);
+						Message::Delete(to_send);
+					}
 				}
 			});
 			if (server_send_thread == nullptr)
