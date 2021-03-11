@@ -26,7 +26,7 @@ namespace DCS
 	namespace Network
 	{
 		/**
-		 * \internal.
+		 * \internal
 		 * \brief Holds windows WSA data.
 		 */
 		struct DCS_INTERNAL_TEST WindowsSocketInformation
@@ -37,68 +37,68 @@ namespace DCS
 		inline static bool is_inited = false;
 
 		/**
-		 * \internal.
+		 * \internal
 		 * \brief Initializes windows WinSock2.
 		 */
 		DCS_INTERNAL_TEST WSADATA InitWinSock();
 
 		/**
-		 * \internal.
+		 * \internal
 		 * \brief Cleans up windows WinSock2.
 		 */
 		DCS_INTERNAL_TEST void CleanupWinSock();
 
 
 		/**
-		 * \internal.
+		 * \internal
 		 * \brief Creates a server socket.
 		 */
 		DCS_INTERNAL_TEST SOCKET CreateServerSocket(i32 listen_port);
 
 		/**
-		 * \internal.
+		 * \internal
 		 * \brief Creates a client socket.
 		 */
 		DCS_INTERNAL_TEST SOCKET CreateClientSocket(const char* host, i32 port);
 
 		/**
-		 * \internal.
+		 * \internal
 		 * \brief Allow server socket to start listenning.
 		 */
 		DCS_INTERNAL_TEST void ServerListen(SOCKET server);
 
 		/**
-		 * \internal.
+		 * \internal
 		 * \brief Allow server socket to accept inbound connections.
 		 */
 		DCS_INTERNAL_TEST SOCKET ServerAcceptConnection(SOCKET server);
 
 		/**
-		 * \internal.
+		 * \internal
 		 * \brief Closes a socket connection.
 		 */
 		DCS_INTERNAL_TEST void CloseSocketConnection(SOCKET client);
 
 		/**
-		 * \internal.
+		 * \internal
 		 * \brief Checks a socket status.
 		 */
 		DCS_INTERNAL_TEST bool ValidateSocket(SOCKET s);
 
 		/**
-		 * \internal.
+		 * \internal
 		 * \brief Allow server to receive data from a client socket.
 		 */
 		DCS_INTERNAL_TEST i32 ReceiveData(SOCKET client, unsigned char* buffer, i32 buff_len);
 
 		/**
-		 * \internal.
+		 * \internal
 		 * \brief Allow server to send data trought a client socket.
 		 */
 		DCS_INTERNAL_TEST i32 SendData(SOCKET client, const unsigned char* buffer, i32 buff_len);
 
 		/**
-		 * \internal.
+		 * \internal
 		 * \brief Allow server to send data trought a client socket using OOB data.
 		 * 
 		 * This can be used when a message sent to the server is of high priority, 
@@ -108,10 +108,13 @@ namespace DCS
 
 		namespace Message
 		{
-			// Internal messages configuration
-#pragma pack(push, 1)
 
 #define MESSAGE_XTRA_SPACE 9
+#pragma pack(push, 1)
+			/**
+			 * \internal
+			 * \brief A default nominal message encoded to send a varible size of data.
+			 */
 			struct DCS_INTERNAL_TEST DefaultMessage
 			{
 				u8 op;
@@ -137,19 +140,62 @@ namespace DCS
 				DATA				///< Send or receive data only.
 			};
 
-			// TODO : This will no longer work if the SVReturn uses pointers instead of full data
+			
+			/**
+			 * \internal
+			 * \brief Wait for a return message with id.
+			 * \todo This will no longer work if the SVReturn uses pointers instead of full data
+			 */
 			DCS_INTERNAL_TEST Registry::SVReturn WaitForId(u64 id);
+
+			/**
+			 * \internal
+			 * \brief Set the last arrived DefaultMessage as msg, and notify all of WaitForId(u64) calls.
+			 */
 			DCS_INTERNAL_TEST void SetMsgIdCondition(DefaultMessage& msg);
 
+			/**
+			 * \internal
+			 * \brief Alocates space for a message. This size must include the sizeof(opcode) and sizeof(id).
+			 * These added sizes are also available via the MESSAGE_XTRA_SPACE definition.
+			 */
 			DCS_INTERNAL_TEST DefaultMessage Alloc(i32 size);
 
+			/**
+			 * \internal
+			 * \brief Copy data to msg (where data contains the id and opcode).
+			 */
 			DCS_INTERNAL_TEST void SetCopyIdAndCode(DefaultMessage& msg, u8* data);
+
+			/**
+			 * \internal
+			 * \brief Copy data to msg (keeping the id passed).
+			 * Copies only the data pointer.
+			 */
 			DCS_INTERNAL_TEST void SetCopyId(DefaultMessage& msg, u8 opcode, u64 id, u8* data);
+
+			/**
+			 * \internal
+			 * \brief Create new msg with data and an opcode (incrementing the id).
+			 */
 			DCS_INTERNAL_TEST void SetNew(DefaultMessage& msg, u8 opcode, u8* data);
 
+			/**
+			 * \internal
+			 * \brief Deep copy msg.
+			 */
 			DCS_INTERNAL_TEST DefaultMessage Copy(DefaultMessage& msg);
+
+			/**
+			 * \internal
+			 * \brief Delete msg.
+			 */
 			DCS_INTERNAL_TEST void Delete(DefaultMessage& msg);
 
+			/**
+			 * \internal
+			 * \brief Schedules the transmission of a message to the client send thread.
+			 */
 			DCS_INTERNAL_TEST void ScheduleTransmission(DefaultMessage msg);
 		}
 	}

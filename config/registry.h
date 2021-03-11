@@ -24,8 +24,8 @@
 #define SV_ARG_float 0x2
 
 #define SV_RET_VOID 0x0
-#define SV_RET_int 0x1
-#define SV_RET_DCS_u16 0x2
+#define SV_RET_DCS_u16 0x1
+#define SV_RET_int 0x2
 
 namespace DCS {
 

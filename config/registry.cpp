@@ -51,7 +51,7 @@ DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 	case SV_CALL_NULL:
 		LOG_ERROR("Function call from SVParams is illegal. Funccode not in hash table.");
 		LOG_ERROR("Maybe function signature naming is wrong?");
-		LOG_ERROR("Prefere SV_CALL defines to string names to avoid errors.");
+		LOG_ERROR("Prefer SV_CALL defines to string names to avoid errors.");
 		break;
 	case SV_CALL_DCS_Threading_GetMaxHardwareConcurrency:
 	{

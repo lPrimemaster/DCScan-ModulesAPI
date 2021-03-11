@@ -51,7 +51,7 @@ void DCS::Network::Client::StartThread(Socket connection)
 				{
 					u64 sz = inbound_bytes.fetchNextMsg(buffer);
 
-					auto msg = Message::Alloc(sz);
+					auto msg = Message::Alloc((i32)sz);
 
 					// Push message to buffer
 					Message::SetCopyIdAndCode(msg, buffer);
@@ -72,6 +72,7 @@ void DCS::Network::Client::StartThread(Socket connection)
 					break;
 					case DCS::Network::Message::InternalOperation::SYNC_RESPONSE:
 					{
+						// Set last message (break out of WaitForId)
 						DCS::Network::Message::SetMsgIdCondition(msg);
 					}
 					break;
@@ -126,11 +127,6 @@ void DCS::Network::Client::StartThread(Socket connection)
 						DCS::Network::SendData(target_server, (const u8*)&to_send.id, 8);
 						DCS::Network::SendData(target_server, (const u8*)to_send.ptr, (i32)to_send.size);
 						Message::Delete(to_send);
-						/*LOG_DEBUG("Sent message");
-						LOG_DEBUG("%d", full_size);
-						LOG_DEBUG("%d", to_send.op);
-						LOG_DEBUG("%d", to_send.id);
-						LOG_DEBUG("%d", to_send.size);*/
 					}
 				}
 			});
@@ -146,6 +142,7 @@ void DCS::Network::Client::StartThread(Socket connection)
 	}
 }
 
+// TODO : fix stopping server_receive_thread
 void DCS::Network::Client::StopThread(Socket connection)
 {
 	if (client_receive_thread != nullptr)

@@ -36,6 +36,8 @@ namespace DCS
 {
 	namespace Utils
 	{
+#pragma warning( push )
+#pragma warning( disable : 4251 )
 		class DCS_INTERNAL_TEST SMessageQueue
 		{
 		public:
@@ -160,6 +162,7 @@ namespace DCS
 			std::mutex m;
 			std::condition_variable c;
 		};
+#pragma warning( pop )
 
 		template<typename E>
 		constexpr auto toUnderlyingType(E e)

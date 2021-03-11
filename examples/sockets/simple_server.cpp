@@ -11,10 +11,8 @@ int main()
 
 	// This waits for a client to connect (blocking)
 	Socket client = Server::WaitForConnection(s);
-	Server::StartThread(client, [](const char* data, DCS::i32 size, Socket client)->void {	
-		LOG_DEBUG("Received data: %s", data);	
-		Server::SendData(client, data, size);		
-		});
+	Server::StartThread(client);
+
 	// Will run indefinitely until client disconnect, or...
 	std::this_thread::sleep_for(std::chrono::milliseconds(1000)); // Wait one second to issue stop command
 	Server::StopThread(client);

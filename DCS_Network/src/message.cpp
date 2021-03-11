@@ -8,7 +8,7 @@ DCS::Network::Message::DefaultMessage DCS::Network::Message::lmessage;
 DCS::Registry::SVReturn DCS::Network::Message::WaitForId(DCS::u64 id)
 {
 	std::unique_lock<std::mutex> lock(message_m);
-	lsync.wait(lock, [&] {return lmessage.id == id; });
+	lsync.wait(lock, [&] { return lmessage.id == id; }); // This makes WaitForId thread-safe
 	Registry::SVReturn ret;
 	auto msg_ptr = lmessage.ptr;
 	auto msg_sz = lmessage.size;

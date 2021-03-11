@@ -53,7 +53,7 @@ void DCS::Network::Server::StartThread(Socket client)
 				{
 					u64 sz = inbound_bytes.fetchNextMsg(buffer);
 					
-					auto msg = Message::Alloc(sz);
+					auto msg = Message::Alloc((i32)sz);
 
 					// Push message to buffer
 					Message::SetCopyIdAndCode(msg, buffer);
@@ -87,17 +87,13 @@ void DCS::Network::Server::StartThread(Socket client)
 						// Execute request locally
 						DCS::Registry::SVReturn r = DCS::Registry::Execute(DCS::Registry::SVParams::GetParamsFromData(msg.ptr, (i32)msg.size));
 
-						// Send the return value if it exists
-						if (r.type != SV_RET_VOID)
-						{
-							//LOG_DEBUG("Server Value: %d [type %d]", *(u16*)r.ptr, r.type);
-							auto dm = Message::Alloc(sizeof(r) + MESSAGE_XTRA_SPACE);
-							Message::SetCopyId(dm, 
-								DCS::Utils::toUnderlyingType(Message::InternalOperation::SYNC_RESPONSE), 
-								msg.id,
-								(u8*)&r);
-							outbound_data_queue.push(dm);
-						}
+						// Send the return value (even if SV_RET_VOID)
+						auto dm = Message::Alloc(sizeof(r) + MESSAGE_XTRA_SPACE);
+						Message::SetCopyId(dm, 
+							DCS::Utils::toUnderlyingType(Message::InternalOperation::SYNC_RESPONSE), 
+							msg.id,
+							(u8*)&r);
+						outbound_data_queue.push(dm);
 					}
 					break;
 					case DCS::Network::Message::InternalOperation::SUB_EVT:
