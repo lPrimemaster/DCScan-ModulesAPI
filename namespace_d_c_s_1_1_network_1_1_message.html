@@ -91,6 +91,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -98,7 +99,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 
-<p>Handles default messaging via a simple protocol.  
+<p>Handles default messaging via a simple fixed protocol.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -106,13 +107,28 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_network_1_1_message_1_1_default_message.html">DefaultMessage</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:aa7033fbcfdb550b00135a10d3ebc45d3"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3">Operation</a> { <br />
+&#160;&#160;<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3a14b52fa379dea9171c3eb958d7fa5795">Operation::NO_OP</a> = 0, 
+<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3aad6c35880c58d97c03d60a6ad0f23737">Operation::REQUEST</a> = 1, 
+<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3a4fa1a4d2e48aa765093ca6aae57a5150">Operation::RESPONSE</a> = 4, 
+<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3a76ceca488754b6488eb2eac415c78428">Operation::SUB_EVT</a> = 7, 
+<br />
+&#160;&#160;<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3a240f17d15eb22d88455ca67ff195271f">Operation::UNSUB_EVT</a>, 
+<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3ae44f9e348e41cb272efa87387728571b">Operation::DATA</a>
+<br />
+ }<tr class="memdesc:aa7033fbcfdb550b00135a10d3ebc45d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the message operation modes in the tcp/ip connection.  <a href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3">More...</a><br /></td></tr>
+</td></tr>
+<tr class="separator:aa7033fbcfdb550b00135a10d3ebc45d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ab57b0bc2b4d5c7774ead06605cba8c67"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab57b0bc2b4d5c7774ead06605cba8c67"></a>
-<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>SendAsync</b> (Operation op, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> *data, <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a> size)</td></tr>
+<tr class="memitem:ab57b0bc2b4d5c7774ead06605cba8c67"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#ab57b0bc2b4d5c7774ead06605cba8c67">SendAsync</a> (<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3">Operation</a> op, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> *data, <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a> size)</td></tr>
+<tr class="memdesc:ab57b0bc2b4d5c7774ead06605cba8c67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an asynchronous message to the server.  <a href="#ab57b0bc2b4d5c7774ead06605cba8c67">More...</a><br /></td></tr>
 <tr class="separator:ab57b0bc2b4d5c7774ead06605cba8c67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5570d6200352323c9a373a25a337da58"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5570d6200352323c9a373a25a337da58"></a>
-<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="struct_d_c_s_1_1_registry_1_1_s_v_return.html">Registry::SVReturn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>SendSync</b> (Operation op, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> *data, <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a> size)</td></tr>
+<tr class="memitem:a5570d6200352323c9a373a25a337da58"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="struct_d_c_s_1_1_registry_1_1_s_v_return.html">Registry::SVReturn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#a5570d6200352323c9a373a25a337da58">SendSync</a> (<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3">Operation</a> op, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> *data, <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a> size)</td></tr>
+<tr class="memdesc:a5570d6200352323c9a373a25a337da58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a synchronous message to the server.  <a href="#a5570d6200352323c9a373a25a337da58">More...</a><br /></td></tr>
 <tr class="separator:a5570d6200352323c9a373a25a337da58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a804f47e1234bc8b5b5739ed59be15a71"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a804f47e1234bc8b5b5739ed59be15a71"></a>
 <a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> <a class="el" href="struct_d_c_s_1_1_registry_1_1_s_v_return.html">Registry::SVReturn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>WaitForId</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a0075e27a0ece07f1d9cf36c9109584ae">u64</a> id)</td></tr>
@@ -155,12 +171,147 @@ std::condition_variable&#160;</td><td class="memItemRight" valign="bottom"><b>ls
 <tr class="separator:a334939311e6267bf41c6f869a76e441b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Handles default messaging via a simple protocol. </p>
-<p>Messages sent via network can be of any type (for example JSON), however, the Messaging namespace provides a default simple messaging style used by the GUI when contacting the server. This implementation attempts to reduce the size of the sent messages, maximizing network functionality.</p>
-<p>If you wish to implement a custom messaging system to interact via a script refer to: (TODO)</p>
-<p>Despite the means how the message shall be carried, it always needs to be converted to the only server-side accepted struct, which is responsible for knowing which operation to perform on the server-side.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>Finish this documentation, use a custom msg read callback </dd></dl>
-</div></div><!-- contents -->
+<div class="textblock"><p>Handles default messaging via a simple fixed protocol. </p>
+<p>If you wish to send a custom message not defined via this protocol, it is possible to implement on top of it and sending pure data to the server/client via the <a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3ae44f9e348e41cb272efa87387728571b" title="Send or receive data only. ">Message::Operation::DATA</a> token. Sending data is async and uses custom DataIn/DataOut user defined callbacks to handle the binary data. The default max message size is 4096 bytes due to the custom FIFO queue max memory size (which can be changed).</p>
+<p>Sending default messages is easy through the use of the Send*(Operation, u8*, i32) functions. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#ab57b0bc2b4d5c7774ead06605cba8c67" title="Sends an asynchronous message to the server. ">Message::SendAsync(Operation, u8*, i32)</a> </dd>
+<dd>
+<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#a5570d6200352323c9a373a25a337da58" title="Sends a synchronous message to the server. ">Message::SendSync(Operation, u8*, i32)</a></dd></dl>
+<p>All the data is assumed to be in the same byte-order as the machine. As tought this code will not work if host and client are of different endianness. Being most systems x86_64 this should not pose a problem for a simple system.</p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>Convert everything to network byte-order (big endian)</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>Update socket examples </dd></dl>
+</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+<a class="anchor" id="aa7033fbcfdb550b00135a10d3ebc45d3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3">DCS::Network::Message::Operation</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Defines the message operation modes in the tcp/ip connection. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="aa7033fbcfdb550b00135a10d3ebc45d3a14b52fa379dea9171c3eb958d7fa5795"></a>NO_OP&#160;</td><td class="fielddoc">
+<p>Do nothing. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="aa7033fbcfdb550b00135a10d3ebc45d3aad6c35880c58d97c03d60a6ad0f23737"></a>REQUEST&#160;</td><td class="fielddoc">
+<p>Request a function call to the server. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="aa7033fbcfdb550b00135a10d3ebc45d3a4fa1a4d2e48aa765093ca6aae57a5150"></a>RESPONSE&#160;</td><td class="fielddoc">
+<p>Send back a response to the client. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="aa7033fbcfdb550b00135a10d3ebc45d3a76ceca488754b6488eb2eac415c78428"></a>SUB_EVT&#160;</td><td class="fielddoc">
+<p>Subscribe to a server-side event. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="aa7033fbcfdb550b00135a10d3ebc45d3a240f17d15eb22d88455ca67ff195271f"></a>UNSUB_EVT&#160;</td><td class="fielddoc">
+<p>Unsubscribe from a previously subscribed event. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="aa7033fbcfdb550b00135a10d3ebc45d3ae44f9e348e41cb272efa87387728571b"></a>DATA&#160;</td><td class="fielddoc">
+<p>Send or receive data only. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="ab57b0bc2b4d5c7774ead06605cba8c67"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DCS::Network::Message::SendAsync </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3">Operation</a>&#160;</td>
+          <td class="paramname"><em>op</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a>&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sends an asynchronous message to the server. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_d_c_s_1_1_registry.html" title="Autogenerated class responsible for registering any function calls that might be requested via tcp/ip...">DCS::Registry</a></dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">op</td><td>The type of operation to perform server-side. </td></tr>
+    <tr><td class="paramname">data</td><td>The <a class="el" href="struct_d_c_s_1_1_network_1_1_message_1_1_default_message.html">DefaultMessage</a> formated message. Expects diferent data deppending on the operation. </td></tr>
+    <tr><td class="paramname">size</td><td>Size of the data bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a5570d6200352323c9a373a25a337da58"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_d_c_s_1_1_registry_1_1_s_v_return.html">DCS::Registry::SVReturn</a> DCS::Network::Message::SendSync </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3">Operation</a>&#160;</td>
+          <td class="paramname"><em>op</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a>&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sends a synchronous message to the server. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="class_d_c_s_1_1_registry.html" title="Autogenerated class responsible for registering any function calls that might be requested via tcp/ip...">DCS::Registry</a></dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">op</td><td>The type of operation to perform server-side. </td></tr>
+    <tr><td class="paramname">data</td><td>The <a class="el" href="struct_d_c_s_1_1_network_1_1_message_1_1_default_message.html">DefaultMessage</a> formated message. Expects diferent data deppending on the operation. </td></tr>
+    <tr><td class="paramname">size</td><td>Size of the data bytes.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Waits, blocking the calling thread, for the server response (see <a class="el" href="struct_d_c_s_1_1_registry_1_1_s_v_return.html">Registry::SVReturn</a>). </dd></dl>
+<dl><dt><b>Examples: </b></dt><dd><a class="el" href="sockets_2simple_client_8cpp-example.html#a2">sockets/simple_client.cpp</a>.</dd>
+</dl>
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
