@@ -3,6 +3,7 @@
 #include "../include/internal.h"
 
 #include <vector>
+#include <future>
 
 static std::thread* client_receive_thread = nullptr;
 static DCS::Utils::SMessageQueue inbound_data_queue;
@@ -14,6 +15,7 @@ static DCS::Utils::SMessageQueue outbound_data_queue;
 static DCS::Utils::ByteQueue inbound_bytes(4096);
 
 static std::atomic<bool> client_running = false;
+static std::atomic<DCS::i16> server_latency_ms = 0;
 
 void DCS::Network::Message::ScheduleTransmission(DefaultMessage msg)
 {
@@ -46,10 +48,21 @@ void DCS::Network::Client::StartThread(Socket connection)
 
 			std::thread* decode_msg = new std::thread([=]()->void {
 				unsigned char buffer[4096] = { 0 };
+				
+				// Start server heartbeat
+				DCS::Timer::SystemTimer timer = DCS::Timer::New();
+				DCS::Timer::Timestamp ts;
+				std::future<void> nblock;
+
+				u8 dd = 0x0;
+				Message::SendAsync(Message::Operation::NO_OP, &dd, 1);
+				ts = DCS::Timer::GetTimestamp(timer);
 
 				while (client_running.load() || inbound_bytes.count() > 0)
 				{
 					u64 sz = inbound_bytes.fetchNextMsg(buffer);
+
+					if (sz == 0) continue; // Guard against inbound_bytes notify_unblock
 
 					auto msg = Message::Alloc((i32)sz);
 
@@ -60,8 +73,25 @@ void DCS::Network::Client::StartThread(Socket connection)
 					switch (static_cast<Message::InternalOperation>(msg.op))
 					{
 					case DCS::Network::Message::InternalOperation::NO_OP:
-						// TODO : Ping back 1 byte
-						break;
+					{
+						// Latency check update every 10 sec
+						auto now = DCS::Timer::GetTimestamp(timer);
+						server_latency_ms.store((now.millis - ts.millis + (now.sec - ts.sec) * 1000));
+
+						// TODO : [Fix] If server disconnect happens at same time of keepalive (Message::SendAsync still runs)
+						// causing socket send error
+						nblock = std::async(std::launch::async, [&]() {
+							// Heartbeat for 10 seconds to keepalive
+							std::this_thread::sleep_for(std::chrono::seconds{ 10 });
+							if (client_running.load())
+							{
+								u8 dd = 0x0;
+								Message::SendAsync(Message::Operation::NO_OP, &dd, 1);
+								ts = DCS::Timer::GetTimestamp(timer);
+							}
+						});
+					}
+					break;
 					case DCS::Network::Message::InternalOperation::ASYNC_RESPONSE:
 					{
 						u16 rvalue = *(u16*)(((DCS::Registry::SVReturn*)msg.ptr)->ptr);
@@ -76,9 +106,14 @@ void DCS::Network::Client::StartThread(Socket connection)
 						DCS::Network::Message::SetMsgIdCondition(msg);
 					}
 					break;
-					case DCS::Network::Message::InternalOperation::SUB_EVT:
+					case DCS::Network::Message::InternalOperation::EVT_RESPONSE:
+
+						LOG_DEBUG("Received event in client! id = %u | x = %d", *(u8*)msg.ptr, *(int*)(msg.ptr + 1));
+
+						// TODO : Set callback based on evt type (id)
+
 						break;
-					case DCS::Network::Message::InternalOperation::UNSUB_EVT:
+					case DCS::Network::Message::InternalOperation::EVT_UNSUB:
 						break;
 					default:
 						break;
@@ -86,7 +121,8 @@ void DCS::Network::Client::StartThread(Socket connection)
 
 					Message::Delete(msg);
 				}
-				});
+				DCS::Timer::Delete(timer);
+			});
 
 			client_receive_thread = new std::thread([=]()->void {
 				unsigned char buffer[512] = { 0 };
@@ -99,7 +135,9 @@ void DCS::Network::Client::StartThread(Socket connection)
 					if (recv_sz > 0) inbound_bytes.addBytes(buffer, recv_sz);
 				}
 				client_running.store(false);
+				inbound_bytes.notify_unblock();
 				decode_msg->join();
+				delete decode_msg;
 			});
 			if (client_receive_thread == nullptr)
 			{
@@ -142,7 +180,6 @@ void DCS::Network::Client::StartThread(Socket connection)
 	}
 }
 
-// TODO : fix stopping server_receive_thread
 void DCS::Network::Client::StopThread(Socket connection)
 {
 	if (client_receive_thread != nullptr)
@@ -191,4 +228,9 @@ void DCS::Network::Client::StopThread(Socket connection)
 	{
 		LOG_WARNING("Could not stop client_send_thread thread. Perhaps is not running?");
 	}
+}
+
+DCS::i16 DCS::Network::Client::GetMillisLatency()
+{
+	return server_latency_ms.load();
 }

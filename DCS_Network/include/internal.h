@@ -21,6 +21,8 @@
  * \date $Date: 2021/02/22$
  */
 
+#define DCS_EMIT_EVT(name, data, size) DCS::Network::Message::EmitEvent(name, data, size) 
+
 namespace DCS
 {
 	namespace Network
@@ -135,8 +137,9 @@ namespace DCS
 				ASYNC_REQUEST = 3,  ///< Request an asynchronous function call to the server.
 				SYNC_RESPONSE = 5,	///< Send back a sync response to the client.
 				ASYNC_RESPONSE = 6,	///< Send back an async response to the client.
-				SUB_EVT,			///< Subscribe to a server-side event.
-				UNSUB_EVT,			///< Unsubscribe from a previously subscribed event.
+				EVT_SUB = 7,		///< Subscribe to a server-side event.
+				EVT_RESPONSE = 8,	///< Send event response to the client.
+				EVT_UNSUB = 9,		///< Unsubscribe from a previously subscribed event.
 				DATA				///< Send or receive data only.
 			};
 
@@ -197,6 +200,12 @@ namespace DCS
 			 * \brief Schedules the transmission of a message to the client send thread.
 			 */
 			DCS_INTERNAL_TEST void ScheduleTransmission(DefaultMessage msg);
+
+			/**
+			 * \internal
+			 * \brief Schedules the emission of an event to the client thread.
+			 */
+			DCS_INTERNAL_TEST void EmitEvent(u8 EVT_ID, u8* evtData, i32 size);
 		}
 	}
 }

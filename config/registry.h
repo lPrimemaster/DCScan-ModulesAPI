@@ -27,6 +27,9 @@
 #define SV_RET_DCS_u16 0x1
 #define SV_RET_int 0x2
 
+#define MAX_SUB 0x1
+#define SV_EVT_OnTest 0x1
+
 namespace DCS {
 
 	/**
@@ -43,7 +46,7 @@ namespace DCS {
 		struct SVParams;
 		struct SVReturn;
 
-		static const u16 Get(const char* func_signature)
+		static DCS_API const u16 Get(const char* func_signature)
 		{
 			u16 val = 0;
 			auto it = id.find(func_signature);
@@ -52,6 +55,25 @@ namespace DCS {
 			else
 				LOG_ERROR("Function signature (%s) not found.", func_signature);
 			return val;
+		}
+
+		static DCS_API const bool CheckEvent(u8 id)
+		{
+			if (id <= MAX_SUB)
+				return subscriptions.at(id);
+			return false;
+		}
+
+		static DCS_API void SetEvent(u8 id)
+		{
+			if (id <= MAX_SUB)
+				subscriptions[id] = true;
+		}
+
+		static DCS_API void UnsetEvent(u8 id)
+		{
+			if (id <= MAX_SUB)
+				subscriptions[id] = false;
 		}
 
 		static DCS_API SVReturn Execute(SVParams params);
@@ -85,6 +107,11 @@ namespace DCS {
 			{"DCS::Threading::GetMaxHardwareConcurrency", 0x1},
 			{"DCS::Threading::addInt", 0x2},
 			{"DCS::Threading::displayFloat", 0x3}
+		};
+
+		inline static std::unordered_map<u8, bool> subscriptions = 
+		{
+			{SV_EVT_OnTest, false}
 		};
 
 	public:

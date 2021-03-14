@@ -15,6 +15,32 @@ static DCS::Utils::ByteQueue inbound_bytes(ib_buff_size);
 
 static std::atomic<bool> server_running = false;
 
+void DCS::Network::Message::callRandom()
+{
+	int x = 20507;
+	DCS_EMIT_EVT(SV_EVT_OnTest, (u8*)&x, sizeof(int));
+}
+
+void DCS::Network::Message::EmitEvent(u8 EVT_ID, u8* evtData, i32 size)
+{
+	// Emit only if event is subscribed to in the client-side
+	// NOTE : If this gets too cpu heavy, just consider using a hasmap approach and waking every x millis
+	if (DCS::Registry::CheckEvent(EVT_ID))
+	{
+		// TODO : Allocate once per event and send a copy of message to outbound_data_queue
+		// Use a preprocessor directive for the allocate on top of the event emitting function 
+		// (this also improves performance)
+		DefaultMessage msg = Message::Alloc(size + sizeof(u8) + MESSAGE_XTRA_SPACE);
+
+		*msg.ptr = EVT_ID;
+		memcpy(msg.ptr + 1, evtData, size);
+
+		Message::SetNew(msg, DCS::Utils::toUnderlyingType(Message::InternalOperation::EVT_RESPONSE), nullptr);
+
+		outbound_data_queue.push(msg);
+	}
+}
+
 DCS::Network::Socket DCS::Network::Server::Create(i32 port)
 {
 	if (!GetStatus())
@@ -52,18 +78,30 @@ void DCS::Network::Server::StartThread(Socket client)
 				while (server_running.load() || inbound_bytes.count() > 0)
 				{
 					u64 sz = inbound_bytes.fetchNextMsg(buffer);
+
+					if (sz == 0) continue; // Guard against inbound_bytes notify_unblock
 					
 					auto msg = Message::Alloc((i32)sz);
 
 					// Push message to buffer
 					Message::SetCopyIdAndCode(msg, buffer);
 
+					LOG_DEBUG("Server received opcode: %u", msg.op);
+
 					// Decide what to do with the data
 					switch (static_cast<Message::InternalOperation>(msg.op))
 					{
 					case DCS::Network::Message::InternalOperation::NO_OP:
-						// TODO : Ping back 1 byte
-						break;
+					{
+						// Ping back 1 byte Used for latency check
+						u8 dd = 0x0;
+						auto dm = Message::Alloc(1 + MESSAGE_XTRA_SPACE);
+						Message::SetCopyId(dm,
+							DCS::Utils::toUnderlyingType(Message::InternalOperation::NO_OP),
+							msg.id, &dd);
+						outbound_data_queue.push(dm);
+					}
+					break;
 					case DCS::Network::Message::InternalOperation::ASYNC_REQUEST:
 					{
 						// Execute request locally
@@ -72,7 +110,6 @@ void DCS::Network::Server::StartThread(Socket client)
 						// Send the return value if it exists
 						if (r.type != SV_RET_VOID)
 						{
-							//LOG_DEBUG("Server Value: %d [type %d]", *(u16*)r.ptr, r.type);
 							auto dm = Message::Alloc(sizeof(r) + MESSAGE_XTRA_SPACE);
 							Message::SetCopyId(dm,
 								DCS::Utils::toUnderlyingType(Message::InternalOperation::ASYNC_RESPONSE), 
@@ -96,9 +133,17 @@ void DCS::Network::Server::StartThread(Socket client)
 						outbound_data_queue.push(dm);
 					}
 					break;
-					case DCS::Network::Message::InternalOperation::SUB_EVT:
+					case DCS::Network::Message::InternalOperation::EVT_SUB:
+
+						LOG_MESSAGE("Subscribing to event id: %u", *msg.ptr);
+						DCS::Registry::SetEvent(*msg.ptr);
+
 						break;
-					case DCS::Network::Message::InternalOperation::UNSUB_EVT:
+					case DCS::Network::Message::InternalOperation::EVT_UNSUB:
+
+						LOG_MESSAGE("Unsubscribing from event id: %u", *msg.ptr);
+						DCS::Registry::UnsetEvent(*msg.ptr);
+
 						break;
 					default:
 						break;
@@ -120,7 +165,9 @@ void DCS::Network::Server::StartThread(Socket client)
 					if (recv_sz > 0) inbound_bytes.addBytes(buffer, recv_sz);
 				}
 				server_running.store(false);
+				inbound_bytes.notify_unblock();
 				decode_msg->join();
+				delete decode_msg;
 			});
 			if (server_receive_thread == nullptr)
 			{

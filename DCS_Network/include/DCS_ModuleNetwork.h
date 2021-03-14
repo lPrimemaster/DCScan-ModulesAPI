@@ -119,6 +119,13 @@ namespace DCS
 			DCS_API void StopThread(Socket connection);
 
 			/**
+			 * \brief Gets the current connection latency in milliseconds.
+			 * Possible last check: 10 seconds ago
+			 * Interval: 0 - 1000 ms
+			 */
+			DCS_API i16 GetMillisLatency();
+
+			/**
 			 * \example sockets/simple_client.cpp.
 			 * An example showing how to implement a simple client.
 			 */
@@ -155,8 +162,9 @@ namespace DCS
 									// 2 and 3 reserved
 				RESPONSE = 4,		///< Send back a response to the client.
 									// 5 and 6 reserved
-				SUB_EVT = 7,		///< Subscribe to a server-side event.
-				UNSUB_EVT,			///< Unsubscribe from a previously subscribed event.
+				EVT_SUB = 7,		///< Subscribe to a server-side event.
+									// 8 reserved
+				EVT_UNSUB = 9,		///< Unsubscribe from a previously subscribed event.
 				DATA				///< Send or receive data only.
 			};
 
@@ -183,6 +191,10 @@ namespace DCS
 			 * \return Waits, blocking the calling thread, for the server response (see Registry::SVReturn).
 			 */
 			DCS_API Registry::SVReturn SendSync(Operation op, u8* data, i32 size);
+
+
+			DCS_REGISTER_EVENT(OnTest)
+			DCS_API void callRandom();
 		}
 	}
 }

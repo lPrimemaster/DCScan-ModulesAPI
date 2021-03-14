@@ -96,6 +96,7 @@ namespace DCS
 				buffer = new u8[buffer_size]; 
 				internal_buff_size = 0;
 				internal_buff_max_size = buffer_size; 
+				ntf_unblock.store(false);
 			};
 			~ByteQueue() 
 			{ 
@@ -121,7 +122,12 @@ namespace DCS
 			{
 				std::unique_lock<std::mutex> lock(m);
 
-				c.wait(lock, [&] {return internal_buff_size >= sizeof(i32); });
+				c.wait(lock, [&] {return (internal_buff_size >= sizeof(i32) || ntf_unblock.load()); });
+
+				if (ntf_unblock.load())
+				{
+					return 0;
+				}
 
 				i32 to_read;
 				memcpy(&to_read, buffer, sizeof(i32));
@@ -151,6 +157,7 @@ namespace DCS
 
 			void notify_unblock()
 			{
+				ntf_unblock.store(true);
 				c.notify_all();
 			}
 
@@ -159,6 +166,7 @@ namespace DCS
 			u64 internal_buff_size;
 			u64 internal_buff_max_size;
 
+			std::atomic<bool> ntf_unblock;
 			std::mutex m;
 			std::condition_variable c;
 		};

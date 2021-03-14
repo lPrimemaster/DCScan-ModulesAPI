@@ -76,7 +76,9 @@ void DCS::Network::Message::SetNew(DefaultMessage& msg, u8 opcode, u8* data)
 	{
 		msg.op = opcode;
 		msg.id = nid++;
-		memcpy(msg.ptr, data, msg.size);
+
+		if (data != nullptr)
+			memcpy(msg.ptr, data, msg.size);
 	}
 	else
 		LOG_ERROR("Cannot set DefaultMessage: Pointer is null or size is 0.");
@@ -118,15 +120,18 @@ void DCS::Network::Message::Delete(DefaultMessage& msg)
 
 void DCS::Network::Message::SendAsync(Operation op, u8* data, i32 size)
 {
+	u8 xtra_op = 0;
 	if (op == DCS::Network::Message::Operation::REQUEST)
 	{
-		u8 op_code = (u8)(DCS::Utils::toUnderlyingType(op) + 2); // InternalOp Async_req (3)
-		u16 total_size = (u16)(size + MESSAGE_XTRA_SPACE);
-		DefaultMessage msg = Message::Alloc(total_size);
-		Message::SetNew(msg, op_code, data);
-
-		ScheduleTransmission(msg);
+		xtra_op = 2;
 	}
+
+	u8 op_code = (u8)(DCS::Utils::toUnderlyingType(op) + xtra_op); // InternalOp Async_req (3)
+	u16 total_size = (u16)(size + MESSAGE_XTRA_SPACE);
+	DefaultMessage msg = Message::Alloc(total_size);
+	Message::SetNew(msg, op_code, data);
+
+	ScheduleTransmission(msg);
 }
 
 DCS::Registry::SVReturn DCS::Network::Message::SendSync(Operation op, u8* data, i32 size)
@@ -134,16 +139,19 @@ DCS::Registry::SVReturn DCS::Network::Message::SendSync(Operation op, u8* data, 
 	Registry::SVReturn ret;
 	ret.type = SV_RET_VOID;
 
+	u8 xtra_op = 0;
 	if (op == DCS::Network::Message::Operation::REQUEST)
 	{
-		u8 op_code = (u8)(DCS::Utils::toUnderlyingType(op) + 1); // InternalOp Sync_req (2)
-		u16 total_size = (u16)(size + MESSAGE_XTRA_SPACE);
-		DefaultMessage msg = Message::Alloc(total_size);
-		Message::SetNew(msg, op_code, data);
-
-		ScheduleTransmission(msg);
-
-		ret = WaitForId(msg.id);
+		xtra_op = 1;
 	}
+
+	u8 op_code = (u8)(DCS::Utils::toUnderlyingType(op) + xtra_op); // InternalOp Sync_req (2)
+	u16 total_size = (u16)(size + MESSAGE_XTRA_SPACE);
+	DefaultMessage msg = Message::Alloc(total_size);
+	Message::SetNew(msg, op_code, data);
+
+	ScheduleTransmission(msg);
+
+	ret = WaitForId(msg.id);
 	return ret;
 }

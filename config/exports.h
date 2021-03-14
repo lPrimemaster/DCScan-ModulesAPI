@@ -26,6 +26,8 @@
  */
 #define DCS_REGISTER_CALL(...)
 
+#define DCS_REGISTER_EVENT(name)
+
 #ifdef API_EXPORT
 /**
  * \brief Defines the export interface acessible via the dll-interface.
