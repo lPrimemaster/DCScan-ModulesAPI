@@ -141,9 +141,9 @@ Enumerations</h2></td></tr>
 &#160;&#160;<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3a14b52fa379dea9171c3eb958d7fa5795">DCS::Network::Message::Operation::NO_OP</a> = 0, 
 <a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3aad6c35880c58d97c03d60a6ad0f23737">DCS::Network::Message::Operation::REQUEST</a> = 1, 
 <a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3a4fa1a4d2e48aa765093ca6aae57a5150">DCS::Network::Message::Operation::RESPONSE</a> = 4, 
-<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3a76ceca488754b6488eb2eac415c78428">DCS::Network::Message::Operation::SUB_EVT</a> = 7, 
+<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3ad94b1368127d97a34d3880f7960ef4fe">DCS::Network::Message::Operation::EVT_SUB</a> = 7, 
 <br />
-&#160;&#160;<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3a240f17d15eb22d88455ca67ff195271f">DCS::Network::Message::Operation::UNSUB_EVT</a>, 
+&#160;&#160;<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3a65c623434b2d7d91b516fa2dc3bbdab6">DCS::Network::Message::Operation::EVT_UNSUB</a> = 9, 
 <a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3ae44f9e348e41cb272efa87387728571b">DCS::Network::Message::Operation::DATA</a>
 <br />
  }<tr class="memdesc:aa7033fbcfdb550b00135a10d3ebc45d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the message operation modes in the tcp/ip connection.  <a href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3">More...</a><br /></td></tr>
@@ -185,12 +185,19 @@ Functions</h2></td></tr>
 <tr class="memitem:a5cfe87ec13fd591d20a45592f62a555b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_client.html#a5cfe87ec13fd591d20a45592f62a555b">DCS::Network::Client::StopThread</a> (Socket connection)</td></tr>
 <tr class="memdesc:a5cfe87ec13fd591d20a45592f62a555b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the client thread on a established connection (Forces disconnect).  <a href="namespace_d_c_s_1_1_network_1_1_client.html#a5cfe87ec13fd591d20a45592f62a555b">More...</a><br /></td></tr>
 <tr class="separator:a5cfe87ec13fd591d20a45592f62a555b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46c0c3253d1fda3744b527038ae3f9c8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a46c0c3253d1fda3744b527038ae3f9c8"></a>
+<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> i16&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_client.html#a46c0c3253d1fda3744b527038ae3f9c8">DCS::Network::Client::GetMillisLatency</a> ()</td></tr>
+<tr class="memdesc:a46c0c3253d1fda3744b527038ae3f9c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current connection latency in milliseconds. Possible last check: 10 seconds ago Interval: 0 - 1000 ms. <br /></td></tr>
+<tr class="separator:a46c0c3253d1fda3744b527038ae3f9c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab57b0bc2b4d5c7774ead06605cba8c67"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#ab57b0bc2b4d5c7774ead06605cba8c67">DCS::Network::Message::SendAsync</a> (Operation op, u8 *data, i32 size)</td></tr>
 <tr class="memdesc:ab57b0bc2b4d5c7774ead06605cba8c67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an asynchronous message to the server.  <a href="namespace_d_c_s_1_1_network_1_1_message.html#ab57b0bc2b4d5c7774ead06605cba8c67">More...</a><br /></td></tr>
 <tr class="separator:ab57b0bc2b4d5c7774ead06605cba8c67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5570d6200352323c9a373a25a337da58"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> Registry::SVReturn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#a5570d6200352323c9a373a25a337da58">DCS::Network::Message::SendSync</a> (Operation op, u8 *data, i32 size)</td></tr>
 <tr class="memdesc:a5570d6200352323c9a373a25a337da58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a synchronous message to the server.  <a href="namespace_d_c_s_1_1_network_1_1_message.html#a5570d6200352323c9a373a25a337da58">More...</a><br /></td></tr>
 <tr class="separator:a5570d6200352323c9a373a25a337da58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab26e3ecffdd875f718706e3376b14373"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab26e3ecffdd875f718706e3376b14373"></a>
+<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Network::Message::callRandom</b> ()</td></tr>
+<tr class="separator:ab26e3ecffdd875f718706e3376b14373"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Exposes Network functionalities of the API to the end user. </p>

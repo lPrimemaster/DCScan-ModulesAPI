@@ -127,6 +127,9 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:a04f196a61db8be08d5293d48bdaad4a2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a04f196a61db8be08d5293d48bdaad4a2"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>DCS_EMIT_EVT</b>(name,  data,  size)&#160;&#160;&#160;DCS::Network::Message::EmitEvent(name, data, size)</td></tr>
+<tr class="separator:a04f196a61db8be08d5293d48bdaad4a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa021e90eb5252e6bf5244c473790cd0b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa021e90eb5252e6bf5244c473790cd0b"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>MESSAGE_XTRA_SPACE</b>&#160;&#160;&#160;9</td></tr>
 <tr class="separator:aa021e90eb5252e6bf5244c473790cd0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -193,6 +196,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aa63541d3b0f355f417850d2bc7c3c947"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa63541d3b0f355f417850d2bc7c3c947"></a>
 <a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Network::Message::ScheduleTransmission</b> (DefaultMessage msg)</td></tr>
 <tr class="separator:aa63541d3b0f355f417850d2bc7c3c947"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16814596933dd091a6293d7b7016d66d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a16814596933dd091a6293d7b7016d66d"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Network::Message::EmitEvent</b> (u8 EVT_ID, u8 *evtData, i32 size)</td></tr>
+<tr class="separator:a16814596933dd091a6293d7b7016d66d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -225,14 +231,18 @@ DefaultMessage&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Networ
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___network_2include_2internal_8h.html#ac46e43c0f250bb03220cde0c923b5e24">ASYNC_RESPONSE</a> = 6</td></tr>
 <tr class="memdesc:ac46e43c0f250bb03220cde0c923b5e24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send back an async response to the client. <br /></td></tr>
 <tr class="separator:ac46e43c0f250bb03220cde0c923b5e24"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b876408d322b6e1ada07e936d4d18b7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9b876408d322b6e1ada07e936d4d18b7"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___network_2include_2internal_8h.html#a9b876408d322b6e1ada07e936d4d18b7">SUB_EVT</a></td></tr>
-<tr class="memdesc:a9b876408d322b6e1ada07e936d4d18b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subscribe to a server-side event. <br /></td></tr>
-<tr class="separator:a9b876408d322b6e1ada07e936d4d18b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f6bf91a797242fc79a88a2567fdccf6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3f6bf91a797242fc79a88a2567fdccf6"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___network_2include_2internal_8h.html#a3f6bf91a797242fc79a88a2567fdccf6">UNSUB_EVT</a></td></tr>
-<tr class="memdesc:a3f6bf91a797242fc79a88a2567fdccf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unsubscribe from a previously subscribed event. <br /></td></tr>
-<tr class="separator:a3f6bf91a797242fc79a88a2567fdccf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a462016f22a99d0de92433acb78ae9345"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a462016f22a99d0de92433acb78ae9345"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___network_2include_2internal_8h.html#a462016f22a99d0de92433acb78ae9345">EVT_SUB</a> = 7</td></tr>
+<tr class="memdesc:a462016f22a99d0de92433acb78ae9345"><td class="mdescLeft">&#160;</td><td class="mdescRight">Subscribe to a server-side event. <br /></td></tr>
+<tr class="separator:a462016f22a99d0de92433acb78ae9345"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a361d79e676aa273e57f8e5291ff5744d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a361d79e676aa273e57f8e5291ff5744d"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___network_2include_2internal_8h.html#a361d79e676aa273e57f8e5291ff5744d">EVT_RESPONSE</a> = 8</td></tr>
+<tr class="memdesc:a361d79e676aa273e57f8e5291ff5744d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send event response to the client. <br /></td></tr>
+<tr class="separator:a361d79e676aa273e57f8e5291ff5744d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a307c833eb3945870586ce182306fbf9c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a307c833eb3945870586ce182306fbf9c"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___network_2include_2internal_8h.html#a307c833eb3945870586ce182306fbf9c">EVT_UNSUB</a> = 9</td></tr>
+<tr class="memdesc:a307c833eb3945870586ce182306fbf9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unsubscribe from a previously subscribed event. <br /></td></tr>
+<tr class="separator:a307c833eb3945870586ce182306fbf9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

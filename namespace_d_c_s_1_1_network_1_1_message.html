@@ -113,9 +113,9 @@ Enumerations</h2></td></tr>
 &#160;&#160;<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3a14b52fa379dea9171c3eb958d7fa5795">Operation::NO_OP</a> = 0, 
 <a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3aad6c35880c58d97c03d60a6ad0f23737">Operation::REQUEST</a> = 1, 
 <a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3a4fa1a4d2e48aa765093ca6aae57a5150">Operation::RESPONSE</a> = 4, 
-<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3a76ceca488754b6488eb2eac415c78428">Operation::SUB_EVT</a> = 7, 
+<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3ad94b1368127d97a34d3880f7960ef4fe">Operation::EVT_SUB</a> = 7, 
 <br />
-&#160;&#160;<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3a240f17d15eb22d88455ca67ff195271f">Operation::UNSUB_EVT</a>, 
+&#160;&#160;<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3a65c623434b2d7d91b516fa2dc3bbdab6">Operation::EVT_UNSUB</a> = 9, 
 <a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3ae44f9e348e41cb272efa87387728571b">Operation::DATA</a>
 <br />
  }<tr class="memdesc:aa7033fbcfdb550b00135a10d3ebc45d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the message operation modes in the tcp/ip connection.  <a href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3">More...</a><br /></td></tr>
@@ -130,6 +130,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a5570d6200352323c9a373a25a337da58"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="struct_d_c_s_1_1_registry_1_1_s_v_return.html">Registry::SVReturn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#a5570d6200352323c9a373a25a337da58">SendSync</a> (<a class="el" href="namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3">Operation</a> op, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> *data, <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a> size)</td></tr>
 <tr class="memdesc:a5570d6200352323c9a373a25a337da58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a synchronous message to the server.  <a href="#a5570d6200352323c9a373a25a337da58">More...</a><br /></td></tr>
 <tr class="separator:a5570d6200352323c9a373a25a337da58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab26e3ecffdd875f718706e3376b14373"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab26e3ecffdd875f718706e3376b14373"></a>
+<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>callRandom</b> ()</td></tr>
+<tr class="separator:ab26e3ecffdd875f718706e3376b14373"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a804f47e1234bc8b5b5739ed59be15a71"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a804f47e1234bc8b5b5739ed59be15a71"></a>
 <a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> <a class="el" href="struct_d_c_s_1_1_registry_1_1_s_v_return.html">Registry::SVReturn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>WaitForId</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a0075e27a0ece07f1d9cf36c9109584ae">u64</a> id)</td></tr>
 <tr class="separator:a804f47e1234bc8b5b5739ed59be15a71"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -157,6 +160,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aa63541d3b0f355f417850d2bc7c3c947"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa63541d3b0f355f417850d2bc7c3c947"></a>
 <a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>ScheduleTransmission</b> (<a class="el" href="struct_d_c_s_1_1_network_1_1_message_1_1_default_message.html">DefaultMessage</a> msg)</td></tr>
 <tr class="separator:aa63541d3b0f355f417850d2bc7c3c947"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16814596933dd091a6293d7b7016d66d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a16814596933dd091a6293d7b7016d66d"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>EmitEvent</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> EVT_ID, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> *evtData, <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a> size)</td></tr>
+<tr class="separator:a16814596933dd091a6293d7b7016d66d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -209,10 +215,10 @@ std::condition_variable&#160;</td><td class="memItemRight" valign="bottom"><b>ls
 <tr><td class="fieldname"><a class="anchor" id="aa7033fbcfdb550b00135a10d3ebc45d3a4fa1a4d2e48aa765093ca6aae57a5150"></a>RESPONSE&#160;</td><td class="fielddoc">
 <p>Send back a response to the client. </p>
 </td></tr>
-<tr><td class="fieldname"><a class="anchor" id="aa7033fbcfdb550b00135a10d3ebc45d3a76ceca488754b6488eb2eac415c78428"></a>SUB_EVT&#160;</td><td class="fielddoc">
+<tr><td class="fieldname"><a class="anchor" id="aa7033fbcfdb550b00135a10d3ebc45d3ad94b1368127d97a34d3880f7960ef4fe"></a>EVT_SUB&#160;</td><td class="fielddoc">
 <p>Subscribe to a server-side event. </p>
 </td></tr>
-<tr><td class="fieldname"><a class="anchor" id="aa7033fbcfdb550b00135a10d3ebc45d3a240f17d15eb22d88455ca67ff195271f"></a>UNSUB_EVT&#160;</td><td class="fielddoc">
+<tr><td class="fieldname"><a class="anchor" id="aa7033fbcfdb550b00135a10d3ebc45d3a65c623434b2d7d91b516fa2dc3bbdab6"></a>EVT_UNSUB&#160;</td><td class="fielddoc">
 <p>Unsubscribe from a previously subscribed event. </p>
 </td></tr>
 <tr><td class="fieldname"><a class="anchor" id="aa7033fbcfdb550b00135a10d3ebc45d3ae44f9e348e41cb272efa87387728571b"></a>DATA&#160;</td><td class="fielddoc">

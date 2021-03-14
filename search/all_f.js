@@ -14,7 +14,6 @@ var searchData=
   ['stopthread',['StopThread',['../namespace_d_c_s_1_1_network_1_1_server.html#a012a35b8d7ecbdaf52f65fea44df6e75',1,'DCS::Network::Server::StopThread()'],['../namespace_d_c_s_1_1_network_1_1_client.html#a5cfe87ec13fd591d20a45592f62a555b',1,'DCS::Network::Client::StopThread()']]],
   ['string',['String',['../class_d_c_s_1_1_utils_1_1_string.html',1,'DCS::Utils']]],
   ['string',['String',['../class_d_c_s_1_1_utils_1_1_string.html#a2500ea75abfeb8a6c36fe59594bcfdfa',1,'DCS::Utils::String']]],
-  ['sub_5fevt',['SUB_EVT',['../_d_c_s___network_2include_2internal_8h.html#a9b876408d322b6e1ada07e936d4d18b7',1,'SUB_EVT():&#160;internal.h'],['../namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3a76ceca488754b6488eb2eac415c78428',1,'DCS::Network::Message::SUB_EVT()']]],
   ['svparams',['SVParams',['../struct_d_c_s_1_1_registry_1_1_s_v_params.html',1,'DCS::Registry']]],
   ['svreturn',['SVReturn',['../struct_d_c_s_1_1_registry_1_1_s_v_return.html',1,'DCS::Registry']]],
   ['sync_5frequest',['SYNC_REQUEST',['../_d_c_s___network_2include_2internal_8h.html#a7722adf8d1483df045ac6810e150c69d',1,'internal.h']]],
