@@ -121,7 +121,7 @@ BOOL DCS::Serial::write_bytes(HANDLE hComm, LPCSTR charArray, DWORD NbytesToWrit
 		return FALSE;
 	}
 
-	LOG_DEBUG("Serial: Tx of data succeded. [%ull bytes written]", NbytesWritten);
+	LOG_DEBUG("Serial: Tx of data succeded. [%u bytes written]", NbytesWritten);
 
 	return TRUE;
 

@@ -57,11 +57,21 @@ int test()
 
 	//Server::StartThread(client);
 
+
+	/*std::thread nt2([&]() {
+		while (true)
+		{ 
+			Message::callRandom(); 
+			std::this_thread::sleep_for(std::chrono::milliseconds(100)); 
+		}
+	});*/
+
 	//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 	//Server::StopThread(client, Server::StopMode::WAIT);
 
 	nt.join();
+	//nt2.join();
 
 	Destroy();
 

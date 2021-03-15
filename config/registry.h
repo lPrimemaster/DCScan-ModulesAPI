@@ -12,7 +12,7 @@
 #include <any>
 #include "../DCS_Utils/include/DCS_ModuleUtils.h"
 
-#include "H:\Data\C++\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
+#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
 
 #define SV_CALL_NULL 0x0
 #define SV_CALL_DCS_Threading_GetMaxHardwareConcurrency 0x1
@@ -24,8 +24,8 @@
 #define SV_ARG_float 0x2
 
 #define SV_RET_VOID 0x0
-#define SV_RET_DCS_u16 0x1
-#define SV_RET_int 0x2
+#define SV_RET_int 0x1
+#define SV_RET_DCS_u16 0x2
 
 #define MAX_SUB 0x1
 #define SV_EVT_OnTest 0x1
