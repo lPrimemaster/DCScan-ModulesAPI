@@ -1,5 +1,5 @@
-#ifndef _DCS_CORE_H
-#define _DCS_CORE_H
+#ifndef _DCS_ENGINECONTROL_H
+#define _DCS_ENGINECONTROL_H
 
 #pragma once
 #include "../../config/exports.h"
@@ -22,10 +22,15 @@
 
 namespace DCS
 {
+	/**
+	 * \brief Exposes tilt and rotation stages control parameters.
+	 */
 	namespace Control
 	{
+		DCS_API void StartServices();
 
+		DCS_API void StopServices();
 	}
 }
 
-#endif _DCS_CORE_H
+#endif _DCS_ENGINECONTROL_H

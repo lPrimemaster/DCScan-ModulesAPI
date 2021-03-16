@@ -11,6 +11,7 @@ set_pretty_filenames()
 
 add_library(DCSModuleEngineControl ${LIB_TYPE}
   src/serial_win.cpp
+  src/control_service.cpp
   include/DCS_ModuleEngineControl.h
   include/internal.h
   ../config/exports.h

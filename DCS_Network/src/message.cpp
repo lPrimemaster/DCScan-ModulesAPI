@@ -123,10 +123,10 @@ void DCS::Network::Message::SendAsync(Operation op, u8* data, i32 size)
 	u8 xtra_op = 0;
 	if (op == DCS::Network::Message::Operation::REQUEST)
 	{
-		xtra_op = 2;
+		xtra_op = 2; // InternalOp Async_req (3)
 	}
 
-	u8 op_code = (u8)(DCS::Utils::toUnderlyingType(op) + xtra_op); // InternalOp Async_req (3)
+	u8 op_code = (u8)(DCS::Utils::toUnderlyingType(op) + xtra_op);
 	u16 total_size = (u16)(size + MESSAGE_XTRA_SPACE);
 	DefaultMessage msg = Message::Alloc(total_size);
 	Message::SetNew(msg, op_code, data);
@@ -142,10 +142,10 @@ DCS::Registry::SVReturn DCS::Network::Message::SendSync(Operation op, u8* data, 
 	u8 xtra_op = 0;
 	if (op == DCS::Network::Message::Operation::REQUEST)
 	{
-		xtra_op = 1;
+		xtra_op = 1; // InternalOp Sync_req (2)
 	}
 
-	u8 op_code = (u8)(DCS::Utils::toUnderlyingType(op) + xtra_op); // InternalOp Sync_req (2)
+	u8 op_code = (u8)(DCS::Utils::toUnderlyingType(op) + xtra_op);
 	u16 total_size = (u16)(size + MESSAGE_XTRA_SPACE);
 	DefaultMessage msg = Message::Alloc(total_size);
 	Message::SetNew(msg, op_code, data);
