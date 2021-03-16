@@ -1,6 +1,8 @@
 #include "../include/DCS_ModuleEngineControl.h"
 #include "../include/internal.h"
 
+#include <setupapi.h>
+
 #include <stdio.h>
 
 #define SERIAL_DEFAULT_BAUD 921600
@@ -42,7 +44,7 @@ HANDLE DCS::Serial::init_handle(LPCSTR portName, DWORD rwAccess, SerialArgs args
 	if (status == FALSE)
 		LOG_WARNING("Serial: GetCommState() error. Using default or suplied values instead.");
 
-	/* Defaults - BDR: 921.6kBd - BSZ: 8bits - SBT: OneStop - PAR: NoParity - EOFC: Carriage return */
+	/* Defaults - BDR: 900 kbps - BSZ: 8bits - SBT: OneStop - PAR: NoParity - EOFC: Carriage return */
 	dcbSerialParams.BaudRate = args.baudRate ? args.baudRate : (dcbSerialParams.BaudRate ? dcbSerialParams.BaudRate : SERIAL_DEFAULT_BAUD);
 	dcbSerialParams.ByteSize = args.byteSize ? args.byteSize : (dcbSerialParams.ByteSize ? dcbSerialParams.ByteSize : SERIAL_DEFAULT_BYTE);
 	dcbSerialParams.StopBits = args.stopBits ? args.stopBits : (dcbSerialParams.StopBits ? dcbSerialParams.StopBits : SERIAL_DEFAULT_SBIT);
@@ -236,4 +238,67 @@ BOOL DCS::Serial::close_handle(HANDLE hComm)
 {
 	LOG_DEBUG("Serial: Closing handle %x", hComm);
 	return CloseHandle(hComm);
+}
+
+DCS::i32 DCS::Serial::enumerate_ports(char* buffer, DCS::i32 buff_size)
+{
+	GUID guid = GUID_DEVINTERFACE_COMPORT;
+	SP_DEVICE_INTERFACE_DATA id;
+	ZeroMemory(&id, sizeof(id));
+	id.cbSize = sizeof(id);
+
+	SP_DEVINFO_DATA devInfo;
+	ZeroMemory(&devInfo, sizeof(devInfo));
+	devInfo.cbSize = sizeof(devInfo);
+
+	HDEVINFO hDevInfo = SetupDiCreateDeviceInfoList(&guid, NULL);
+
+	if (hDevInfo != INVALID_HANDLE_VALUE)
+	{
+		DWORD tSize = 0x0UL;
+
+		for (int m = 0; m < 10; m++)
+		{
+			if (SetupDiEnumDeviceInfo(hDevInfo, m, &devInfo))
+			{
+				DWORD regDataType;
+				DWORD rSize;
+				BYTE  hardwareID[300];
+				if (SetupDiGetDeviceRegistryProperty(hDevInfo,
+					&devInfo, SPDRP_HARDWAREID,
+					&regDataType, hardwareID,
+					sizeof(hardwareID), NULL))
+				{
+					BYTE friendlyName[300];
+					if (SetupDiGetDeviceRegistryProperty(hDevInfo,
+						&devInfo, SPDRP_FRIENDLYNAME,
+						NULL, friendlyName,
+						sizeof(friendlyName), &rSize))
+					{
+						if (tSize + rSize < (u32)buff_size)
+						{
+							memcpy(buffer + tSize, (LPCSTR)friendlyName, rSize);
+							tSize += rSize;
+						}
+						else
+						{
+							LOG_ERROR("COM Device enumeration failed: Output buffer size to small.");
+							break; // Return the contents already inside the buffer anyways
+						}
+					}
+				}
+			}
+		}
+		SetupDiDestroyDeviceInfoList(hDevInfo);
+		return tSize;
+	}
+	else
+		LOG_ERROR("COM Device enumeration failed: Could not create DeviceInfoList.");
+
+	return 0;
+}
+
+void DCS::Serial::comnumber_to_string(char* pname, DCS::u8 n)
+{
+	strcpy(pname, ("COM" + std::to_string(n)).c_str());
 }

@@ -2,59 +2,29 @@
 #include "../../DCS_EngineControl/include/internal.h"
 #include "../include/DCS_Assert.h"
 
-// std::to_string
-#include <string>
-
-bool issueCommand(HANDLE handle, const std::string command, const int axis, const std::string right)
-{
-	const std::string value = axis ? std::to_string(axis) + command + right + ';' : command + right + ';';
-	const char* data = value.c_str();
-
-	bool stt = true;
-
-	stt &= DCS::Serial::write_bytes(handle, data, value.size());
-	stt &= DCS::Serial::write_bytes(handle, "\r", 2);
-
-	return stt;
-}
-
 int main()
 {
 	DCS_START_TEST;
 
-	using namespace DCS::Serial;
+	using namespace DCS::Control;
 
-	SerialArgs args;
-	args.baudRate = 921600;		//921.6 kBd
-	args.byteSize = 8;			//8 bit size
-	args.eofChar = '\r';		//Carriage return command eof (?)
-	args.parity = NOPARITY;		//No parity
-	args.stopBits = ONESTOPBIT;	//One stop bit
+	char buff[1024];
+	DCS::i32 size = DCS::Serial::enumerate_ports(buff, 1024);
 
-	HANDLE handle = init_handle("COM3", GENERIC_READ | GENERIC_WRITE, args);
+	char* w = std::strtok(buff, "\0");
+	LOG_DEBUG("Port0: %s", w);
 
-	issueCommand(handle, "MO", 2, "");
+	StartServices();
 
-	/*issueCommand(handle, "PA", 2, "45.000");
-	issueCommand(handle, "WS", 2, "");
-	issueCommand(handle, "TP", 2, "?");*/
+	// Set the ESP301 axis 1 to 90.5 deg and wait for stop. After, get position.
+	//auto r = IssueGenericCommandResponse(UnitTarget::PMC8742, "1PA90.50;WS;1TP?");
+	IssueGenericCommand(UnitTarget::PMC8742, "1PA90.50;WS;1TP?");
 
-	issueCommand(handle, "OR", 2, "");
-	issueCommand(handle, "WS", 2, "");
-	issueCommand(handle, "TP", 2, "?");
+	//LOG_DEBUG("ESP301 [axis 1] stopped at: %s", r.c_str());
 
-	
+	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-	char response[256];
-	DWORD rbSize = 0;
-	bool val = read_bytes(handle, response, 256, &rbSize);
-
-	LOG_DEBUG("2TP? Got: %s", response);
-
-	issueCommand(handle, "MF", 2, "");
-
-
-	close_handle(handle);
+	StopServices();
 
 	DCS_RETURN_TEST;
 }
