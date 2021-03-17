@@ -392,7 +392,7 @@ dn = 1
 arg_def_all = []
 if(len(arg_defines) > 0):
 	for a in arg_defines:
-		arg_def = 'SV_ARG_' + a.replace('::', '_')
+		arg_def = 'SV_ARG_' + a.replace('::', '_').replace(' ', '_').replace('*', '_ptr')
 		arg_def_all.append('#define ' + arg_def + ' ' + hex(dn))
 		switch_type.append('case ' + arg_def + ':\n\t\t\t' + 
 			'args.push_back(convert_from_byte<' + a + '>(payload, it, size));\n\t\t\t' + 

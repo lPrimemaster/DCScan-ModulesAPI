@@ -12,20 +12,19 @@
 #include <any>
 #include "../DCS_Utils/include/DCS_ModuleUtils.h"
 
-#include "H:\Data\C++\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
+#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
+#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
 
 #define SV_CALL_NULL 0x0
 #define SV_CALL_DCS_Threading_GetMaxHardwareConcurrency 0x1
-#define SV_CALL_DCS_Threading_addInt 0x2
-#define SV_CALL_DCS_Threading_displayFloat 0x3
+#define SV_CALL_DCS_Control_IssueGenericCommand 0x2
 
 #define SV_ARG_NULL 0x0
-#define SV_ARG_int 0x1
-#define SV_ARG_float 0x2
+#define SV_ARG_DCS_Control_value_str_test 0x1
+#define SV_ARG_DCS_Control_UnitTarget 0x2
 
 #define SV_RET_VOID 0x0
 #define SV_RET_DCS_u16 0x1
-#define SV_RET_int 0x2
 
 #define MAX_SUB 0x1
 #define SV_EVT_OnTest 0x1
@@ -105,8 +104,7 @@ namespace DCS {
 		inline static std::unordered_map<const char*, u16> id = 
 		{
 			{"DCS::Threading::GetMaxHardwareConcurrency", 0x1},
-			{"DCS::Threading::addInt", 0x2},
-			{"DCS::Threading::displayFloat", 0x3}
+			{"DCS::Control::IssueGenericCommand", 0x2}
 		};
 
 		inline static std::unordered_map<u8, bool> subscriptions = 
@@ -149,21 +147,14 @@ namespace DCS {
 
 				switch(fcode)
 				{
-					case SV_CALL_DCS_Threading_addInt:
+					case SV_CALL_DCS_Control_IssueGenericCommand:
 					{
-						auto A0_v = std::any_cast<int>(p.at(0));
-						u8   A0_t = SV_ARG_int;
-						cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(int), it);
-						auto A1_v = std::any_cast<int>(p.at(1));
-						u8   A1_t = SV_ARG_int;
-						cpyArgToBuffer(buffer, (u8*)&A1_v, A1_t, sizeof(int), it);
-						break;
-					}
-					case SV_CALL_DCS_Threading_displayFloat:
-					{
-						auto A0_v = std::any_cast<float>(p.at(0));
-						u8   A0_t = SV_ARG_float;
-						cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(float), it);
+						auto A0_v = std::any_cast<DCS::Control::UnitTarget>(p.at(0));
+						u8   A0_t = SV_ARG_DCS_Control_UnitTarget;
+						cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(DCS::Control::UnitTarget), it);
+						auto A1_v = std::any_cast<DCS::Control::value_str_test>(p.at(1));
+						u8   A1_t = SV_ARG_DCS_Control_value_str_test;
+						cpyArgToBuffer(buffer, (u8*)&A1_v, A1_t, sizeof(DCS::Control::value_str_test), it);
 						break;
 					}
 					default:

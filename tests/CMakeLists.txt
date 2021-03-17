@@ -21,6 +21,7 @@ newtest(threading test_threading)
 newtest(socket test_socket)
 newtest(message test_message)
 newtest(serialcom test_serialcom)
+newtest(usb test_usb)
 
 
 set(BNAME ${CMAKE_BINARY_DIR}/DCS_Utils/Release/DCSModuleUtils.dll)

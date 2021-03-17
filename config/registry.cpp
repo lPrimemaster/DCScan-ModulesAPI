@@ -26,13 +26,13 @@ const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const u
 		case SV_ARG_NULL:
 			LOG_ERROR("Arg type not recognized.");
 			break;
-		case SV_ARG_int:
-			args.push_back(convert_from_byte<int>(payload, it, size));
-			it += sizeof(int);
+		case SV_ARG_DCS_Control_value_str_test:
+			args.push_back(convert_from_byte<DCS::Control::value_str_test>(payload, it, size));
+			it += sizeof(DCS::Control::value_str_test);
 			break;
-		case SV_ARG_float:
-			args.push_back(convert_from_byte<float>(payload, it, size));
-			it += sizeof(float);
+		case SV_ARG_DCS_Control_UnitTarget:
+			args.push_back(convert_from_byte<DCS::Control::UnitTarget>(payload, it, size));
+			it += sizeof(DCS::Control::UnitTarget);
 			break;
 		default:
 			__assume(0); // Hint the compiler to optimize a jump table even further disregarding arg_code checks
@@ -61,18 +61,10 @@ DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 		ret.type = SV_RET_DCS_u16;
 		break;
 	}
-	case SV_CALL_DCS_Threading_addInt:
+	case SV_CALL_DCS_Control_IssueGenericCommand:
 	{
-		int local = DCS::Threading::addInt(params.getArg<int>(0),
-			params.getArg<int>(1));
-		if(sizeof(int) > 1024) LOG_ERROR("SVReturn value < sizeof(int).");
-		memcpy(ret.ptr, &local, sizeof(int));
-		ret.type = SV_RET_int;
-		break;
-	}
-	case SV_CALL_DCS_Threading_displayFloat:
-	{
-		DCS::Threading::displayFloat(params.getArg<float>(0));
+		DCS::Control::IssueGenericCommand(params.getArg<DCS::Control::UnitTarget>(0),
+			params.getArg<DCS::Control::value_str_test>(1));
 		break;
 	}
 	default:

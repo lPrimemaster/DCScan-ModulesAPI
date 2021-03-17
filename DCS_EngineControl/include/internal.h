@@ -82,6 +82,21 @@ namespace DCS
 
 	/**
 	 * \internal
+	 * \brief USB Control.
+	 */
+	namespace USerial
+	{
+		/* 
+		 * Class     = USBDevice
+		 * ClassGUID = {88BAE032-5A81-49f0-BC3D-A4FF138216D6} 
+		 */
+		static const GUID OSR_DEVICE_INTERFACE = { 0x88BAE032, 0x5A81, 0x49f0, { 0xBC, 0x3D, 0xA4, 0xFF, 0x13, 0x82, 0x16, 0xD6 } };
+
+		DCS_INTERNAL_TEST HANDLE init_usb_handle();
+	}
+
+	/**
+	 * \internal
 	 * \brief Allows for communications request with COM devices in the local machine.
 	 */
 	namespace Coms

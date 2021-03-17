@@ -33,7 +33,7 @@ int test()
 			Message::SendAsync(Message::Operation::REQUEST, buffer, size_written);
 		}*/
 
-		DCS::u8 evt = SV_EVT_OnTest;
+		/*DCS::u8 evt = SV_EVT_OnTest;
 		Message::SendAsync(Message::Operation::EVT_SUB, &evt, sizeof(DCS::u8));
 		LOG_DEBUG("Subscribing...");
 
@@ -45,7 +45,17 @@ int test()
 		std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
 		Message::SendAsync(Message::Operation::EVT_SUB, &evt, sizeof(DCS::u8));
-		LOG_DEBUG("Subscribing...");
+		LOG_DEBUG("Subscribing...");*/
+
+		DCS::Control::value_str_test str = { "2MO;2PA45.0;2WS;2MF" };
+
+		auto size_written = DCS::Registry::SVParams::GetDataFromParams(buffer,
+			SV_CALL_DCS_Control_IssueGenericCommand,
+			DCS::Control::UnitTarget::ESP301,
+			str
+		);
+
+		Message::SendAsync(Message::Operation::REQUEST, buffer, size_written);
 
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(7000));

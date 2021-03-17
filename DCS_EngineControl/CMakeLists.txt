@@ -11,6 +11,8 @@ set_pretty_filenames()
 
 add_library(DCSModuleEngineControl ${LIB_TYPE}
   src/serial_win.cpp
+  src/winusb.cpp
+
   src/control_service.cpp
   src/external_cmds.cpp
   include/DCS_ModuleEngineControl.h
@@ -19,7 +21,7 @@ add_library(DCSModuleEngineControl ${LIB_TYPE}
   )
 
 
-target_link_libraries(DCSModuleEngineControl DCSModuleUtils Setupapi)
+target_link_libraries(DCSModuleEngineControl DCSModuleUtils Setupapi Winusb)
 
 set_target_properties(DCSModuleEngineControl PROPERTIES
   PUBLIC_HEADER "include/DCS_ModuleEngineControl.h"

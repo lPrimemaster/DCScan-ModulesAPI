@@ -44,7 +44,7 @@ void DCS::Control::StartServices()
 			com_device_properties.serial_args.stopBits = ONESTOPBIT;	// One stop bit
 
 			// Open both ports for communication
-			HANDLE esp301_handle  = Serial::init_handle(com_ports[0], GENERIC_READ | GENERIC_WRITE, com_device_properties.serial_args);
+			HANDLE esp301_handle  = Serial::init_handle("COM3", GENERIC_READ | GENERIC_WRITE, com_device_properties.serial_args);
 			HANDLE pmc8742_handle = Serial::init_handle(com_ports[1], GENERIC_READ | GENERIC_WRITE, com_device_properties.serial_args);
 
 			char response[256];

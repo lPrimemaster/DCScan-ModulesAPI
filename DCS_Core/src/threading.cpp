@@ -3,17 +3,6 @@
 #include "../include/DCS_ModuleCore.h"
 #include "../include/internal.h"
 
-const int DCS::Threading::addInt(int a, int b)
-{
-	return a + b;
-}
-
-void DCS::Threading::displayFloat(float v)
-{
-	static int i = 0;
-	LOG_MESSAGE("[%d] Server reads value: %f", i++, v);
-}
-
 const DCS::u16 DCS::Threading::GetMaxHardwareConcurrency()
 {
 	return std::thread::hardware_concurrency();
