@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['bytequeue',['ByteQueue',['../class_d_c_s_1_1_utils_1_1_byte_queue.html',1,'DCS::Utils']]]
+  ['_5fdevice_5fdata',['_DEVICE_DATA',['../struct___d_e_v_i_c_e___d_a_t_a.html',1,'']]]
 ];

@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['cmdbuffer',['CmdBuffer',['../class_d_c_s_1_1_coms_1_1_cmd_buffer.html',1,'DCS::Coms']]],
-  ['comdeviceprivateproperties',['COMDevicePrivateProperties',['../struct_d_c_s_1_1_coms_1_1_c_o_m_device_private_properties.html',1,'DCS::Coms']]],
-  ['command',['Command',['../struct_d_c_s_1_1_coms_1_1_command.html',1,'DCS::Coms']]]
+  ['bytequeue',['ByteQueue',['../class_d_c_s_1_1_utils_1_1_byte_queue.html',1,'DCS::Utils']]]
 ];
