@@ -4,6 +4,9 @@
 #include <Usb100.h>
 #include <Setupapi.h>
 #include <strsafe.h>
+#include <cfgmgr32.h>
+#include <tchar.h>
+#include <devpkey.h>
 
 typedef struct _DEVICE_DATA {
 	BOOL HandlesOpen;
@@ -12,181 +15,80 @@ typedef struct _DEVICE_DATA {
 	LPTSTR DevicePath;
 } DEVICE_DATA, * PDEVICE_DATA;
 
-static
-HRESULT
-RetrieveDevicePath(
-	_Out_bytecap_(BufLen) LPTSTR DevicePath,
-	_In_                  ULONG  BufLen,
-	_Out_opt_             PBOOL  FailureDeviceNotFound
-)
+// Skipping error checking is not very healthy...
+static LPTSTR GetDeviceUSBPath(std::string vid, std::string pid)
 {
-	BOOL                             bResult = FALSE;
-	HDEVINFO                         deviceInfo;
-	SP_DEVICE_INTERFACE_DATA         interfaceData;
-	PSP_DEVICE_INTERFACE_DETAIL_DATA detailData = NULL;
-	ULONG                            length;
-	ULONG                            requiredLength = 0;
-	HRESULT                          hr;
+	DWORD deviceIndex = 0;
+	SP_DEVINFO_DATA deviceInfoData;
+	SP_DEVICE_INTERFACE_DATA deviceInterfaceData;
 
-	if (NULL != FailureDeviceNotFound) {
+	deviceInfoData.cbSize = sizeof(deviceInfoData);
 
-		*FailureDeviceNotFound = FALSE;
-	}
 
-	//
-	// Enumerate all devices exposing the interface
-	//
-	deviceInfo = SetupDiGetClassDevs(&DCS::USerial::OSR_DEVICE_INTERFACE,
-		NULL,
-		NULL,
-		DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
+	static GUID GUID_DEVINTERFACE_USB_HUB = { 0xf18a0e88, 0xc30c, 0x11d0, {0x88, 0x15, 0x00, 0xa0, 0xc9, 0x06, 0xbe, 0xd8} };
+	static GUID GUID_DEVINTERFACE_USB_DEVICE = { 0xA5DCBF10L, 0x6530, 0x11D2, { 0x90, 0x1F, 0x00, 0xC0, 0x4F, 0xB9, 0x51, 0xED } };
+	static GUID GUID_DEVINTERFACE_USB_HOST_CONTROLLER = { 0x3abf6f2d, 0x71c4, 0x462a, {0x8a, 0x92, 0x1e, 0x68, 0x61, 0xe6, 0xaf, 0x27} };
+	static GUID GUID_DEVINTERFACE_USB_GENERIC = { 0x4d36e96e, 0xe325, 0x11ce, { 0xbf, 0xc1, 0x08, 0x00, 0x2b, 0xe1, 0x03, 0x18 } };
 
-	if (deviceInfo == INVALID_HANDLE_VALUE) {
+	//get usb device interfaces
+	HDEVINFO deviceInterfaceSet = SetupDiGetClassDevs(&GUID_DEVINTERFACE_USB_DEVICE, NULL, NULL, DIGCF_DEVICEINTERFACE);
 
-		hr = HRESULT_FROM_WIN32(GetLastError());
-		return hr;
-	}
+	LPTSTR DevicePath = (LPTSTR)GlobalAlloc(GMEM_FIXED, 256);
 
-	interfaceData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
+	while (SetupDiEnumDeviceInfo(deviceInterfaceSet, deviceIndex, &deviceInfoData))
+	{
+		deviceInfoData.cbSize = sizeof(deviceInfoData);
 
-	//
-	// Get the first interface (index 0) in the result set
-	//
-	bResult = SetupDiEnumDeviceInterfaces(deviceInfo,
-		NULL,
-		&DCS::USerial::OSR_DEVICE_INTERFACE,
-		0,
-		&interfaceData);
+		ULONG IDSize;
+		CM_Get_Device_ID_Size(&IDSize, deviceInfoData.DevInst, 0);
 
-	if (FALSE == bResult) {
+		TCHAR* deviceID = new TCHAR[IDSize];
 
-		//
-		// We would see this error if no devices were found
-		//
-		if (ERROR_NO_MORE_ITEMS == GetLastError() &&
-			NULL != FailureDeviceNotFound) {
+		CM_Get_Device_ID(deviceInfoData.DevInst, deviceID, MAX_PATH, 0);
 
-			*FailureDeviceNotFound = TRUE;
+		if (deviceID[8] == vid.at(0) && deviceID[9] == vid.at(1) && deviceID[10] == vid.at(2) && deviceID[11] == vid.at(3) && //VID
+			deviceID[17] == pid.at(0) && deviceID[18] == pid.at(1) && deviceID[19] == pid.at(2) && deviceID[20] == pid.at(3)) //PID
+		{
+			DWORD deviceInterfaceIndex = 0;
+			deviceInterfaceData.cbSize = sizeof(deviceInterfaceData);
+
+			while (SetupDiEnumDeviceInterfaces(deviceInterfaceSet, &deviceInfoData, &GUID_DEVINTERFACE_USB_DEVICE, deviceInterfaceIndex, &deviceInterfaceData))
+			{
+				deviceInterfaceData.cbSize = sizeof(deviceInterfaceData);
+
+				// Get some more details etc
+				DWORD requiredBufferSize;
+				SetupDiGetDeviceInterfaceDetail(deviceInterfaceSet,
+					&deviceInterfaceData,
+					NULL,
+					0,
+					&requiredBufferSize,
+					NULL);
+
+				PSP_DEVICE_INTERFACE_DETAIL_DATA detailData = (PSP_DEVICE_INTERFACE_DETAIL_DATA)LocalAlloc(LMEM_FIXED, requiredBufferSize);
+				detailData->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
+				ULONG length = requiredBufferSize;
+
+				SetupDiGetDeviceInterfaceDetail(deviceInterfaceSet,
+					&deviceInterfaceData,
+					detailData,
+					length,
+					&requiredBufferSize,
+					NULL);
+
+				
+				StringCbCopy(DevicePath, 256, detailData->DevicePath);
+
+				LocalFree(detailData);
+				deviceInterfaceIndex++;
+			}
 		}
 
-		hr = HRESULT_FROM_WIN32(GetLastError());
-		SetupDiDestroyDeviceInfoList(deviceInfo);
-		return hr;
+		deviceIndex++;
 	}
 
-	//
-	// Get the size of the path string
-	// We expect to get a failure with insufficient buffer
-	//
-	bResult = SetupDiGetDeviceInterfaceDetail(deviceInfo,
-		&interfaceData,
-		NULL,
-		0,
-		&requiredLength,
-		NULL);
-
-	if (FALSE == bResult && ERROR_INSUFFICIENT_BUFFER != GetLastError()) {
-
-		hr = HRESULT_FROM_WIN32(GetLastError());
-		SetupDiDestroyDeviceInfoList(deviceInfo);
-		return hr;
-	}
-
-	//
-	// Allocate temporary space for SetupDi structure
-	//
-	detailData = (PSP_DEVICE_INTERFACE_DETAIL_DATA)
-		LocalAlloc(LMEM_FIXED, requiredLength);
-
-	if (NULL == detailData)
-	{
-		hr = E_OUTOFMEMORY;
-		SetupDiDestroyDeviceInfoList(deviceInfo);
-		return hr;
-	}
-
-	detailData->cbSize = sizeof(SP_DEVICE_INTERFACE_DETAIL_DATA);
-	length = requiredLength;
-
-	//
-	// Get the interface's path string
-	//
-	bResult = SetupDiGetDeviceInterfaceDetail(deviceInfo,
-		&interfaceData,
-		detailData,
-		length,
-		&requiredLength,
-		NULL);
-
-	if (FALSE == bResult)
-	{
-		hr = HRESULT_FROM_WIN32(GetLastError());
-		LocalFree(detailData);
-		SetupDiDestroyDeviceInfoList(deviceInfo);
-		return hr;
-	}
-
-	//
-	// Give path to the caller. SetupDiGetDeviceInterfaceDetail ensured
-	// DevicePath is NULL-terminated.
-	//
-	hr = StringCbCopy(DevicePath,
-		BufLen,
-		detailData->DevicePath);
-
-	LocalFree(detailData);
-	SetupDiDestroyDeviceInfoList(deviceInfo);
-
-	return hr;
-}
-
-static
-HRESULT
-OpenDevice(
-	_Out_     PDEVICE_DATA DeviceData,
-	_Out_opt_ PBOOL        FailureDeviceNotFound
-)
-{
-	HRESULT hr = S_OK;
-	BOOL    bResult;
-
-	DeviceData->HandlesOpen = FALSE;
-
-	hr = RetrieveDevicePath(DeviceData->DevicePath,
-		sizeof(DeviceData->DevicePath),
-		FailureDeviceNotFound);
-
-	if (FAILED(hr)) {
-
-		return hr;
-	}
-
-	DeviceData->DeviceHandle = CreateFile(DeviceData->DevicePath,
-		GENERIC_WRITE | GENERIC_READ,
-		FILE_SHARE_WRITE | FILE_SHARE_READ,
-		NULL,
-		OPEN_EXISTING,
-		FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED,
-		NULL);
-
-	if (INVALID_HANDLE_VALUE == DeviceData->DeviceHandle) {
-
-		hr = HRESULT_FROM_WIN32(GetLastError());
-		return hr;
-	}
-
-	bResult = WinUsb_Initialize(DeviceData->DeviceHandle,
-		&DeviceData->WinusbHandle);
-
-	if (FALSE == bResult) {
-
-		hr = HRESULT_FROM_WIN32(GetLastError());
-		CloseHandle(DeviceData->DeviceHandle);
-		return hr;
-	}
-
-	DeviceData->HandlesOpen = TRUE;
-	return hr;
+	// Returns last value
+	return DevicePath;
 }
 
 HANDLE DCS::USerial::init_usb_handle()
@@ -194,8 +96,41 @@ HANDLE DCS::USerial::init_usb_handle()
 	DEVICE_DATA devData;
 	BOOL onFailure;
 
-	HRESULT v = OpenDevice(&devData, &onFailure);
+	//HRESULT v = OpenDevice(&devData, &onFailure);
+	LPTSTR devPath = GetDeviceUSBPath("256C", "006D");
+	LOG_DEBUG("Device Path: %s", devPath);
+	GlobalFree(devPath);
 
-	LOG_DEBUG("Open device return code: %d", v);
+	HANDLE DeviceHandle = CreateFile(devPath,
+		GENERIC_WRITE | GENERIC_READ,
+		FILE_SHARE_WRITE | FILE_SHARE_READ,
+		NULL,
+		OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED,
+		NULL);
+
+	if (INVALID_HANDLE_VALUE == DeviceHandle) {
+
+		LOG_DEBUG("Failed to open...");
+	}
+
+	WINUSB_INTERFACE_HANDLE WinusbHandle;
+
+	BOOL bResult = WinUsb_Initialize(DeviceHandle, &WinusbHandle);
+
+	if (FALSE == bResult) {
+
+		LOG_DEBUG("%ld", GetLastError());
+		CloseHandle(DeviceHandle);
+	}
+	else
+	{
+		WinUsb_Free(WinusbHandle);
+		CloseHandle(DeviceHandle);
+	}
+
+
+
+	//LOG_DEBUG("Open device return code: %ld", v);
 	return INVALID_HANDLE_VALUE;
 }

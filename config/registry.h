@@ -12,19 +12,21 @@
 #include <any>
 #include "../DCS_Utils/include/DCS_ModuleUtils.h"
 
-#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
-#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
 
 #define SV_CALL_NULL 0x0
 #define SV_CALL_DCS_Threading_GetMaxHardwareConcurrency 0x1
 #define SV_CALL_DCS_Control_IssueGenericCommand 0x2
+#define SV_CALL_DCS_Control_IssueGenericCommandResponse 0x3
 
 #define SV_ARG_NULL 0x0
-#define SV_ARG_DCS_Control_value_str_test 0x1
-#define SV_ARG_DCS_Control_UnitTarget 0x2
+#define SV_ARG_DCS_Control_UnitTarget 0x1
+#define SV_ARG_DCS_Utils_BasicString 0x2
 
 #define SV_RET_VOID 0x0
 #define SV_RET_DCS_u16 0x1
+#define SV_RET_DCS_Utils_BasicString 0x2
 
 #define MAX_SUB 0x1
 #define SV_EVT_OnTest 0x1
@@ -104,7 +106,8 @@ namespace DCS {
 		inline static std::unordered_map<const char*, u16> id = 
 		{
 			{"DCS::Threading::GetMaxHardwareConcurrency", 0x1},
-			{"DCS::Control::IssueGenericCommand", 0x2}
+			{"DCS::Control::IssueGenericCommand", 0x2},
+			{"DCS::Control::IssueGenericCommandResponse", 0x3}
 		};
 
 		inline static std::unordered_map<u8, bool> subscriptions = 
@@ -152,9 +155,19 @@ namespace DCS {
 						auto A0_v = std::any_cast<DCS::Control::UnitTarget>(p.at(0));
 						u8   A0_t = SV_ARG_DCS_Control_UnitTarget;
 						cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(DCS::Control::UnitTarget), it);
-						auto A1_v = std::any_cast<DCS::Control::value_str_test>(p.at(1));
-						u8   A1_t = SV_ARG_DCS_Control_value_str_test;
-						cpyArgToBuffer(buffer, (u8*)&A1_v, A1_t, sizeof(DCS::Control::value_str_test), it);
+						auto A1_v = std::any_cast<DCS::Utils::BasicString>(p.at(1));
+						u8   A1_t = SV_ARG_DCS_Utils_BasicString;
+						cpyArgToBuffer(buffer, (u8*)&A1_v, A1_t, sizeof(DCS::Utils::BasicString), it);
+						break;
+					}
+					case SV_CALL_DCS_Control_IssueGenericCommandResponse:
+					{
+						auto A0_v = std::any_cast<DCS::Control::UnitTarget>(p.at(0));
+						u8   A0_t = SV_ARG_DCS_Control_UnitTarget;
+						cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(DCS::Control::UnitTarget), it);
+						auto A1_v = std::any_cast<DCS::Utils::BasicString>(p.at(1));
+						u8   A1_t = SV_ARG_DCS_Utils_BasicString;
+						cpyArgToBuffer(buffer, (u8*)&A1_v, A1_t, sizeof(DCS::Utils::BasicString), it);
 						break;
 					}
 					default:

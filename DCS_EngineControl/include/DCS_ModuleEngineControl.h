@@ -57,11 +57,6 @@ namespace DCS
 		 */
 		DCS_API void StopServices();
 
-		struct value_str_test
-		{
-			char buffer[512];
-		};
-
 		/**
 		 * \brief Issue a generic command to the specified target.
 		 * 
@@ -73,8 +68,8 @@ namespace DCS
 		 * \param target The stage to target.
 		 * \param full_command The ASCII command to send to the unit.
 		 */
-		DCS_REGISTER_CALL(void, DCS::Control::UnitTarget, DCS::Control::value_str_test)
-		DCS_API void IssueGenericCommand(UnitTarget target, value_str_test full_command);
+		DCS_REGISTER_CALL(void, DCS::Control::UnitTarget, DCS::Utils::BasicString)
+		DCS_API void IssueGenericCommand(UnitTarget target, DCS::Utils::BasicString full_command);
 
 		/**
 		 * \brief Issue a generic command to the specified target, waiting for a response.
@@ -91,7 +86,8 @@ namespace DCS
 		 * 
 		 * \return A string containing the raw target controller's response.
 		 */
-		DCS_API DCS::Utils::String IssueGenericCommandResponse(UnitTarget target, const char* full_command);
+		DCS_REGISTER_CALL(DCS::Utils::BasicString, DCS::Control::UnitTarget, DCS::Utils::BasicString)
+		DCS_API DCS::Utils::BasicString IssueGenericCommandResponse(UnitTarget target, DCS::Utils::BasicString full_command);
 	}
 }
 

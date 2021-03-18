@@ -108,6 +108,15 @@ namespace DCS
 		};
 
 		/**
+		 * \brief A very simple string buffer to hold char values.
+		 * Used for string information manipulations via tcp/ip mostly.
+		 */
+		struct DCS_API BasicString
+		{
+			char buffer[512];
+		};
+
+		/**
 		 * \brief This class enables writing to a single (or multiple) buffer(s) for logging.
 		 * Thread-safe.
 		 * 

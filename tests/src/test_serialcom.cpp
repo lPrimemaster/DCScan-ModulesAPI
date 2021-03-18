@@ -29,7 +29,7 @@ int main()
 
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 
-	IssueGenericCommand(UnitTarget::ESP301, { "2MO;2PA5.00;2WS;2PA0.00;2WS;2MF" });
+	IssueGenericCommand(UnitTarget::ESP301, { "2MO;2PA5.00;2WS;2PA0.00;2WS;2MF"  });
 
 	Init();
 

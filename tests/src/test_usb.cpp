@@ -8,7 +8,12 @@ int main()
 {
 	DCS_START_TEST;
 
-	DCS::USerial::init_usb_handle();
+	HANDLE h = DCS::USerial::init_usb_handle();
+
+	if (h == INVALID_HANDLE_VALUE)
+	{
+		LOG_DEBUG("OOPS");
+	}
 
 	DCS_RETURN_TEST;
 }

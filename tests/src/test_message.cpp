@@ -47,12 +47,10 @@ int test()
 		Message::SendAsync(Message::Operation::EVT_SUB, &evt, sizeof(DCS::u8));
 		LOG_DEBUG("Subscribing...");*/
 
-		DCS::Control::value_str_test str = { "2MO;2PA45.0;2WS;2MF" };
-
-		auto size_written = DCS::Registry::SVParams::GetDataFromParams(buffer,
+		auto size_written = DCS::Registry::SVParams::GetDataFromParams<DCS::Control::UnitTarget, DCS::Utils::BasicString>(buffer,
 			SV_CALL_DCS_Control_IssueGenericCommand,
 			DCS::Control::UnitTarget::ESP301,
-			str
+			{ "2MO;2PA45.0;2WS;2MF" }
 		);
 
 		Message::SendAsync(Message::Operation::REQUEST, buffer, size_written);
