@@ -10,6 +10,6 @@ var searchData=
   ['internal_2eh',['internal.h',['../_d_c_s___core_2include_2internal_8h.html',1,'']]],
   ['internal_2eh',['internal.h',['../_d_c_s___engine_control_2include_2internal_8h.html',1,'']]],
   ['internal_2eh',['internal.h',['../_d_c_s___utils_2include_2internal_8h.html',1,'']]],
-  ['issuegenericcommand',['IssueGenericCommand',['../namespace_d_c_s_1_1_control.html#a3f4c2827219c233c1e3f3ee255b14d4e',1,'DCS::Control']]],
-  ['issuegenericcommandresponse',['IssueGenericCommandResponse',['../namespace_d_c_s_1_1_control.html#a5db7a041711d67787838aaf495ab6fb2',1,'DCS::Control']]]
+  ['issuegenericcommand',['IssueGenericCommand',['../namespace_d_c_s_1_1_control.html#af9fd36aa25f09013428e092dac2ea7fc',1,'DCS::Control']]],
+  ['issuegenericcommandresponse',['IssueGenericCommandResponse',['../namespace_d_c_s_1_1_control.html#ab07308337869f8b12264279e23ac2338',1,'DCS::Control']]]
 ];
