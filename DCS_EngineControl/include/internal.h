@@ -3,6 +3,7 @@
 #include "../../DCS_Utils/include/DCS_ModuleUtils.h"
 
 #include <Windows.h>
+#include <winusb.h>
 #include <queue>
 
 /**
@@ -86,15 +87,26 @@ namespace DCS
 	 */
 	namespace USerial
 	{
-		/* 
-		 * Class     = USBDevice
-		 * ClassGUID = {88BAE032-5A81-49f0-BC3D-A4FF138216D6} 
-		 */
-		//static const GUID OSR_DEVICE_INTERFACE = { 0x88BAE032, 0x5A81, 0x49f0, 0xBC, 0x3D, 0xA4, 0xFF, 0x13, 0x82, 0x16, 0xD6 };
-		static const GUID OSR_DEVICE_INTERFACE = { 0x4d36e96e, 0xe325, 0x11ce, 0xbf, 0xc1, 0x08, 0x00, 0x2b, 0xe1, 0x03, 0x18 };
-		static const GUID GUID_DEVINTERFACE_USB_DEVICE = { 0xA5DCBF10L, 0x6530, 0x11D2, { 0x90, 0x1F, 0x00, 0xC0, 0x4F, 0xB9, 0x51, 0xED } };
+		struct DCS_INTERNAL_TEST PIPE_ID
+		{
+			UCHAR  PipeInId;
+			UCHAR  PipeOutId;
+		};
 
-		DCS_INTERNAL_TEST HANDLE init_usb_handle();
+		struct DCS_INTERNAL_TEST USBIntHandle
+		{
+			WINUSB_INTERFACE_HANDLE usb_handle;
+			HANDLE dev_handle;
+			PIPE_ID pipe_id;
+		};
+
+		DCS_INTERNAL_TEST USBIntHandle init_usb_handle(std::string VID_PID);
+
+		DCS_INTERNAL_TEST ULONG write_bulk_bytes(USBIntHandle hnd, PUCHAR buffer, DWORD size);
+
+		DCS_INTERNAL_TEST ULONG read_bulk_bytes(USBIntHandle hnd, PUCHAR buffer, DWORD size);
+
+		DCS_INTERNAL_TEST BOOL term_usb_handle(USBIntHandle handle);
 	}
 
 	/**
