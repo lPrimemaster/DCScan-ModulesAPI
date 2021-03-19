@@ -99,6 +99,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="textblock"><code>#include &quot;<a class="el" href="_d_c_s___module_engine_control_8h_source.html">../include/DCS_ModuleEngineControl.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_d_c_s___module_utils_8h_source.html">../../DCS_Utils/include/DCS_ModuleUtils.h</a>&quot;</code><br />
 <code>#include &lt;Windows.h&gt;</code><br />
+<code>#include &lt;winusb.h&gt;</code><br />
 <code>#include &lt;queue&gt;</code><br />
 </div>
 <p><a href="_d_c_s___engine_control_2include_2internal_8h_source.html">Go to the source code of this file.</a></p>
@@ -106,6 +107,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_serial_1_1_serial_args.html">DCS::Serial::SerialArgs</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_u_serial_1_1_p_i_p_e___i_d.html">DCS::USerial::PIPE_ID</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_u_serial_1_1_u_s_b_int_handle.html">DCS::USerial::USBIntHandle</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_coms_1_1_c_o_m_device_private_properties.html">DCS::Coms::COMDevicePrivateProperties</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -134,9 +139,18 @@ Functions</h2></td></tr>
 <tr class="memitem:ab44dda7482960390c37269a5234d3c00"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab44dda7482960390c37269a5234d3c00"></a>
 <a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Serial::comnumber_to_string</b> (char pname[7], <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> n)</td></tr>
 <tr class="separator:ab44dda7482960390c37269a5234d3c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaba1db2bd640c5e5fca2d8d3fbb78592"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaba1db2bd640c5e5fca2d8d3fbb78592"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> HANDLE&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::USerial::init_usb_handle</b> ()</td></tr>
-<tr class="separator:aaba1db2bd640c5e5fca2d8d3fbb78592"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14489bcafd6e4261207dd36b274472aa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a14489bcafd6e4261207dd36b274472aa"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> USBIntHandle&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::USerial::init_usb_handle</b> (std::string VID_PID)</td></tr>
+<tr class="separator:a14489bcafd6e4261207dd36b274472aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16d2a7aa7b3c88ae97fcdb7e9f668cf4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a16d2a7aa7b3c88ae97fcdb7e9f668cf4"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> ULONG&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::USerial::write_bulk_bytes</b> (USBIntHandle hnd, PUCHAR buffer, DWORD size)</td></tr>
+<tr class="separator:a16d2a7aa7b3c88ae97fcdb7e9f668cf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34f315adfaff3bafd75b6c800e913708"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a34f315adfaff3bafd75b6c800e913708"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> ULONG&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::USerial::read_bulk_bytes</b> (USBIntHandle hnd, PUCHAR buffer, DWORD size)</td></tr>
+<tr class="separator:a34f315adfaff3bafd75b6c800e913708"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc31b112ad6c4e83b49bae39dfd3b741"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acc31b112ad6c4e83b49bae39dfd3b741"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> BOOL&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::USerial::term_usb_handle</b> (USBIntHandle handle)</td></tr>
+<tr class="separator:acc31b112ad6c4e83b49bae39dfd3b741"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3824421645f27dbb81d3edcbef8b571"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae3824421645f27dbb81d3edcbef8b571"></a>
 <a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> CmdBuffer &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Coms::GetCmdBuffer</b> ()</td></tr>
 <tr class="separator:ae3824421645f27dbb81d3edcbef8b571"><td class="memSeparator" colspan="2">&#160;</td></tr>
