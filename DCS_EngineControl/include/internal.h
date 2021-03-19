@@ -280,10 +280,8 @@ namespace DCS
 
 				if (value.wait_response)
 				{
-					LOG_DEBUG("Waiting for response...");
 					std::unique_lock<std::mutex> lock(mr);
 					cr.wait(lock);
-					LOG_DEBUG("Finished waiting...");
 					return response_buffer;
 				}
 
@@ -297,7 +295,6 @@ namespace DCS
 				response_buffer = response;
 				lock.unlock();
 				cr.notify_one();
-				LOG_DEBUG("Notifying...");
 			}
 
 			void notify_unblock()

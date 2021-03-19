@@ -45,7 +45,8 @@ void DCS::Control::StartServices()
 
 			// Open both ports for communication
 			HANDLE esp301_handle  = Serial::init_handle("COM3", GENERIC_READ | GENERIC_WRITE, com_device_properties.serial_args);
-			HANDLE pmc8742_handle = Serial::init_handle(com_ports[1], GENERIC_READ | GENERIC_WRITE, com_device_properties.serial_args);
+
+			DCS::USerial::USBIntHandle pmc8742_handle = USerial::init_usb_handle("104D-4000");
 
 			char response[256];
 			DWORD rbSize;
@@ -72,12 +73,13 @@ void DCS::Control::StartServices()
 
 					break;
 				case Control::UnitTarget::PMC8742:
-					Serial::write_bytes(pmc8742_handle, cmd.full_cmd.c_str(), (DWORD)(cmd.full_cmd.size()));
-					Serial::write_bytes(pmc8742_handle, "\r", 2);
+					USerial::write_bulk_bytes(pmc8742_handle, (PUCHAR)cmd.full_cmd.c_str(), (DWORD)(cmd.full_cmd.size()));
+					USerial::write_bulk_bytes(pmc8742_handle, (PUCHAR)"\r", 1);
 
 					if (cmd.wait_response)
 					{
-						Serial::read_bytes(pmc8742_handle, response, 256, &rbSize);
+						// TODO : Check the 8742 with the MD? query to see if motor is stopped
+						rbSize = USerial::read_bulk_bytes(pmc8742_handle, (PUCHAR)response, 256);
 						cmd_buffer.reply(response);
 					}
 					break;
@@ -85,7 +87,7 @@ void DCS::Control::StartServices()
 			}
 
 			Serial::close_handle(esp301_handle);
-			Serial::close_handle(pmc8742_handle);
+			DCS::USerial::term_usb_handle(pmc8742_handle);
 		});
 		if (control_service_thread == nullptr)
 		{

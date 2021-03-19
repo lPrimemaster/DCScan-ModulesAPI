@@ -176,8 +176,10 @@ ULONG DCS::USerial::write_bulk_bytes(USBIntHandle hnd, PUCHAR buffer, DWORD size
 
 ULONG DCS::USerial::read_bulk_bytes(USBIntHandle hnd, PUCHAR buffer, DWORD size)
 {
-	//LOG_DEBUG("Reading...");
-	return ReadFromBulkEndpoint(hnd.usb_handle, hnd.pipe_id.PipeInId, buffer, size);
+	ULONG sz = ReadFromBulkEndpoint(hnd.usb_handle, hnd.pipe_id.PipeInId, buffer, size);
+	buffer[sz - 1] = '\0';
+
+	return sz;
 }
 
 DCS::USerial::USBIntHandle DCS::USerial::init_usb_handle(std::string VID_PID)

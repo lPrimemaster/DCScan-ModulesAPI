@@ -12,13 +12,6 @@ int main()
 	using namespace DCS::Control;
 	using namespace DCS::Network;
 
-	char buff[1024];
-	DCS::i32 size = DCS::Serial::enumerate_ports(buff, 1024);
-
-	char* w = std::strtok(buff, "\0");
-	LOG_DEBUG("Port0: %s", w);
-	LOG_DEBUG("Size: %d", size);
-
 	StartServices();
 
 	// Set the ESP301 axis 1 to 90.5 deg and wait for stop. After, get position.
@@ -29,8 +22,19 @@ int main()
 
 	std::this_thread::sleep_for(std::chrono::seconds(1));
 
-	IssueGenericCommand(UnitTarget::ESP301, { "2MO;2PA5.00;2WS;2PA0.00;2WS;2MF"  });
+	//IssueGenericCommand(UnitTarget::ESP301, { "2MO;2PA5.00;2WS;2PA0.00;2WS;2MF"  });
 
+	IssueGenericCommand(UnitTarget::PMC8742, { "2>1PA0" });
+
+	std::this_thread::sleep_for(std::chrono::seconds(3));
+
+	auto r = IssueGenericCommandResponse(UnitTarget::PMC8742, { "2>1TP?" });
+
+	LOG_DEBUG("Got: %s", r.buffer);
+
+	std::this_thread::sleep_for(std::chrono::seconds(1));
+
+	/*
 	Init();
 
 	auto client = Server::WaitForConnection(Server::Create(15777));
@@ -52,6 +56,7 @@ int main()
 	Server::StopThread(client);
 
 	Destroy();
+	*/
 
 	StopServices();
 

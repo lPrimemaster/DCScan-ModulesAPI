@@ -24,6 +24,15 @@ int main(int argc, char* argv[])
 
 	LOG_DEBUG("Got response: %s", buffer);
 
+	DCS::USerial::write_bulk_bytes(hnd, (PUCHAR)"2>1PA0", 6);
+
+	LOG_DEBUG("Waiting 2 seconds to reset axis 1...");
+	std::this_thread::sleep_for(std::chrono::seconds(2));
+
+	DCS::USerial::write_bulk_bytes(hnd, (PUCHAR)"\r", 1);
+
+	std::this_thread::sleep_for(std::chrono::seconds(2));
+
 	DCS::USerial::term_usb_handle(hnd);
 
 	DCS_RETURN_TEST;

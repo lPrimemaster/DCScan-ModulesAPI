@@ -9,7 +9,7 @@ void DCS::Control::IssueGenericCommand(UnitTarget target, DCS::Utils::BasicStrin
 DCS::Utils::BasicString DCS::Control::IssueGenericCommandResponse(UnitTarget target, DCS::Utils::BasicString full_command)
 {
 	DCS::Utils::BasicString ret;
-	const char* val = Coms::GetCmdBuffer().schedule(Coms::Command::Custom(target, full_command.buffer, true)).c_str();
-	memcpy(ret.buffer, val, strlen(val));
+	auto str = Coms::GetCmdBuffer().schedule(Coms::Command::Custom(target, full_command.buffer, true));
+	memcpy(ret.buffer, str.c_str(), str.size() + 1);
 	return ret;
 }
