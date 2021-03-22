@@ -91,14 +91,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">DCS_ModuleEngineControl.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Provide an example.  
+<p>Exposes engine control functionalities of the API to the end user.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="exports_8h_source.html">../../config/exports.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_d_c_s___module_utils_8h_source.html">../../DCS_Utils/include/DCS_ModuleUtils.h</a>&quot;</code><br />
@@ -111,13 +111,21 @@ Namespaces</h2></td></tr>
 <tr class="memdesc:namespace_d_c_s_1_1_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exposes tilt and rotation stages control parameters. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ad3e1fb34d05375e56c2219d9eb033e0a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_control.html#ad3e1fb34d05375e56c2219d9eb033e0a">DCS::Control::UnitTarget</a> { <a class="el" href="namespace_d_c_s_1_1_control.html#ad3e1fb34d05375e56c2219d9eb033e0aac8ead7c47ffe815a063d2bb2a6ab65eb">DCS::Control::UnitTarget::ESP301</a>, 
+<a class="el" href="namespace_d_c_s_1_1_control.html#ad3e1fb34d05375e56c2219d9eb033e0aa3df26a17dfccfd19b33f6d6328e2e966">DCS::Control::UnitTarget::PMC8742</a>
+ }<tr class="memdesc:ad3e1fb34d05375e56c2219d9eb033e0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerates the diferent devices acessible via COM/USB ports.  <a href="namespace_d_c_s_1_1_control.html#ad3e1fb34d05375e56c2219d9eb033e0a">More...</a><br /></td></tr>
+</td></tr>
+<tr class="separator:ad3e1fb34d05375e56c2219d9eb033e0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aa6cf401da3b0fe6b80958dc3cc487fea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_control.html#aa6cf401da3b0fe6b80958dc3cc487fea">DCS::Control::StartServices</a> ()</td></tr>
-<tr class="memdesc:aa6cf401da3b0fe6b80958dc3cc487fea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the COM port services.  <a href="namespace_d_c_s_1_1_control.html#aa6cf401da3b0fe6b80958dc3cc487fea">More...</a><br /></td></tr>
+<tr class="memdesc:aa6cf401da3b0fe6b80958dc3cc487fea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the COM and USB port services.  <a href="namespace_d_c_s_1_1_control.html#aa6cf401da3b0fe6b80958dc3cc487fea">More...</a><br /></td></tr>
 <tr class="separator:aa6cf401da3b0fe6b80958dc3cc487fea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13e193dd3f54eaccba73d8bfb8ccf520"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_control.html#a13e193dd3f54eaccba73d8bfb8ccf520">DCS::Control::StopServices</a> ()</td></tr>
-<tr class="memdesc:a13e193dd3f54eaccba73d8bfb8ccf520"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the COM port services.  <a href="namespace_d_c_s_1_1_control.html#a13e193dd3f54eaccba73d8bfb8ccf520">More...</a><br /></td></tr>
+<tr class="memdesc:a13e193dd3f54eaccba73d8bfb8ccf520"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the COM and USB port services.  <a href="namespace_d_c_s_1_1_control.html#a13e193dd3f54eaccba73d8bfb8ccf520">More...</a><br /></td></tr>
 <tr class="separator:a13e193dd3f54eaccba73d8bfb8ccf520"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af9fd36aa25f09013428e092dac2ea7fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_control.html#af9fd36aa25f09013428e092dac2ea7fc">DCS::Control::IssueGenericCommand</a> (UnitTarget target, <a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> full_command)</td></tr>
 <tr class="memdesc:af9fd36aa25f09013428e092dac2ea7fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Issue a generic command to the specified target.  <a href="namespace_d_c_s_1_1_control.html#af9fd36aa25f09013428e092dac2ea7fc">More...</a><br /></td></tr>
@@ -125,18 +133,10 @@ Functions</h2></td></tr>
 <tr class="memitem:ab07308337869f8b12264279e23ac2338"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_control.html#ab07308337869f8b12264279e23ac2338">DCS::Control::IssueGenericCommandResponse</a> (UnitTarget target, <a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> full_command)</td></tr>
 <tr class="memdesc:ab07308337869f8b12264279e23ac2338"><td class="mdescLeft">&#160;</td><td class="mdescRight">Issue a generic command to the specified target, waiting for a response.  <a href="namespace_d_c_s_1_1_control.html#ab07308337869f8b12264279e23ac2338">More...</a><br /></td></tr>
 <tr class="separator:ab07308337869f8b12264279e23ac2338"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a19454a9a73ffad9bd572c42affc3190d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a19454a9a73ffad9bd572c42affc3190d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_d_c_s___module_engine_control_8h.html#a19454a9a73ffad9bd572c42affc3190d">ESP301</a></td></tr>
-<tr class="memdesc:a19454a9a73ffad9bd572c42affc3190d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ESP301 rotation stage controller target. <br /></td></tr>
-<tr class="separator:a19454a9a73ffad9bd572c42affc3190d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provide an example. </p>
-<p>This class is meant as an example. It is not useful by itself rather its usefulness is only a function of how much it helps the reader. It is in a sense defined by the person who reads it and otherwise does not exist in any real form.</p>
-<dl class="section author"><dt>Author</dt><dd>César Godinho</dd></dl>
+<div class="textblock"><p>Exposes engine control functionalities of the API to the end user. </p>
+<dl class="section author"><dt>Author</dt><dd>Cesar Godinho</dd></dl>
 <dl class="section version"><dt>Version</dt><dd>1.0 </dd></dl>
 <dl class="section rcs"><dt>Revision</dt><dd>1.5 </dd></dl>
 <dl class="section date"><dt>Date</dt><dd></dd></dl>

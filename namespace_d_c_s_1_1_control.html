@@ -90,6 +90,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">DCS::Control Namespace Reference</div>  </div>
@@ -99,24 +100,64 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>Exposes tilt and rotation stages control parameters.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ad3e1fb34d05375e56c2219d9eb033e0a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_control.html#ad3e1fb34d05375e56c2219d9eb033e0a">UnitTarget</a> { <a class="el" href="namespace_d_c_s_1_1_control.html#ad3e1fb34d05375e56c2219d9eb033e0aac8ead7c47ffe815a063d2bb2a6ab65eb">UnitTarget::ESP301</a>, 
+<a class="el" href="namespace_d_c_s_1_1_control.html#ad3e1fb34d05375e56c2219d9eb033e0aa3df26a17dfccfd19b33f6d6328e2e966">UnitTarget::PMC8742</a>
+ }<tr class="memdesc:ad3e1fb34d05375e56c2219d9eb033e0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerates the diferent devices acessible via COM/USB ports.  <a href="namespace_d_c_s_1_1_control.html#ad3e1fb34d05375e56c2219d9eb033e0a">More...</a><br /></td></tr>
+</td></tr>
+<tr class="separator:ad3e1fb34d05375e56c2219d9eb033e0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aa6cf401da3b0fe6b80958dc3cc487fea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_control.html#aa6cf401da3b0fe6b80958dc3cc487fea">StartServices</a> ()</td></tr>
-<tr class="memdesc:aa6cf401da3b0fe6b80958dc3cc487fea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the COM port services.  <a href="#aa6cf401da3b0fe6b80958dc3cc487fea">More...</a><br /></td></tr>
+<tr class="memdesc:aa6cf401da3b0fe6b80958dc3cc487fea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the COM and USB port services.  <a href="#aa6cf401da3b0fe6b80958dc3cc487fea">More...</a><br /></td></tr>
 <tr class="separator:aa6cf401da3b0fe6b80958dc3cc487fea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13e193dd3f54eaccba73d8bfb8ccf520"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_control.html#a13e193dd3f54eaccba73d8bfb8ccf520">StopServices</a> ()</td></tr>
-<tr class="memdesc:a13e193dd3f54eaccba73d8bfb8ccf520"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the COM port services.  <a href="#a13e193dd3f54eaccba73d8bfb8ccf520">More...</a><br /></td></tr>
+<tr class="memdesc:a13e193dd3f54eaccba73d8bfb8ccf520"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the COM and USB port services.  <a href="#a13e193dd3f54eaccba73d8bfb8ccf520">More...</a><br /></td></tr>
 <tr class="separator:a13e193dd3f54eaccba73d8bfb8ccf520"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9fd36aa25f09013428e092dac2ea7fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_control.html#af9fd36aa25f09013428e092dac2ea7fc">IssueGenericCommand</a> (UnitTarget target, <a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> full_command)</td></tr>
+<tr class="memitem:af9fd36aa25f09013428e092dac2ea7fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_control.html#af9fd36aa25f09013428e092dac2ea7fc">IssueGenericCommand</a> (<a class="el" href="namespace_d_c_s_1_1_control.html#ad3e1fb34d05375e56c2219d9eb033e0a">UnitTarget</a> target, <a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> full_command)</td></tr>
 <tr class="memdesc:af9fd36aa25f09013428e092dac2ea7fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Issue a generic command to the specified target.  <a href="#af9fd36aa25f09013428e092dac2ea7fc">More...</a><br /></td></tr>
 <tr class="separator:af9fd36aa25f09013428e092dac2ea7fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab07308337869f8b12264279e23ac2338"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_control.html#ab07308337869f8b12264279e23ac2338">IssueGenericCommandResponse</a> (UnitTarget target, <a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> full_command)</td></tr>
+<tr class="memitem:ab07308337869f8b12264279e23ac2338"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_control.html#ab07308337869f8b12264279e23ac2338">IssueGenericCommandResponse</a> (<a class="el" href="namespace_d_c_s_1_1_control.html#ad3e1fb34d05375e56c2219d9eb033e0a">UnitTarget</a> target, <a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> full_command)</td></tr>
 <tr class="memdesc:ab07308337869f8b12264279e23ac2338"><td class="mdescLeft">&#160;</td><td class="mdescRight">Issue a generic command to the specified target, waiting for a response.  <a href="#ab07308337869f8b12264279e23ac2338">More...</a><br /></td></tr>
 <tr class="separator:ab07308337869f8b12264279e23ac2338"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Exposes tilt and rotation stages control parameters. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
+</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+<a class="anchor" id="ad3e1fb34d05375e56c2219d9eb033e0a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespace_d_c_s_1_1_control.html#ad3e1fb34d05375e56c2219d9eb033e0a">DCS::Control::UnitTarget</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enumerates the diferent devices acessible via COM/USB ports. </p>
+<p>Value of components is for identification only. It is not related to the OS COM/USB port id. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="ad3e1fb34d05375e56c2219d9eb033e0aac8ead7c47ffe815a063d2bb2a6ab65eb"></a>ESP301&#160;</td><td class="fielddoc">
+<p>The ESP301 rotation stage controller target. </p>
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ad3e1fb34d05375e56c2219d9eb033e0aa3df26a17dfccfd19b33f6d6328e2e966"></a>PMC8742&#160;</td><td class="fielddoc">
+<p>The PMC8742 tilt stage controller target. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="af9fd36aa25f09013428e092dac2ea7fc"></a>
 <div class="memitem">
 <div class="memproto">
@@ -124,7 +165,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void DCS::Control::IssueGenericCommand </td>
           <td>(</td>
-          <td class="paramtype">UnitTarget&#160;</td>
+          <td class="paramtype"><a class="el" href="namespace_d_c_s_1_1_control.html#ad3e1fb34d05375e56c2219d9eb033e0a">UnitTarget</a>&#160;</td>
           <td class="paramname"><em>target</em>, </td>
         </tr>
         <tr>
@@ -143,7 +184,7 @@ Functions</h2></td></tr>
 
 <p>Issue a generic command to the specified target. </p>
 <p>This function sends a command to a controller using its commands. See the ESP301-3G and PMC8742 controller manuals for the raw commands to send via this function.</p>
-<p>Separate commands for the ESP301-3G and PMC8742 controller's using semicolons.</p>
+<p>Separate commands for the ESP301-3G controller's using semicolons. The PMC8742 only supports non separated commands. </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000008">Todo:</a></b></dt><dd>Create a wrapper to emulate PMC8742 command separator via (;).</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">target</td><td>The stage to target. </td></tr>
@@ -161,7 +202,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> DCS::Control::IssueGenericCommandResponse </td>
           <td>(</td>
-          <td class="paramtype">UnitTarget&#160;</td>
+          <td class="paramtype"><a class="el" href="namespace_d_c_s_1_1_control.html#ad3e1fb34d05375e56c2219d9eb033e0a">UnitTarget</a>&#160;</td>
           <td class="paramname"><em>target</em>, </td>
         </tr>
         <tr>
@@ -180,7 +221,7 @@ Functions</h2></td></tr>
 
 <p>Issue a generic command to the specified target, waiting for a response. </p>
 <p>This function sends a command to a controller using its commands. See the ESP301-3G and PMC8742 controller manuals for the raw commands to send via this function.</p>
-<p>Separate commands for the ESP301-3G and PMC8742 controller's using semicolons.</p>
+<p>Separate commands for the ESP301-3G controller's using semicolons. The PMC8742 only supports non separated commands. </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000009">Todo:</a></b></dt><dd>Create a wrapper to emulate PMC8742 command separator via (;).</dd></dl>
 <p>The part of the command responsible for requesting data can be anywhere in the command chain.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -206,7 +247,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Starts the COM port services. </p>
+<p>Starts the COM and USB port services. </p>
 <p>This creates a thread responsible for sending commands for all the targets.</p>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000006">Todo:</a></b></dt><dd>Create a thread for each target. Allowing for simultaneous operation of the stages. </dd></dl>
 
@@ -225,8 +266,8 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Stops the COM port services. </p>
-<p>This destroys all the context of COM handles and disables remote connection.</p>
+<p>Stops the COM and USB port services. </p>
+<p>This destroys all the context of COM and USB handles and disables remote connection.</p>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000007">Todo:</a></b></dt><dd>Clean up motors to a reset state as well. </dd></dl>
 
 </div>
