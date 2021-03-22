@@ -3,6 +3,11 @@
 #include "../include/DCS_ModuleCore.h"
 #include "../include/internal.h"
 
+const DCS_API DCS::u16 DCS::Threading::GetNumber7u16(int x)
+{
+	return 7;
+}
+
 const DCS::u16 DCS::Threading::GetMaxHardwareConcurrency()
 {
 	return std::thread::hardware_concurrency();

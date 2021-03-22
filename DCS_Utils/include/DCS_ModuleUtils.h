@@ -23,7 +23,6 @@
  * \version 1.0
  *
  * \date 2020/10/16
- * $Modified: 2020/10/19$
  */
 
 
@@ -55,8 +54,6 @@ namespace DCS
 
 	/**
 	 * \brief A generic opaque handle that is only meaningful for the API.
-	 * 
-	 * \todo Maybe change this to intptr?
 	 */
 	typedef void* GenericHandle;
 
@@ -113,14 +110,13 @@ namespace DCS
 		 */
 		struct DCS_API BasicString
 		{
-			char buffer[512];
+			char buffer[512]; ///< The sized string buffer.
 		};
 
 		/**
 		 * \brief This class enables writing to a single (or multiple) buffer(s) for logging.
 		 * Thread-safe.
 		 * 
-		 * \todo Add Deinit static method.
 		 * \todo Make the output redirectable (for stderr or stdout for example).
 		 */
 		class Logger

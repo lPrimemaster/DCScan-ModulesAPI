@@ -26,6 +26,28 @@
  */
 #define DCS_REGISTER_CALL(...)
 
+ /**
+  * \brief Append this definition before function declarations (or anywhere in the code) to register a tcp connection
+  * event. name param is the return type, the following params are argument types (if existent).
+  *
+  * \param name The name given to the event.
+  * 
+  * After running the DCS Preprocessor, integer codes should be generated for each
+  * event registered.
+  *
+  *
+  * Examples:
+  * \code{.cpp}
+  * DCS_REGISTER_EVENT(OnSomeData)
+  * void onData(int x);
+  * 
+  * void onData(int x)
+  * {
+  *		// Emits the the OnSomeData event, passing param x everytime the function onData is called.
+  *		DCS_EMIT_EVT(SV_EVT_OnSomeData, (u8*)&x, sizeof(int));
+  * }
+  * \endcode
+  */
 #define DCS_REGISTER_EVENT(name)
 
 #ifdef API_EXPORT

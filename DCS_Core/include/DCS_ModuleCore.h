@@ -135,6 +135,9 @@ namespace DCS
 		 */
 		DCS_REGISTER_CALL(DCS::u16)
 		const DCS_API u16 GetMaxHardwareConcurrency();
+
+		DCS_REGISTER_CALL(DCS::u16, int)
+		const DCS_API u16 GetNumber7u16(int x);
 	}
 }
 

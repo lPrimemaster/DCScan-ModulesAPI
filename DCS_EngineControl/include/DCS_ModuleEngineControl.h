@@ -7,14 +7,9 @@
 
 /**
  * @file
- * \brief Provide an example
+ * \brief Exposes engine control functionalities of the API to the end user.
  *
- * This class is meant as an example. It is not useful by itself
- * rather its usefulness is only a function of how much it helps
- * the reader.  It is in a sense defined by the person who reads it
- * and otherwise does not exist in any real form.
- *
- * \author César Godinho
+ * \author Cesar Godinho
  *
  * \version 1.0 $Revision: 1.5 $
  *
@@ -29,18 +24,18 @@ namespace DCS
 	namespace Control
 	{
 		/**
-		 * \brief Enumerates the diferent devices acessible via COM ports.
+		 * \brief Enumerates the diferent devices acessible via COM/USB ports.
 		 * 
-		 * Value of components is for identification only. It is not related to the OS COM port id.
+		 * Value of components is for identification only. It is not related to the OS COM/USB port id.
 		 */
-		enum class DCS_API UnitTarget
+		enum class UnitTarget
 		{
 			ESP301, ///< The ESP301 rotation stage controller target.
 			PMC8742 ///< The PMC8742 tilt stage controller target.
 		};
 
 		/**
-		 * \brief Starts the COM port services.
+		 * \brief Starts the COM and USB port services.
 		 * 
 		 * This creates a thread responsible for sending commands for all the targets.
 		 * 
@@ -49,9 +44,9 @@ namespace DCS
 		DCS_API void StartServices();
 
 		/**
-		 * \brief Stops the COM port services.
+		 * \brief Stops the COM and USB port services.
 		 *
-		 * This destroys all the context of COM handles and disables remote connection.
+		 * This destroys all the context of COM and USB handles and disables remote connection.
 		 *
 		 * \todo Clean up motors to a reset state as well.
 		 */
@@ -63,7 +58,9 @@ namespace DCS
 		 * This function sends a command to a controller using its commands.
 		 * See the ESP301-3G and PMC8742 controller manuals for the raw commands to send via this function.
 		 * 
-		 * Separate commands for the ESP301-3G and PMC8742 controller's using semicolons.
+		 * Separate commands for the ESP301-3G controller's using semicolons.
+		 * The PMC8742 only supports non separated commands.
+		 * \todo Create a wrapper to emulate PMC8742 command separator via (;).
 		 * 
 		 * \param target The stage to target.
 		 * \param full_command The ASCII command to send to the unit.
@@ -77,7 +74,9 @@ namespace DCS
 		 * This function sends a command to a controller using its commands.
 		 * See the ESP301-3G and PMC8742 controller manuals for the raw commands to send via this function.
 		 * 
-		 * Separate commands for the ESP301-3G and PMC8742 controller's using semicolons.
+		 * Separate commands for the ESP301-3G controller's using semicolons.
+		 * The PMC8742 only supports non separated commands.
+		 * \todo Create a wrapper to emulate PMC8742 command separator via (;).
 		 * 
 		 * The part of the command responsible for requesting data can be anywhere in the command chain.
 		 *

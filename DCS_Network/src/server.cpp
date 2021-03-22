@@ -15,24 +15,33 @@ static DCS::Utils::ByteQueue inbound_bytes(ib_buff_size);
 
 static std::atomic<bool> server_running = false;
 
-void DCS::Network::Message::callRandom()
+void DCS::Network::Message::FibSeqEvt()
 {
-	int x = 20507;
-	DCS_EMIT_EVT(SV_EVT_OnTest, (u8*)&x, sizeof(int));
+	static u64 a = 0;
+	static u64 b = 1;
+
+	u64 p = a;
+	
+	u64 l = b;
+	b = a + b;
+	a = l;
+	
+	DCS_EMIT_EVT(SV_EVT_OnTestFibSeq, (u8*)&p, sizeof(u64));
 }
 
 void DCS::Network::Message::EmitEvent(u8 EVT_ID, u8* evtData, i32 size)
 {
 	// Emit only if event is subscribed to in the client-side
-	// NOTE : If this gets too cpu heavy, just consider using a hasmap approach and waking every x millis
+	// NOTE : If this gets too cpu heavy, just consider using a hashmap approach and waking every x millis
 	if (DCS::Registry::CheckEvent(EVT_ID))
 	{
-		// TODO : Allocate once per event and send a copy of message to outbound_data_queue
-		// Use a preprocessor directive for the allocate on top of the event emitting function 
-		// (this also improves performance)
+		// TODO : Allocate via a memory pool (not wasting time with all these new[] operators [via Message::Alloc])
+		// TODO : Create a Message::PoolAlloc() func
 		DefaultMessage msg = Message::Alloc(size + sizeof(u8) + MESSAGE_XTRA_SPACE);
 
 		*msg.ptr = EVT_ID;
+		
+		// memcpy performance is fine here
 		memcpy(msg.ptr + 1, evtData, size);
 
 		Message::SetNew(msg, DCS::Utils::toUnderlyingType(Message::InternalOperation::EVT_RESPONSE), nullptr);

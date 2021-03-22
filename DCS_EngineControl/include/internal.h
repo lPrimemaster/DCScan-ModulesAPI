@@ -50,7 +50,7 @@ namespace DCS
 
 		/**
 		 * \internal
-		 * \brief Initialized COM HANDLE with params.
+		 * \brief Initialize COM HANDLE with params.
 		 */
 		DCS_INTERNAL_TEST HANDLE init_handle(LPCSTR portName, DWORD rwAccess, SerialArgs args);
 
@@ -78,21 +78,36 @@ namespace DCS
 		 */
 		DCS_INTERNAL_TEST i32    enumerate_ports(char* buffer, DCS::i32 buff_size);
 
+		/**
+		 * \internal
+		 * \brief Transforms a COM number to its system accepted string.
+		 */
 		DCS_INTERNAL_TEST void   comnumber_to_string(char pname[7], DCS::u8 n);
 	}
 
 	/**
 	 * \internal
 	 * \brief USB Control.
+	 * 
+	 * This module is reverse engineered from the PMC8742's DLL (usbdll.dll).
+	 * Found a link with the windows system native usb driver controler, WinUsb.dll.
 	 */
 	namespace USerial
 	{
+		/**
+		 * \internal
+		 * \brief Stores Windows USB pipe ids.
+		 */
 		struct DCS_INTERNAL_TEST PIPE_ID
 		{
 			UCHAR  PipeInId;
 			UCHAR  PipeOutId;
 		};
 
+		/**
+		 * \internal
+		 * \brief Stores USB related handles and settings.
+		 */
 		struct DCS_INTERNAL_TEST USBIntHandle
 		{
 			WINUSB_INTERFACE_HANDLE usb_handle;
@@ -100,28 +115,40 @@ namespace DCS
 			PIPE_ID pipe_id;
 		};
 
+		/**
+		 * \internal
+		 * \brief Initialize USB handle for hardware with VID and PID.
+		 * 
+		 * \param VID_PID Accepts a dash formatted string separating vendor and product id.
+		 * Example: "104D-4000"
+		 */
 		DCS_INTERNAL_TEST USBIntHandle init_usb_handle(std::string VID_PID);
 
+		/**
+		 * \internal
+		 * \brief Write raw data to a USB endpoint.
+		 */
 		DCS_INTERNAL_TEST ULONG write_bulk_bytes(USBIntHandle hnd, PUCHAR buffer, DWORD size);
 
+		/**
+		 * \internal
+		 * \brief Read raw data from a USB endpoint.
+		 */
 		DCS_INTERNAL_TEST ULONG read_bulk_bytes(USBIntHandle hnd, PUCHAR buffer, DWORD size);
 
+		/**
+		 * \internal
+		 * \brief Close USB related handles and data. Terminating connection with device.
+		 */
 		DCS_INTERNAL_TEST BOOL term_usb_handle(USBIntHandle handle);
 	}
 
 	/**
 	 * \internal
-	 * \brief Allows for communications request with COM devices in the local machine.
+	 * \brief Allows for communications request with COM and USB devices in the local machine.
 	 */
 	namespace Coms
 	{
-		struct DCS_INTERNAL_TEST COMDevicePrivateProperties
-		{
-			u8 comport_esp301;
-			u8 comport_pmc8742;
-			Serial::SerialArgs serial_args;
-		};
-
 		class CmdBuffer;
 
 		DCS_INTERNAL_TEST CmdBuffer& GetCmdBuffer();

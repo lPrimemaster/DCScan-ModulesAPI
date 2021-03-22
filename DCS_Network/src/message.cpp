@@ -9,6 +9,7 @@ DCS::Registry::SVReturn DCS::Network::Message::WaitForId(DCS::u64 id)
 {
 	std::unique_lock<std::mutex> lock(message_m);
 	lsync.wait(lock, [&] { return lmessage.id == id; }); // This makes WaitForId thread-safe
+
 	Registry::SVReturn ret;
 	auto msg_ptr = lmessage.ptr;
 	auto msg_sz = lmessage.size;
@@ -71,7 +72,7 @@ void DCS::Network::Message::SetCopyId(DefaultMessage& msg, u8 opcode, u64 id, u8
 
 void DCS::Network::Message::SetNew(DefaultMessage& msg, u8 opcode, u8* data)
 {
-	static u64 nid = 0;
+	static std::atomic<u64> nid = 0;
 	if (msg.size > 0)
 	{
 		msg.op = opcode;

@@ -84,6 +84,25 @@ namespace DCS {
 			return val;
 		}
 
+        typedef void (*EventCallbackFunc)(u8* data);
+
+        static DCS_API const i32 SetupEvent(unsigned char* buffer, u8 id, EventCallbackFunc f)
+        {
+            memcpy(buffer, &id, sizeof(u8));
+
+            evt_callbacks.emplace(id, f);
+
+            return sizeof(u8);
+        }
+
+        static DCS_API const EventCallbackFunc GetEventCallback(u8 id)
+        {
+            if (id <= MAX_SUB)
+                return evt_callbacks.at(id);
+            LOG_ERROR("Event id -> %d. No callback found.", id);
+            return nullptr;
+        }
+
 		static DCS_API const bool CheckEvent(u8 id)
 		{
 			if (id <= MAX_SUB)
@@ -139,6 +158,8 @@ namespace DCS {
 			$6
 		};
 
+        inline static std::unordered_map<u8, EventCallbackFunc> evt_callbacks;
+
 	public:
 		struct DCS_API SVParams
 		{
@@ -172,14 +193,17 @@ namespace DCS {
 				i32 it = sizeof(u16);
 				memcpy(buffer, &fcode, sizeof(u16));
 
-				switch(fcode)
+                if(p.size() > 0)
 				{
-					$7
-					default:
-						LOG_ERROR("GetDataFromParams() function code (fcode) not found.");
-						LOG_ERROR("Maybe function signature naming is invalid, or function does not take any arguments.");
-						break;
-				}
+				    switch(fcode)
+				    {
+					    $7
+					    default:
+						    LOG_ERROR("GetDataFromParams() function code (fcode) not found.");
+						    LOG_ERROR("Maybe function signature naming is invalid, or function does not take any arguments.");
+						    break;
+				    }
+                }
 
 				return it;
 			}
@@ -244,6 +268,8 @@ DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 {
 	SVReturn ret; // A generic return type container
 	ret.type = SV_RET_VOID;
+
+    LOG_DEBUG("Executing function code -> %d", params.getFunccode());
 	switch(params.getFunccode())
 	{
 	case SV_CALL_NULL:
@@ -433,12 +459,12 @@ for sig in func:
 		for a in args_name[number-1]:
 			switch_reverse_args.append('auto A' + str(anumber) + 
 				'_v = std::any_cast<' + a + '>(p.at(' + str(anumber) + '));\n\t\t\t\t\t\t' + 
-				'u8   A' + str(anumber) + '_t = ' + 'SV_ARG_' + a.replace('::', '_') + ';\n\t\t\t\t\t\t' +
-				'cpyArgToBuffer(buffer, (u8*)&A' + str(anumber) + '_v, A' + str(anumber) + '_t, sizeof(' + a + '), it);')
+				'\tu8   A' + str(anumber) + '_t = ' + 'SV_ARG_' + a.replace('::', '_') + ';\n\t\t\t\t\t\t' +
+				'\tcpyArgToBuffer(buffer, (u8*)&A' + str(anumber) + '_v, A' + str(anumber) + '_t, sizeof(' + a + '), it);')
 			anumber += 1
 
-		switch_reverse.append('case ' + definition + ':\n\t\t\t\t\t{\n\t\t\t\t\t\t' + 
-			'\n\t\t\t\t\t\t'.join(switch_reverse_args) + '\n\t\t\t\t\t\tbreak;\n\t\t\t\t\t}')
+		switch_reverse.append('case ' + definition + ':\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t' + 
+			'\n\t\t\t\t\t\t\t'.join(switch_reverse_args) + '\n\t\t\t\t\t\t\tbreak;\n\t\t\t\t\t\t}')
 
 	registry.append('{"' + sig + '", ' + hex(number) + '}')
 	number += 1
@@ -462,7 +488,7 @@ with open(curr_dir + '/config/registry.h', 'w') as f:
 		hex(len(evt_def)) + '\n' + '\n'.join(evt_def))  # Place evt codes definitions
 	DEC = DEC.replace('$5', ',\n\t\t\t'.join(registry)) # Register function signatures in unordered_map
 	DEC = DEC.replace('$6', ',\n\t\t\t'.join(evt_map))  # Register events
-	DEC = DEC.replace('$7', '\n\t\t\t\t\t'.join(switch_reverse))
+	DEC = DEC.replace('$7', '\n\t\t\t\t\t\t'.join(switch_reverse))
 
 	f.write(DEC)
 

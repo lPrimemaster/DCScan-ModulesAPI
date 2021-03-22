@@ -9,8 +9,6 @@ static std::atomic<bool> control_service_running = false;
 
 static DCS::Coms::CmdBuffer cmd_buffer;
 
-static DCS::Coms::COMDevicePrivateProperties com_device_properties;
-
 DCS::Coms::CmdBuffer& DCS::Coms::GetCmdBuffer()
 {
 	return cmd_buffer;
@@ -24,29 +22,22 @@ void DCS::Control::StartServices()
 
 		control_service_thread = new std::thread([=]()->void {
 
-			// Search for handle names
-			char comNames[10240];
-			i32 cn_sz = Serial::enumerate_ports(comNames, 10240);
+			// TODO : Change the init_handle and init_usb_handle from hardcoded port names for COM and USB.
+			/*char com_port[16];
+			Serial::comnumber_to_string(com_port, 3);*/
 
-			// TODO : Find COM from name - required
-			com_device_properties.comport_esp301  = 0;
-			com_device_properties.comport_pmc8742 = 1;
+			Serial::SerialArgs serial_args;
 
-			char com_ports[2][16];
-			Serial::comnumber_to_string(com_ports[0], com_device_properties.comport_esp301);
-			Serial::comnumber_to_string(com_ports[1], com_device_properties.comport_pmc8742);
-
-			// Both eps301 and pmc8742 use the same connection features
-			com_device_properties.serial_args.baudRate = 921600;		// 900 kbps
-			com_device_properties.serial_args.byteSize = 8;				// 8 bit size
-			com_device_properties.serial_args.eofChar = '\r';			// Carriage return command eof (?)
-			com_device_properties.serial_args.parity = NOPARITY;		// No parity
-			com_device_properties.serial_args.stopBits = ONESTOPBIT;	// One stop bit
+			serial_args.baudRate = 921600;		// 900 kbps
+			serial_args.byteSize = 8;			// 8 bit size
+			serial_args.eofChar = '\r';			// Carriage return command eof (?)
+			serial_args.parity = NOPARITY;		// No parity
+			serial_args.stopBits = ONESTOPBIT;	// One stop bit
 
 			// Open both ports for communication
-			HANDLE esp301_handle  = Serial::init_handle("COM3", GENERIC_READ | GENERIC_WRITE, com_device_properties.serial_args);
+			HANDLE esp301_handle  = Serial::init_handle("COM3", GENERIC_READ | GENERIC_WRITE, serial_args);
 
-			DCS::USerial::USBIntHandle pmc8742_handle = USerial::init_usb_handle("104D-4000");
+			USerial::USBIntHandle pmc8742_handle = USerial::init_usb_handle("104D-4000");
 
 			char response[256];
 			DWORD rbSize;

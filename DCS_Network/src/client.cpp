@@ -108,9 +108,8 @@ void DCS::Network::Client::StartThread(Socket connection)
 					break;
 					case DCS::Network::Message::InternalOperation::EVT_RESPONSE:
 
-						LOG_DEBUG("Received event in client! id = %u | x = %d", *(u8*)msg.ptr, *(int*)(msg.ptr + 1));
-
-						// TODO : Set callback based on evt type (id)
+						// Call client-side user callback
+						DCS::Registry::GetEventCallback(*(u8*)msg.ptr)(msg.ptr + 1);
 
 						break;
 					case DCS::Network::Message::InternalOperation::EVT_UNSUB:

@@ -197,7 +197,7 @@ DCS::USerial::USBIntHandle DCS::USerial::init_usb_handle(std::string VID_PID)
 
 	if (INVALID_HANDLE_VALUE == DeviceHandle) {
 
-		LOG_DEBUG("Failed to open %s", devPath);
+		LOG_ERROR("Failed to open device path: %s", devPath);
 		return { NULL, INVALID_HANDLE_VALUE, PIPE_ID() };
 	}
 
@@ -209,7 +209,7 @@ DCS::USerial::USBIntHandle DCS::USerial::init_usb_handle(std::string VID_PID)
 
 	if (FALSE == bResult) {
 
-		LOG_DEBUG("Failed to initialize WinUSB. Error: %ld", GetLastError());
+		LOG_ERROR("Failed to initialize WinUSB. Error: %ld", GetLastError());
 		CloseHandle(DeviceHandle);
 		return { INVALID_HANDLE_VALUE, NULL, PIPE_ID() };
 	}
@@ -220,7 +220,7 @@ DCS::USerial::USBIntHandle DCS::USerial::init_usb_handle(std::string VID_PID)
 
 		if (FALSE == bQResult)
 		{
-			LOG_DEBUG("Failed to query usb endpoints. Error: %ld", GetLastError());
+			LOG_ERROR("Failed to query usb endpoints. Error: %ld", GetLastError());
 			CloseHandle(DeviceHandle);
 			return { NULL, NULL, PIPE_ID() };
 		}

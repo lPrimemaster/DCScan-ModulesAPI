@@ -193,8 +193,8 @@ namespace DCS
 			DCS_API Registry::SVReturn SendSync(Operation op, u8* data, i32 size);
 
 
-			DCS_REGISTER_EVENT(OnTest)
-			DCS_API void callRandom();
+			DCS_REGISTER_EVENT(OnTestFibSeq)
+			DCS_API void FibSeqEvt();
 		}
 	}
 }

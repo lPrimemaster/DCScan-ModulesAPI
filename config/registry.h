@@ -12,24 +12,26 @@
 #include <any>
 #include "../DCS_Utils/include/DCS_ModuleUtils.h"
 
-#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
-#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
 
 #define SV_CALL_NULL 0x0
 #define SV_CALL_DCS_Threading_GetMaxHardwareConcurrency 0x1
-#define SV_CALL_DCS_Control_IssueGenericCommand 0x2
-#define SV_CALL_DCS_Control_IssueGenericCommandResponse 0x3
+#define SV_CALL_DCS_Threading_GetNumber7u16 0x2
+#define SV_CALL_DCS_Control_IssueGenericCommand 0x3
+#define SV_CALL_DCS_Control_IssueGenericCommandResponse 0x4
 
 #define SV_ARG_NULL 0x0
-#define SV_ARG_DCS_Control_UnitTarget 0x1
+#define SV_ARG_int 0x1
 #define SV_ARG_DCS_Utils_BasicString 0x2
+#define SV_ARG_DCS_Control_UnitTarget 0x3
 
 #define SV_RET_VOID 0x0
-#define SV_RET_DCS_u16 0x1
-#define SV_RET_DCS_Utils_BasicString 0x2
+#define SV_RET_DCS_Utils_BasicString 0x1
+#define SV_RET_DCS_u16 0x2
 
 #define MAX_SUB 0x1
-#define SV_EVT_OnTest 0x1
+#define SV_EVT_OnTestFibSeq 0x1
 
 namespace DCS {
 
@@ -57,6 +59,25 @@ namespace DCS {
 				LOG_ERROR("Function signature (%s) not found.", func_signature);
 			return val;
 		}
+
+        typedef void (*EventCallbackFunc)(u8* data);
+
+        static DCS_API const i32 SetupEvent(unsigned char* buffer, u8 id, EventCallbackFunc f)
+        {
+            memcpy(buffer, &id, sizeof(u8));
+
+            evt_callbacks.emplace(id, f);
+
+            return sizeof(u8);
+        }
+
+        static DCS_API const EventCallbackFunc GetEventCallback(u8 id)
+        {
+            if (id <= MAX_SUB)
+                return evt_callbacks.at(id);
+            LOG_ERROR("Event id -> %d. No callback found.", id);
+            return nullptr;
+        }
 
 		static DCS_API const bool CheckEvent(u8 id)
 		{
@@ -106,14 +127,17 @@ namespace DCS {
 		inline static std::unordered_map<const char*, u16> id = 
 		{
 			{"DCS::Threading::GetMaxHardwareConcurrency", 0x1},
-			{"DCS::Control::IssueGenericCommand", 0x2},
-			{"DCS::Control::IssueGenericCommandResponse", 0x3}
+			{"DCS::Threading::GetNumber7u16", 0x2},
+			{"DCS::Control::IssueGenericCommand", 0x3},
+			{"DCS::Control::IssueGenericCommandResponse", 0x4}
 		};
 
 		inline static std::unordered_map<u8, bool> subscriptions = 
 		{
-			{SV_EVT_OnTest, false}
+			{SV_EVT_OnTestFibSeq, false}
 		};
+
+        inline static std::unordered_map<u8, EventCallbackFunc> evt_callbacks;
 
 	public:
 		struct DCS_API SVParams
@@ -148,33 +172,43 @@ namespace DCS {
 				i32 it = sizeof(u16);
 				memcpy(buffer, &fcode, sizeof(u16));
 
-				switch(fcode)
+                if(p.size() > 0)
 				{
-					case SV_CALL_DCS_Control_IssueGenericCommand:
-					{
-						auto A0_v = std::any_cast<DCS::Control::UnitTarget>(p.at(0));
-						u8   A0_t = SV_ARG_DCS_Control_UnitTarget;
-						cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(DCS::Control::UnitTarget), it);
-						auto A1_v = std::any_cast<DCS::Utils::BasicString>(p.at(1));
-						u8   A1_t = SV_ARG_DCS_Utils_BasicString;
-						cpyArgToBuffer(buffer, (u8*)&A1_v, A1_t, sizeof(DCS::Utils::BasicString), it);
-						break;
-					}
-					case SV_CALL_DCS_Control_IssueGenericCommandResponse:
-					{
-						auto A0_v = std::any_cast<DCS::Control::UnitTarget>(p.at(0));
-						u8   A0_t = SV_ARG_DCS_Control_UnitTarget;
-						cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(DCS::Control::UnitTarget), it);
-						auto A1_v = std::any_cast<DCS::Utils::BasicString>(p.at(1));
-						u8   A1_t = SV_ARG_DCS_Utils_BasicString;
-						cpyArgToBuffer(buffer, (u8*)&A1_v, A1_t, sizeof(DCS::Utils::BasicString), it);
-						break;
-					}
-					default:
-						LOG_ERROR("GetDataFromParams() function code (fcode) not found.");
-						LOG_ERROR("Maybe function signature naming is invalid, or function does not take any arguments.");
-						break;
-				}
+				    switch(fcode)
+				    {
+					    case SV_CALL_DCS_Threading_GetNumber7u16:
+						{
+							auto A0_v = std::any_cast<int>(p.at(0));
+							u8   A0_t = SV_ARG_int;
+							cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(int), it);
+							break;
+						}
+						case SV_CALL_DCS_Control_IssueGenericCommand:
+						{
+							auto A0_v = std::any_cast<DCS::Control::UnitTarget>(p.at(0));
+							u8   A0_t = SV_ARG_DCS_Control_UnitTarget;
+							cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(DCS::Control::UnitTarget), it);
+							auto A1_v = std::any_cast<DCS::Utils::BasicString>(p.at(1));
+							u8   A1_t = SV_ARG_DCS_Utils_BasicString;
+							cpyArgToBuffer(buffer, (u8*)&A1_v, A1_t, sizeof(DCS::Utils::BasicString), it);
+							break;
+						}
+						case SV_CALL_DCS_Control_IssueGenericCommandResponse:
+						{
+							auto A0_v = std::any_cast<DCS::Control::UnitTarget>(p.at(0));
+							u8   A0_t = SV_ARG_DCS_Control_UnitTarget;
+							cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(DCS::Control::UnitTarget), it);
+							auto A1_v = std::any_cast<DCS::Utils::BasicString>(p.at(1));
+							u8   A1_t = SV_ARG_DCS_Utils_BasicString;
+							cpyArgToBuffer(buffer, (u8*)&A1_v, A1_t, sizeof(DCS::Utils::BasicString), it);
+							break;
+						}
+					    default:
+						    LOG_ERROR("GetDataFromParams() function code (fcode) not found.");
+						    LOG_ERROR("Maybe function signature naming is invalid, or function does not take any arguments.");
+						    break;
+				    }
+                }
 
 				return it;
 			}
