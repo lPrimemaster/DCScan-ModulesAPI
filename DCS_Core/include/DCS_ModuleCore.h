@@ -139,6 +139,17 @@ namespace DCS
 		DCS_REGISTER_CALL(DCS::u16, int)
 		const DCS_API u16 GetNumber7u16(int x);
 	}
+
+	/**
+	 * \brief Command Line Interface (CLI) responsible for handling server-side console commands
+	 */
+	namespace CLI
+	{
+		/**
+		 * \brief Make the current thread wait for console commands.
+		 */
+		DCS_API void Listen();
+	}
 }
 
 #endif _DCS_CORE_H

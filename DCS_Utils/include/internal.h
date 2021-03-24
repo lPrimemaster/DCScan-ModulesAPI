@@ -177,5 +177,11 @@ namespace DCS
 		{
 			return static_cast<typename std::underlying_type<E>::type>(e);
 		}
+
+		DCS_INTERNAL_TEST void GetConsoleSize(int* x, int* y);
+
+		DCS_INTERNAL_TEST void SetConsoleMargins(int t, int b);
+
+		DCS_INTERNAL_TEST void WriteConsoleLine(int b, const char* str);
 	}
 }

@@ -1,4 +1,5 @@
 #include "../include/DCS_ModuleUtils.h"
+#include "../include/internal.h"
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -81,6 +82,12 @@ void DCS::Utils::Logger::Init(Verbosity level, DCS::Utils::String file)
 	GetConsoleMode(outHandle, &dwMode);
 	dwMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 	SetConsoleMode(outHandle, dwMode);
+
+	int x, y;
+	GetConsoleSize(&x, &y);
+	SetConsoleMargins(1, y - 1);
+
+	WriteConsoleLine(y, "> ");
 
 	Logger::handle = fopen(file.c_str(), "w");
 }
