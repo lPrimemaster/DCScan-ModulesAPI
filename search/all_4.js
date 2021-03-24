@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['cli',['CLI',['../namespace_d_c_s_1_1_c_l_i.html',1,'DCS']]],
   ['client',['Client',['../namespace_d_c_s_1_1_network_1_1_client.html',1,'DCS::Network']]],
   ['control',['Control',['../namespace_d_c_s_1_1_control.html',1,'DCS']]],
   ['data',['DATA',['../namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3ae44f9e348e41cb272efa87387728571b',1,'DCS::Network::Message']]],
