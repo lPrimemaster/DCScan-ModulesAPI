@@ -12,8 +12,8 @@
 #include <any>
 #include "../DCS_Utils/include/DCS_ModuleUtils.h"
 
-#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
-#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
 
 #define SV_CALL_NULL 0x0
 #define SV_CALL_DCS_Threading_GetMaxHardwareConcurrency 0x1
@@ -22,9 +22,9 @@
 #define SV_CALL_DCS_Control_IssueGenericCommandResponse 0x4
 
 #define SV_ARG_NULL 0x0
-#define SV_ARG_int 0x1
-#define SV_ARG_DCS_Control_UnitTarget 0x2
-#define SV_ARG_DCS_Utils_BasicString 0x3
+#define SV_ARG_DCS_Control_UnitTarget 0x1
+#define SV_ARG_DCS_Utils_BasicString 0x2
+#define SV_ARG_int 0x3
 
 #define SV_RET_VOID 0x0
 #define SV_RET_DCS_u16 0x1

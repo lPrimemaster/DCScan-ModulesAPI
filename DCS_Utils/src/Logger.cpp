@@ -87,13 +87,20 @@ void DCS::Utils::Logger::Init(Verbosity level, DCS::Utils::String file)
 	GetConsoleSize(&x, &y);
 	SetConsoleMargins(1, y - 1);
 
-	WriteConsoleLine(y, "> ");
+	// Set the help bar text
+	WriteConsoleLine(y, "> Type \"help\" for commands.");
 
 	Logger::handle = fopen(file.c_str(), "w");
 }
 
 void DCS::Utils::Logger::Destroy()
 {
+	// Clear screen (Keep buffer)
+	std::cout << "\x1b[2J";
+
+	// Move to top
+	std::cout << "\x1b[H";
+
 	fclose(Logger::handle);
 }
 
