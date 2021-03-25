@@ -23,12 +23,12 @@
 
 #define SV_ARG_NULL 0x0
 #define SV_ARG_DCS_Control_UnitTarget 0x1
-#define SV_ARG_int 0x2
-#define SV_ARG_DCS_Utils_BasicString 0x3
+#define SV_ARG_DCS_Utils_BasicString 0x2
+#define SV_ARG_int 0x3
 
 #define SV_RET_VOID 0x0
-#define SV_RET_DCS_Utils_BasicString 0x1
-#define SV_RET_DCS_u16 0x2
+#define SV_RET_DCS_u16 0x1
+#define SV_RET_DCS_Utils_BasicString 0x2
 
 #define MAX_SUB 0x1
 #define SV_EVT_OnTestFibSeq 0x1
