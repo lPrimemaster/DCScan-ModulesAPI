@@ -50,13 +50,13 @@ void DCS::Network::Client::StartThread(Socket connection)
 				unsigned char buffer[4096] = { 0 };
 				
 				// Start server heartbeat
-				DCS::Timer::SystemTimer timer = DCS::Timer::New();
+				/*DCS::Timer::SystemTimer timer = DCS::Timer::New();
 				DCS::Timer::Timestamp ts;
 				std::future<void> nblock;
 
 				u8 dd = 0x0;
 				Message::SendAsync(Message::Operation::NO_OP, &dd, 1);
-				ts = DCS::Timer::GetTimestamp(timer);
+				ts = DCS::Timer::GetTimestamp(timer);*/
 
 				while (client_running.load() || inbound_bytes.count() > 0)
 				{
@@ -75,21 +75,21 @@ void DCS::Network::Client::StartThread(Socket connection)
 					case DCS::Network::Message::InternalOperation::NO_OP:
 					{
 						// Latency check update every 10 sec
-						auto now = DCS::Timer::GetTimestamp(timer);
-						server_latency_ms.store((now.millis - ts.millis + (now.sec - ts.sec) * 1000));
+						//auto now = DCS::Timer::GetTimestamp(timer);
+						//server_latency_ms.store((now.millis - ts.millis + (now.sec - ts.sec) * 1000));
 
-						// TODO : [Fix] If server disconnect happens at same time of keepalive (Message::SendAsync still runs)
-						// causing socket send error
-						nblock = std::async(std::launch::async, [&]() {
-							// Heartbeat for 10 seconds to keepalive
-							std::this_thread::sleep_for(std::chrono::seconds{ 10 });
-							if (client_running.load())
-							{
-								u8 dd = 0x0;
-								Message::SendAsync(Message::Operation::NO_OP, &dd, 1);
-								ts = DCS::Timer::GetTimestamp(timer);
-							}
-						});
+						//// TODO : [Fix] If server disconnect happens at same time of keepalive (Message::SendAsync still runs)
+						//// causing socket send error
+						//nblock = std::async(std::launch::async, [&]() {
+						//	// Heartbeat for 10 seconds to keepalive
+						//	std::this_thread::sleep_for(std::chrono::seconds{ 10 });
+						//	if (client_running.load())
+						//	{
+						//		u8 dd = 0x0;
+						//		Message::SendAsync(Message::Operation::NO_OP, &dd, 1);
+						//		ts = DCS::Timer::GetTimestamp(timer);
+						//	}
+						//});
 					}
 					break;
 					case DCS::Network::Message::InternalOperation::ASYNC_RESPONSE:
@@ -120,7 +120,7 @@ void DCS::Network::Client::StartThread(Socket connection)
 
 					Message::Delete(msg);
 				}
-				DCS::Timer::Delete(timer);
+				//DCS::Timer::Delete(timer);
 			});
 
 			client_receive_thread = new std::thread([=]()->void {

@@ -26,13 +26,13 @@ const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const u
 		case SV_ARG_NULL:
 			LOG_ERROR("Arg type not recognized.");
 			break;
-		case SV_ARG_DCS_Control_UnitTarget:
-			args.push_back(convert_from_byte<DCS::Control::UnitTarget>(payload, it, size));
-			it += sizeof(DCS::Control::UnitTarget);
-			break;
 		case SV_ARG_int:
 			args.push_back(convert_from_byte<int>(payload, it, size));
 			it += sizeof(int);
+			break;
+		case SV_ARG_DCS_Control_UnitTarget:
+			args.push_back(convert_from_byte<DCS::Control::UnitTarget>(payload, it, size));
+			it += sizeof(DCS::Control::UnitTarget);
 			break;
 		case SV_ARG_DCS_Utils_BasicString:
 			args.push_back(convert_from_byte<DCS::Utils::BasicString>(payload, it, size));
