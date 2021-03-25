@@ -102,17 +102,18 @@ void DCS::Network::Server::StartThread(Socket client)
 					{
 					case DCS::Network::Message::InternalOperation::NO_OP:
 					{
-						// Ping back 1 byte Used for latency check
-						u8 dd = 0x0;
-						auto dm = Message::Alloc(1 + MESSAGE_XTRA_SPACE);
-						Message::SetCopyId(dm,
-							DCS::Utils::toUnderlyingType(Message::InternalOperation::NO_OP),
-							msg.id, &dd);
-						outbound_data_queue.push(dm);
+						//// Ping back 1 byte Used for latency check
+						//u8 dd = 0x0;
+						//auto dm = Message::Alloc(1 + MESSAGE_XTRA_SPACE);
+						//Message::SetCopyId(dm,
+						//	DCS::Utils::toUnderlyingType(Message::InternalOperation::NO_OP),
+						//	msg.id, &dd);
+						//outbound_data_queue.push(dm);
 					}
 					break;
 					case DCS::Network::Message::InternalOperation::ASYNC_REQUEST:
 					{
+						LOG_DEBUG("Payload size: %d", msg.size);
 						// Execute request locally
 						DCS::Registry::SVReturn r = DCS::Registry::Execute(DCS::Registry::SVParams::GetParamsFromData(msg.ptr, (i32)msg.size));
 
@@ -130,6 +131,7 @@ void DCS::Network::Server::StartThread(Socket client)
 					break;
 					case DCS::Network::Message::InternalOperation::SYNC_REQUEST:
 					{
+						LOG_DEBUG("Payload size: %d", msg.size);
 						// Execute request locally
 						DCS::Registry::SVReturn r = DCS::Registry::Execute(DCS::Registry::SVParams::GetParamsFromData(msg.ptr, (i32)msg.size));
 
@@ -170,6 +172,8 @@ void DCS::Network::Server::StartThread(Socket client)
 				while (recv_sz > 0 && server_running.load())
 				{
 					recv_sz = ReceiveData(target_client, buffer, buff_size);
+
+					LOG_DEBUG("Recv size: %d", recv_sz);
 
 					if (recv_sz > 0) inbound_bytes.addBytes(buffer, recv_sz);
 				}
