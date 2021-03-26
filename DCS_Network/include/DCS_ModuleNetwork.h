@@ -89,6 +89,13 @@ namespace DCS
 			DCS_API void StopThread(Socket client, StopMode mode = StopMode::IMMEDIATE);
 
 			/**
+			 * \brief Returns the currently server connected client
+			 */
+			DCS_API Socket GetConnectedClient();
+
+			DCS_API bool IsRunning();
+
+			/**
 			 * \example sockets/simple_server.cpp.
 			 * An example showing how to implement a simple server.
 			 */

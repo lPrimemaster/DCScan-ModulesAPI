@@ -14,6 +14,9 @@ constexpr DCS::u64 ib_buff_size = 4096;
 static DCS::Utils::ByteQueue inbound_bytes(ib_buff_size);
 
 static std::atomic<bool> server_running = false;
+static std::atomic<bool> stop_forced = false;
+
+static std::atomic<DCS::Network::Socket> server_client_sock;
 
 void DCS::Network::Message::FibSeqEvt()
 {
@@ -74,6 +77,7 @@ DCS::Network::Socket DCS::Network::Server::WaitForConnection(Socket server)
 void DCS::Network::Server::StartThread(Socket client)
 {
 	SOCKET target_client = (SOCKET)client;
+	server_client_sock.store(client);
 	if (ValidateSocket(target_client))
 	{
 		if (server_receive_thread == nullptr)
@@ -102,6 +106,7 @@ void DCS::Network::Server::StartThread(Socket client)
 					{
 					case DCS::Network::Message::InternalOperation::NO_OP:
 					{
+						// TODO : Fix
 						//// Ping back 1 byte Used for latency check
 						//u8 dd = 0x0;
 						//auto dm = Message::Alloc(1 + MESSAGE_XTRA_SPACE);
@@ -232,6 +237,13 @@ void DCS::Network::Server::StopThread(Socket client, StopMode mode)
 		{
 			while (server_running.load())
 				std::this_thread::yield();
+
+			if (stop_forced.load())
+				return;
+		}
+		else
+		{
+			stop_forced.store(true);
 		}
 
 		CloseSocketConnection((SOCKET)client);
@@ -262,4 +274,14 @@ void DCS::Network::Server::StopThread(Socket client, StopMode mode)
 	{
 		LOG_WARNING("Could not stop server_send_thread thread. Perhaps is not running?");
 	}
+}
+
+DCS::Network::Socket DCS::Network::Server::GetConnectedClient()
+{
+	return server_client_sock.load();
+}
+
+bool DCS::Network::Server::IsRunning()
+{
+	return server_running.load();
 }

@@ -1,4 +1,5 @@
 #include "../include/DCS_ModuleCore.h"
+#include "../DCS_Network/include/DCS_ModuleNetwork.h"
 
 static DCS::i32 LevenshteinDistance(std::string s1, std::string s2)
 {
@@ -72,13 +73,34 @@ DCS::CLI::Command* DCS::CLI::Command::Closest(std::string name)
 	return min_c;
 }
 
-void DCS::CLI::WaitForCommands()
+static void CommandRegistry()
 {
+	using namespace DCS::CLI;
 #pragma warning( push )
 #pragma warning( disable : 26444 )
-	Command("help", "Displays this help message.", []() { LOG_DEBUG("Not very helpful..."); });
-	Command("stop", "Stops the server execution.");
+
+	Command("help", "Displays this help message.", []() {
+		LOG_MESSAGE("Here you go");
+		for (auto c : Command::ListCommands())
+		{
+			LOG_MESSAGE("%s", c.c_str());
+		}
+	});
+
+	Command("stop", "Stops the server execution.", []() {
+		LOG_MESSAGE("Stopping server...");
+		if (DCS::Network::Server::IsRunning())
+		{
+			DCS::Network::Server::StopThread(DCS::Network::Server::GetConnectedClient(), DCS::Network::Server::StopMode::IMMEDIATE);
+		}
+	});
+
 #pragma warning( pop )
+}
+
+void DCS::CLI::WaitForCommands()
+{
+	CommandRegistry();
 
 	std::string cmd_str;
 	Command* cmd = nullptr;

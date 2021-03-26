@@ -183,18 +183,25 @@ namespace DCS
 
 			static Command* Closest(std::string name);
 
+			static std::vector<std::string> ListCommands()
+			{
+				std::vector<std::string> cmds;
+				for (auto& p : cmd_reg)
+				{
+					cmds.push_back(p.second.cmd_name + " - " + p.second.help_string);
+				}
+				return cmds;
+			}
+
 			inline const std::string getName() const
 			{
 				return cmd_name;
 			}
 
-			// TODO: Fix
 			inline void Run()
 			{
-				LOG_DEBUG("RUN_IT - %s", cmd_name.c_str());
 				if (to_run != nullptr)
 				{
-					LOG_DEBUG("DO_IT");
 					to_run();
 				}
 
