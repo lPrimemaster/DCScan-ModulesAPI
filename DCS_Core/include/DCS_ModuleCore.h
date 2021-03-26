@@ -150,7 +150,7 @@ namespace DCS
 		class Command
 		{
 		public:
-			using MapType = std::map<std::string, Command*>;
+			using MapType = std::map<std::string, Command>;
 			using RunCB   = std::function<void()>;
 
 			Command(const char* DCL, const char* help = "", RunCB cb = nullptr)
@@ -160,7 +160,7 @@ namespace DCS
 				to_run = cb;
 
 				if (!IsCommand(cmd_name))
-					cmd_reg.emplace(cmd_name, this);
+					cmd_reg.emplace(cmd_name, *this);
 				else
 					LOG_WARNING("Attempted to create command %s. But it was already registered. Ignoring...", DCL);
 
@@ -171,7 +171,7 @@ namespace DCS
 				MapType::iterator it = cmd_reg.find(name);
 
 				if (it != cmd_reg.end())
-					return it->second;
+					return &it->second;
 				return nullptr;
 			}
 
@@ -179,6 +179,13 @@ namespace DCS
 			{
 				MapType::iterator it = cmd_reg.find(name);
 				return it != cmd_reg.end();
+			}
+
+			static Command* Closest(std::string name);
+
+			inline const std::string getName() const
+			{
+				return cmd_name;
 			}
 
 			// TODO: Fix
