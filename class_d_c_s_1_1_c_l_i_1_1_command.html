@@ -102,9 +102,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a52a0e68a7e5044e071bf36626f5263e3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a52a0e68a7e5044e071bf36626f5263e3"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>MapType</b> = std::map&lt; std::string, <a class="el" href="class_d_c_s_1_1_c_l_i_1_1_command.html">Command</a> * &gt;</td></tr>
-<tr class="separator:a52a0e68a7e5044e071bf36626f5263e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3e721d69d53138a7453538cdb31692c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae3e721d69d53138a7453538cdb31692c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>MapType</b> = std::map&lt; std::string, <a class="el" href="class_d_c_s_1_1_c_l_i_1_1_command.html">Command</a> &gt;</td></tr>
+<tr class="separator:ae3e721d69d53138a7453538cdb31692c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a764f611ba73585e8dfdbb9f4ac9eab72"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a764f611ba73585e8dfdbb9f4ac9eab72"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>RunCB</b> = std::function&lt; void()&gt;</td></tr>
 <tr class="separator:a764f611ba73585e8dfdbb9f4ac9eab72"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -114,6 +114,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af28a7f289387cb4ad45c62c21a72eb0d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af28a7f289387cb4ad45c62c21a72eb0d"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Command</b> (const char *DCL, const char *help=&quot;&quot;, RunCB cb=nullptr)</td></tr>
 <tr class="separator:af28a7f289387cb4ad45c62c21a72eb0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a129cf3f2318ac9b7de439ae1eb0bd716"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a129cf3f2318ac9b7de439ae1eb0bd716"></a>
+const std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> () const </td></tr>
+<tr class="separator:a129cf3f2318ac9b7de439ae1eb0bd716"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ee107681ae05f0a456f22d826008abc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2ee107681ae05f0a456f22d826008abc"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>Run</b> ()</td></tr>
 <tr class="separator:a2ee107681ae05f0a456f22d826008abc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -126,9 +129,16 @@ static <a class="el" href="class_d_c_s_1_1_c_l_i_1_1_command.html">Command</a> *
 <tr class="memitem:acdd91dd1faf6f3c9ed9ed77a6f8def20"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acdd91dd1faf6f3c9ed9ed77a6f8def20"></a>
 static bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsCommand</b> (std::string name)</td></tr>
 <tr class="separator:acdd91dd1faf6f3c9ed9ed77a6f8def20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cedce242a51603b3de09c6d157cb16c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2cedce242a51603b3de09c6d157cb16c"></a>
+static <a class="el" href="class_d_c_s_1_1_c_l_i_1_1_command.html">Command</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>Closest</b> (std::string name)</td></tr>
+<tr class="separator:a2cedce242a51603b3de09c6d157cb16c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1be7081d9bb1c4b1f5952ce07cb982d1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1be7081d9bb1c4b1f5952ce07cb982d1"></a>
+static std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ListCommands</b> ()</td></tr>
+<tr class="separator:a1be7081d9bb1c4b1f5952ce07cb982d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li>DCS_Core/include/<a class="el" href="_d_c_s___module_core_8h_source.html">DCS_ModuleCore.h</a></li>
+<li>DCS_Core/src/cli.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
