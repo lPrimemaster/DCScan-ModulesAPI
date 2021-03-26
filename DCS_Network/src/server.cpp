@@ -118,7 +118,6 @@ void DCS::Network::Server::StartThread(Socket client)
 					break;
 					case DCS::Network::Message::InternalOperation::ASYNC_REQUEST:
 					{
-						LOG_DEBUG("Payload size: %d", msg.size);
 						// Execute request locally
 						DCS::Registry::SVReturn r = DCS::Registry::Execute(DCS::Registry::SVParams::GetParamsFromData(msg.ptr, (i32)msg.size));
 
@@ -136,7 +135,6 @@ void DCS::Network::Server::StartThread(Socket client)
 					break;
 					case DCS::Network::Message::InternalOperation::SYNC_REQUEST:
 					{
-						LOG_DEBUG("Payload size: %d", msg.size);
 						// Execute request locally
 						DCS::Registry::SVReturn r = DCS::Registry::Execute(DCS::Registry::SVParams::GetParamsFromData(msg.ptr, (i32)msg.size));
 
@@ -177,8 +175,6 @@ void DCS::Network::Server::StartThread(Socket client)
 				while (recv_sz > 0 && server_running.load())
 				{
 					recv_sz = ReceiveData(target_client, buffer, buff_size);
-
-					LOG_DEBUG("Recv size: %d", recv_sz);
 
 					if (recv_sz > 0) inbound_bytes.addBytes(buffer, recv_sz);
 				}

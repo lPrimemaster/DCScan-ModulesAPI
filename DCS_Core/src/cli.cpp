@@ -1,5 +1,4 @@
 #include "../include/DCS_ModuleCore.h"
-#include "../DCS_Network/include/DCS_ModuleNetwork.h"
 
 static DCS::i32 LevenshteinDistance(std::string s1, std::string s2)
 {
@@ -89,10 +88,10 @@ static void CommandRegistry()
 
 	Command("stop", "Stops the server execution.", []() {
 		LOG_MESSAGE("Stopping server...");
-		if (DCS::Network::Server::IsRunning())
+		/*if (DCS::Network::Server::IsRunning())
 		{
 			DCS::Network::Server::StopThread(DCS::Network::Server::GetConnectedClient(), DCS::Network::Server::StopMode::IMMEDIATE);
-		}
+		}*/
 	});
 
 #pragma warning( pop )

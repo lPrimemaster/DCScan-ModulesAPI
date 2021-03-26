@@ -64,7 +64,6 @@ void DCS::Network::Client::StartThread(Socket connection)
 
 					if (sz == 0) continue; // Guard against inbound_bytes notify_unblock
 
-					LOG_DEBUG("Client got message: [Size %d]", sz);
 					auto msg = Message::Alloc((i32)sz);
 
 					// Push message to buffer
@@ -104,7 +103,6 @@ void DCS::Network::Client::StartThread(Socket connection)
 					case DCS::Network::Message::InternalOperation::SYNC_RESPONSE:
 					{
 						// Set last message (break out of WaitForId)
-						LOG_DEBUG("Client Value SYNC: %d", *(u16*)((DCS::Registry::SVReturn*)msg.ptr)->ptr);
 						DCS::Network::Message::SetMsgIdCondition(msg);
 					}
 					break;
@@ -132,8 +130,6 @@ void DCS::Network::Client::StartThread(Socket connection)
 				while (recv_sz > 0 && client_running.load())
 				{
 					recv_sz = ReceiveData(target_server, buffer, 512);
-
-					LOG_DEBUG("Recv size: %d", recv_sz);
 
 					if (recv_sz > 0) inbound_bytes.addBytes(buffer, recv_sz);
 				}
