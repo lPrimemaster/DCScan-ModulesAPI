@@ -230,11 +230,14 @@ DCS::i32 DCS::Network::ReceiveData(SOCKET client, unsigned char* buffer, i32 buf
 	}
 	else
 	{
+		//if (WSAGetLastError() != 10054)
+		//{
 		LOG_ERROR("socket receive failed: %d\n", WSAGetLastError());
 		LOG_ERROR("Closing socket...");
 		LOG_ERROR("Terminating WSA...");
 		closesocket(client);
 		WSACleanup();
+		//}
 		return -1;
 	}
 }

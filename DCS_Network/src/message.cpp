@@ -8,7 +8,10 @@ DCS::Network::Message::DefaultMessage DCS::Network::Message::lmessage;
 DCS::Registry::SVReturn DCS::Network::Message::WaitForId(DCS::u64 id)
 {
 	std::unique_lock<std::mutex> lock(message_m);
-	lsync.wait(lock, [&] { return lmessage.id == id; }); // This makes WaitForId thread-safe
+	LOG_DEBUG("SendSync waiting... [%d][%d]", id, lmessage.id);
+	lsync.wait(lock, [&] { return lmessage.ptr != nullptr && lmessage.id == id; }); // This makes WaitForId thread-safe
+	LOG_DEBUG("SendSync resumed...");
+	LOG_DEBUG("SendSync got %d", *(u16*)((DCS::Registry::SVReturn*)lmessage.ptr)->ptr);
 
 	Registry::SVReturn ret;
 	auto msg_ptr = lmessage.ptr;

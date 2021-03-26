@@ -83,23 +83,23 @@ void DCS::Utils::Logger::Init(Verbosity level, DCS::Utils::String file)
 	dwMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 	SetConsoleMode(outHandle, dwMode);
 
-	int x, y;
-	GetConsoleSize(&x, &y);
-	SetConsoleMargins(1, y - 1);
+	//int x, y;
+	//GetConsoleSize(&x, &y);
+	//SetConsoleMargins(1, y - 1);
 
-	// Set the help bar text
-	WriteConsoleLine(y, "> Type \"help\" for commands.");
+	//// Set the help bar text
+	//WriteConsoleLine(y, "> Type \"help\" for commands.");
 
 	Logger::handle = fopen(file.c_str(), "w");
 }
 
 void DCS::Utils::Logger::Destroy()
 {
-	// Clear screen (Keep buffer)
-	std::cout << "\x1b[2J";
+	//// Clear screen (Keep buffer)
+	//std::cout << "\x1b[2J";
 
-	// Move to top
-	std::cout << "\x1b[H";
+	//// Move to top
+	//std::cout << "\x1b[H";
 
 	fclose(Logger::handle);
 }
