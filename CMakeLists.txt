@@ -84,6 +84,18 @@ set(CONF_TARGETS DCSModuleEngineControl DCSModuleUtils DCSModuleCore DCSModuleNe
 
 string (REPLACE ";" " " CMAKE_LIBS_SOURCE_DIR "${CMAKE_LIBS_SOURCE_DIR}")
 
+# ===================== #
+# Start DCSGen.py setup #
+# ===================== #
+
+# Tell CMake to run python from the directory where this CMakeLists file exists.
+execute_process(COMMAND python DCSGen.py
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+
+# =================== #
+# End DCSGen.py setup #
+# =================== #
+
 # =================== #
 # Begin Doxygen setup #
 # =================== #
@@ -122,18 +134,6 @@ endif (DOXYGEN_FOUND)
 # ================= #
 # End Doxygen setup #
 # ================= #
-
-# ===================== #
-# Start DCSGen.py setup #
-# ===================== #
-
-# Tell CMake to run python from the directory where this CMakeLists file exists.
-execute_process(COMMAND python DCSGen.py
-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
-
-# =================== #
-# End DCSGen.py setup #
-# =================== #
 
 if(BUILD_TESTS)
   # Add testing subdirectory

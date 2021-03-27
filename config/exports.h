@@ -1,6 +1,53 @@
 #pragma once
 
-/** @file */
+/**
+ * @file
+ */
+
+/**
+ * \defgroup calls  Remote Server Callables
+ * \brief A module containing all the API functions callable via TCP/IP.
+ * 
+ * An example syntax to call a function is:
+ * \code
+ * unsigned char buffer[1024];
+ * 
+ * // Register the message
+ * auto size_written = DCS::Registry::SVParams::GetDataFromParams(buffer,
+ *		SV_CALL_FUNC_NAME_WITH_SCOPE,
+ *		3, DCS::Utils::BasicString{ "Hello server!" }
+ *	);
+ *	
+ * // Send the message and wait for response
+ * auto ret_val = Message::SendSync(Message::Operation::REQUEST, buffer, size_written);
+ * // Or dont wait...
+ * Message::SendAsync(Message::Operation::REQUEST, buffer, size_written);
+ * \endcode
+ */
+
+/**
+ * \defgroup events Remote Server Events
+ * \brief A module containing all the API events subscribable via TCP/IP.
+ * 
+ * An example syntax to sub/unsub to events is:
+ * \code
+ * unsigned char buffer[1024];
+ * 
+ * // Register the event
+ * auto size_written = DCS::Registry::SetupEvent(buffer, SV_EVT_OnTestFibSeq, [] (DCS::u8* data) {
+ *		LOG_DEBUG("FibEvent returned: %llu", *(DCS::u64*)data);
+ * });
+ * 
+ * // Send the sub request
+ * Message::SendAsync(Message::Operation::EVT_SUB, buffer, size_written);
+ * 
+ * // ...
+ * 
+ * // Unsubscribe
+ * size_written = DCS::Registry::RemoveEvent(buffer, SV_EVT_OnTestFibSeq);
+ * Message::SendAsync(Message::Operation::EVT_UNSUB, buffer, size_written);
+ * \endcode
+ */
 
 /**
  * \brief Append this definition before function declarations to register it as a tcp connection
@@ -34,7 +81,6 @@
   * 
   * After running the DCS Preprocessor, integer codes should be generated for each
   * event registered.
-  *
   *
   * Examples:
   * \code{.cpp}

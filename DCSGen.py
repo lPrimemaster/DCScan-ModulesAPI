@@ -37,6 +37,26 @@ HEADER = '''////////////////////////////////////////
 ////////////////////////////////////////
 '''
 DEC = '''
+
+/**
+ * @file
+ */
+
+/**
+ * \\defgroup calls_id Remote Server Callables ID List.
+ * \\brief A module containing all the API functions callable via TCP/IP IDs.
+ */
+
+/**
+ * \\defgroup args_id Remote Server Arguments ID List.
+ * \\brief A module containing all the TCP/IP passable argument IDs.
+ */
+
+/**
+ * \\defgroup ret_id Remote Server Return Types ID List.
+ * \\brief A module containing all the TCP/IP passable return type IDs.
+ */
+
 #pragma once
 #include "exports.h"
 #include <unordered_map>
@@ -46,13 +66,13 @@ DEC = '''
 
 $0
 
-#define SV_CALL_NULL 0x0
+#define SV_CALL_NULL 0x0 ///< Indicates a non existant call [Not to use].
 $1
 
-#define SV_ARG_NULL 0x0
+#define SV_ARG_NULL 0x0 ///< Indicates a non existant argument [Not to use].
 $2
 
-#define SV_RET_VOID 0x0
+#define SV_RET_VOID 0x0 ///< Indicates a void return type.
 $3
 
 $4
@@ -73,6 +93,11 @@ namespace DCS {
 		struct SVParams;
 		struct SVReturn;
 
+        /**
+         * \\brief Get a function id [SV_CALL_*] by function name.
+         * Syntax: ["ns::func"]
+         * Example: "DCS::Threading::GetMaxHardwareConcurrency" -> Returns: SV_CALL_DCS_Threading_GetMaxHardwareConcurrency
+         */
 		static DCS_API const u16 Get(const char* func_signature)
 		{
 			u16 val = 0;
@@ -86,11 +111,27 @@ namespace DCS {
 
         typedef void (*EventCallbackFunc)(u8* data);
 
+        /**
+         * \\brief Set up event to subscribe by ID SV_EVT_*.
+         */
         static DCS_API const i32 SetupEvent(unsigned char* buffer, u8 id, EventCallbackFunc f)
         {
             memcpy(buffer, &id, sizeof(u8));
 
             evt_callbacks.emplace(id, f);
+
+            return sizeof(u8);
+        }
+
+        // TODO : Check if id is a key
+        /**
+         * \\brief Set up event to unsubscribe by ID SV_EVT_*.
+         */
+        static DCS_API const i32 RemoveEvent(unsigned char* buffer, u8 id)
+        {
+            memcpy(buffer, &id, sizeof(u8));
+
+            evt_callbacks.erase(id);
 
             return sizeof(u8);
         }
@@ -409,7 +450,7 @@ for hd in header_def:
 
 for rt in list(filter(None, list(set(return_type)))):
 	definition = 'SV_RET_' + rt.replace('::', '_')
-	rtype_defines.append('#define ' + definition + ' ' + hex(number))
+	rtype_defines.append('#define ' + definition + ' ' + hex(number) + ' ///< Refers to return type `' + rt + '` \\ingroup ret_id')
 	number += 1
 
 # Concat arg_types and remove empty str ('') (if exists)
@@ -419,7 +460,7 @@ arg_def_all = []
 if(len(arg_defines) > 0):
 	for a in arg_defines:
 		arg_def = 'SV_ARG_' + a.replace('::', '_').replace(' ', '_').replace('*', '_ptr')
-		arg_def_all.append('#define ' + arg_def + ' ' + hex(dn))
+		arg_def_all.append('#define ' + arg_def + ' ' + hex(dn) + ' ///< Refers to argument `' + a + '` \\ingroup args_id')
 		switch_type.append('case ' + arg_def + ':\n\t\t\t' + 
 			'args.push_back(convert_from_byte<' + a + '>(payload, it, size));\n\t\t\t' + 
 			'it += sizeof(' + a + ');\n\t\t\t' + 'break;')
@@ -428,7 +469,7 @@ if(len(arg_defines) > 0):
 number = 1
 for sig in func:
 	definition = 'SV_CALL_' + sig.replace('::', '_')
-	defines.append('#define ' + definition + ' ' + hex(number))
+	defines.append('#define ' + definition + ' ' + hex(number) + ' ///< A call to `' + sig + '` \\ingroup calls_id')
 
 	fargs_casted = []
 	anumber = 0

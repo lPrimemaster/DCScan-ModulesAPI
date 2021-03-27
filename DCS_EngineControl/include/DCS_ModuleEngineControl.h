@@ -64,6 +64,8 @@ namespace DCS
 		 * 
 		 * \param target The stage to target.
 		 * \param full_command The ASCII command to send to the unit.
+		 * 
+		 * \ingroup calls
 		 */
 		DCS_REGISTER_CALL(void, DCS::Control::UnitTarget, DCS::Utils::BasicString)
 		DCS_API void IssueGenericCommand(UnitTarget target, DCS::Utils::BasicString full_command);
@@ -84,6 +86,8 @@ namespace DCS
 		 * \param full_command The ASCII command to send to the unit.
 		 * 
 		 * \return A string containing the raw target controller's response.
+		 * 
+		 * \ingroup calls
 		 */
 		DCS_REGISTER_CALL(DCS::Utils::BasicString, DCS::Control::UnitTarget, DCS::Utils::BasicString)
 		DCS_API DCS::Utils::BasicString IssueGenericCommandResponse(UnitTarget target, DCS::Utils::BasicString full_command);

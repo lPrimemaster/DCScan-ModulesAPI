@@ -26,17 +26,13 @@ const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const u
 		case SV_ARG_NULL:
 			LOG_ERROR("Arg type not recognized.");
 			break;
-		case SV_ARG_DCS_Utils_BasicString:
-			args.push_back(convert_from_byte<DCS::Utils::BasicString>(payload, it, size));
-			it += sizeof(DCS::Utils::BasicString);
-			break;
-		case SV_ARG_int:
-			args.push_back(convert_from_byte<int>(payload, it, size));
-			it += sizeof(int);
-			break;
 		case SV_ARG_DCS_Control_UnitTarget:
 			args.push_back(convert_from_byte<DCS::Control::UnitTarget>(payload, it, size));
 			it += sizeof(DCS::Control::UnitTarget);
+			break;
+		case SV_ARG_DCS_Utils_BasicString:
+			args.push_back(convert_from_byte<DCS::Utils::BasicString>(payload, it, size));
+			it += sizeof(DCS::Utils::BasicString);
 			break;
 		default:
 			__assume(0); // Hint the compiler to optimize a jump table even further disregarding arg_code checks
@@ -62,14 +58,6 @@ DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 	case SV_CALL_DCS_Threading_GetMaxHardwareConcurrency:
 	{
 		DCS::u16 local = DCS::Threading::GetMaxHardwareConcurrency();
-		if(sizeof(DCS::u16) > 1024) LOG_ERROR("SVReturn value < sizeof(DCS::u16).");
-		memcpy(ret.ptr, &local, sizeof(DCS::u16));
-		ret.type = SV_RET_DCS_u16;
-		break;
-	}
-	case SV_CALL_DCS_Threading_GetNumber7u16:
-	{
-		DCS::u16 local = DCS::Threading::GetNumber7u16(params.getArg<int>(0));
 		if(sizeof(DCS::u16) > 1024) LOG_ERROR("SVReturn value < sizeof(DCS::u16).");
 		memcpy(ret.ptr, &local, sizeof(DCS::u16));
 		ret.type = SV_RET_DCS_u16;

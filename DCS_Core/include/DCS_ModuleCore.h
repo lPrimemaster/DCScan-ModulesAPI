@@ -130,20 +130,21 @@ namespace DCS
 		};
 	}
 
+	/**
+	 * \brief Handles threading and asynchronicity.
+	 */
 	namespace Threading
 	{
 		/**
 		 * \brief Get current machine maximum hardware concurrency (Number of physical threads supported by the current implementation).
+		 * \ingroup calls
 		 */
 		DCS_REGISTER_CALL(DCS::u16)
 		const DCS_API u16 GetMaxHardwareConcurrency();
-
-		DCS_REGISTER_CALL(DCS::u16, int)
-		const DCS_API u16 GetNumber7u16(int x);
 	}
 
 	/**
-	 * \brief Command Line Interface (CLI) responsible for handling server-side console commands
+	 * \brief Command Line Interface (CLI) responsible for handling server-side console commands.
 	 */
 	namespace CLI
 	{

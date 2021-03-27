@@ -93,6 +93,9 @@ namespace DCS
 			 */
 			DCS_API Socket GetConnectedClient();
 
+			/**
+			 * \brief Checks if the server is running.
+			 */
 			DCS_API bool IsRunning();
 
 			/**
@@ -121,14 +124,16 @@ namespace DCS
 
 			/**
 			 * \brief Stops the client thread on a established connection (Forces disconnect).
+			 * \todo Stopping the client thread while data is being transfered loops inf on the client.
 			 * \param connection The connection between server and client that is currently active.
 			 */
 			DCS_API void StopThread(Socket connection);
 
 			/**
 			 * \brief Gets the current connection latency in milliseconds.
+			 * \todo This is not working. Re-enable the tcp keep alive to fix.
 			 * Possible last check: 10 seconds ago
-			 * Interval: 0 - 1000 ms
+			 * Interval: [0, Inf[ ms
 			 */
 			DCS_API i16 GetMillisLatency();
 
@@ -199,7 +204,11 @@ namespace DCS
 			 */
 			DCS_API Registry::SVReturn SendSync(Operation op, u8* data, i32 size);
 
-
+			/**
+			 * \brief A Sample Event possible to implement in the server/API.
+			 * When called, returns the next number in the Fibbonacci sequence.
+			 * \ingroup events
+			 */
 			DCS_REGISTER_EVENT(OnTestFibSeq)
 			DCS_API void FibSeqEvt();
 		}
