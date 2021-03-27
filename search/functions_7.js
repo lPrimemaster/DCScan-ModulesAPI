@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['message',['Message',['../class_d_c_s_1_1_utils_1_1_logger.html#a7f5356787d597823a828358636bc013d',1,'DCS::Utils::Logger']]]
+  ['linearallocator',['LinearAllocator',['../class_d_c_s_1_1_memory_1_1_linear_allocator.html#af461b1d6c4955179c03b70c84fa0160c',1,'DCS::Memory::LinearAllocator']]]
 ];

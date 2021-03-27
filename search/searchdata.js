@@ -3,14 +3,15 @@ var indexSectionsWithContent =
   0: "_abcdefghilmnoprstuvw",
   1: "_bcdlprstuw",
   2: "d",
-  3: "dei",
-  4: "acdegilmnrstw",
+  3: "deir",
+  4: "acdefgilmnrstw",
   5: "abehmnps",
   6: "fgisu",
   7: "osuv",
   8: "cdeimnprw",
-  9: "d",
-  10: "tw"
+  9: "ds",
+  10: "r",
+  11: "tw"
 };
 
 var indexSectionNames =
@@ -25,7 +26,8 @@ var indexSectionNames =
   7: "enums",
   8: "enumvalues",
   9: "defines",
-  10: "pages"
+  10: "groups",
+  11: "pages"
 };
 
 var indexSectionLabels =
@@ -40,6 +42,7 @@ var indexSectionLabels =
   7: "Enumerations",
   8: "Enumerator",
   9: "Macros",
-  10: "Pages"
+  10: "Modules",
+  11: "Pages"
 };
 

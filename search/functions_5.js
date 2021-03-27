@@ -1,6 +1,11 @@
 var searchData=
 [
-  ['init',['Init',['../class_d_c_s_1_1_utils_1_1_logger.html#a1cfc314c21dda0fd73e67d0412e96d0f',1,'DCS::Utils::Logger::Init()'],['../namespace_d_c_s_1_1_network.html#a5c640d619f8c1de773b10f6a61c648c0',1,'DCS::Network::Init()']]],
-  ['issuegenericcommand',['IssueGenericCommand',['../namespace_d_c_s_1_1_control.html#af9fd36aa25f09013428e092dac2ea7fc',1,'DCS::Control']]],
-  ['issuegenericcommandresponse',['IssueGenericCommandResponse',['../namespace_d_c_s_1_1_control.html#ab07308337869f8b12264279e23ac2338',1,'DCS::Control']]]
+  ['get',['Get',['../class_d_c_s_1_1_registry.html#a01cc73bb34f08abd73687d64ff8338b7',1,'DCS::Registry']]],
+  ['getconnectedclient',['GetConnectedClient',['../namespace_d_c_s_1_1_network_1_1_server.html#a90dd2d381e9e323a205425006607ab0e',1,'DCS::Network::Server']]],
+  ['getmaxhardwareconcurrency',['GetMaxHardwareConcurrency',['../group__calls.html#ga16e7b04c4d2927403d5fa081c706d275',1,'DCS::Threading']]],
+  ['getmillislatency',['GetMillisLatency',['../namespace_d_c_s_1_1_network_1_1_client.html#a46c0c3253d1fda3744b527038ae3f9c8',1,'DCS::Network::Client']]],
+  ['getnanoseconds',['GetNanoseconds',['../namespace_d_c_s_1_1_timer.html#a576497a2da0f79c39b1947abe65eceac',1,'DCS::Timer']]],
+  ['getstatus',['GetStatus',['../namespace_d_c_s_1_1_network.html#a6b64be5bb5bda3891c650696cbe68d83',1,'DCS::Network']]],
+  ['gettimestamp',['GetTimestamp',['../namespace_d_c_s_1_1_timer.html#abe8c5f76582cc4bd70cf5385d14ab0c1',1,'DCS::Timer']]],
+  ['gettimestampstring',['GetTimestampString',['../namespace_d_c_s_1_1_timer.html#ac0c3497e8178789b11dd211f69ec8604',1,'DCS::Timer']]]
 ];

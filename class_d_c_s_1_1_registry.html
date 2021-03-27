@@ -41,6 +41,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -121,11 +122,17 @@ typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>EventCallba
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a01cc73bb34f08abd73687d64ff8338b7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a01cc73bb34f08abd73687d64ff8338b7"></a>
-static <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> const <a class="el" href="_d_c_s___module_utils_8h.html#a0397607df3bf36ef7b9afaa963f80c1b">u16</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Get</b> (const char *func_signature)</td></tr>
+static <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> const <a class="el" href="_d_c_s___module_utils_8h.html#a0397607df3bf36ef7b9afaa963f80c1b">u16</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_c_s_1_1_registry.html#a01cc73bb34f08abd73687d64ff8338b7">Get</a> (const char *func_signature)</td></tr>
+<tr class="memdesc:a01cc73bb34f08abd73687d64ff8338b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a function id [SV_CALL_*] by function name. Syntax: ["ns::func"] Example: "DCS::Threading::GetMaxHardwareConcurrency" -&gt; Returns: SV_CALL_DCS_Threading_GetMaxHardwareConcurrency. <br /></td></tr>
 <tr class="separator:a01cc73bb34f08abd73687d64ff8338b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adcefc20c8ce8b22db5354b7f1d0eb997"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adcefc20c8ce8b22db5354b7f1d0eb997"></a>
-static <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> const <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a>&#160;</td><td class="memItemRight" valign="bottom"><b>SetupEvent</b> (unsigned char *buffer, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id, EventCallbackFunc f)</td></tr>
+static <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> const <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_c_s_1_1_registry.html#adcefc20c8ce8b22db5354b7f1d0eb997">SetupEvent</a> (unsigned char *buffer, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id, EventCallbackFunc f)</td></tr>
+<tr class="memdesc:adcefc20c8ce8b22db5354b7f1d0eb997"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set up event to subscribe by ID SV_EVT_*. <br /></td></tr>
 <tr class="separator:adcefc20c8ce8b22db5354b7f1d0eb997"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada814d90579c909c1e997cf42ad94672"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ada814d90579c909c1e997cf42ad94672"></a>
+static <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> const <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_c_s_1_1_registry.html#ada814d90579c909c1e997cf42ad94672">RemoveEvent</a> (unsigned char *buffer, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id)</td></tr>
+<tr class="memdesc:ada814d90579c909c1e997cf42ad94672"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set up event to unsubscribe by ID SV_EVT_*. <br /></td></tr>
+<tr class="separator:ada814d90579c909c1e997cf42ad94672"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07c6050321ff0a75c4498be7c571cbef"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a07c6050321ff0a75c4498be7c571cbef"></a>
 static <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> const EventCallbackFunc&#160;</td><td class="memItemRight" valign="bottom"><b>GetEventCallback</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id)</td></tr>
 <tr class="separator:a07c6050321ff0a75c4498be7c571cbef"><td class="memSeparator" colspan="2">&#160;</td></tr>
