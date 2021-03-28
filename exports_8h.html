@@ -104,9 +104,9 @@ Macros</h2></td></tr>
 <tr class="memitem:a454934597ef43cc74a7244a392fb110d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exports_8h.html#a454934597ef43cc74a7244a392fb110d">DCS_REGISTER_CALL</a>(...)</td></tr>
 <tr class="memdesc:a454934597ef43cc74a7244a392fb110d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append this definition before function declarations to register it as a tcp connection callable. First param is the return type, the following params are argument types (if existent).  <a href="#a454934597ef43cc74a7244a392fb110d">More...</a><br /></td></tr>
 <tr class="separator:a454934597ef43cc74a7244a392fb110d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41fc21950343edab5998ada0152e2ddc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exports_8h.html#a41fc21950343edab5998ada0152e2ddc">DCS_REGISTER_EVENT</a>(name)</td></tr>
-<tr class="memdesc:a41fc21950343edab5998ada0152e2ddc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append this definition before function declarations (or anywhere in the code) to register a tcp connection event. name param is the return type, the following params are argument types (if existent).  <a href="#a41fc21950343edab5998ada0152e2ddc">More...</a><br /></td></tr>
-<tr class="separator:a41fc21950343edab5998ada0152e2ddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a414e39cabf37e22214d38a46141c9cef"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exports_8h.html#a414e39cabf37e22214d38a46141c9cef">DCS_REGISTER_EVENT</a></td></tr>
+<tr class="memdesc:a414e39cabf37e22214d38a46141c9cef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append this definition before function declarations (or anywhere in the code) to register a tcp connection event.  <a href="#a414e39cabf37e22214d38a46141c9cef">More...</a><br /></td></tr>
+<tr class="separator:a414e39cabf37e22214d38a46141c9cef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a240a0f4545ac093f1b6795229b386fb8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a>&#160;&#160;&#160;__declspec(dllimport)</td></tr>
 <tr class="memdesc:a240a0f4545ac093f1b6795229b386fb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the export interface acessible via the dll-interface.  <a href="#a240a0f4545ac093f1b6795229b386fb8">More...</a><br /></td></tr>
 <tr class="separator:a240a0f4545ac093f1b6795229b386fb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -126,7 +126,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Defines the export interface acessible via the dll-interface. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>Do not define API for Cmake's STATIC lib configuration </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Do not define API for Cmake's STATIC lib configuration </dd></dl>
 
 </div>
 </div>
@@ -141,7 +141,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Defines the export interface acessible via the dll-interface applicable for internal functions only. </p>
-<p>This is used to expose certain internal features for testing, declarations with this specifier will not be exported to the final built shared library. </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Do not define API for Cmake's STATIC lib configuration </dd></dl>
+<p>This is used to expose certain internal features for testing, declarations with this specifier will not be exported to the final built shared library. </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>Do not define API for Cmake's STATIC lib configuration </dd></dl>
 
 </div>
 </div>
@@ -165,29 +165,20 @@ Macros</h2></td></tr>
 <p>Examples: </p><div class="fragment"><div class="line"><a class="code" href="exports_8h.html#a454934597ef43cc74a7244a392fb110d">DCS_REGISTER_CALL</a>(<span class="keywordtype">void</span>, <span class="keywordtype">int</span>)</div><div class="line">void funcInt(<span class="keywordtype">int</span> x);</div><div class="line"></div><div class="line"><a class="code" href="exports_8h.html#a454934597ef43cc74a7244a392fb110d">DCS_REGISTER_CALL</a>(<span class="keywordtype">void</span>)</div><div class="line"><span class="keywordtype">void</span> func();</div><div class="line"></div><div class="line"><a class="code" href="exports_8h.html#a454934597ef43cc74a7244a392fb110d">DCS_REGISTER_CALL</a>(<span class="keywordtype">int</span>, <a class="code" href="namespace_d_c_s.html">DCS</a>::i8)</div><div class="line"><span class="keywordtype">int</span> <a class="code" href="namespace_d_c_s.html">DCS</a>::example_func(i8 val);</div></div><!-- fragment --> 
 </div>
 </div>
-<a class="anchor" id="a41fc21950343edab5998ada0152e2ddc"></a>
+<a class="anchor" id="a414e39cabf37e22214d38a46141c9cef"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">#define DCS_REGISTER_EVENT</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">name</td><td>)</td>
-          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Append this definition before function declarations (or anywhere in the code) to register a tcp connection event. name param is the return type, the following params are argument types (if existent). </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>The name given to the event.</td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Append this definition before function declarations (or anywhere in the code) to register a tcp connection event. </p>
 <p>After running the DCS Preprocessor, integer codes should be generated for each event registered.</p>
-<p>Examples: </p><div class="fragment"><div class="line"><a class="code" href="exports_8h.html#a41fc21950343edab5998ada0152e2ddc">DCS_REGISTER_EVENT</a>(OnSomeData)</div><div class="line">void onData(<span class="keywordtype">int</span> x);</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> onData(<span class="keywordtype">int</span> x)</div><div class="line">{</div><div class="line">    <span class="comment">// Emits the the OnSomeData event, passing param x everytime the function onData is called.</span></div><div class="line">    DCS_EMIT_EVT(SV_EVT_OnSomeData, (u8*)&amp;x, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>));</div><div class="line">}</div></div><!-- fragment --> 
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>Create a alias field for events</dd></dl>
+<p>Examples: </p><div class="fragment"><div class="line"><a class="code" href="exports_8h.html#a414e39cabf37e22214d38a46141c9cef">DCS_REGISTER_EVENT</a></div><div class="line"><span class="keywordtype">void</span> onData(<span class="keywordtype">int</span> x);</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> onData(<span class="keywordtype">int</span> x)</div><div class="line">{</div><div class="line">    <span class="comment">// Emits the the SV_EVT_onData event, passing param x everytime the function onData is called.</span></div><div class="line">    DCS_EMIT_EVT((u8*)&amp;x, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>));</div><div class="line">}</div></div><!-- fragment --> 
 </div>
 </div>
 </div><!-- contents -->

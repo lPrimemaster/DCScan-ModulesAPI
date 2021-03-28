@@ -117,6 +117,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a7fbc6cf8c12bcefd41b259c507a09f96"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#a7fbc6cf8c12bcefd41b259c507a09f96">WaitForConnection</a> (<a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> server)</td></tr>
 <tr class="memdesc:a7fbc6cf8c12bcefd41b259c507a09f96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for a client to connect to the server connection Socket.  <a href="#a7fbc6cf8c12bcefd41b259c507a09f96">More...</a><br /></td></tr>
 <tr class="separator:a7fbc6cf8c12bcefd41b259c507a09f96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8c93e8a3e623584e74ad355223ea5d3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#ab8c93e8a3e623584e74ad355223ea5d3">StopListening</a> (<a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> server)</td></tr>
+<tr class="memdesc:ab8c93e8a3e623584e74ad355223ea5d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes the server listening socket, no longer accepting new connections.  <a href="#ab8c93e8a3e623584e74ad355223ea5d3">More...</a><br /></td></tr>
+<tr class="separator:ab8c93e8a3e623584e74ad355223ea5d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb09928fdb547173592b09053aab6632"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_server.html#acb09928fdb547173592b09053aab6632">StartThread</a> (<a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> client)</td></tr>
 <tr class="memdesc:acb09928fdb547173592b09053aab6632"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the server thread on a established connection.  <a href="#acb09928fdb547173592b09053aab6632">More...</a><br /></td></tr>
 <tr class="separator:acb09928fdb547173592b09053aab6632"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -216,6 +219,30 @@ Functions</h2></td></tr>
 </dl>
 </div>
 </div>
+<a class="anchor" id="ab8c93e8a3e623584e74ad355223ea5d3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DCS::Network::Server::StopListening </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a>&#160;</td>
+          <td class="paramname"><em>server</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Closes the server listening socket, no longer accepting new connections. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">server</td><td>Created server socket to perform the operation. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="a012a35b8d7ecbdaf52f65fea44df6e75"></a>
 <div class="memitem">
 <div class="memproto">
@@ -269,7 +296,7 @@ Functions</h2></td></tr>
 <p>Wait for a client to connect to the server connection Socket. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">server</td><td>created server socket to wait on. </td></tr>
+    <tr><td class="paramname">server</td><td>Created server socket to wait on. </td></tr>
   </table>
   </dd>
 </dl>

@@ -103,6 +103,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="textblock"><code>#include &quot;<a class="el" href="_d_c_s___module_utils_8h_source.html">../../DCS_Utils/include/DCS_ModuleUtils.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_d_c_s___module_core_8h_source.html">../../DCS_Core/include/DCS_ModuleCore.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_d_c_s___module_network_8h_source.html">DCS_ModuleNetwork.h</a>&quot;</code><br />
+<code>#include &quot;../config/registry.h&quot;</code><br />
 <code>#include &lt;WinSock2.h&gt;</code><br />
 <code>#include &lt;ws2tcpip.h&gt;</code><br />
 <code>#include &lt;atomic&gt;</code><br />
@@ -128,9 +129,18 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a04f196a61db8be08d5293d48bdaad4a2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a04f196a61db8be08d5293d48bdaad4a2"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>DCS_EMIT_EVT</b>(name,  data,  size)&#160;&#160;&#160;DCS::Network::Message::EmitEvent(name, data, size)</td></tr>
-<tr class="separator:a04f196a61db8be08d5293d48bdaad4a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8539fb022d20af30b16edb500ce5c9d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac8539fb022d20af30b16edb500ce5c9d"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>_GET_F_NAME</b>()&#160;&#160;&#160;__FUNCTION__</td></tr>
+<tr class="separator:ac8539fb022d20af30b16edb500ce5c9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addf1d5da66953a15634cdf0ac6d38f97"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="addf1d5da66953a15634cdf0ac6d38f97"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>GET_F_NAME</b>()&#160;&#160;&#160;_GET_F_NAME()</td></tr>
+<tr class="separator:addf1d5da66953a15634cdf0ac6d38f97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a441ae4b67cdf4b1395e385a223bf35bf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a441ae4b67cdf4b1395e385a223bf35bf"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>DCS_EMIT_NAMED_EVT</b>(name,  data,  size)&#160;&#160;&#160;DCS::Network::Message::EmitEvent(name, data, size)</td></tr>
+<tr class="separator:a441ae4b67cdf4b1395e385a223bf35bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a858d9d8b2680244530462d917768626c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a858d9d8b2680244530462d917768626c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>DCS_EMIT_EVT</b>(data,  size)&#160;&#160;&#160;DCS::Network::Message::EmitEvent(DCS::Registry::GetEvent(GET_F_NAME()), data, size)</td></tr>
+<tr class="separator:a858d9d8b2680244530462d917768626c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa021e90eb5252e6bf5244c473790cd0b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa021e90eb5252e6bf5244c473790cd0b"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>MESSAGE_XTRA_SPACE</b>&#160;&#160;&#160;9</td></tr>
 <tr class="separator:aa021e90eb5252e6bf5244c473790cd0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
