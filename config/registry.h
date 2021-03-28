@@ -25,6 +25,11 @@
  * \brief A module containing all the TCP/IP passable return type IDs.
  */
 
+/**
+ * \defgroup evt_id Remote Server Event Types ID List.
+ * \brief A module containing all the TCP/IP subscribable events IDs.
+ */
+
 #pragma once
 #include "exports.h"
 #include <unordered_map>
@@ -49,7 +54,7 @@
 #define SV_RET_DCS_u16 0x2 ///< Refers to return type `DCS::u16` \ingroup ret_id
 
 #define MAX_SUB 0x1
-#define SV_EVT_OnTestFibSeq 0x1
+#define SV_EVT_DCS_Network_Message_FibSeqEvt 0x1 ///< A event refering to `DCS::Network::Message::FibSeqEvt` \ingroup evt_id
 
 namespace DCS {
 
@@ -125,6 +130,11 @@ namespace DCS {
 			return false;
 		}
 
+		static DCS_API const u8 GetEvent(const char* func)
+		{
+			return evt_named_func.at(func);
+		}
+
 		static DCS_API void SetEvent(u8 id)
 		{
 			if (id <= MAX_SUB)
@@ -172,7 +182,12 @@ namespace DCS {
 
 		inline static std::unordered_map<u8, bool> subscriptions = 
 		{
-			{SV_EVT_OnTestFibSeq, false}
+			{SV_EVT_DCS_Network_Message_FibSeqEvt, false}
+		};
+
+		inline static std::unordered_map<const char*, u8> evt_named_func = 
+		{
+			{"DCS::Network::Message::FibSeqEvt", SV_EVT_DCS_Network_Message_FibSeqEvt}
 		};
 
         inline static std::unordered_map<u8, EventCallbackFunc> evt_callbacks;

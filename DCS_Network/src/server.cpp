@@ -28,8 +28,8 @@ void DCS::Network::Message::FibSeqEvt()
 	u64 l = b;
 	b = a + b;
 	a = l;
-	
-	DCS_EMIT_EVT(SV_EVT_OnTestFibSeq, (u8*)&p, sizeof(u64));
+
+	DCS_EMIT_EVT((u8*)&p, sizeof(u64));
 }
 
 void DCS::Network::Message::EmitEvent(u8 EVT_ID, u8* evtData, i32 size)
@@ -72,6 +72,12 @@ DCS::Network::Socket DCS::Network::Server::Create(i32 port)
 DCS::Network::Socket DCS::Network::Server::WaitForConnection(Socket server)
 {
 	return (Socket)ServerAcceptConnection((SOCKET)server);
+}
+
+void DCS::Network::Server::StopListening(Socket server)
+{
+	LOG_WARNING("Closing server listen socket...");
+	closesocket((SOCKET)server);
 }
 
 void DCS::Network::Server::StartThread(Socket client)
@@ -179,6 +185,7 @@ void DCS::Network::Server::StartThread(Socket client)
 					if (recv_sz > 0) inbound_bytes.addBytes(buffer, recv_sz);
 				}
 				server_running.store(false);
+				server_client_sock.store((Socket)INVALID_SOCKET);
 				inbound_bytes.notify_unblock();
 				decode_msg->join();
 				delete decode_msg;

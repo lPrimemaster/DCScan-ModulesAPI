@@ -25,11 +25,17 @@ namespace DCS
 {
 	namespace Threading
 	{
+		/**
+		 * \todo ???
+		 */
 		struct TSignal
 		{
 
 		};
 
+		/**
+		 * \todo ???
+		 */
 		enum NotifyFlag
 		{
 			START

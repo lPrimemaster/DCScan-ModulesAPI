@@ -17,6 +17,8 @@ add_library(DCSModuleNetwork ${LIB_TYPE}
   src/client.cpp
   src/message.cpp
 
+  src/cli.cpp
+
   ../config/registry.cpp
   ../config/exports.h
   ../config/registry.h

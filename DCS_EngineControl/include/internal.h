@@ -151,10 +151,22 @@ namespace DCS
 	{
 		class CmdBuffer;
 
+		/**
+		 * \internal
+		 * \brief Returns the static CmdBuffer instance.
+		 */
 		DCS_INTERNAL_TEST CmdBuffer& GetCmdBuffer();
 
+		/**
+		 * \internal
+		 * \brief A generic command holding data to be sent to the controllers.
+		 */
 		struct DCS_INTERNAL_TEST Command
 		{
+			/**
+			 * \internal
+			 * \brief An empty, invalid, command.
+			 */
 			Command()
 			{
 				id = 0;
@@ -163,6 +175,10 @@ namespace DCS
 				target = Control::UnitTarget::ESP301;
 			}
 
+			/**
+			 * \internal
+			 * \brief Command to an axis with arguments.
+			 */
 			template<typename T>
 			Command(Control::UnitTarget target, const char* cmd, u16 axis, T argument)
 			{
@@ -174,6 +190,10 @@ namespace DCS
 				full_cmd = std::to_string(axis) + cmd + std::to_string(argument) + ";";
 			}
 
+			/**
+			 * \internal
+			 * \brief Command to an axis with string arguments.
+			 */
 			template<>
 			Command(Control::UnitTarget target, const char* cmd, u16 axis, const char* argument)
 			{
@@ -189,6 +209,10 @@ namespace DCS
 				full_cmd = std::to_string(axis) + cmd + argument + ";";
 			}
 
+			/**
+			 * \internal
+			 * \brief Command to an axis without arguments.
+			 */
 			Command(Control::UnitTarget target, const char* cmd, u16 axis = 0)
 			{
 				this->target = target;
@@ -199,6 +223,10 @@ namespace DCS
 				full_cmd = (axis > 0 ? std::to_string(axis) : "") + cmd + ";";
 			}
 
+			/**
+			 * \internal
+			 * \brief Command with arguments.
+			 */
 			template<typename T>
 			Command(Control::UnitTarget target, const char* cmd, T argument)
 			{
@@ -210,6 +238,10 @@ namespace DCS
 				full_cmd = cmd + std::to_string(argument) + ";";
 			}
 
+			/**
+			 * \internal
+			 * \brief Command with string arguments.
+			 */
 			template<>
 			Command(Control::UnitTarget target, const char* cmd, const char* argument)
 			{
@@ -225,6 +257,10 @@ namespace DCS
 				full_cmd = cmd + std::string(argument) + ";";
 			}
 
+			/**
+			 * \internal
+			 * \brief Custom Command fully described by a string.
+			 */
 			static Command Custom(Control::UnitTarget target, const char* cmd, bool response = false)
 			{
 				Command c;
@@ -237,12 +273,20 @@ namespace DCS
 				return c;
 			}
 
+			/**
+			 * \internal
+			 * \brief Command id generator.
+			 */
 			static const u64 NextId()
 			{
 				static u64 nid = 0;
 				return nid++;
 			}
 
+			/**
+			 * \internal
+			 * \brief Joins two commands using ';'.
+			 */
 			Command operator+(const Command& rhs)
 			{
 				if (target != rhs.target)
@@ -275,6 +319,13 @@ namespace DCS
 
 #pragma warning( push )
 #pragma warning( disable : 4251 )
+
+		/**
+		 * \internal
+		 * \brief A generic command buffer processing unit, schedules and processes commands.
+		 * Thread-safe.
+		 * All FIFO.
+		 */
 		class DCS_INTERNAL_TEST CmdBuffer
 		{
 		public:
@@ -282,6 +333,10 @@ namespace DCS
 			CmdBuffer() {};
 			~CmdBuffer() {};
 
+			/**
+			 * \internal
+			 * \brief Processes a command that was scheduled. This gets the command to be sent to the controller.
+			 */
 			Type process()
 			{
 				std::unique_lock<std::mutex> lock(m);
@@ -298,6 +353,10 @@ namespace DCS
 				return Type();
 			}
 
+			/**
+			 * \internal
+			 * \brief Schedules a command from any thread.
+			 */
 			std::string schedule(const Type& value)
 			{
 				std::unique_lock<std::mutex> lock(m);
@@ -316,6 +375,10 @@ namespace DCS
 				return response_buffer;
 			}
 
+			/**
+			 * \internal
+			 * \brief Sends a reply to the scheduler when one was requested.
+			 */
 			void reply(std::string response)
 			{
 				std::unique_lock<std::mutex> lock(mr);
@@ -324,11 +387,19 @@ namespace DCS
 				cr.notify_one();
 			}
 
+			/**
+			 * \internal
+			 * \brief Unblocks the CmdBuffer internal queue.
+			 */
 			void notify_unblock()
 			{
 				c.notify_all();
 			}
 
+			/**
+			 * \internal
+			 * \brief Returns the commands currently waiting in queue to be processed.
+			 */
 			int size()
 			{
 				std::unique_lock<std::mutex> lock(m);

@@ -188,8 +188,8 @@ SOCKET DCS::Network::ServerAcceptConnection(SOCKET server)
 	}
 
 	LOG_WARNING("Established connection with client...");
-	LOG_WARNING("Closing server socket...");
-	closesocket(server);
+	/*LOG_WARNING("Closing server socket...");
+	closesocket(server);*/
 
 	return client;
 }

@@ -70,9 +70,15 @@ namespace DCS
 
 			/**
 			 * \brief Wait for a client to connect to the server connection Socket.
-			 * \param server created server socket to wait on.
+			 * \param server Created server socket to wait on.
 			 */
 			DCS_API Socket WaitForConnection(Socket server);
+
+			/**
+			 * \brief Closes the server listening socket, no longer accepting new connections.
+			 * \param server Created server socket to perform the operation.
+			 */
+			DCS_API void StopListening(Socket server);
 
 			/**
 			 * \brief Starts the server thread on a established connection.
@@ -209,9 +215,122 @@ namespace DCS
 			 * When called, returns the next number in the Fibbonacci sequence.
 			 * \ingroup events
 			 */
-			DCS_REGISTER_EVENT(OnTestFibSeq)
+			DCS_REGISTER_EVENT
 			DCS_API void FibSeqEvt();
 		}
+	}
+
+	/**
+	 * \brief %Command Line Interface (CLI) responsible for handling server-side console commands.
+	 */
+	namespace CLI
+	{
+		/**
+		 * \brief Class responsible for keeping the state of a declared command to use in the server console.
+		 */
+		class Command
+		{
+		public:
+			using MapType = std::map<std::string, Command>;
+			using RunCB = std::function<void()>;
+
+			/**
+			 * \internal
+			 * \brief This constructor is used to register commands only. Do not use its return.  
+			 */
+			Command(const char* DCL, const char* help = "", RunCB cb = nullptr)
+			{
+				cmd_name = DCL;
+				help_string = help;
+				to_run = cb;
+
+				if (!IsCommand(cmd_name))
+					cmd_reg.emplace(cmd_name, *this);
+				else
+					LOG_WARNING("Attempted to create command %s. But it was already registered. Ignoring...", DCL);
+			}
+
+			/**
+			 * \internal
+			 * \brief Gets a named Command.
+			 */
+			static Command* Get(std::string name)
+			{
+				MapType::iterator it = cmd_reg.find(name);
+
+				if (it != cmd_reg.end())
+					return &it->second;
+				return nullptr;
+			}
+
+			/**
+			 * \internal
+			 * \brief Checks if name is a Command.
+			 */
+			static bool IsCommand(std::string name)
+			{
+				MapType::iterator it = cmd_reg.find(name);
+				return it != cmd_reg.end();
+			}
+
+			/**
+			 * \internal
+			 * \brief Founds most similar Command existing to name.
+			 * \todo Fix for nonsense commands being matched. Set a maximum for the Levenshtein Distance (8 maybe?).
+			 */
+			static Command* Closest(std::string name);
+
+			/**
+			 * \internal
+			 * \brief Lists all the available, registered, commands.
+			 */
+			static std::vector<std::string> ListCommands()
+			{
+				std::vector<std::string> cmds;
+				for (auto& p : cmd_reg)
+				{
+					cmds.push_back(p.second.cmd_name + " - " + p.second.help_string);
+				}
+				return cmds;
+			}
+
+			/**
+			 * \internal
+			 * \brief Get the name of the Command.
+			 */
+			inline const std::string getName() const
+			{
+				return cmd_name;
+			}
+
+			/**
+			 * \internal
+			 * \brief Run the Command callback task.
+			 */
+			inline void Run()
+			{
+				if (to_run != nullptr)
+				{
+					to_run();
+				}
+
+				// Silently ignore
+			}
+
+		private:
+			inline static MapType cmd_reg;
+
+		private:
+			std::string cmd_name;
+			std::string help_string;
+
+			RunCB to_run;
+		};
+
+		/**
+		 * \brief Make the current thread wait for, and process, console commands.
+		 */
+		DCS_API void Spin();
 	}
 }
 

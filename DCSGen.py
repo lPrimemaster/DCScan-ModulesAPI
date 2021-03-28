@@ -57,6 +57,11 @@ DEC = '''
  * \\brief A module containing all the TCP/IP passable return type IDs.
  */
 
+/**
+ * \\defgroup evt_id Remote Server Event Types ID List.
+ * \\brief A module containing all the TCP/IP subscribable events IDs.
+ */
+
 #pragma once
 #include "exports.h"
 #include <unordered_map>
@@ -151,6 +156,11 @@ namespace DCS {
 			return false;
 		}
 
+		static DCS_API const u8 GetEvent(const char* func)
+		{
+			return evt_named_func.at(func);
+		}
+
 		static DCS_API void SetEvent(u8 id)
 		{
 			if (id <= MAX_SUB)
@@ -199,6 +209,11 @@ namespace DCS {
 			$6
 		};
 
+		inline static std::unordered_map<const char*, u8> evt_named_func = 
+		{
+			$7
+		};
+
         inline static std::unordered_map<u8, EventCallbackFunc> evt_callbacks;
 
 	public:
@@ -238,7 +253,7 @@ namespace DCS {
 				{
 				    switch(fcode)
 				    {
-					    $7
+					    $8
 					    default:
 						    LOG_ERROR("GetDataFromParams() function code (fcode) not found.");
 						    LOG_ERROR("Maybe function signature naming is invalid, or function does not take any arguments.");
@@ -369,6 +384,7 @@ def getTokenSymbols(all_files):
 	header_def = []
 	args_name = []
 	evt_name = []
+	evt_func = []
 
 	for one_file in all_files:
 		f_prefix = []
@@ -414,11 +430,13 @@ def getTokenSymbols(all_files):
 					header_def.append(one_file['name'])
 
 			elif v.startswith(token_evt):
-				evt_name.append(re.findall('\((.*?)\)', v, re.DOTALL)[0].split(',')[0].strip())
-	return func, return_type, header_def, args_name, evt_name
+				evt_f_name = '::'.join(f_prefix) + '::' + v.split('(')[-2].split(' ')[-1]
+				evt_func.append(evt_f_name)
+				evt_name.append(evt_f_name.replace('::', '_'))
+	return func, return_type, header_def, args_name, evt_name, evt_func
 
 cFiles = cleanFiles()
-func, return_type, header_def, args_name, evt_name = getTokenSymbols(cFiles)
+func, return_type, header_def, args_name, evt_name, evt_func = getTokenSymbols(cFiles)
 
 
 print('Registering functions:')
@@ -441,6 +459,7 @@ arg_defines = []
 rtype_defines = []
 evt_def = []
 evt_map = []
+evt_f_map = []
 
 registry = []
 number = 1
@@ -513,8 +532,9 @@ for sig in func:
 number = 1
 for evt in evt_name:
 	defi = 'SV_EVT_' + evt
-	evt_def.append('#define '+ defi + ' ' + hex(number))
+	evt_def.append('#define '+ defi + ' ' + hex(number) + ' ///< A event refering to `' + evt_func[number-1] + '` \\ingroup evt_id')
 	evt_map.append('{' + defi + ', false}')
+	evt_f_map.append('{"' + evt_func[number-1] + '", ' + defi + '}')
 	number += 1
 
 
@@ -529,7 +549,8 @@ with open(curr_dir + '/config/registry.h', 'w') as f:
 		hex(len(evt_def)) + '\n' + '\n'.join(evt_def))  # Place evt codes definitions
 	DEC = DEC.replace('$5', ',\n\t\t\t'.join(registry)) # Register function signatures in unordered_map
 	DEC = DEC.replace('$6', ',\n\t\t\t'.join(evt_map))  # Register events
-	DEC = DEC.replace('$7', '\n\t\t\t\t\t\t'.join(switch_reverse))
+	DEC = DEC.replace('$7', ',\n\t\t\t'.join(evt_f_map))# Register event functions
+	DEC = DEC.replace('$8', '\n\t\t\t\t\t\t'.join(switch_reverse))
 
 	f.write(DEC)
 

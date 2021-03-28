@@ -12,7 +12,6 @@ set_pretty_filenames()
 add_library(DCSModuleCore ${LIB_TYPE}
   src/memory.cpp
   src/threading.cpp
-  src/cli.cpp
   ../config/exports.h
   include/internal.h
   include/DCS_ModuleCore.h

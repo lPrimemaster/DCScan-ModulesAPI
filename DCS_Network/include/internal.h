@@ -2,6 +2,7 @@
 #include "../../DCS_Utils/include/DCS_ModuleUtils.h"
 #include "../../DCS_Core/include/DCS_ModuleCore.h"
 #include "DCS_ModuleNetwork.h"
+#include "../config/registry.h"
 
 #include <WinSock2.h>
 #include <ws2tcpip.h>
@@ -21,7 +22,29 @@
  * \date $Date: 2021/02/22$
  */
 
-#define DCS_EMIT_EVT(name, data, size) DCS::Network::Message::EmitEvent(name, data, size) 
+/**
+ * \internal
+ */
+#define _GET_F_NAME() __FUNCTION__
+
+ /**
+  * \internal
+  */
+#define GET_F_NAME() _GET_F_NAME()
+
+/**
+ * \internal
+ * \brief Placed anywhere to emit the registered event 'name'.
+ * \see DCS_REGISTER_EVENT
+ */
+#define DCS_EMIT_NAMED_EVT(name, data, size) DCS::Network::Message::EmitEvent(name, data, size)
+
+ /**
+  * \internal
+  * \brief Placed in the event main caller to emit the registered associated event.
+  * \see DCS_REGISTER_EVENT
+  */
+#define DCS_EMIT_EVT(data, size) DCS::Network::Message::EmitEvent(DCS::Registry::GetEvent(GET_F_NAME()), data, size)
 
 namespace DCS
 {
@@ -130,6 +153,10 @@ namespace DCS
 			extern std::condition_variable lsync;
 			extern DefaultMessage lmessage;
 
+			/**
+			 * \internal
+			 * \brief A default operation for internal use only.
+			 */
 			enum class DCS_INTERNAL_TEST InternalOperation
 			{
 				NO_OP = 0,			///< Ping the server only.
