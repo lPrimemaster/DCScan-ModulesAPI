@@ -26,12 +26,11 @@ void DCS::Network::Destroy()
 	// Silently ignore
 }
 
-
 WSADATA DCS::Network::InitWinSock()
 {
 	WSADATA wsa;
-	
-	int iResult = WSAStartup(MAKEWORD(2,2), &wsa);
+
+	int iResult = WSAStartup(MAKEWORD(2, 2), &wsa);
 
 	if (iResult != 0)
 	{
@@ -51,7 +50,7 @@ void DCS::Network::CleanupWinSock()
 
 SOCKET DCS::Network::CreateServerSocket(i32 listen_port)
 {
-	struct addrinfo* result = NULL, * ptr = NULL, hints;
+	struct addrinfo *result = NULL, *ptr = NULL, hints;
 	ZeroMemory(&hints, sizeof(hints));
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_STREAM;
@@ -77,7 +76,7 @@ SOCKET DCS::Network::CreateServerSocket(i32 listen_port)
 
 	if (ListenSocket == INVALID_SOCKET)
 	{
-		LOG_ERROR("socket creation (WSAAPI) failed: %ld", WSAGetLastError());
+		LOG_ERROR("Socket creation (WSAAPI) failed: %ld", WSAGetLastError());
 		LOG_ERROR("Terminating WSA...");
 		freeaddrinfo(result);
 		WSACleanup();
@@ -90,7 +89,7 @@ SOCKET DCS::Network::CreateServerSocket(i32 listen_port)
 
 	if (iResult == SOCKET_ERROR)
 	{
-		LOG_ERROR("socket bind (WSAAPI) failed: %d", WSAGetLastError());
+		LOG_ERROR("Socket bind (WSAAPI) failed: %d", WSAGetLastError());
 		LOG_ERROR("Closing socket...");
 		LOG_ERROR("Terminating WSA...");
 		freeaddrinfo(result);
@@ -104,9 +103,9 @@ SOCKET DCS::Network::CreateServerSocket(i32 listen_port)
 	return ListenSocket;
 }
 
-SOCKET DCS::Network::CreateClientSocket(const char* host, i32 port)
+SOCKET DCS::Network::CreateClientSocket(const char *host, i32 port)
 {
-	struct addrinfo* result = NULL, * ptr = NULL, hints;
+	struct addrinfo *result = NULL, *ptr = NULL, hints;
 	ZeroMemory(&hints, sizeof(hints));
 	hints.ai_family = AF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
@@ -130,8 +129,9 @@ SOCKET DCS::Network::CreateClientSocket(const char* host, i32 port)
 		ptr = result;
 		c_socket = socket(ptr->ai_family, ptr->ai_socktype, ptr->ai_protocol);
 
-		if (c_socket == INVALID_SOCKET) {
-			LOG_ERROR("socket creation (WSAAPI) failed: %ld", WSAGetLastError());
+		if (c_socket == INVALID_SOCKET)
+		{
+			LOG_ERROR("Socket creation (WSAAPI) failed: %ld", WSAGetLastError());
 			LOG_ERROR("Terminating WSA...");
 			freeaddrinfo(result);
 			WSACleanup();
@@ -140,8 +140,9 @@ SOCKET DCS::Network::CreateClientSocket(const char* host, i32 port)
 
 		// Connect to server.
 		iResult = connect(c_socket, ptr->ai_addr, (int)ptr->ai_addrlen);
-		if (iResult == SOCKET_ERROR) {
-			LOG_ERROR("socket connect failed: %ld", WSAGetLastError());
+		if (iResult == SOCKET_ERROR)
+		{
+			LOG_ERROR("Socket connect failed: %ld", WSAGetLastError());
 			LOG_ERROR("Closing socket...");
 			closesocket(c_socket);
 			c_socket = INVALID_SOCKET;
@@ -149,10 +150,11 @@ SOCKET DCS::Network::CreateClientSocket(const char* host, i32 port)
 
 		freeaddrinfo(result);
 
-		if (c_socket == INVALID_SOCKET) {
+		if (c_socket == INVALID_SOCKET)
+		{
 			LOG_ERROR("Unable to connect to server!");
-			LOG_ERROR("Terminating WSA...");
-			WSACleanup();
+			// LOG_ERROR("Terminating WSA...");
+			// WSACleanup();
 			return INVALID_SOCKET;
 		}
 	}
@@ -163,7 +165,7 @@ void DCS::Network::ServerListen(SOCKET server)
 {
 	if (listen(server, SOMAXCONN) == SOCKET_ERROR)
 	{
-		LOG_ERROR("socket listen (WSAAPI) failed: %ld", WSAGetLastError());
+		LOG_ERROR("Socket listen (WSAAPI) failed: %ld", WSAGetLastError());
 		LOG_ERROR("Closing socket...");
 		LOG_ERROR("Terminating WSA...");
 		closesocket(server);
@@ -174,20 +176,24 @@ void DCS::Network::ServerListen(SOCKET server)
 SOCKET DCS::Network::ServerAcceptConnection(SOCKET server)
 {
 	SOCKET client = INVALID_SOCKET;
-	
+
 	client = accept(server, NULL, NULL);
 
 	if (client == INVALID_SOCKET)
 	{
-		LOG_ERROR("socket accept (WSAAPI) failed: %d", WSAGetLastError());
-		LOG_ERROR("Closing socket...");
-		LOG_ERROR("Terminating WSA...");
-		closesocket(server);
-		WSACleanup();
+
+		if(WSAGetLastError() != WSAEINTR)
+		{
+			LOG_ERROR("Socket accept (WSAAPI) failed: %d", WSAGetLastError());
+			LOG_ERROR("Closing socket...");
+			LOG_ERROR("Terminating WSA...");
+			closesocket(server);
+			WSACleanup();
+		}
 		return INVALID_SOCKET;
 	}
 
-	LOG_WARNING("Established connection with client...");
+	LOG_DEBUG("Established connection with client...");
 	/*LOG_WARNING("Closing server socket...");
 	closesocket(server);*/
 
@@ -196,7 +202,7 @@ SOCKET DCS::Network::ServerAcceptConnection(SOCKET server)
 
 void DCS::Network::CloseSocketConnection(SOCKET client)
 {
-	LOG_WARNING("Closing socket...");
+	LOG_DEBUG("Closing socket...");
 	closesocket(client);
 }
 
@@ -205,9 +211,9 @@ bool DCS::Network::ValidateSocket(SOCKET s)
 	return s != INVALID_SOCKET;
 }
 
-DCS::i32 DCS::Network::ReceiveData(SOCKET client, unsigned char* buffer, i32 buff_len)
+DCS::i32 DCS::Network::ReceiveData(SOCKET client, unsigned char *buffer, i32 buff_len)
 {
-	int iResult = recv(client, (char*)buffer, buff_len, 0);
+	int iResult = recv(client, (char *)buffer, buff_len, 0);
 
 	if (iResult > 0)
 	{
@@ -217,34 +223,28 @@ DCS::i32 DCS::Network::ReceiveData(SOCKET client, unsigned char* buffer, i32 buf
 	{
 		// Note: Should both connection data flows be shutdown?
 		iResult = shutdown(client, SD_BOTH);
-		LOG_WARNING("Shuting down socket connection.");
 		if (iResult == SOCKET_ERROR)
 		{
-			LOG_ERROR("socket shutdown failed: %d\n", WSAGetLastError());
+			LOG_ERROR("Socket shutdown failed: %d\n", WSAGetLastError());
 			LOG_ERROR("Closing socket...");
-			LOG_ERROR("Terminating WSA...");
 			closesocket(client);
-			WSACleanup();
 		}
 		return 0;
 	}
 	else
 	{
-		//if (WSAGetLastError() != 10054)
-		//{
-		LOG_ERROR("socket receive failed: %d\n", WSAGetLastError());
+		LOG_ERROR("Socket receive failed: %d\n", WSAGetLastError());
 		LOG_ERROR("Closing socket...");
 		LOG_ERROR("Terminating WSA...");
 		closesocket(client);
 		WSACleanup();
-		//}
 		return -1;
 	}
 }
 
-static DCS::i32 SendGenericData(SOCKET client, const unsigned char* buffer, DCS::i32 buff_len, int flags)
+static DCS::i32 SendGenericData(SOCKET client, const unsigned char *buffer, DCS::i32 buff_len, int flags)
 {
-	int iSResult = send(client, (const char*)buffer, buff_len, flags);
+	int iSResult = send(client, (const char *)buffer, buff_len, flags);
 
 	if (iSResult > 0)
 	{
@@ -252,21 +252,21 @@ static DCS::i32 SendGenericData(SOCKET client, const unsigned char* buffer, DCS:
 	}
 	else
 	{
-		LOG_ERROR("socket send failed: %d\n", WSAGetLastError());
+		LOG_ERROR("Socket send failed: %d\n", WSAGetLastError());
 		LOG_ERROR("Closing socket...");
-		LOG_ERROR("Terminating WSA...");
+		//LOG_ERROR("Terminating WSA...");
 		closesocket(client);
-		WSACleanup();
+		//WSACleanup();
 		return -1;
 	}
 }
 
-DCS::i32 DCS::Network::SendData(SOCKET client, const unsigned char* buffer, i32 buff_len)
+DCS::i32 DCS::Network::SendData(SOCKET client, const unsigned char *buffer, i32 buff_len)
 {
 	return SendGenericData(client, buffer, buff_len, 0);
 }
 
-DCS::i32 DCS::Network::SendPriorityData(SOCKET client, const unsigned char* buffer, i32 buff_len)
+DCS::i32 DCS::Network::SendPriorityData(SOCKET client, const unsigned char *buffer, i32 buff_len)
 {
 	return SendGenericData(client, buffer, buff_len, MSG_OOB);
 }

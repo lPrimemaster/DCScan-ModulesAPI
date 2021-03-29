@@ -58,7 +58,7 @@ void DCS::Control::StartServices()
 
 					if (cmd.wait_response)
 					{
-						Serial::read_bytes(esp301_handle, response, 256, &rbSize);
+						Serial::read_bytes(esp301_handle, (LPTSTR)response, 256, &rbSize);
 						cmd_buffer.reply(response);
 					}
 

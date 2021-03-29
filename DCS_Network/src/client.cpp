@@ -16,6 +16,11 @@ static DCS::Utils::ByteQueue inbound_bytes(4096);
 
 static std::atomic<bool> client_running = false;
 static std::atomic<DCS::i16> server_latency_ms = 0;
+static std::atomic<DCS::u8> conn_valid = false;
+
+#define C_WAIT 0
+#define C_VALID 1
+#define C_INVALID 2
 
 void DCS::Network::Message::ScheduleTransmission(DefaultMessage msg)
 {
@@ -37,7 +42,7 @@ DCS::Network::Socket DCS::Network::Client::Connect(DCS::Utils::String host, i32 
 	}
 }
 
-void DCS::Network::Client::StartThread(Socket connection)
+bool DCS::Network::Client::StartThread(Socket connection)
 {
 	SOCKET target_server = (SOCKET)connection;
 	if (ValidateSocket(target_server))
@@ -114,6 +119,29 @@ void DCS::Network::Client::StartThread(Socket connection)
 						break;
 					case DCS::Network::Message::InternalOperation::EVT_UNSUB:
 						break;
+					case DCS::Network::Message::InternalOperation::OP_ERROR:
+					{
+						// TODO : Setup error codes rather then only strings in the future
+						const char* err_msg = (const char*)msg.ptr;
+						LOG_ERROR("Server responded with error: %s", err_msg);
+					}
+					break;
+					case DCS::Network::Message::InternalOperation::CON_VALID:
+					{
+						if(*msg.ptr == C_VALID)
+						{
+							LOG_DEBUG("Server connection is VALID.");
+							conn_valid.store(C_VALID);
+						}
+						else
+						{
+							LOG_DEBUG("Server connection is INVALID.");
+					        conn_valid.store(C_INVALID); // Connection not valid
+							client_running.store(false); // Stop the client
+							inbound_bytes.notify_unblock();
+						}
+					}
+					break;
 					default:
 						break;
 					}
@@ -134,6 +162,7 @@ void DCS::Network::Client::StartThread(Socket connection)
 					if (recv_sz > 0) inbound_bytes.addBytes(buffer, recv_sz);
 				}
 				client_running.store(false);
+				conn_valid.store(C_WAIT);
 				inbound_bytes.notify_unblock();
 				decode_msg->join();
 				delete decode_msg;
@@ -150,7 +179,14 @@ void DCS::Network::Client::StartThread(Socket connection)
 
 		if (client_send_thread == nullptr)
 		{
+			// This is just a very cheap way... Just use std::condition_variable...
+			while(conn_valid.load() == 0) std::this_thread::yield();
+
+			if(conn_valid.load() == 2)
+				return false;
+
 			client_send_thread = new std::thread([=]()->void {
+
 				while (client_running.load())
 				{
 					auto to_send = outbound_data_queue.pop();
@@ -176,7 +212,9 @@ void DCS::Network::Client::StartThread(Socket connection)
 		{
 			LOG_WARNING("Could not start client_send_thread thread. Perhaps is already running?");
 		}
+		return true;
 	}
+	return false;
 }
 
 void DCS::Network::Client::StopThread(Socket connection)
@@ -188,7 +226,6 @@ void DCS::Network::Client::StopThread(Socket connection)
 			client_running.store(false);
 
 			int iResult = shutdown((SOCKET)connection, SD_SEND);
-			LOG_WARNING("Shuting down socket connection.");
 			if (iResult == SOCKET_ERROR) {
 				LOG_ERROR("socket shutdown failed: %d\n", WSAGetLastError());
 				LOG_ERROR("Closing socket...");

@@ -58,8 +58,8 @@ namespace DCS
 			 */
 			enum class StopMode
 			{
-				IMMEDIATE, ///< Stop server thread without waiting for the client to disconnect (force shutdown server-side). 
-				WAIT       ///< Stop server after waiting for the client to disconnect (blocking the calling thread).
+				IMMEDIATE, ///< Stop server thread without waiting for the client to disconnect (force shutdown server-side).
+				WAIT	   ///< Stop server after waiting for the client to disconnect (blocking the calling thread).
 			};
 
 			/**
@@ -69,10 +69,10 @@ namespace DCS
 			DCS_API Socket Create(i32 port);
 
 			/**
-			 * \brief Wait for a client to connect to the server connection Socket.
+			 * \brief Wait for any client to connect to the server connection Socket.
 			 * \param server Created server socket to wait on.
 			 */
-			DCS_API Socket WaitForConnection(Socket server);
+			DCS_API void WaitForConnections(Socket server);
 
 			/**
 			 * \brief Closes the server listening socket, no longer accepting new connections.
@@ -83,9 +83,9 @@ namespace DCS
 			/**
 			 * \brief Starts the server thread on a established connection.
 			 * \param client The connection between server and client returned by WaitForConnection(Socket).
+			 * \return Thread init success.
 			 */
-			DCS_API void StartThread(Socket client);
-
+			DCS_API bool StartThread(Socket client);
 
 			/**
 			 * \brief Stops the server thread on a established connection (Forces disconnect).
@@ -98,6 +98,11 @@ namespace DCS
 			 * \brief Returns the currently server connected client
 			 */
 			DCS_API Socket GetConnectedClient();
+
+			/**
+			 * \brief Returns the server listen socket
+			 */
+			DCS_API Socket GetListenSocket();
 
 			/**
 			 * \brief Checks if the server is running.
@@ -125,8 +130,9 @@ namespace DCS
 			/**
 			 * \brief Starts the client thread on a established connection.
 			 * \param connection The connection between server and client returned by Connect(DCS::Utils::String, i32).
+			 * \return Thread init success.
 			 */
-			DCS_API void StartThread(Socket connection);
+			DCS_API bool StartThread(Socket connection);
 
 			/**
 			 * \brief Stops the client thread on a established connection (Forces disconnect).
@@ -175,15 +181,17 @@ namespace DCS
 			 */
 			enum class Operation
 			{
-				NO_OP = 0,			///< Do nothing.
-				REQUEST = 1,		///< Request a function call to the server.
-									// 2 and 3 reserved
-				RESPONSE = 4,		///< Send back a response to the client.
-									// 5 and 6 reserved
-				EVT_SUB = 7,		///< Subscribe to a server-side event.
-									// 8 reserved
-				EVT_UNSUB = 9,		///< Unsubscribe from a previously subscribed event.
-				DATA				///< Send or receive data only.
+				NO_OP = 0,	   ///< Do nothing.
+				REQUEST = 1,   ///< Request a function call to the server.
+							   // 2 and 3 reserved
+				RESPONSE = 4,  ///< Send back a response to the client.
+							   // 5 and 6 reserved
+				EVT_SUB = 7,   ///< Subscribe to a server-side event.
+							   // 8 reserved
+				EVT_UNSUB = 9, ///< Unsubscribe from a previously subscribed event.
+				OP_ERROR,	   ///< Send an error to the client/server.
+				CON_VALID,	   ///< Server connection validity message.
+				DATA		   ///< Send or receive data only.
 			};
 
 			/**
@@ -195,7 +203,7 @@ namespace DCS
 			 * \param data The DefaultMessage formated message. Expects diferent data deppending on the operation.
 			 * \param size Size of the data bytes.
 			 */
-			DCS_API void SendAsync(Operation op, u8* data, i32 size);
+			DCS_API void SendAsync(Operation op, u8 *data, i32 size);
 
 			/**
 			 * \brief Sends a synchronous message to the server.
@@ -208,7 +216,7 @@ namespace DCS
 			 * 
 			 * \return Waits, blocking the calling thread, for the server response (see Registry::SVReturn).
 			 */
-			DCS_API Registry::SVReturn SendSync(Operation op, u8* data, i32 size);
+			DCS_API Registry::SVReturn SendSync(Operation op, u8 *data, i32 size);
 
 			/**
 			 * \brief A Sample Event possible to implement in the server/API.
@@ -238,7 +246,7 @@ namespace DCS
 			 * \internal
 			 * \brief This constructor is used to register commands only. Do not use its return.  
 			 */
-			Command(const char* DCL, const char* help = "", RunCB cb = nullptr)
+			Command(const char *DCL, const char *help = "", RunCB cb = nullptr)
 			{
 				cmd_name = DCL;
 				help_string = help;
@@ -254,7 +262,7 @@ namespace DCS
 			 * \internal
 			 * \brief Gets a named Command.
 			 */
-			static Command* Get(std::string name)
+			static Command *Get(std::string name)
 			{
 				MapType::iterator it = cmd_reg.find(name);
 
@@ -278,7 +286,7 @@ namespace DCS
 			 * \brief Founds most similar Command existing to name.
 			 * \todo Fix for nonsense commands being matched. Set a maximum for the Levenshtein Distance (8 maybe?).
 			 */
-			static Command* Closest(std::string name);
+			static Command *Closest(std::string name);
 
 			/**
 			 * \internal
@@ -287,7 +295,7 @@ namespace DCS
 			static std::vector<std::string> ListCommands()
 			{
 				std::vector<std::string> cmds;
-				for (auto& p : cmd_reg)
+				for (auto &p : cmd_reg)
 				{
 					cmds.push_back(p.second.cmd_name + " - " + p.second.help_string);
 				}

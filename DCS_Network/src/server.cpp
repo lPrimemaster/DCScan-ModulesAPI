@@ -4,19 +4,24 @@
 #include <vector>
 #include <future>
 
-static std::thread* server_receive_thread = nullptr;
+static std::thread *server_receive_thread = nullptr;
 static DCS::Utils::SMessageQueue inbound_data_queue;
 
-static std::thread* server_send_thread = nullptr;
+static std::thread *server_send_thread = nullptr;
 static DCS::Utils::SMessageQueue outbound_data_queue;
 
 constexpr DCS::u64 ib_buff_size = 4096;
 static DCS::Utils::ByteQueue inbound_bytes(ib_buff_size);
 
+static std::thread* server_listen_thread = nullptr;
+
 static std::atomic<bool> server_running = false;
+static std::atomic<bool> server_listening = true;
 static std::atomic<bool> stop_forced = false;
 
 static std::atomic<DCS::Network::Socket> server_client_sock;
+static std::atomic<DCS::Network::Socket> server_listen_sock;
+
 
 void DCS::Network::Message::FibSeqEvt()
 {
@@ -24,15 +29,15 @@ void DCS::Network::Message::FibSeqEvt()
 	static u64 b = 1;
 
 	u64 p = a;
-	
+
 	u64 l = b;
 	b = a + b;
 	a = l;
 
-	DCS_EMIT_EVT((u8*)&p, sizeof(u64));
+	DCS_EMIT_EVT((u8 *)&p, sizeof(u64));
 }
 
-void DCS::Network::Message::EmitEvent(u8 EVT_ID, u8* evtData, i32 size)
+void DCS::Network::Message::EmitEvent(u8 EVT_ID, u8 *evtData, i32 size)
 {
 	// Emit only if event is subscribed to in the client-side
 	// NOTE : If this gets too cpu heavy, just consider using a hashmap approach and waking every x millis
@@ -43,7 +48,7 @@ void DCS::Network::Message::EmitEvent(u8 EVT_ID, u8* evtData, i32 size)
 		DefaultMessage msg = Message::Alloc(size + sizeof(u8) + MESSAGE_XTRA_SPACE);
 
 		*msg.ptr = EVT_ID;
-		
+
 		// memcpy performance is fine here
 		memcpy(msg.ptr + 1, evtData, size);
 
@@ -65,41 +70,88 @@ DCS::Network::Socket DCS::Network::Server::Create(i32 port)
 	{
 		SOCKET server = CreateServerSocket(port);
 		ServerListen(server);
+		server_listen_sock.store((Socket)server);
 		return (Socket)server;
 	}
 }
 
-DCS::Network::Socket DCS::Network::Server::WaitForConnection(Socket server)
+void DCS::Network::Server::WaitForConnections(Socket server)
 {
-	return (Socket)ServerAcceptConnection((SOCKET)server);
+	server_listen_thread = new std::thread([=]() -> void {
+		std::vector<std::thread> connections;
+		while(server_listening.load())
+		{
+			SOCKET client = ServerAcceptConnection((SOCKET)server);
+			connections.push_back(std::thread([=]() {
+				if(StartThread((Socket)client))
+					StopThread((Socket)client, DCS::Network::Server::StopMode::WAIT);
+			}));
+		}
+	});
 }
 
 void DCS::Network::Server::StopListening(Socket server)
 {
 	LOG_WARNING("Closing server listen socket...");
+
+	SOCKET cts = (SOCKET)server_client_sock.load();
+	if(cts != INVALID_SOCKET)
+		shutdown(cts, SD_BOTH);
+	
 	closesocket((SOCKET)server);
+	server_listening.store(false);
+	server_listen_thread->join();
+	delete server_listen_thread;
 }
 
-void DCS::Network::Server::StartThread(Socket client)
+static void SendErrorToClient(SOCKET client, const char* error_msg)
+{
+	DCS::u8 error = DCS::Utils::toUnderlyingType(DCS::Network::Message::InternalOperation::OP_ERROR);
+	DCS::u64 id = 0;
+	DCS::i32 str_size = (DCS::i32)strlen(error_msg) + 1;
+	DCS::u32 size = (DCS::u32)str_size + MESSAGE_XTRA_SPACE;
+
+	DCS::Network::SendData(client, (const DCS::u8 *)&size, 4);
+	DCS::Network::SendData(client, (const DCS::u8 *)&error, 1);
+	DCS::Network::SendData(client, (const DCS::u8 *)&id, 8);
+	DCS::Network::SendData(client, (const DCS::u8 *)error_msg, str_size);
+}
+
+static void IssueValidity(SOCKET client, DCS::u8 validity)
+{
+	DCS::u8 cval = DCS::Utils::toUnderlyingType(DCS::Network::Message::InternalOperation::CON_VALID);
+	DCS::u64 id = 0;
+	DCS::i32 cval_size = 1;
+	DCS::u32 size = (DCS::u32)cval_size + MESSAGE_XTRA_SPACE;
+
+	DCS::Network::SendData(client, (const DCS::u8 *)&size, 4);
+	DCS::Network::SendData(client, (const DCS::u8 *)&cval, 1);
+	DCS::Network::SendData(client, (const DCS::u8 *)&id, 8);
+	DCS::Network::SendData(client, (const DCS::u8 *)&validity, cval_size);
+}
+
+bool DCS::Network::Server::StartThread(Socket client)
 {
 	SOCKET target_client = (SOCKET)client;
-	server_client_sock.store(client);
 	if (ValidateSocket(target_client))
 	{
 		if (server_receive_thread == nullptr)
 		{
+			server_client_sock.store(client);
 			server_running.store(true);
+			
+			LOG_DEBUG("Starting server_receive_thread thread...");
 
-			std::thread* decode_msg = new std::thread([=]()->void {
-				
-				unsigned char buffer[ib_buff_size] = { 0 };
+			std::thread *decode_msg = new std::thread([=]() -> void {
+				unsigned char buffer[ib_buff_size] = {0};
 
 				while (server_running.load() || inbound_bytes.count() > 0)
 				{
 					u64 sz = inbound_bytes.fetchNextMsg(buffer);
 
-					if (sz == 0) continue; // Guard against inbound_bytes notify_unblock
-					
+					if (sz == 0)
+						continue; // Guard against inbound_bytes notify_unblock
+
 					auto msg = Message::Alloc((i32)sz);
 
 					// Push message to buffer
@@ -132,9 +184,9 @@ void DCS::Network::Server::StartThread(Socket client)
 						{
 							auto dm = Message::Alloc(sizeof(r) + MESSAGE_XTRA_SPACE);
 							Message::SetCopyId(dm,
-								DCS::Utils::toUnderlyingType(Message::InternalOperation::ASYNC_RESPONSE), 
-								msg.id, 
-								(u8*)&r);
+											   DCS::Utils::toUnderlyingType(Message::InternalOperation::ASYNC_RESPONSE),
+											   msg.id,
+											   (u8 *)&r);
 							outbound_data_queue.push(dm);
 						}
 					}
@@ -146,10 +198,10 @@ void DCS::Network::Server::StartThread(Socket client)
 
 						// Send the return value (even if SV_RET_VOID)
 						auto dm = Message::Alloc(sizeof(r) + MESSAGE_XTRA_SPACE);
-						Message::SetCopyId(dm, 
-							DCS::Utils::toUnderlyingType(Message::InternalOperation::SYNC_RESPONSE), 
-							msg.id,
-							(u8*)&r);
+						Message::SetCopyId(dm,
+										   DCS::Utils::toUnderlyingType(Message::InternalOperation::SYNC_RESPONSE),
+										   msg.id,
+										   (u8 *)&r);
 						outbound_data_queue.push(dm);
 					}
 					break;
@@ -171,18 +223,20 @@ void DCS::Network::Server::StartThread(Socket client)
 
 					Message::Delete(msg);
 				}
+				inbound_bytes.notify_restart();
 			});
 
-			server_receive_thread = new std::thread([=]()->void {
+			server_receive_thread = new std::thread([=]() -> void {
 				constexpr u64 buff_size = 512;
-				unsigned char buffer[buff_size] = { 0 };
+				unsigned char buffer[buff_size] = {0};
 				i32 recv_sz = 1;
 
 				while (recv_sz > 0 && server_running.load())
 				{
 					recv_sz = ReceiveData(target_client, buffer, buff_size);
 
-					if (recv_sz > 0) inbound_bytes.addBytes(buffer, recv_sz);
+					if (recv_sz > 0)
+						inbound_bytes.addBytes(buffer, recv_sz);
 				}
 				server_running.store(false);
 				server_client_sock.store((Socket)INVALID_SOCKET);
@@ -194,16 +248,38 @@ void DCS::Network::Server::StartThread(Socket client)
 			{
 				LOG_ERROR("Could not allocate server_receive_thread thread.");
 			}
+
+			IssueValidity(target_client, 1); // Valid
 		}
 		else
 		{
 			LOG_WARNING("Could not start server_receive_thread thread. Perhaps is already running?");
+
+			SendErrorToClient(target_client, "Connection is not unique. Closing connection.");
+
+			SOCKADDR_IN client_info = {0};
+			int addrsize = sizeof(client_info);
+			getpeername((SOCKET)server_client_sock.load(), (struct sockaddr*)&client_info, &addrsize);
+			char *ip = inet_ntoa(client_info.sin_addr);
+			char msg_buf[512];
+			sprintf(msg_buf, "Wait for user at %s to disconnect and try again.", ip);
+			SendErrorToClient(target_client, msg_buf);
+
+			IssueValidity(target_client, 2); // Not valid
+			
+			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+			shutdown(target_client, SD_BOTH);
+
+			CloseSocketConnection(target_client);
+			return false;
 		}
 
 		if (server_send_thread == nullptr)
 		{
-			server_send_thread = new std::thread([=]()->void {
+			LOG_DEBUG("Starting server_send_thread thread...");
 
+			server_send_thread = new std::thread([=]() -> void {
 				while (server_running.load())
 				{
 					auto to_send = outbound_data_queue.pop();
@@ -212,10 +288,10 @@ void DCS::Network::Server::StartThread(Socket client)
 					if (to_send.ptr != nullptr)
 					{
 						i32 full_size = (i32)(to_send.size + MESSAGE_XTRA_SPACE);
-						DCS::Network::SendData(target_client, (const u8*)&full_size, 4);
-						DCS::Network::SendData(target_client, (const u8*)&to_send.op, 1);
-						DCS::Network::SendData(target_client, (const u8*)&to_send.id, 8);
-						DCS::Network::SendData(target_client, (const u8*)to_send.ptr, (i32)to_send.size);
+						DCS::Network::SendData(target_client, (const u8 *)&full_size, 4);
+						DCS::Network::SendData(target_client, (const u8 *)&to_send.op, 1);
+						DCS::Network::SendData(target_client, (const u8 *)&to_send.id, 8);
+						DCS::Network::SendData(target_client, (const u8 *)to_send.ptr, (i32)to_send.size);
 						Message::Delete(to_send);
 					}
 				}
@@ -224,12 +300,15 @@ void DCS::Network::Server::StartThread(Socket client)
 			{
 				LOG_ERROR("Could not allocate server_send_thread thread.");
 			}
+			return true;
 		}
 		else
 		{
 			LOG_WARNING("Could not start server_send_thread thread. Perhaps is already running?");
+			return false;
 		}
 	}
+	return false;
 }
 
 void DCS::Network::Server::StopThread(Socket client, StopMode mode)
@@ -257,6 +336,8 @@ void DCS::Network::Server::StopThread(Socket client, StopMode mode)
 		server_receive_thread->join();
 
 		delete server_receive_thread;
+		server_receive_thread = nullptr;
+		LOG_DEBUG("Done!");
 	}
 	else
 	{
@@ -272,6 +353,8 @@ void DCS::Network::Server::StopThread(Socket client, StopMode mode)
 		server_send_thread->join();
 
 		delete server_send_thread;
+		server_send_thread = nullptr;
+		LOG_DEBUG("Done!");
 	}
 	else
 	{
@@ -282,6 +365,11 @@ void DCS::Network::Server::StopThread(Socket client, StopMode mode)
 DCS::Network::Socket DCS::Network::Server::GetConnectedClient()
 {
 	return server_client_sock.load();
+}
+
+DCS::Network::Socket DCS::Network::Server::GetListenSocket()
+{
+	return server_listen_sock.load();
 }
 
 bool DCS::Network::Server::IsRunning()

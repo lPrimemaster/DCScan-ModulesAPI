@@ -46,8 +46,8 @@
 #define SV_CALL_DCS_Control_IssueGenericCommandResponse 0x3 ///< A call to `DCS::Control::IssueGenericCommandResponse` \ingroup calls_id
 
 #define SV_ARG_NULL 0x0 ///< Indicates a non existant argument [Not to use].
-#define SV_ARG_DCS_Control_UnitTarget 0x1 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
-#define SV_ARG_DCS_Utils_BasicString 0x2 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
+#define SV_ARG_DCS_Utils_BasicString 0x1 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
+#define SV_ARG_DCS_Control_UnitTarget 0x2 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
 
 #define SV_RET_VOID 0x0 ///< Indicates a void return type.
 #define SV_RET_DCS_Utils_BasicString 0x1 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id

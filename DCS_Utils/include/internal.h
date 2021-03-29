@@ -161,6 +161,11 @@ namespace DCS
 				c.notify_all();
 			}
 
+			void notify_restart()
+			{
+				ntf_unblock.store(false);
+			}
+
 		private:
 			u8* buffer;
 			u64 internal_buff_size;
