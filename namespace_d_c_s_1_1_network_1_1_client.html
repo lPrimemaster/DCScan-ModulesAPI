@@ -105,9 +105,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a4ee6eb135d9c3b3529c72f0b11c6cc83"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_client.html#a4ee6eb135d9c3b3529c72f0b11c6cc83">Connect</a> (<a class="el" href="class_d_c_s_1_1_utils_1_1_string.html">DCS::Utils::String</a> host, <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a> port)</td></tr>
 <tr class="memdesc:a4ee6eb135d9c3b3529c72f0b11c6cc83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connect to a running server.  <a href="#a4ee6eb135d9c3b3529c72f0b11c6cc83">More...</a><br /></td></tr>
 <tr class="separator:a4ee6eb135d9c3b3529c72f0b11c6cc83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a963779ede8f5a26ab471a591b808cf1d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_client.html#a963779ede8f5a26ab471a591b808cf1d">StartThread</a> (<a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> connection)</td></tr>
-<tr class="memdesc:a963779ede8f5a26ab471a591b808cf1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the client thread on a established connection.  <a href="#a963779ede8f5a26ab471a591b808cf1d">More...</a><br /></td></tr>
-<tr class="separator:a963779ede8f5a26ab471a591b808cf1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa65aedb936b03232808070accccd7a65"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_client.html#aa65aedb936b03232808070accccd7a65">StartThread</a> (<a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> connection)</td></tr>
+<tr class="memdesc:aa65aedb936b03232808070accccd7a65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the client thread on a established connection.  <a href="#aa65aedb936b03232808070accccd7a65">More...</a><br /></td></tr>
+<tr class="separator:aa65aedb936b03232808070accccd7a65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5cfe87ec13fd591d20a45592f62a555b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_client.html#a5cfe87ec13fd591d20a45592f62a555b">StopThread</a> (<a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> connection)</td></tr>
 <tr class="memdesc:a5cfe87ec13fd591d20a45592f62a555b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the client thread on a established connection (Forces disconnect).  <a href="#a5cfe87ec13fd591d20a45592f62a555b">More...</a><br /></td></tr>
 <tr class="separator:a5cfe87ec13fd591d20a45592f62a555b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -172,12 +172,12 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a963779ede8f5a26ab471a591b808cf1d"></a>
+<a class="anchor" id="aa65aedb936b03232808070accccd7a65"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void DCS::Network::Client::StartThread </td>
+          <td class="memname">bool DCS::Network::Client::StartThread </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a>&#160;</td>
           <td class="paramname"><em>connection</em></td><td>)</td>
@@ -193,6 +193,7 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>Thread init success. </dd></dl>
 <dl><dt><b>Examples: </b></dt><dd><a class="el" href="sockets_2simple_client_8cpp-example.html#a1">sockets/simple_client.cpp</a>.</dd>
 </dl>
 </div>
