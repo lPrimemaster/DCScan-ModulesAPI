@@ -82,10 +82,17 @@ void DCS::Network::Server::WaitForConnections(Socket server)
 		while(server_listening.load())
 		{
 			SOCKET client = ServerAcceptConnection((SOCKET)server);
-			connections.push_back(std::thread([=]() {
+			connections.push_back(std::thread([&]() {
 				if(StartThread((Socket)client))
+				{
 					StopThread((Socket)client, DCS::Network::Server::StopMode::WAIT);
+				}
 			}));
+		}
+
+		for(auto& c : connections)
+		{
+			c.join();
 		}
 	});
 }
@@ -319,7 +326,7 @@ void DCS::Network::Server::StopThread(Socket client, StopMode mode)
 		{
 			while (server_running.load())
 				std::this_thread::yield();
-
+				
 			if (stop_forced.load())
 				return;
 		}

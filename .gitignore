@@ -3,6 +3,9 @@
 *.vcxproj
 *.vcxproj.filters
 
+# Leave visual studio code out as well
+.vscode/
+
 # Ignore cmake generator files created at build time
 *.cmake
 *.stamp

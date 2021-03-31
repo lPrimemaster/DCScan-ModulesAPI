@@ -82,6 +82,9 @@ add_libTargetSubDir(DCS_Utils)
 add_libTargetSubDir(DCS_Core)
 set(CONF_TARGETS DCSModuleEngineControl DCSModuleUtils DCSModuleCore DCSModuleNetwork)
 
+# Add custom targets
+add_subdirectory(custom_targets)
+
 string (REPLACE ";" " " CMAKE_LIBS_SOURCE_DIR "${CMAKE_LIBS_SOURCE_DIR}")
 
 # ===================== #

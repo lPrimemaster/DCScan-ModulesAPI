@@ -90,7 +90,6 @@ static void CommandRegistry()
 		LOG_MESSAGE("Stopping server...");
 		if (DCS::Network::Server::IsRunning())
 		{
-			DCS::Network::Server::StopListening(DCS::Network::Server::GetListenSocket()); // Get server handle
 			DCS::Network::Server::StopThread(DCS::Network::Server::GetConnectedClient(), DCS::Network::Server::StopMode::IMMEDIATE);
 		}
 	});
@@ -116,7 +115,7 @@ void DCS::CLI::Spin()
 		else
 		{
 			LOG_MESSAGE("Could not find command %s.", cmd_str.c_str());
-			LOG_MESSAGE("Did you mean %s?", Command::Closest(cmd_str)->getName().c_str());
+			LOG_MESSAGE("Did you mean \"%s\"?", Command::Closest(cmd_str)->getName().c_str());
 			LOG_MESSAGE("Type \"help\" to see the valid commands.");
 		}
 	}
