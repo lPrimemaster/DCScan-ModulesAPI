@@ -1,11 +1,11 @@
 
-add_executable(EncoderPrecTest
-  src/enc_prec.cpp
-  )
-
+# Encoder test precision client target
+# Builds an executable to test engine precision
+add_executable(EncoderPrecTest src/enc_prec.cpp)
 target_link_libraries(EncoderPrecTest DCSModuleUtils DCSModuleCore DCSModuleNetwork DCSModuleEngineControl)
 
-
+add_custom_target(CTARGETS)
+add_dependencies(CTARGETS EncoderPrecTest)
 
 # Copy the libs dll
 add_custom_command(TARGET EncoderPrecTest 

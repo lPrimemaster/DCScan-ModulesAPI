@@ -19,6 +19,8 @@ IF /I "%~1" == "RUN_TESTS" (
 )
 IF /I "%~1" == "CLEAN"     (SET result="CLEAN")
 
+IF /I "%~1" == "CTARGETS"  (SET result="TRUE")
+
 IF "%ab%"==""FALSE"" (
 	IF NOT "%~2"=="" (
 		echo [1mThis command only supports one argument. Multiple provided. Ignoring...[0m
@@ -36,6 +38,7 @@ IF "%result%"==""TRUE"" (
 	echo [92mBUILD STARTED.[0m
 	mkdir build
 	cd /D "%~dp0/build"
+	:: TODO - We dont need to regen the cmake everytime
 	cmake %~2 ..
 	:: Make msbuild's verbosity level quiet maybe ??
 	cmake --build . --target %1 --config Release -- /nologo /verbosity:minimal /maxcpucount
@@ -45,13 +48,13 @@ IF "%result%"==""TRUE"" (
 
 :errorNA
 echo [91mYou must specify a target to be built.[0m
-echo [94mAvailable targets = [ALL_BUILD, INSTALL, RUN_TESTS, CLEAN][0m
+echo [94mAvailable targets = [ALL_BUILD, INSTALL, RUN_TESTS, CTARGETS, CLEAN][0m
 echo Example: 'build ALL_BUILD' will build all the library targets.
 GOTO errEnd
 
 :errorWT
 echo [91mThe target specified (%~1) is invalid.[0m
-echo [94mAvailable targets = [ALL_BUILD, INSTALL, RUN_TESTS, CLEAN][0m
+echo [94mAvailable targets = [ALL_BUILD, INSTALL, RUN_TESTS, CTARGETS, CLEAN][0m
 GOTO errEnd
 
 :errEnd

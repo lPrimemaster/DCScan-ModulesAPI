@@ -37,7 +37,7 @@ static void RunToWaitPoll(int rep, float acc_min = 1.0f, float acc_max = 200.0f)
 	auto wfm_ret = *(DCS::Utils::BasicString*)wfm.ptr;
 	LOG_DEBUG("2ZB: %s", wfm_ret.buffer);
 
-	LOG_DEBUG("Finished waiting for homing");
+	LOG_DEBUG("Finished waiting for homing... Running on open loop...");
 
 	std::vector<std::vector<float>> data = { std::vector<float>(),
 											 std::vector<float>(),
@@ -49,7 +49,7 @@ static void RunToWaitPoll(int rep, float acc_min = 1.0f, float acc_max = 200.0f)
 	for (int i = 0; i < rep; i++)
 	{
 		float acc = acc_min + acc_step * i;
-		std::string acc_str = "2PA0;2WS;2AC" + std::to_string(acc) + ";2AG" + std::to_string(acc) + ";2PA45.010;2WS;2TP?";
+		std::string acc_str = "2PA0;2WS;2OR1;2WS;2AC" + std::to_string(acc) + ";2AG" + std::to_string(acc) + ";2PA360;2WS;2TP?;2AC2500;2AG2500";
 
 		DCS::Utils::BasicString reqstr;
 
@@ -61,11 +61,12 @@ static void RunToWaitPoll(int rep, float acc_min = 1.0f, float acc_max = 200.0f)
 			reqstr
 		);
 
-		for (int j = 0; j < 100000; j++)
+		for (int j = 0; j < 100; j++)
 		{
 			auto ret = Message::SendSync(Message::Operation::REQUEST, buffer, size_written);
 			float rpos = (float)atof((*(DCS::Utils::BasicString*)ret.ptr).buffer);
-			LOG_DEBUG("Acc: %f || Dev: %f", acc, rpos);
+			LOG_DEBUG("Raw value: %s", (*(DCS::Utils::BasicString*)ret.ptr).buffer);
+			LOG_DEBUG("Acc: %f || Dev: %f", acc, rpos - 360.0f);
 			data.at(i).push_back(rpos);
 		}
 	}
@@ -113,15 +114,15 @@ int main()
 			LOG_DEBUG("FibEvent returned: %llu", *(DCS::u64*)data);
 			});
 
-		Message::SendAsync(Message::Operation::EVT_SUB, buffer, size_written);
+		//Message::SendAsync(Message::Operation::EVT_SUB, buffer, size_written);
 
-		//RunToWaitPoll(5, 2500.0f, 20000.0f);
+		RunToWaitPoll(5, 1.0f, 200.0f);
 
 		std::this_thread::sleep_for(std::chrono::seconds(5));
 
 		size_written = DCS::Registry::RemoveEvent(buffer, SV_EVT_DCS_Network_Message_FibSeqEvt);
 
-		Message::SendAsync(Message::Operation::EVT_UNSUB, buffer, size_written);
+		//Message::SendAsync(Message::Operation::EVT_UNSUB, buffer, size_written);
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
