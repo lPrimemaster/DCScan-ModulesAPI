@@ -24,7 +24,7 @@ print('Processing files...')
 pp.pprint(filenames)
 print('\n\n')
 
-# TODO : Make this token_call an argument
+
 # TODO : Document (remember default parameters cannot be used [value must be passed via args])
 token_call = 'DCS_REGISTER_CALL'
 token_evt  = 'DCS_REGISTER_EVENT'
@@ -128,7 +128,6 @@ namespace DCS {
             return sizeof(u8);
         }
 
-        // TODO : Check if id is a key
         /**
          * \\brief Set up event to unsubscribe by ID SV_EVT_*.
          */
@@ -136,7 +135,8 @@ namespace DCS {
         {
             memcpy(buffer, &id, sizeof(u8));
 
-            evt_callbacks.erase(id);
+			if (id <= MAX_SUB)
+            	evt_callbacks.erase(id);
 
             return sizeof(u8);
         }
@@ -319,7 +319,6 @@ const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const u
 	return DCS::Registry::SVParams(func_code, args);
 }
 
-// TODO : error directive if parameter is not registered via token_call 
 DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 {
 	SVReturn ret; // A generic return type container

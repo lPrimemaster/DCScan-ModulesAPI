@@ -83,7 +83,7 @@ bool DCS::Network::Client::StartThread(Socket connection)
 						//auto now = DCS::Timer::GetTimestamp(timer);
 						//server_latency_ms.store((now.millis - ts.millis + (now.sec - ts.sec) * 1000));
 
-						//// TODO : [Fix] If server disconnect happens at same time of keepalive (Message::SendAsync still runs)
+						//// BUG : If server disconnect happens at same time of keepalive (Message::SendAsync still runs)
 						//// causing socket send error
 						//nblock = std::async(std::launch::async, [&]() {
 						//	// Heartbeat for 10 seconds to keepalive
@@ -102,7 +102,7 @@ bool DCS::Network::Client::StartThread(Socket connection)
 						u16 rvalue = *(u16*)(((DCS::Registry::SVReturn*)msg.ptr)->ptr);
 						LOG_DEBUG("Client Value ASYNC: %d", rvalue);
 
-						// TODO : Call client user defined callback for async calls
+						// TODO : Wrap around std::future for this
 					}
 					break;
 					case DCS::Network::Message::InternalOperation::SYNC_RESPONSE:
@@ -121,7 +121,7 @@ bool DCS::Network::Client::StartThread(Socket connection)
 						break;
 					case DCS::Network::Message::InternalOperation::OP_ERROR:
 					{
-						// TODO : Setup error codes rather then only strings in the future
+						// NOTE : Setup error codes rather then only strings??
 						const char* err_msg = (const char*)msg.ptr;
 						LOG_ERROR("Server responded with error: %s", err_msg);
 					}

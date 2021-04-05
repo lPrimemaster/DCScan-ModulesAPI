@@ -1,4 +1,8 @@
 #include "../include/DCS_ModuleNetwork.h"
+#include "../include/internal.h"
+#include "../../DCS_Core/include/DCS_ModuleCore.h"
+
+static DCS::Timer::SystemTimer cli_uptime;
 
 static DCS::i32 LevenshteinDistance(std::string s1, std::string s2)
 {
@@ -79,7 +83,7 @@ static void CommandRegistry()
 #pragma warning( disable : 26444 )
 
 	Command("help", "Displays this help message.", []() {
-		LOG_MESSAGE("Here you go");
+		LOG_MESSAGE("There you go!");
 		for (auto c : Command::ListCommands())
 		{
 			LOG_MESSAGE("%s", c.c_str());
@@ -87,18 +91,51 @@ static void CommandRegistry()
 	});
 
 	Command("stop", "Stops the server execution.", []() {
-		LOG_MESSAGE("Stopping server...");
 		if (DCS::Network::Server::IsRunning())
 		{
-			DCS::Network::Server::StopThread(DCS::Network::Server::GetConnectedClient(), DCS::Network::Server::StopMode::IMMEDIATE);
+			if((SOCKET)DCS::Network::Server::GetConnectedClient() != INVALID_SOCKET)
+			{
+				char ip[128];
+				DCS::Network::GetSocketIpAddress((SOCKET)DCS::Network::Server::GetConnectedClient(), ip);
+				LOG_WARNING("A client is currently connected to the server: [at %s]", ip);
+				LOG_WARNING("Stop server anyways? y/n");
+
+				std::string s;
+				std::cin >> s;
+				if(s[0] == 'y')
+				{
+					LOG_MESSAGE("Stopping server...");
+					DCS::Network::Server::StopThread(DCS::Network::Server::GetConnectedClient(), DCS::Network::Server::StopMode::IMMEDIATE);
+				}
+				else
+				{
+					LOG_MESSAGE("Aborting stop...");
+				}
+			}
 		}
 	});
+
+	Command("uptime", "Prints how long the server (CLI) has been running.", []() {
+		LOG_MESSAGE("[%s]", DCS::Timer::GetTimestampString(cli_uptime).c_str());
+	});
+
+	// TODO : Add more CLI commands
+	// - Disconnect user
+	// - Force stop current task tree
+	// - Override remote commands
+	// - Suspend -> Pause current task to resume later
+	// - Resume
+
+	// TODO : Implement easter eggs commands 
+	// - Funny statistics ( # data collected, # time collecting, # deg spun, ... )
 
 #pragma warning( pop )
 }
 
 void DCS::CLI::Spin()
 {
+	cli_uptime = DCS::Timer::New();
+
 	CommandRegistry();
 
 	std::string cmd_str;
@@ -119,4 +156,6 @@ void DCS::CLI::Spin()
 			LOG_MESSAGE("Type \"help\" to see the valid commands.");
 		}
 	}
+
+	DCS::Timer::Delete(cli_uptime);
 }

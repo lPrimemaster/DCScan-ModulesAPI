@@ -37,8 +37,8 @@
 #include <any>
 #include "../DCS_Utils/include/DCS_ModuleUtils.h"
 
-#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
-#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
 
 #define SV_CALL_NULL 0x0 ///< Indicates a non existant call [Not to use].
 #define SV_CALL_DCS_Threading_GetMaxHardwareConcurrency 0x1 ///< A call to `DCS::Threading::GetMaxHardwareConcurrency` \ingroup calls_id
@@ -50,8 +50,8 @@
 #define SV_ARG_DCS_Utils_BasicString 0x2 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
 
 #define SV_RET_VOID 0x0 ///< Indicates a void return type.
-#define SV_RET_DCS_Utils_BasicString 0x1 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id
-#define SV_RET_DCS_u16 0x2 ///< Refers to return type `DCS::u16` \ingroup ret_id
+#define SV_RET_DCS_u16 0x1 ///< Refers to return type `DCS::u16` \ingroup ret_id
+#define SV_RET_DCS_Utils_BasicString 0x2 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id
 
 #define MAX_SUB 0x1
 #define SV_EVT_DCS_Network_Message_FibSeqEvt 0x1 ///< A event refering to `DCS::Network::Message::FibSeqEvt` \ingroup evt_id
@@ -101,8 +101,7 @@ namespace DCS {
 
             return sizeof(u8);
         }
-
-        // TODO : Check if id is a key
+		
         /**
          * \brief Set up event to unsubscribe by ID SV_EVT_*.
          */
@@ -110,7 +109,8 @@ namespace DCS {
         {
             memcpy(buffer, &id, sizeof(u8));
 
-            evt_callbacks.erase(id);
+			if (id <= MAX_SUB)
+            	evt_callbacks.erase(id);
 
             return sizeof(u8);
         }

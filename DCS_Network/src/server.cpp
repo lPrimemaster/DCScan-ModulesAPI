@@ -171,7 +171,7 @@ bool DCS::Network::Server::StartThread(Socket client)
 					{
 					case DCS::Network::Message::InternalOperation::NO_OP:
 					{
-						// TODO : Fix
+						// FIXME : Keepalive 10 sec ping
 						//// Ping back 1 byte Used for latency check
 						//u8 dd = 0x0;
 						//auto dm = Message::Alloc(1 + MESSAGE_XTRA_SPACE);
@@ -264,10 +264,9 @@ bool DCS::Network::Server::StartThread(Socket client)
 
 			SendErrorToClient(target_client, "Connection is not unique. Closing connection.");
 
-			SOCKADDR_IN client_info = {0};
-			int addrsize = sizeof(client_info);
-			getpeername((SOCKET)server_client_sock.load(), (struct sockaddr*)&client_info, &addrsize);
-			char *ip = inet_ntoa(client_info.sin_addr);
+			char ip[128];
+			GetSocketIpAddress((SOCKET)GetConnectedClient(), ip);
+
 			char msg_buf[512];
 			sprintf(msg_buf, "Wait for user at %s to disconnect and try again.", ip);
 			SendErrorToClient(target_client, msg_buf);

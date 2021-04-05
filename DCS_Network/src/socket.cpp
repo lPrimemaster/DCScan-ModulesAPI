@@ -211,6 +211,19 @@ bool DCS::Network::ValidateSocket(SOCKET s)
 	return s != INVALID_SOCKET;
 }
 
+void DCS::Network::GetSocketIpAddress(SOCKET s, char* buffer)
+{
+	SOCKADDR_IN client_info = {0};
+	int addrsize = sizeof(client_info);
+	getpeername(s, (struct sockaddr*)&client_info, &addrsize);
+	char *ip = inet_ntoa(client_info.sin_addr);
+
+	if(buffer != nullptr)
+		strcpy(buffer, ip);
+	else
+		LOG_ERROR("GetSocketIpAddress failed: buffer is nullptr.");
+}
+
 DCS::i32 DCS::Network::ReceiveData(SOCKET client, unsigned char *buffer, i32 buff_len)
 {
 	int iResult = recv(client, (char *)buffer, buff_len, 0);

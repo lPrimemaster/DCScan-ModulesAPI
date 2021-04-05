@@ -131,6 +131,15 @@ namespace DCS
 		 */
 		DCS_INTERNAL_TEST i32 SendPriorityData(SOCKET client, const unsigned char *buffer, i32 buff_len);
 
+		/**
+		 * \internal
+		 * \brief Get the Socket Ip Address
+		 * 
+		 * \param s socket
+		 * \param buffer place to write ip string
+		 */
+		DCS_INTERNAL_TEST void GetSocketIpAddress(SOCKET s, char* buffer);
+
 		namespace Message
 		{
 
