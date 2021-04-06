@@ -46,6 +46,7 @@ WSADATA DCS::Network::InitWinSock()
 void DCS::Network::CleanupWinSock()
 {
 	WSACleanup();
+	LOG_DEBUG("Windows socket implementation (WSA) terminated.");
 }
 
 SOCKET DCS::Network::CreateServerSocket(i32 listen_port)

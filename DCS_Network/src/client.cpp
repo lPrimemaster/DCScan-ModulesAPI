@@ -148,7 +148,7 @@ bool DCS::Network::Client::StartThread(Socket connection)
 
 					Message::Delete(msg);
 				}
-				//DCS::Timer::Delete(timer);
+				inbound_bytes.notify_restart();
 			});
 
 			client_receive_thread = new std::thread([=]()->void {
@@ -177,13 +177,40 @@ bool DCS::Network::Client::StartThread(Socket connection)
 			LOG_WARNING("Could not start client_receive_thread thread. Perhaps is already running?");
 		}
 
+		// BUG : App crash when client reconnect after failed connection because of other connected client
+		// Reason unkown
 		if (client_send_thread == nullptr)
 		{
 			// This is just a very cheap way... Just use std::condition_variable...
-			while(conn_valid.load() == 0) std::this_thread::yield();
+			while(conn_valid.load() == C_WAIT) std::this_thread::yield();
 
-			if(conn_valid.load() == 2)
+			if(conn_valid.load() == C_INVALID)
+			{
+				bool v_socket = ValidateSocket((SOCKET)connection);
+				if (v_socket)
+				{
+					int iResult = shutdown((SOCKET)connection, SD_SEND);
+					if (iResult == SOCKET_ERROR) {
+						LOG_ERROR("socket shutdown failed: %d\n", WSAGetLastError());
+						LOG_ERROR("Closing socket...");
+						LOG_ERROR("Terminating WSA...");
+						closesocket((SOCKET)connection);
+						WSACleanup();
+					}
+					else
+						CloseSocketConnection((SOCKET)connection);
+				}
+
+				LOG_DEBUG("Stopping client_receive_thread thread...");
+
+				// Wait for disconnect
+				client_receive_thread->join();
+
+				delete client_receive_thread;
+				client_receive_thread = nullptr;
+				LOG_DEBUG("Done!");
 				return false;
+			}
 
 			client_send_thread = new std::thread([=]()->void {
 
@@ -219,24 +246,27 @@ bool DCS::Network::Client::StartThread(Socket connection)
 
 void DCS::Network::Client::StopThread(Socket connection)
 {
+	bool v_socket = ValidateSocket((SOCKET)connection);
 	if (client_receive_thread != nullptr)
 	{
 		if (client_running.load())
 		{
 			client_running.store(false);
-
-			int iResult = shutdown((SOCKET)connection, SD_SEND);
-			if (iResult == SOCKET_ERROR) {
-				LOG_ERROR("socket shutdown failed: %d\n", WSAGetLastError());
-				LOG_ERROR("Closing socket...");
-				LOG_ERROR("Terminating WSA...");
-				closesocket((SOCKET)connection);
-				WSACleanup();
-				return;
+			
+			if (v_socket)
+			{
+				int iResult = shutdown((SOCKET)connection, SD_SEND);
+				if (iResult == SOCKET_ERROR) {
+					LOG_ERROR("socket shutdown failed: %d\n", WSAGetLastError());
+					LOG_ERROR("Closing socket...");
+					LOG_ERROR("Terminating WSA...");
+					closesocket((SOCKET)connection);
+					WSACleanup();
+				}
+				else
+					CloseSocketConnection((SOCKET)connection);
 			}
 		}
-
-		CloseSocketConnection((SOCKET)connection);
 
 		LOG_DEBUG("Stopping client_receive_thread thread...");
 
@@ -244,6 +274,8 @@ void DCS::Network::Client::StopThread(Socket connection)
 		client_receive_thread->join();
 
 		delete client_receive_thread;
+		client_receive_thread = nullptr;
+		LOG_DEBUG("Done!");
 	}
 	else
 	{
@@ -259,6 +291,8 @@ void DCS::Network::Client::StopThread(Socket connection)
 		client_send_thread->join();
 
 		delete client_send_thread;
+		client_send_thread = nullptr;
+		LOG_DEBUG("Done!");
 	}
 	else
 	{
