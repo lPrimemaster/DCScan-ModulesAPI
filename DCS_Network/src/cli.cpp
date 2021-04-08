@@ -82,7 +82,7 @@ static void CommandRegistry()
 #pragma warning( push )
 #pragma warning( disable : 26444 )
 
-	Command("help", "Displays this help message.", []() {
+	Command("help", "Displays this help message.", [](bool* brk) {
 		LOG_MESSAGE("There you go!");
 		for (auto c : Command::ListCommands())
 		{
@@ -90,7 +90,7 @@ static void CommandRegistry()
 		}
 	});
 
-	Command("stop", "Stops the server execution.", []() {
+	Command("stop", "Stops the server execution.", [](bool* brk) {
 		if (DCS::Network::Server::IsRunning())
 		{
 			if((SOCKET)DCS::Network::Server::GetConnectedClient() != INVALID_SOCKET)
@@ -104,7 +104,7 @@ static void CommandRegistry()
 				std::cin >> s;
 				if(s[0] == 'y')
 				{
-					LOG_MESSAGE("Stopping server...");
+					LOG_MESSAGE("Stopping server..."); *brk = true; // The only true use case of the cli brk flag
 					DCS::Network::Server::StopThread(DCS::Network::Server::GetConnectedClient(), DCS::Network::Server::StopMode::IMMEDIATE);
 				}
 				else
@@ -113,9 +113,13 @@ static void CommandRegistry()
 				}
 			}
 		}
+		else
+		{
+			LOG_MESSAGE("Stopping server..."); *brk = true; // The only true use case of the cli brk flag
+		}
 	});
 
-	Command("uptime", "Prints how long the server (CLI) has been running.", []() {
+	Command("uptime", "Prints how long the server (CLI) has been running.", [](bool* brk) {
 		LOG_MESSAGE("[%s]", DCS::Timer::GetTimestampString(cli_uptime).c_str());
 	});
 
@@ -140,14 +144,13 @@ void DCS::CLI::Spin()
 
 	std::string cmd_str;
 	Command* cmd = nullptr;
-	while (true)
+	bool brk = false; 
+
+	while (!brk)
 	{
 		if (std::cin >> cmd_str, cmd = Command::Get(cmd_str), cmd != nullptr)
 		{
-			cmd->Run();
-
-			if (cmd->getName() == "stop")
-				break;
+			cmd->Run(&brk);
 		}
 		else
 		{

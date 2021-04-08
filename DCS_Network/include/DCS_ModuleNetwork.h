@@ -240,7 +240,7 @@ namespace DCS
 		{
 		public:
 			using MapType = std::map<std::string, Command>;
-			using RunCB = std::function<void()>;
+			using RunCB = std::function<void(bool*)>;
 
 			/**
 			 * \internal
@@ -315,11 +315,11 @@ namespace DCS
 			 * \internal
 			 * \brief Run the Command callback task.
 			 */
-			inline void Run()
+			inline void Run(bool* brk)
 			{
 				if (to_run != nullptr)
 				{
-					to_run();
+					to_run(brk);
 				}
 
 				// Silently ignore
