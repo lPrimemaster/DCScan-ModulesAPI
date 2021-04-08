@@ -111,9 +111,9 @@ Public Types</h2></td></tr>
 <tr class="memitem:ae3e721d69d53138a7453538cdb31692c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae3e721d69d53138a7453538cdb31692c"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>MapType</b> = std::map&lt; std::string, <a class="el" href="class_d_c_s_1_1_c_l_i_1_1_command.html">Command</a> &gt;</td></tr>
 <tr class="separator:ae3e721d69d53138a7453538cdb31692c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a764f611ba73585e8dfdbb9f4ac9eab72"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a764f611ba73585e8dfdbb9f4ac9eab72"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>RunCB</b> = std::function&lt; void()&gt;</td></tr>
-<tr class="separator:a764f611ba73585e8dfdbb9f4ac9eab72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fdf14b88e000c9b592552afc7bc6157"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0fdf14b88e000c9b592552afc7bc6157"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>RunCB</b> = std::function&lt; void(bool *)&gt;</td></tr>
+<tr class="separator:a0fdf14b88e000c9b592552afc7bc6157"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -123,9 +123,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a129cf3f2318ac9b7de439ae1eb0bd716"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a129cf3f2318ac9b7de439ae1eb0bd716"></a>
 const std::string&#160;</td><td class="memItemRight" valign="bottom"><b>getName</b> () const </td></tr>
 <tr class="separator:a129cf3f2318ac9b7de439ae1eb0bd716"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ee107681ae05f0a456f22d826008abc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2ee107681ae05f0a456f22d826008abc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Run</b> ()</td></tr>
-<tr class="separator:a2ee107681ae05f0a456f22d826008abc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a155803f09c62ae4cd24bd93821afb8dc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a155803f09c62ae4cd24bd93821afb8dc"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>Run</b> (bool *brk)</td></tr>
+<tr class="separator:a155803f09c62ae4cd24bd93821afb8dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
