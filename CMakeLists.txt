@@ -17,6 +17,10 @@ endfunction()
 # Disable MSVC nasty deprecations
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
+# Do not hide any production important warnings (MSVC only)
+# /W4 and /Wall are just nonsensical
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /W3")
+
 function(set_pretty_filenames)
 	string(LENGTH "${CMAKE_CURRENT_SOURCE_DIR}/" SOURCE_PATH_SIZE)
 	add_definitions("-DSOURCE_PATH_SIZE=${SOURCE_PATH_SIZE}")

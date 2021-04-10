@@ -196,6 +196,12 @@ namespace DCS
 
 			/**
 			 * \internal
+			 * \brief Similar to SetMsgIdCondition, but works for async requests.
+			 */
+			DCS_INTERNAL_TEST void NotifyPromise(DefaultMessage &msg);
+
+			/**
+			 * \internal
 			 * \brief Alocates space for a message. This size must include the sizeof(opcode) and sizeof(id).
 			 * These added sizes are also available via the MESSAGE_XTRA_SPACE definition.
 			 */

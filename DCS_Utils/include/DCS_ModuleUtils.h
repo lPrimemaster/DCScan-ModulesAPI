@@ -8,6 +8,7 @@
 #include <mutex>
 #include <map>
 #include <string>
+#include <future>
 
 /**
  * @file
@@ -27,16 +28,16 @@
 
 
 #ifdef SOURCE_PATH_SIZE
-#define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, __VA_ARGS__)
+#define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, __VA_ARGS__) ///< Alias to DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, __VA_ARGS__)
 #else 
-#define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__, msg, __VA_ARGS__)
+#define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__, msg, __VA_ARGS__) ///< Alias to DCS::Utils::Logger::lvl(__FILE__, msg, __VA_ARGS__)
 #endif
 
-#define LOG_DEBUG(msg, ...) LOG_LVL(Debug, msg, __VA_ARGS__)
-#define LOG_MESSAGE(msg, ...) LOG_LVL(Message, msg, __VA_ARGS__)
-#define LOG_WARNING(msg, ...) LOG_LVL(Warning, msg, __VA_ARGS__)
-#define LOG_ERROR(msg, ...) LOG_LVL(Error, msg, __VA_ARGS__)
-#define LOG_CRITICAL(msg, ...) LOG_LVL(Critical, msg, __VA_ARGS__)
+#define LOG_DEBUG(msg, ...) LOG_LVL(Debug, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Debug, msg, __VA_ARGS__)
+#define LOG_MESSAGE(msg, ...) LOG_LVL(Message, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Message, msg, __VA_ARGS__)
+#define LOG_WARNING(msg, ...) LOG_LVL(Warning, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Warning, msg, __VA_ARGS__)
+#define LOG_ERROR(msg, ...) LOG_LVL(Error, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Error, msg, __VA_ARGS__)
+#define LOG_CRITICAL(msg, ...) LOG_LVL(Critical, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Critical, msg, __VA_ARGS__)
 
 namespace DCS
 {
@@ -216,6 +217,44 @@ namespace DCS
 			static FILE* handle;
 			static std::mutex _log_mtx;
 		};
+
+		/**
+		 * \brief A class that holds possible future data.
+		 * 
+		 * To be used as a return type when expected data T is returned async.
+		 * 
+		 * \tparam T the type to manipulate.
+		 */
+		template<typename T>
+		class AsyncItem
+		{
+		public:
+			AsyncItem(std::promise<T>& p) { f = p.get_future(); };
+			~AsyncItem() = default;
+
+			/**
+			 * \brief Wait for item to be available.
+			 */
+			inline void wait() const
+			{
+				f.wait();
+			}
+
+			/**
+			 * \brief Get the item stored in the future.
+			 * 
+			 * If item is not available, it waits until it is.
+			 * 
+			 * \return T item
+			 */
+			inline T get() const
+			{
+				return f.get();
+			}
+
+		private:
+			std::shared_future<T> f;
+		};
 	}
 
 	/**
@@ -278,6 +317,14 @@ namespace DCS
 		 * \return Utils::String timestamp [XXh XXm XXs XXms XXus XXns].
 		 */
 		DCS_API Utils::String GetTimestampString(SystemTimer timer);
+
+		/**
+		 * \brief Gives a timestamp relative to timer in Utils::String format (displays day/hour/minute duration only).
+		 * 
+		 * \param timer Relative point to measure.
+		 * \return Utils::String timestamp [XXd XXh XXm].
+		 */
+		DCS_API Utils::String GetTimestampStringSimple(SystemTimer timer);
 
 		/**
 		 * \brief Gives number of nanoseconds passed relative to timer.

@@ -25,7 +25,6 @@ pp.pprint(filenames)
 print('\n\n')
 
 
-# TODO : Document (remember default parameters cannot be used [value must be passed via args])
 token_call = 'DCS_REGISTER_CALL'
 token_evt  = 'DCS_REGISTER_EVENT'
 
@@ -217,14 +216,27 @@ namespace DCS {
         inline static std::unordered_map<u8, EventCallbackFunc> evt_callbacks;
 
 	public:
+		/**
+		* \\brief Auto-generated class that allows for buffer <-> parameters conversion.
+		*/
 		struct DCS_API SVParams
 		{
 		public:
+			/**
+			* \\brief Retrieve the function code of the currently held parameter list.
+			* \\return u16 Func code
+			*/
 			const u16 getFunccode() const
 			{
 				return fcode;
 			}
 
+			/**
+			* \\brief Get the i'th positional argument.
+			* Mostly internal use.
+			* \\tparam T parameter type
+			* \\return T parameter
+			*/
 			template<typename T>
 			const T getArg(u64 i) const
 			{
@@ -240,8 +252,24 @@ namespace DCS {
 				return rv;
 			}
 
+			/**
+			* \\brief Get all the positional arguments from byte buffer.
+			* Mostly internal use.
+			* \\param payload char buffer
+			* \\param size buffer size
+			* \\return SVParams parameter list
+			*/
 			static const SVParams GetParamsFromData(const unsigned char* payload, i32 size);
 
+			/**
+			* \\brief Fill a byte buffer with a list of arguments. use this function to populate the buffer passed to
+			* DCS::Network::Message::SendSync / DCS::Network::Message::SendAsync when calling a function.
+			* Make sure buffer has enough size to hold the data. Error checking is disabled for speed.
+			* \\param buffer char buffer to store function code to be executed + its params
+			* \\param fcode function code
+			* \\param args the arguments passed to the function represented by fcode
+			* \\return DCS::i32 size written to buffer
+			*/
 			template<typename... Args>
 			static i32 GetDataFromParams(unsigned char* buffer, u16 fcode, Args... args)
 			{
@@ -279,6 +307,9 @@ namespace DCS {
 		};
 
 #pragma pack(push, 1)
+		/**
+		 * \\brief Holds messages return types.
+		 */
 		struct DCS_API SVReturn
 		{
 			i8 type;

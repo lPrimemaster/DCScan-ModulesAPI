@@ -38,6 +38,11 @@ namespace DCS
 	{
 #pragma warning( push )
 #pragma warning( disable : 4251 )
+
+		/**
+		 * \internal 
+		 * \brief A thread-safe message queue. Similar to std::queue.
+		 */
 		class DCS_INTERNAL_TEST SMessageQueue
 		{
 		public:
@@ -88,6 +93,10 @@ namespace DCS
 			std::condition_variable c;
 		};
 
+		/**
+		 * \internal 
+		 * \brief A thread-safe byte queue. Holds message data up to a certain specified header size.
+		 */
 		class DCS_INTERNAL_TEST ByteQueue
 		{
 		public:

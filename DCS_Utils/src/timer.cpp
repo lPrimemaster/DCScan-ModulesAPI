@@ -55,10 +55,10 @@ DCS::Timer::Timestamp DCS::Timer::GetTimestamp(SystemTimer timer)
 
 	ts.hour = add_value(h.count());
 	ts.min = add_value((m - h).count());
-	ts.sec = add_value((s - m - h).count());
-	ts.millis = add_value((ms - s - m - h).count());
-	ts.micros = add_value((us - ms - s - m - h).count());
-	ts.nanos = add_value((ns - us - ms - s - m - h).count());
+	ts.sec = add_value((s - m).count());
+	ts.millis = add_value((ms - s).count());
+	ts.micros = add_value((us - ms).count());
+	ts.nanos = add_value((ns - us).count());
 
 	return ts;
 }
@@ -83,10 +83,32 @@ DCS::Utils::String DCS::Timer::GetTimestampString(SystemTimer timer)
 
 	add_value("h ", h.count());
 	add_value("m ", (m - h).count());
-	add_value("s ", (s - m - h).count());
-	add_value("ms ", (ms - s - m - h).count());
-	add_value("us ", (us - ms - s - m - h).count());
-	add_value("ns", (ns - us - ms - s - m - h).count());
+	add_value("s ", (s - m).count());
+	add_value("ms ", (ms - s).count());
+	add_value("us ", (us - ms).count());
+	add_value("ns", (ns - us).count());
+
+	return DCS::Utils::String(ts.c_str());
+}
+
+DCS::Utils::String DCS::Timer::GetTimestampStringSimple(SystemTimer timer)
+{
+	auto now = std::chrono::steady_clock::now();
+	auto ns = now - *reinterpret_cast<std::chrono::time_point<std::chrono::steady_clock>*>(timer.point);
+
+	std::string ts;
+
+	auto h = std::chrono::duration_cast<std::chrono::hours>(ns);
+	auto m = std::chrono::duration_cast<std::chrono::minutes>(ns);
+
+	auto add_value = [&](std::string t, i64 v)
+	{
+		ts += std::to_string(v) + t;
+	};
+
+	add_value("d ", h.count() / 24);
+	add_value("h ", h.count() % 24);
+	add_value("m", (m - h).count());
 
 	return DCS::Utils::String(ts.c_str());
 }

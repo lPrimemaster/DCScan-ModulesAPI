@@ -44,7 +44,7 @@ void DCS::Network::Message::EmitEvent(u8 EVT_ID, u8 *evtData, i32 size)
 	if (DCS::Registry::CheckEvent(EVT_ID))
 	{
 		// TODO : Allocate via a memory pool (not wasting time with all these new[] operators [via Message::Alloc])
-		// TODO : Create a Message::PoolAlloc() func
+		// Create a Message::PoolAlloc() func
 		DefaultMessage msg = Message::Alloc(size + sizeof(u8) + MESSAGE_XTRA_SPACE);
 
 		*msg.ptr = EVT_ID;

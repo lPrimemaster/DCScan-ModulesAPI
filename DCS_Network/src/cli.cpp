@@ -120,7 +120,7 @@ static void CommandRegistry()
 	});
 
 	Command("uptime", "Prints how long the server (CLI) has been running.", [](bool* brk) {
-		LOG_MESSAGE("[%s]", DCS::Timer::GetTimestampString(cli_uptime).c_str());
+		LOG_MESSAGE("[%s]", DCS::Timer::GetTimestampStringSimple(cli_uptime).c_str());
 	});
 
 	// TODO : Add more CLI commands

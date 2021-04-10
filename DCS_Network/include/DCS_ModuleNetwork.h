@@ -202,8 +202,10 @@ namespace DCS
 			 * \param op The type of operation to perform server-side.
 			 * \param data The DefaultMessage formated message. Expects diferent data deppending on the operation.
 			 * \param size Size of the data bytes.
+			 * 
+			 * \return Server async response (similar to std::future).
 			 */
-			DCS_API void SendAsync(Operation op, u8 *data, i32 size);
+			DCS_API DCS::Utils::AsyncItem<DCS::Registry::SVReturn> SendAsync(Operation op, u8 *data, i32 size);
 
 			/**
 			 * \brief Sends a synchronous message to the server.

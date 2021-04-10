@@ -99,10 +99,8 @@ bool DCS::Network::Client::StartThread(Socket connection)
 					break;
 					case DCS::Network::Message::InternalOperation::ASYNC_RESPONSE:
 					{
-						u16 rvalue = *(u16*)(((DCS::Registry::SVReturn*)msg.ptr)->ptr);
-						LOG_DEBUG("Client Value ASYNC: %d", rvalue);
-
-						// TODO : Wrap around std::future for this
+						// TODO : Test NotifyPromise
+						DCS::Network::Message::NotifyPromise(msg);
 					}
 					break;
 					case DCS::Network::Message::InternalOperation::SYNC_RESPONSE:
@@ -112,11 +110,11 @@ bool DCS::Network::Client::StartThread(Socket connection)
 					}
 					break;
 					case DCS::Network::Message::InternalOperation::EVT_RESPONSE:
-
+					{
 						// Call client-side user callback
 						DCS::Registry::GetEventCallback(*(u8*)msg.ptr)(msg.ptr + 1);
-
-						break;
+					}
+					break;
 					case DCS::Network::Message::InternalOperation::EVT_UNSUB:
 						break;
 					case DCS::Network::Message::InternalOperation::OP_ERROR:

@@ -37,8 +37,8 @@
 #include <any>
 #include "../DCS_Utils/include/DCS_ModuleUtils.h"
 
-#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
-#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
 
 #define SV_CALL_NULL 0x0 ///< Indicates a non existant call [Not to use].
 #define SV_CALL_DCS_Threading_GetMaxHardwareConcurrency 0x1 ///< A call to `DCS::Threading::GetMaxHardwareConcurrency` \ingroup calls_id
@@ -46,12 +46,12 @@
 #define SV_CALL_DCS_Control_IssueGenericCommandResponse 0x3 ///< A call to `DCS::Control::IssueGenericCommandResponse` \ingroup calls_id
 
 #define SV_ARG_NULL 0x0 ///< Indicates a non existant argument [Not to use].
-#define SV_ARG_DCS_Utils_BasicString 0x1 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
-#define SV_ARG_DCS_Control_UnitTarget 0x2 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
+#define SV_ARG_DCS_Control_UnitTarget 0x1 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
+#define SV_ARG_DCS_Utils_BasicString 0x2 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
 
 #define SV_RET_VOID 0x0 ///< Indicates a void return type.
-#define SV_RET_DCS_Utils_BasicString 0x1 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id
-#define SV_RET_DCS_u16 0x2 ///< Refers to return type `DCS::u16` \ingroup ret_id
+#define SV_RET_DCS_u16 0x1 ///< Refers to return type `DCS::u16` \ingroup ret_id
+#define SV_RET_DCS_Utils_BasicString 0x2 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id
 
 #define MAX_SUB 0x1
 #define SV_EVT_DCS_Network_Message_FibSeqEvt 0x1 ///< A event refering to `DCS::Network::Message::FibSeqEvt` \ingroup evt_id
@@ -193,14 +193,27 @@ namespace DCS {
         inline static std::unordered_map<u8, EventCallbackFunc> evt_callbacks;
 
 	public:
+		/**
+		* \brief Auto-generated class that allows for buffer <-> parameters conversion.
+		*/
 		struct DCS_API SVParams
 		{
 		public:
+			/**
+			* \brief Retrieve the function code of the currently held parameter list.
+			* \return u16 Func code
+			*/
 			const u16 getFunccode() const
 			{
 				return fcode;
 			}
 
+			/**
+			* \brief Get the i'th positional argument.
+			* Mostly internal use.
+			* \tparam T parameter type
+			* \return T parameter
+			*/
 			template<typename T>
 			const T getArg(u64 i) const
 			{
@@ -216,8 +229,24 @@ namespace DCS {
 				return rv;
 			}
 
+			/**
+			* \brief Get all the positional arguments from byte buffer.
+			* Mostly internal use.
+			* \param payload char buffer
+			* \param size buffer size
+			* \return SVParams parameter list
+			*/
 			static const SVParams GetParamsFromData(const unsigned char* payload, i32 size);
 
+			/**
+			* \brief Fill a byte buffer with a list of arguments. use this function to populate the buffer passed to
+			* DCS::Network::Message::SendSync / DCS::Network::Message::SendAsync when calling a function.
+			* Make sure buffer has enough size to hold the data. Error checking is disabled for speed.
+			* \param buffer char buffer to store function code to be executed + its params
+			* \param fcode function code
+			* \param args the arguments passed to the function represented by fcode
+			* \return DCS::i32 size written to buffer
+			*/
 			template<typename... Args>
 			static i32 GetDataFromParams(unsigned char* buffer, u16 fcode, Args... args)
 			{
@@ -274,6 +303,9 @@ namespace DCS {
 		};
 
 #pragma pack(push, 1)
+		/**
+		 * \brief Holds messages return types.
+		 */
 		struct DCS_API SVReturn
 		{
 			i8 type;

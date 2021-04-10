@@ -105,49 +105,49 @@ static void RunToWaitPoll(int rep, float acc_min = 1.0f, float acc_max = 200.0f,
 
 static void RunRelativeIncrement(float start, float step = 0.0005f, float acc = 25.0f, char stop = 's')
 {
-		unsigned char buffer[1024];
+	unsigned char buffer[1024];
 
 
 
-		char move[512];
-		sprintf(move, "2PA%f;2WS", start);
+	char move[512];
+	sprintf(move, "2PA%f;2WS", start);
 
-		std::string acc_str = "2AC" + std::to_string(acc) + ";2AG" + std::to_string(acc) + ";" + move;
-		DCS::Utils::BasicString reqstr;
-		memcpy(reqstr.buffer, acc_str.c_str(), acc_str.size());
+	std::string acc_str = "2AC" + std::to_string(acc) + ";2AG" + std::to_string(acc) + ";" + move;
+	DCS::Utils::BasicString reqstr;
+	memcpy(reqstr.buffer, acc_str.c_str(), acc_str.size());
 
-		auto size_written = DCS::Registry::SVParams::GetDataFromParams(buffer,
-			SV_CALL_DCS_Control_IssueGenericCommand,
-			DCS::Control::UnitTarget::ESP301,
-			reqstr
-		);
-		Message::SendAsync(Message::Operation::REQUEST, buffer, size_written);
+	auto size_written = DCS::Registry::SVParams::GetDataFromParams(buffer,
+		SV_CALL_DCS_Control_IssueGenericCommand,
+		DCS::Control::UnitTarget::ESP301,
+		reqstr
+	);
+	Message::SendAsync(Message::Operation::REQUEST, buffer, size_written);
 
 
-		memset(move, 0, 512);
-		sprintf(move, "2PR%f;2WS;2TP?", step);
+	memset(move, 0, 512);
+	sprintf(move, "2PR%f;2WS;2TP?", step);
 
-		memset(reqstr.buffer, 0, 512);
-		memcpy(reqstr.buffer, move, strlen(move));
+	memset(reqstr.buffer, 0, 512);
+	memcpy(reqstr.buffer, move, strlen(move));
 
-		LOG_DEBUG("-> %s", reqstr.buffer);
+	LOG_DEBUG("-> %s", reqstr.buffer);
 
-		size_written = DCS::Registry::SVParams::GetDataFromParams(buffer,
-			SV_CALL_DCS_Control_IssueGenericCommandResponse,
-			DCS::Control::UnitTarget::ESP301,
-			reqstr
-		);
+	size_written = DCS::Registry::SVParams::GetDataFromParams(buffer,
+		SV_CALL_DCS_Control_IssueGenericCommandResponse,
+		DCS::Control::UnitTarget::ESP301,
+		reqstr
+	);
 
-		char s;
+	char s;
 
+	std::cin.get(s);
+	while(s != stop)
+	{
+		auto ret = Message::SendSync(Message::Operation::REQUEST, buffer, size_written);
+		float rpos = (float)atof((*(DCS::Utils::BasicString*)ret.ptr).buffer);
+		LOG_DEBUG("Acc: %f || Dev: %f", acc, rpos - start);
 		std::cin.get(s);
-		while(s != stop)
-		{
-			auto ret = Message::SendSync(Message::Operation::REQUEST, buffer, size_written);
-			float rpos = (float)atof((*(DCS::Utils::BasicString*)ret.ptr).buffer);
-			LOG_DEBUG("Acc: %f || Dev: %f", acc, rpos - start);
-			std::cin.get(s);
-		}
+	}
 }
 
 int main()

@@ -4,6 +4,7 @@
 std::mutex DCS::Network::Message::message_m;
 std::condition_variable DCS::Network::Message::lsync;
 DCS::Network::Message::DefaultMessage DCS::Network::Message::lmessage;
+std::map<DCS::u64, std::promise<DCS::Registry::SVReturn>> async_mess_prom;
 
 DCS::Registry::SVReturn DCS::Network::Message::WaitForId(DCS::u64 id)
 {
@@ -39,6 +40,12 @@ void DCS::Network::Message::SetMsgIdCondition(DefaultMessage& msg)
 	lock.unlock();
 
 	lsync.notify_all();
+}
+
+void DCS::Network::Message::NotifyPromise(DefaultMessage& msg)
+{
+	async_mess_prom.at(msg.id).set_value(*(DCS::Registry::SVReturn*)msg.ptr);
+	async_mess_prom.erase(msg.id);
 }
 
 DCS::Network::Message::DefaultMessage DCS::Network::Message::Alloc(i32 size)
@@ -122,8 +129,11 @@ void DCS::Network::Message::Delete(DefaultMessage& msg)
 		LOG_ERROR("Cannot delete DefaultMessage: Pointer is null.");
 }
 
-void DCS::Network::Message::SendAsync(Operation op, u8* data, i32 size)
+DCS::Utils::AsyncItem<DCS::Registry::SVReturn> DCS::Network::Message::SendAsync(Operation op, u8* data, i32 size)
 {
+	std::promise<DCS::Registry::SVReturn> p;
+	DCS::Utils::AsyncItem<DCS::Registry::SVReturn> ret(p);
+
 	u8 xtra_op = 0;
 	if (op == DCS::Network::Message::Operation::REQUEST)
 	{
@@ -136,6 +146,10 @@ void DCS::Network::Message::SendAsync(Operation op, u8* data, i32 size)
 	Message::SetNew(msg, op_code, data);
 
 	ScheduleTransmission(msg);
+
+	async_mess_prom.emplace(msg.id, std::move(p));
+
+	return ret;
 }
 
 DCS::Registry::SVReturn DCS::Network::Message::SendSync(Operation op, u8* data, i32 size)
