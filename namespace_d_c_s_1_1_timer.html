@@ -126,6 +126,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ac0c3497e8178789b11dd211f69ec8604"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="class_d_c_s_1_1_utils_1_1_string.html">Utils::String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_timer.html#ac0c3497e8178789b11dd211f69ec8604">GetTimestampString</a> (<a class="el" href="struct_d_c_s_1_1_timer_1_1_system_timer.html">SystemTimer</a> timer)</td></tr>
 <tr class="memdesc:ac0c3497e8178789b11dd211f69ec8604"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives a timestamp relative to timer in <a class="el" href="class_d_c_s_1_1_utils_1_1_string.html" title="A wrapper class used to export a simple string to the client side. ">Utils::String</a> format.  <a href="#ac0c3497e8178789b11dd211f69ec8604">More...</a><br /></td></tr>
 <tr class="separator:ac0c3497e8178789b11dd211f69ec8604"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4341c226e0d3c8cd5b7af61dcad4dca6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="class_d_c_s_1_1_utils_1_1_string.html">Utils::String</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_timer.html#a4341c226e0d3c8cd5b7af61dcad4dca6">GetTimestampStringSimple</a> (<a class="el" href="struct_d_c_s_1_1_timer_1_1_system_timer.html">SystemTimer</a> timer)</td></tr>
+<tr class="memdesc:a4341c226e0d3c8cd5b7af61dcad4dca6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives a timestamp relative to timer in <a class="el" href="class_d_c_s_1_1_utils_1_1_string.html" title="A wrapper class used to export a simple string to the client side. ">Utils::String</a> format (displays day/hour/minute duration only).  <a href="#a4341c226e0d3c8cd5b7af61dcad4dca6">More...</a><br /></td></tr>
+<tr class="separator:a4341c226e0d3c8cd5b7af61dcad4dca6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a576497a2da0f79c39b1947abe65eceac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="_d_c_s___module_utils_8h.html#a7b0a8f6b03fef5436d1a2b804219776f">i64</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_timer.html#a576497a2da0f79c39b1947abe65eceac">GetNanoseconds</a> (<a class="el" href="struct_d_c_s_1_1_timer_1_1_system_timer.html">SystemTimer</a> timer)</td></tr>
 <tr class="memdesc:a576497a2da0f79c39b1947abe65eceac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives number of nanoseconds passed relative to timer.  <a href="#a576497a2da0f79c39b1947abe65eceac">More...</a><br /></td></tr>
 <tr class="separator:a576497a2da0f79c39b1947abe65eceac"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -206,6 +209,31 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_d_c_s_1_1_utils_1_1_string.html" title="A wrapper class used to export a simple string to the client side. ">Utils::String</a> timestamp [XXh XXm XXs XXms XXus XXns]. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a4341c226e0d3c8cd5b7af61dcad4dca6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_d_c_s_1_1_utils_1_1_string.html">DCS::Utils::String</a> DCS::Timer::GetTimestampStringSimple </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_d_c_s_1_1_timer_1_1_system_timer.html">SystemTimer</a>&#160;</td>
+          <td class="paramname"><em>timer</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gives a timestamp relative to timer in <a class="el" href="class_d_c_s_1_1_utils_1_1_string.html" title="A wrapper class used to export a simple string to the client side. ">Utils::String</a> format (displays day/hour/minute duration only). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">timer</td><td>Relative point to measure. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="class_d_c_s_1_1_utils_1_1_string.html" title="A wrapper class used to export a simple string to the client side. ">Utils::String</a> timestamp [XXd XXh XXm]. </dd></dl>
 
 </div>
 </div>

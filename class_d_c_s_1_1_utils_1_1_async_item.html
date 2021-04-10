@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>DCSModulesAPI: DCS::Registry::SVReturn Struct Reference</title>
+<title>DCSModulesAPI: DCS::Utils::AsyncItem&lt; T &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -87,36 +87,80 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>DCS</b></li><li class="navelem"><a class="el" href="class_d_c_s_1_1_registry.html">Registry</a></li><li class="navelem"><a class="el" href="struct_d_c_s_1_1_registry_1_1_s_v_return.html">SVReturn</a></li>  </ul>
+<li class="navelem"><b>DCS</b></li><li class="navelem"><b>Utils</b></li><li class="navelem"><a class="el" href="class_d_c_s_1_1_utils_1_1_async_item.html">AsyncItem</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="struct_d_c_s_1_1_registry_1_1_s_v_return-members.html">List of all members</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="class_d_c_s_1_1_utils_1_1_async_item-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">DCS::Registry::SVReturn Struct Reference</div>  </div>
+<div class="title">DCS::Utils::AsyncItem&lt; T &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Holds messages return types.  
- <a href="struct_d_c_s_1_1_registry_1_1_s_v_return.html#details">More...</a></p>
+<p>A class that holds possible future data.  
+ <a href="class_d_c_s_1_1_utils_1_1_async_item.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="registry_8h_source.html">registry.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="_d_c_s___module_utils_8h_source.html">DCS_ModuleUtils.h</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a35d970e77cb74636f69931a8b04e2932"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a35d970e77cb74636f69931a8b04e2932"></a>
-<a class="el" href="_d_c_s___module_utils_8h.html#a1429129a80d5de72dd07278f97a75664">i8</a>&#160;</td><td class="memItemRight" valign="bottom"><b>type</b></td></tr>
-<tr class="separator:a35d970e77cb74636f69931a8b04e2932"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84d88528db12ea2f1469672c98180ab0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a84d88528db12ea2f1469672c98180ab0"></a>
-<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ptr</b> [1024]</td></tr>
-<tr class="separator:a84d88528db12ea2f1469672c98180ab0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ad85bbbdd3b3e9b633de53136563ca170"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad85bbbdd3b3e9b633de53136563ca170"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>AsyncItem</b> (std::promise&lt; T &gt; &amp;p)</td></tr>
+<tr class="separator:ad85bbbdd3b3e9b633de53136563ca170"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dff0acc0c9496adc55609a1f77f40cd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9dff0acc0c9496adc55609a1f77f40cd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_c_s_1_1_utils_1_1_async_item.html#a9dff0acc0c9496adc55609a1f77f40cd">wait</a> () const </td></tr>
+<tr class="memdesc:a9dff0acc0c9496adc55609a1f77f40cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for item to be available. <br /></td></tr>
+<tr class="separator:a9dff0acc0c9496adc55609a1f77f40cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2947b0e145da1dfbdbd16b4f5a6c085b"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_c_s_1_1_utils_1_1_async_item.html#a2947b0e145da1dfbdbd16b4f5a6c085b">get</a> () const </td></tr>
+<tr class="memdesc:a2947b0e145da1dfbdbd16b4f5a6c085b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the item stored in the future.  <a href="#a2947b0e145da1dfbdbd16b4f5a6c085b">More...</a><br /></td></tr>
+<tr class="separator:a2947b0e145da1dfbdbd16b4f5a6c085b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Holds messages return types. </p>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
-<li>config/<a class="el" href="registry_8h_source.html">registry.h</a></li>
+<div class="textblock"><h3>template&lt;typename T&gt;<br />
+class DCS::Utils::AsyncItem&lt; T &gt;</h3>
+
+<p>A class that holds possible future data. </p>
+<p>To be used as a return type when expected data T is returned async.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>the type to manipulate. </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a2947b0e145da1dfbdbd16b4f5a6c085b"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T <a class="el" href="class_d_c_s_1_1_utils_1_1_async_item.html">DCS::Utils::AsyncItem</a>&lt; T &gt;::get </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the item stored in the future. </p>
+<p>If item is not available, it waits until it is.</p>
+<dl class="section return"><dt>Returns</dt><dd>T item </dd></dl>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>DCS_Utils/include/<a class="el" href="_d_c_s___module_utils_8h_source.html">DCS_ModuleUtils.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
