@@ -11,6 +11,9 @@
 *.stamp
 *.stamp.depend
 
+# Track custom made cmake files
+!cmake/modules/*.cmake
+
 # Do not track builds or installations
 [Bb]uild/
 [Ii]nstall/
