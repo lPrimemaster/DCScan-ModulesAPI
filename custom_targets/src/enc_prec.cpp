@@ -62,7 +62,7 @@ static void RunToWaitPoll(int rep, float acc_min = 1.0f, float acc_max = 200.0f,
 	for (int i = 0; i < rep; i++)
 	{
 		float acc = acc_min + acc_step * i;
-		std::string acc_str = "2PA2.5;2WS;2AC" + std::to_string(acc) + ";2AG" + std::to_string(acc) + ";2PR360;2WS;2TP?";
+		std::string acc_str = "2PA0;2WS;2AC" + std::to_string(acc) + ";2AG" + std::to_string(acc) + ";2PR360;2WS;2TP?";
 
 		DCS::Utils::BasicString reqstr;
 
@@ -179,7 +179,8 @@ int main()
 
 		//Message::SendAsync(Message::Operation::EVT_SUB, buffer, size_written);
 
-		RunToWaitPoll(0, 25.0f, 200.0f, true); // Zero reps -> Initialize only
+		//RunToWaitPoll(0, 25.0f, 200.0f, true); // Zero reps -> Initialize only
+		RunToWaitPoll(1, 25.0f, 200.0f, true);
 
 		LOG_DEBUG("Run relative increment started!");
 

@@ -84,7 +84,8 @@ add_libTargetSubDir(DCS_Network)
 add_libTargetSubDir(DCS_EngineControl)
 add_libTargetSubDir(DCS_Utils)
 add_libTargetSubDir(DCS_Core)
-set(CONF_TARGETS DCSModuleEngineControl DCSModuleUtils DCSModuleCore DCSModuleNetwork)
+add_libTargetSubDir(DCS_Acquisition)
+set(CONF_TARGETS DCSModuleAcquisition DCSModuleEngineControl DCSModuleUtils DCSModuleCore DCSModuleNetwork)
 
 # Add custom targets
 add_subdirectory(custom_targets)
