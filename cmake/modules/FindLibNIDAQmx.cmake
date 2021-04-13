@@ -1,5 +1,5 @@
 
-set(NI_PPATH "National Instruments/NI-DAQ/DAQmx ANSI C Dev")
+set(NI_PPATH "National Instruments/Shared/ExternalCompilerSupport/C")
 set(_pf_x86 "$ENV{ProgramFiles\(x86\)}/${NI_PPATH}")
 list(APPEND NIDAQMX_PATH ${_pf_x86})
 
@@ -7,7 +7,7 @@ list(APPEND NIDAQMX_PATH ${_pf_x86})
 find_library(LIBNIDAQMX_LIBRARY 
 			NAMES "NIDAQmx"
             PATHS ${NIDAQMX_PATH}
-            PATH_SUFFIXES "lib/msvc")
+            PATH_SUFFIXES "lib64/msvc")
             
 find_path(LIBNIDAQMX_INCLUDE_DIR 
 			NAMES "NIDAQmx.h"

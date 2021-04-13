@@ -39,6 +39,15 @@
 #define LOG_ERROR(msg, ...) LOG_LVL(Error, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Error, msg, __VA_ARGS__)
 #define LOG_CRITICAL(msg, ...) LOG_LVL(Critical, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Critical, msg, __VA_ARGS__)
 
+#define ENUM_FLAG_OPERATOR(T,X) inline T operator X (T lhs, T rhs) { return (T) (static_cast<std::underlying_type_t <T>>(lhs) X static_cast<std::underlying_type_t <T>>(rhs)); } 
+#define ENUM_FLAGS(T) \
+enum class T; \
+inline T operator ~ (T t) { return (T) (~static_cast<std::underlying_type_t <T>>(t)); } \
+ENUM_FLAG_OPERATOR(T,|) \
+ENUM_FLAG_OPERATOR(T,^) \
+ENUM_FLAG_OPERATOR(T,&) \
+enum class T
+
 namespace DCS
 {
 	typedef signed long long i64; ///< Equivalent to int_64t.
