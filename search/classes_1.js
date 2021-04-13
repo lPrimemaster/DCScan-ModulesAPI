@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['asyncitem',['AsyncItem',['../class_d_c_s_1_1_utils_1_1_async_item.html',1,'DCS::Utils']]]
+  ['svparams',['SVParams',['../struct_d_c_s_1_1_registry_1_1_s_v_params.html',1,'DCS::Registry']]],
+  ['svreturn',['SVReturn',['../struct_d_c_s_1_1_registry_1_1_s_v_return.html',1,'DCS::Registry']]]
 ];
