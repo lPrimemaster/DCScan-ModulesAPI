@@ -50,8 +50,8 @@
 #define SV_ARG_DCS_Control_UnitTarget 0x2 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
 
 #define SV_RET_VOID 0x0 ///< Indicates a void return type.
-#define SV_RET_DCS_u16 0x1 ///< Refers to return type `DCS::u16` \ingroup ret_id
-#define SV_RET_DCS_Utils_BasicString 0x2 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id
+#define SV_RET_DCS_Utils_BasicString 0x1 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id
+#define SV_RET_DCS_u16 0x2 ///< Refers to return type `DCS::u16` \ingroup ret_id
 
 #define MAX_SUB 0x1
 #define SV_EVT_DCS_Network_Message_FibSeqEvt 0x1 ///< A event refering to `DCS::Network::Message::FibSeqEvt` \ingroup evt_id

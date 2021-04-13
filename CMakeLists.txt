@@ -14,6 +14,10 @@ function(add_libTargetSubDir sd)
   add_subdirectory(${sd})
 endfunction()
 
+function(add_libTargetSubDirNamingOnly sd)
+  set(CMAKE_LIBS_SOURCE_DIR ${CMAKE_LIBS_SOURCE_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/${sd}" PARENT_SCOPE)
+endfunction()
+
 # Disable MSVC nasty deprecations
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
@@ -91,6 +95,12 @@ if(NOT CI_DOC_GENERATE)
   
   # Add custom targets
   add_subdirectory(custom_targets)
+else()
+  add_libTargetSubDirNamingOnly(DCS_Network)
+  add_libTargetSubDirNamingOnly(DCS_EngineControl)
+  add_libTargetSubDirNamingOnly(DCS_Utils)
+  add_libTargetSubDirNamingOnly(DCS_Core)
+  add_libTargetSubDirNamingOnly(DCS_Acquisition)
 endif()
 
 string (REPLACE ";" " " CMAKE_LIBS_SOURCE_DIR "${CMAKE_LIBS_SOURCE_DIR}")
