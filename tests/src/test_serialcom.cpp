@@ -12,7 +12,7 @@ int main()
 	using namespace DCS::Control;
 	using namespace DCS::Network;
 
-	StartServices();
+	//StartServices();
 
 	// Set the ESP301 axis 1 to 90.5 deg and wait for stop. After, get position.
 	//auto r = IssueGenericCommandResponse(UnitTarget::PMC8742, "1PA90.50;WS;1TP?");
@@ -20,19 +20,19 @@ int main()
 	//value_str_test str = { "2MO;2PA45.0;2WS;2PA0.00;2WS;2MF" };
 	//str.buffer = "2MO;2PA45.0;2WS;2PA0.00;2WS;2MF";
 
-	std::this_thread::sleep_for(std::chrono::seconds(1));
+	//std::this_thread::sleep_for(std::chrono::seconds(1));
 
 	//IssueGenericCommand(UnitTarget::ESP301, { "2MO;2PA5.00;2WS;2PA0.00;2WS;2MF"  });
 
-	IssueGenericCommand(UnitTarget::PMC8742, { "2>1PA0" });
+	//IssueGenericCommand(UnitTarget::PMC8742, { "2>1PA0" });
 
-	std::this_thread::sleep_for(std::chrono::seconds(3));
+	//std::this_thread::sleep_for(std::chrono::seconds(3));
 
-	auto r = IssueGenericCommandResponse(UnitTarget::PMC8742, { "2>1TP?" });
+	//auto r = IssueGenericCommandResponse(UnitTarget::PMC8742, { "2>1TP?" });
 
-	LOG_DEBUG("Got: %s", r.buffer);
+	//LOG_DEBUG("Got: %s", r.buffer);
 
-	std::this_thread::sleep_for(std::chrono::seconds(1));
+	//std::this_thread::sleep_for(std::chrono::seconds(1));
 
 	/*
 	Init();
@@ -58,7 +58,7 @@ int main()
 	Destroy();
 	*/
 
-	StopServices();
+	//StopServices();
 
 	DCS_RETURN_TEST;
 }
