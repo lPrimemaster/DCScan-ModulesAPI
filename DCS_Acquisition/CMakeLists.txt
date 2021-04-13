@@ -16,6 +16,7 @@ add_library(DCSModuleAcquisition ${LIB_TYPE}
   ../config/exports.h
   ../DCS_Utils/include/DCS_ModuleUtils.h
   include/DCS_ModuleAcquisition.h
+  include/internal.h
   )
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/")

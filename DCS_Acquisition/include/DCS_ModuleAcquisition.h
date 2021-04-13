@@ -5,8 +5,6 @@
 #include "../../config/exports.h"
 #include "../../DCS_Utils/include/DCS_ModuleUtils.h"
 
-#include <NIDAQmx.h>
-
 
 /**
  * @file
@@ -23,7 +21,21 @@ namespace DCS
 {
     namespace DAQ
     {
-        DCS_API void JustToLink();
+        typedef DCS::GenericHandle Task;
+
+        ENUM_FLAGS(ChannelType)
+        {
+            Voltage
+        };
+
+        ENUM_FLAGS(ChannelRef)
+        {
+            Default            =     -1, // DAQmx_Val_Cfg_Default
+            SingleEnded        =  10083, // DAQmx_Val_RSE
+            NoRefSingleEnded   =  10078, // DAQmx_Val_NRSE
+            Differential       =  10106, // DAQmx_Val_Diff
+            PseudoDifferential =  12529  // DAQmx_Val_PseudoDiff
+        };
     }
 }
 
