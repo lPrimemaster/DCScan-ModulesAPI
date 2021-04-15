@@ -424,13 +424,13 @@ def getTokenSymbols(all_files):
 			if (v.startswith('namespace') or
 			 v.startswith('class') or
 			 v.startswith('struct')):
-				scope = v.split(' ')[1]
+				scope = v.split(' ')[-2]
 				f_prefix.append(scope)
 				oc[scope] = 1
 			elif scope:
 				if ('{' in v):
 					oc[scope] += 1
-				elif ('}' in v):
+				if ('}' in v):
 					oc[scope] -= 1
 
 				if (oc[scope] == 0 and len(f_prefix) > 0):
@@ -468,6 +468,7 @@ def getTokenSymbols(all_files):
 cFiles = cleanFiles()
 func, return_type, header_def, args_name, evt_name, evt_func = getTokenSymbols(cFiles)
 
+# pp.pprint(cFiles)
 
 print('Registering functions:')
 pp.pprint('Signature: {0}'.format(func))
