@@ -152,7 +152,7 @@ bool DCS::Network::Server::StartThread(Socket client)
 			std::thread *decode_msg = new std::thread([=]() -> void {
 				unsigned char buffer[ib_buff_size] = {0};
 
-				while (server_running.load() || inbound_bytes.count() > 0)
+				while (server_running.load())
 				{
 					u64 sz = inbound_bytes.fetchNextMsg(buffer);
 
@@ -245,6 +245,7 @@ bool DCS::Network::Server::StartThread(Socket client)
 					if (recv_sz > 0)
 						inbound_bytes.addBytes(buffer, recv_sz);
 				}
+
 				server_running.store(false);
 				server_client_sock.store((Socket)INVALID_SOCKET);
 				inbound_bytes.notify_unblock();
@@ -294,10 +295,10 @@ bool DCS::Network::Server::StartThread(Socket client)
 					if (to_send.ptr != nullptr)
 					{
 						i32 full_size = (i32)(to_send.size + MESSAGE_XTRA_SPACE);
-						DCS::Network::SendData(target_client, (const u8 *)&full_size, 4);
-						DCS::Network::SendData(target_client, (const u8 *)&to_send.op, 1);
-						DCS::Network::SendData(target_client, (const u8 *)&to_send.id, 8);
-						DCS::Network::SendData(target_client, (const u8 *)to_send.ptr, (i32)to_send.size);
+						DCS::Network::SendData(target_client, (const u8 *)&full_size, 4) > 0;
+						DCS::Network::SendData(target_client, (const u8 *)&to_send.op, 1) > 0;
+						DCS::Network::SendData(target_client, (const u8 *)&to_send.id, 8) > 0;
+						DCS::Network::SendData(target_client, (const u8 *)to_send.ptr, (i32)to_send.size) > 0;
 						Message::Delete(to_send);
 					}
 				}
