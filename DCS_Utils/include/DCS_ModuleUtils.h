@@ -85,6 +85,8 @@ namespace DCS
 
 			~String();
 
+			String& operator=(const String& s) noexcept;
+
 			/**
 			 * \brief Returns size of the string
 			 * \return str size.

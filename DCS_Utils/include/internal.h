@@ -172,6 +172,9 @@ namespace DCS
 
 			void notify_restart()
 			{
+				delete[] buffer;
+				internal_buff_size = 0;
+				buffer = new u8[internal_buff_max_size]; 
 				ntf_unblock.store(false);
 			}
 
