@@ -63,8 +63,8 @@ void DCS::DAQ::SetupTask(InternalTask* t, const char* clk_source, DCS::f64 clk, 
     if(clk > maxrate)
     {
         LOG_WARNING("The requested task clock sample rate could not be assigned.");
-        LOG_WARNING("Reason: Requested clock rate is bigger than the max hardware rate limit.");
-        LOG_MESSAGE("Setting the task clock rate to: %lf", maxrate);
+        LOG_WARNING("Reason: Requested clock rate is larger than the max hardware rate limit.");
+        LOG_MESSAGE("Setting the task clock rate to max OnBoardClock rate: %lf", maxrate);
     }
 
     // TODO : Make these arguments

@@ -27,7 +27,7 @@ add_library(DCSModuleNetwork ${LIB_TYPE}
   include/DCS_ModuleNetwork.h
   )
 
-target_link_libraries(DCSModuleNetwork DCSModuleCore DCSModuleUtils DCSModuleEngineControl ws2_32)
+target_link_libraries(DCSModuleNetwork DCSModuleCore DCSModuleUtils DCSModuleEngineControl DCSModuleAcquisition ws2_32)
 #target_link_libraries(DCSModuleNetwork INTERFACE OpenSSL::SSL)
 #target_link_libraries(DCSModuleNetwork INTERFACE OpenSSL::Crypto)
 

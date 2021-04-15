@@ -26,13 +26,21 @@ const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const u
 		case SV_ARG_NULL:
 			LOG_ERROR("Arg type not recognized.");
 			break;
+		case SV_ARG_DCS_Control_UnitTarget:
+			args.push_back(convert_from_byte<DCS::Control::UnitTarget>(payload, it, size));
+			it += sizeof(DCS::Control::UnitTarget);
+			break;
+		case SV_ARG_DCS_DAQ_TaskSettings:
+			args.push_back(convert_from_byte<DCS::DAQ::TaskSettings>(payload, it, size));
+			it += sizeof(DCS::DAQ::TaskSettings);
+			break;
 		case SV_ARG_DCS_Utils_BasicString:
 			args.push_back(convert_from_byte<DCS::Utils::BasicString>(payload, it, size));
 			it += sizeof(DCS::Utils::BasicString);
 			break;
-		case SV_ARG_DCS_Control_UnitTarget:
-			args.push_back(convert_from_byte<DCS::Control::UnitTarget>(payload, it, size));
-			it += sizeof(DCS::Control::UnitTarget);
+		case SV_ARG_DCS_DAQ_Task:
+			args.push_back(convert_from_byte<DCS::DAQ::Task>(payload, it, size));
+			it += sizeof(DCS::DAQ::Task);
 			break;
 		default:
 			__assume(0); // Hint the compiler to optimize a jump table even further disregarding arg_code checks
@@ -54,6 +62,44 @@ DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 		LOG_ERROR("Maybe function signature naming is wrong?");
 		LOG_ERROR("Prefer SV_CALL defines to string names to avoid errors.");
 		break;
+	case SV_CALL_DCS_DAQ_NewTask:
+	{
+		DCS::DAQ::Task local = DCS::DAQ::NewTask(params.getArg<DCS::DAQ::TaskSettings>(0));
+		if(sizeof(DCS::DAQ::Task) > 1024) LOG_ERROR("SVReturn value < sizeof(DCS::DAQ::Task).");
+		memcpy(ret.ptr, &local, sizeof(DCS::DAQ::Task));
+		ret.type = SV_RET_DCS_DAQ_Task;
+		break;
+	}
+	case SV_CALL_DCS_DAQ_StartTask:
+	{
+		DCS::DAQ::StartTask(params.getArg<DCS::DAQ::Task>(0));
+		break;
+	}
+	case SV_CALL_DCS_DAQ_StartNamedTask:
+	{
+		DCS::DAQ::StartNamedTask(params.getArg<DCS::Utils::BasicString>(0));
+		break;
+	}
+	case SV_CALL_DCS_DAQ_StopTask:
+	{
+		DCS::DAQ::StopTask(params.getArg<DCS::DAQ::Task>(0));
+		break;
+	}
+	case SV_CALL_DCS_DAQ_StopNamedTask:
+	{
+		DCS::DAQ::StopNamedTask(params.getArg<DCS::Utils::BasicString>(0));
+		break;
+	}
+	case SV_CALL_DCS_DAQ_DestroyTask:
+	{
+		DCS::DAQ::DestroyTask(params.getArg<DCS::DAQ::Task>(0));
+		break;
+	}
+	case SV_CALL_DCS_DAQ_DestroyNamedTask:
+	{
+		DCS::DAQ::DestroyNamedTask(params.getArg<DCS::Utils::BasicString>(0));
+		break;
+	}
 	case SV_CALL_DCS_Threading_GetMaxHardwareConcurrency:
 	{
 		DCS::u16 local = DCS::Threading::GetMaxHardwareConcurrency();

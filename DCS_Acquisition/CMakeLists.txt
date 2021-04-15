@@ -12,9 +12,9 @@ set_pretty_filenames()
 
 add_library(DCSModuleAcquisition ${LIB_TYPE}
   src/daq.cpp
+  src/external_cmds.cpp
 
   ../config/exports.h
-  ../DCS_Utils/include/DCS_ModuleUtils.h
   include/DCS_ModuleAcquisition.h
   include/internal.h
   )

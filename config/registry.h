@@ -37,21 +37,32 @@
 #include <any>
 #include "../DCS_Utils/include/DCS_ModuleUtils.h"
 
-#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
-#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_Acquisition\include\DCS_ModuleAcquisition.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
 
 #define SV_CALL_NULL 0x0 ///< Indicates a non existant call [Not to use].
-#define SV_CALL_DCS_Threading_GetMaxHardwareConcurrency 0x1 ///< A call to `DCS::Threading::GetMaxHardwareConcurrency` \ingroup calls_id
-#define SV_CALL_DCS_Control_IssueGenericCommand 0x2 ///< A call to `DCS::Control::IssueGenericCommand` \ingroup calls_id
-#define SV_CALL_DCS_Control_IssueGenericCommandResponse 0x3 ///< A call to `DCS::Control::IssueGenericCommandResponse` \ingroup calls_id
+#define SV_CALL_DCS_DAQ_NewTask 0x1 ///< A call to `DCS::DAQ::NewTask` \ingroup calls_id
+#define SV_CALL_DCS_DAQ_StartTask 0x2 ///< A call to `DCS::DAQ::StartTask` \ingroup calls_id
+#define SV_CALL_DCS_DAQ_StartNamedTask 0x3 ///< A call to `DCS::DAQ::StartNamedTask` \ingroup calls_id
+#define SV_CALL_DCS_DAQ_StopTask 0x4 ///< A call to `DCS::DAQ::StopTask` \ingroup calls_id
+#define SV_CALL_DCS_DAQ_StopNamedTask 0x5 ///< A call to `DCS::DAQ::StopNamedTask` \ingroup calls_id
+#define SV_CALL_DCS_DAQ_DestroyTask 0x6 ///< A call to `DCS::DAQ::DestroyTask` \ingroup calls_id
+#define SV_CALL_DCS_DAQ_DestroyNamedTask 0x7 ///< A call to `DCS::DAQ::DestroyNamedTask` \ingroup calls_id
+#define SV_CALL_DCS_Threading_GetMaxHardwareConcurrency 0x8 ///< A call to `DCS::Threading::GetMaxHardwareConcurrency` \ingroup calls_id
+#define SV_CALL_DCS_Control_IssueGenericCommand 0x9 ///< A call to `DCS::Control::IssueGenericCommand` \ingroup calls_id
+#define SV_CALL_DCS_Control_IssueGenericCommandResponse 0xa ///< A call to `DCS::Control::IssueGenericCommandResponse` \ingroup calls_id
 
 #define SV_ARG_NULL 0x0 ///< Indicates a non existant argument [Not to use].
-#define SV_ARG_DCS_Utils_BasicString 0x1 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
-#define SV_ARG_DCS_Control_UnitTarget 0x2 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
+#define SV_ARG_DCS_Control_UnitTarget 0x1 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
+#define SV_ARG_DCS_DAQ_TaskSettings 0x2 ///< Refers to argument `DCS::DAQ::TaskSettings` \ingroup args_id
+#define SV_ARG_DCS_Utils_BasicString 0x3 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
+#define SV_ARG_DCS_DAQ_Task 0x4 ///< Refers to argument `DCS::DAQ::Task` \ingroup args_id
 
 #define SV_RET_VOID 0x0 ///< Indicates a void return type.
-#define SV_RET_DCS_Utils_BasicString 0x1 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id
-#define SV_RET_DCS_u16 0x2 ///< Refers to return type `DCS::u16` \ingroup ret_id
+#define SV_RET_DCS_u16 0x1 ///< Refers to return type `DCS::u16` \ingroup ret_id
+#define SV_RET_DCS_Utils_BasicString 0x2 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id
+#define SV_RET_DCS_DAQ_Task 0x3 ///< Refers to return type `DCS::DAQ::Task` \ingroup ret_id
 
 #define MAX_SUB 0x1
 #define SV_EVT_DCS_Network_Message_FibSeqEvt 0x1 ///< A event refering to `DCS::Network::Message::FibSeqEvt` \ingroup evt_id
@@ -175,9 +186,16 @@ namespace DCS {
 
 		inline static std::unordered_map<const char*, u16> id = 
 		{
-			{"DCS::Threading::GetMaxHardwareConcurrency", 0x1},
-			{"DCS::Control::IssueGenericCommand", 0x2},
-			{"DCS::Control::IssueGenericCommandResponse", 0x3}
+			{"DCS::DAQ::NewTask", 0x1},
+			{"DCS::DAQ::StartTask", 0x2},
+			{"DCS::DAQ::StartNamedTask", 0x3},
+			{"DCS::DAQ::StopTask", 0x4},
+			{"DCS::DAQ::StopNamedTask", 0x5},
+			{"DCS::DAQ::DestroyTask", 0x6},
+			{"DCS::DAQ::DestroyNamedTask", 0x7},
+			{"DCS::Threading::GetMaxHardwareConcurrency", 0x8},
+			{"DCS::Control::IssueGenericCommand", 0x9},
+			{"DCS::Control::IssueGenericCommandResponse", 0xa}
 		};
 
 		inline static std::unordered_map<u8, bool> subscriptions = 
@@ -258,7 +276,56 @@ namespace DCS {
 				{
 				    switch(fcode)
 				    {
-					    case SV_CALL_DCS_Control_IssueGenericCommand:
+					    case SV_CALL_DCS_DAQ_NewTask:
+						{
+							auto A0_v = std::any_cast<DCS::DAQ::TaskSettings>(p.at(0));
+							u8   A0_t = SV_ARG_DCS_DAQ_TaskSettings;
+							cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(DCS::DAQ::TaskSettings), it);
+							break;
+						}
+						case SV_CALL_DCS_DAQ_StartTask:
+						{
+							auto A0_v = std::any_cast<DCS::DAQ::Task>(p.at(0));
+							u8   A0_t = SV_ARG_DCS_DAQ_Task;
+							cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(DCS::DAQ::Task), it);
+							break;
+						}
+						case SV_CALL_DCS_DAQ_StartNamedTask:
+						{
+							auto A0_v = std::any_cast<DCS::Utils::BasicString>(p.at(0));
+							u8   A0_t = SV_ARG_DCS_Utils_BasicString;
+							cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(DCS::Utils::BasicString), it);
+							break;
+						}
+						case SV_CALL_DCS_DAQ_StopTask:
+						{
+							auto A0_v = std::any_cast<DCS::DAQ::Task>(p.at(0));
+							u8   A0_t = SV_ARG_DCS_DAQ_Task;
+							cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(DCS::DAQ::Task), it);
+							break;
+						}
+						case SV_CALL_DCS_DAQ_StopNamedTask:
+						{
+							auto A0_v = std::any_cast<DCS::Utils::BasicString>(p.at(0));
+							u8   A0_t = SV_ARG_DCS_Utils_BasicString;
+							cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(DCS::Utils::BasicString), it);
+							break;
+						}
+						case SV_CALL_DCS_DAQ_DestroyTask:
+						{
+							auto A0_v = std::any_cast<DCS::DAQ::Task>(p.at(0));
+							u8   A0_t = SV_ARG_DCS_DAQ_Task;
+							cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(DCS::DAQ::Task), it);
+							break;
+						}
+						case SV_CALL_DCS_DAQ_DestroyNamedTask:
+						{
+							auto A0_v = std::any_cast<DCS::Utils::BasicString>(p.at(0));
+							u8   A0_t = SV_ARG_DCS_Utils_BasicString;
+							cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(DCS::Utils::BasicString), it);
+							break;
+						}
+						case SV_CALL_DCS_Control_IssueGenericCommand:
 						{
 							auto A0_v = std::any_cast<DCS::Control::UnitTarget>(p.at(0));
 							u8   A0_t = SV_ARG_DCS_Control_UnitTarget;
