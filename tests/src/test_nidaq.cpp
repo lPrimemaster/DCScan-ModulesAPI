@@ -1,33 +1,47 @@
 #include "../../DCS_Acquisition/include/DCS_ModuleAcquisition.h"
-#include "../../DCS_Acquisition/include/internal.h"
+#include "../../DCS_Network/include/DCS_ModuleNetwork.h"
 #include "../include/DCS_Assert.h"
-
-static DCS::i32 Callback(DCS::DAQ::TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData)
-{
-    LOG_DEBUG("Got 1000 samples...");
-    return 0;
-}
 
 int main()
 {
     DCS_START_TEST;
 
-    DCS::DAQ::InternalTask t;
+    DCS::DAQ::TaskSettings settings;
 
-    DCS::DAQ::CreateTask(&t);
+    settings.task_name = { "MyTask" };
 
-    // This is connector 2 ai0 equivalent
-    DCS::DAQ::AddTaskChannel(&t, "PXI_Slot2/ai16", DCS::DAQ::ChannelType::Voltage, DCS::DAQ::ChannelRef::Differential);
+    settings.channel_name[0] = { "PXI_Slot2/ai0" };
+    settings.channel_type[0] = DCS::DAQ::ChannelType::Voltage;
+    settings.channel_ref[0]  = DCS::DAQ::ChannelRef::Differential;
+    settings.channel_lim[0].min = -10.0;
+    settings.channel_lim[0].max =  10.0;
 
-    DCS::DAQ::SetupTask(&t, nullptr, 10000.0, Callback);
+    DCS::Network::Init();
 
-    DCS::DAQ::StartTask(&t);
+    auto c = DCS::Network::Client::Connect("127.0.0.1", 15777);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+    if(DCS::Network::Client::StartThread(c))
+    {
 
-    DCS::DAQ::StopTask(&t);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        unsigned char buffer[4096];
 
-    DCS::DAQ::ClearTask(&t);
+        auto size = DCS::Registry::SVParams::GetDataFromParams(buffer, SV_CALL_DCS_DAQ_NewTask, settings);
+
+        DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::REQUEST, buffer, size);
+
+
+
+        size = DCS::Registry::SVParams::GetDataFromParams<DCS::Utils::BasicString>(buffer, SV_CALL_DCS_DAQ_StartNamedTask, { "MyTask_Error" });
+
+        DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::REQUEST, buffer, size);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+        DCS::Network::Client::StopThread(c);
+    }
+
+    DCS::Network::Destroy();
 
     DCS_RETURN_TEST;
 }

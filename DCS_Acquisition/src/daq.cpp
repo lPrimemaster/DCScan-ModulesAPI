@@ -30,16 +30,16 @@ static bool HandleNiError(DCS::i32 error)
     }
 }
 
-void DCS::DAQ::CreateTask(InternalTask* t)
+void DCS::DAQ::CreateTask(InternalTask* t, const char* name)
 {
-    static DCS::u32 gtask_id = 0;
     if(t == nullptr)
     {
         LOG_ERROR("Cannot initialize an empty task.");
     }
     else
     {
-        DCS::i32 err = DAQmxCreateTask(("dcs_acq_task_" + std::to_string(gtask_id++)).c_str(), &t->ni_opaque_handler);
+        t->name = name;
+        DCS::i32 err = DAQmxCreateTask(name, &t->ni_opaque_handler);
         if(!HandleNiError(err))
         {
             LOG_ERROR("Error creating task.");
@@ -101,7 +101,7 @@ void DCS::DAQ::SetupTask(InternalTask* t, const char* clk_source, DCS::f64 clk, 
     }
 }
 
-void DCS::DAQ::AddTaskChannel(InternalTask* t, const char* channel_name, ChannelType type, ChannelRef ref, const char* virtual_channel_name)
+void DCS::DAQ::AddTaskChannel(InternalTask* t, const char* channel_name, ChannelType type, ChannelRef ref, ChannelLimits lims, const char* virtual_channel_name)
 {
     switch (type)
     {
@@ -111,7 +111,7 @@ void DCS::DAQ::AddTaskChannel(InternalTask* t, const char* channel_name, Channel
                                                 channel_name, 
                                                 virtual_channel_name, 
                                                 DCS::Utils::toUnderlyingType(ref),
-                                                -10.0, 10.0,
+                                                lims.min, lims.max,
                                                 DAQmx_Val_Volts,
                                                 NULL);
         
@@ -126,17 +126,8 @@ void DCS::DAQ::AddTaskChannel(InternalTask* t, const char* channel_name, Channel
     
     default:
         LOG_ERROR("Channel type for AddTaskChannel not recognized.");
-        return;
+        break;
     }
-
-    InternalChannel ic;
-    ic.type = type;
-    ic.ref = ref;
-
-    if(virtual_channel_name == nullptr || strlen(virtual_channel_name) == 0)
-        t->vchannels.emplace(channel_name, ic);
-    else
-        t->vchannels.emplace(virtual_channel_name, ic);
 }
 
 void DCS::DAQ::StartTask(InternalTask* t)

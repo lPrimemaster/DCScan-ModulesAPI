@@ -44,14 +44,16 @@ namespace DCS
             // TODO : Allocate data via some sort of pool for the caller thread to use safely
             DCS::u8* taskData = nullptr;
 
+            DCS::Utils::String name;
+
             std::map<const char*, InternalChannel> vchannels;
         };
 
-        DCS_INTERNAL_TEST void CreateTask(InternalTask* t);
+        DCS_INTERNAL_TEST void CreateTask(InternalTask* t, const char* name);
 
         DCS_INTERNAL_TEST void SetupTask(InternalTask* t, const char* clk_source, DCS::f64 clk, NIDataCallback func);
 
-        DCS_INTERNAL_TEST void AddTaskChannel(InternalTask* t, const char* channel_name, ChannelType type, ChannelRef ref, const char* virtual_channel_name = nullptr);
+        DCS_INTERNAL_TEST void AddTaskChannel(InternalTask* t, const char* channel_name, ChannelType type, ChannelRef ref, ChannelLimits lims, const char* virtual_channel_name = nullptr);
 
         DCS_INTERNAL_TEST void StartTask(InternalTask* t);
 

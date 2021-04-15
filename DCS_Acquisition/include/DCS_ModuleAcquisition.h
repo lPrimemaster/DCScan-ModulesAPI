@@ -40,39 +40,21 @@ namespace DCS
             PseudoDifferential =  12529  // DAQmx_Val_PseudoDiff
         };
 
-        struct /*DCS_API*/ ChannelLimits
+        struct DCS_API ChannelLimits
         {
             DCS::f64 min = -10.0;
             DCS::f64 max =  10.0;
         };
 
-        struct /*DCS_API*/ TaskSettings
+        struct DCS_API TaskSettings
         {
             DCS::Utils::BasicString task_name = { "" };
 
-            DCS::Utils::BasicString channel0_name = { "" };
-            DCS::Utils::BasicString channel1_name = { "" };
-            DCS::Utils::BasicString channel2_name = { "" };
-            DCS::Utils::BasicString channel3_name = { "" };
-            DCS::Utils::BasicString channel4_name = { "" };
-
-            ChannelRef channel0_ref = ChannelRef::None;
-            ChannelRef channel1_ref = ChannelRef::None;
-            ChannelRef channel2_ref = ChannelRef::None;
-            ChannelRef channel3_ref = ChannelRef::None;
-            ChannelRef channel4_ref = ChannelRef::None;
-
-            ChannelType channel0_type = ChannelType::None;
-            ChannelType channel1_type = ChannelType::None;
-            ChannelType channel2_type = ChannelType::None;
-            ChannelType channel3_type = ChannelType::None;
-            ChannelType channel4_type = ChannelType::None;
-
-            ChannelLimits channel0_lim;
-            ChannelLimits channel1_lim;
-            ChannelLimits channel2_lim;
-            ChannelLimits channel3_lim;
-            ChannelLimits channel4_lim;
+            DCS::Utils::BasicString channel_name[5] = { "" };
+            
+            ChannelRef    channel_ref[5] = { ChannelRef::None };
+            ChannelType  channel_type[5] = { ChannelType::None };
+            ChannelLimits channel_lim[5];
 
             DCS::Utils::BasicString clock = { "OnBoardClock" };
             DCS::f64 clock_rate = 10000;
