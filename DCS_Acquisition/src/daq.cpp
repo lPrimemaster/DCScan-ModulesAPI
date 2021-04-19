@@ -117,13 +117,31 @@ void DCS::DAQ::AddTaskChannel(InternalTask* t, const char* channel_name, Channel
         
         if(!HandleNiError(err))
         {
-            LOG_ERROR("Error setting virtual channel.");
+            LOG_ERROR("Error setting virtual voltage channel.");
             DAQmxClearTask(t->ni_opaque_handler);
             return;
         }
     }
     break;
-    
+
+    case ChannelType::Counter:
+    {
+        DCS::i32 err = DAQmxCreateCICountEdgesChan(t->ni_opaque_handler, 
+                                                channel_name, 
+                                                virtual_channel_name, 
+                                                DAQmx_Val_Falling,
+                                                0,
+                                                DAQmx_Val_CountUp);
+        
+        if(!HandleNiError(err))
+        {
+            LOG_ERROR("Error setting virtual counter channel.");
+            DAQmxClearTask(t->ni_opaque_handler);
+            return;
+        }
+    }
+    break;
+
     default:
         LOG_ERROR("Channel type for AddTaskChannel not recognized.");
         break;

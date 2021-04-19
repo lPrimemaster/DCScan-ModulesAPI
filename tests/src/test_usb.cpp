@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
 
 	// DCS::USerial::USBIntHandle hnd = DCS::USerial::init_usb_handle("104D-4000");
 
-	// auto v = ("2>1PA" + std::string(argv[1]) + "\r");
+	// auto v = ("2>1PA3000\r");
 
 	// DCS::USerial::write_bulk_bytes(hnd, (PUCHAR)v.c_str(), v.size());
 

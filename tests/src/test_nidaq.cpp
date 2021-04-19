@@ -30,8 +30,6 @@ int main()
 
         DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::REQUEST, buffer, size);
 
-
-
         size = DCS::Registry::SVParams::GetDataFromParams<DCS::Utils::BasicString>(buffer, SV_CALL_DCS_DAQ_StartNamedTask, { "MyTask_Error" });
 
         DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::REQUEST, buffer, size);
