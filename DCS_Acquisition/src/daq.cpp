@@ -126,9 +126,9 @@ void DCS::DAQ::AddTaskChannel(InternalTask* t, const char* channel_name, Channel
 
     case ChannelType::Counter:
     {
-        DCS::i32 err = DAQmxCreateCICountEdgesChan(t->ni_opaque_handler, 
-                                                channel_name, 
-                                                virtual_channel_name, 
+        DCS::i32 err = DAQmxCreateCICountEdgesChan(t->ni_opaque_handler,
+                                                channel_name,
+                                                virtual_channel_name,
                                                 DAQmx_Val_Falling,
                                                 0,
                                                 DAQmx_Val_CountUp);

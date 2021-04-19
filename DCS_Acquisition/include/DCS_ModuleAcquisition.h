@@ -27,7 +27,8 @@ namespace DCS
         enum class ChannelType
         {
             None,
-            Voltage
+            Voltage,
+            Counter
         };
 
         enum class ChannelRef
@@ -49,11 +50,13 @@ namespace DCS
         struct DCS_API TaskSettings
         {
             DCS::Utils::BasicString task_name = { "" };
-
             DCS::Utils::BasicString channel_name[5] = { "" };
             
+
+            // NOTE : Even though type is per channel. A task only supports channels of the same type 
+            // (not true, but close enough for this application).
+            ChannelType   channel_type   = ChannelType::None;
             ChannelRef    channel_ref[5] = { ChannelRef::None };
-            ChannelType  channel_type[5] = { ChannelType::None };
             ChannelLimits channel_lim[5];
 
             DCS::Utils::BasicString clock = { "OnBoardClock" };

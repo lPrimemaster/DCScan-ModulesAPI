@@ -5,9 +5,32 @@
 
 static std::map<DCS::DAQ::Task, DCS::DAQ::InternalTask> tasks_map;
 
+static FILE* f_test = nullptr;
+
 static DCS::i32 InternalNICallback(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData)
 {
     LOG_DEBUG("Fired DCS internal acq callback.");
+
+    if(f_test == nullptr)
+    {
+        f_test = fopen("Dump Data.txt", "w");
+    }
+
+    DCS::f64 samples[1000];
+    DCS::i32 aread;
+
+    DCS::u32 count[1000];
+    DCS::i32 aread_c;
+
+    DAQmxReadAnalogF64(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &aread, NULL);
+
+    DAQmxReadCounterU32(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, count, nSamples, &aread_c, NULL);
+
+    for(int i = 0; i < 1000; i++)
+    {
+        std::string str = std::to_string(count[i]) + '\n';
+        fwrite(str.c_str(), 1, str.size(), f_test);
+    }
 
     // TODO : Call user defined callbacks here
     
@@ -16,7 +39,6 @@ static DCS::i32 InternalNICallback(TaskHandle taskHandle, DCS::i32 everyNsamples
 
 static std::map<DCS::DAQ::Task, DCS::DAQ::InternalTask>::iterator FindByName(DCS::Utils::String name)
 {
-
     return std::find_if(tasks_map.begin(), tasks_map.end(), [name](std::pair<DCS::DAQ::Task, DCS::DAQ::InternalTask> p) {
             if(strcmp(p.second.name.c_str(), name.c_str()) == 0)
                 return true;
@@ -42,19 +64,28 @@ DCS::DAQ::Task DCS::DAQ::NewTask(DCS::DAQ::TaskSettings setup)
     for(int i = 0; i < 5; i++)
     {
         // Skip empty channel
-        if(setup.channel_name[i].buffer == "" || setup.channel_type[i] == ChannelType::None)
+        if(std::string(setup.channel_name[i].buffer) == "")
             continue;
 
         LOG_DEBUG("Adding channel %d", i);
 
         AddTaskChannel(tp,
             setup.channel_name[i].buffer, 
-            setup.channel_type[i],
+            setup.channel_type,
             setup.channel_ref[i],
             setup.channel_lim[i]);
     }
 
-    SetupTask(tp, setup.clock.buffer, setup.clock_rate, InternalNICallback);
+    switch(setup.channel_type)
+    {
+        case ChannelType::Voltage:
+            SetupTask(tp, setup.clock.buffer, setup.clock_rate, InternalNICallback);
+            break;
+        case ChannelType::Counter:
+            break;
+        default:
+            break;
+    }
 
     tasks_map.emplace(l_task, t);
 
@@ -83,6 +114,9 @@ void DCS::DAQ::StartNamedTask(DCS::Utils::BasicString task_name)
 
 void DCS::DAQ::StopTask(Task task)
 {
+    if(f_test)
+        fclose(f_test);
+    f_test = nullptr;
     StopTask(&tasks_map.at(task));
 }
 

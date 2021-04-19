@@ -26,6 +26,10 @@ const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const u
 		case SV_ARG_NULL:
 			LOG_ERROR("Arg type not recognized.");
 			break;
+		case SV_ARG_DCS_Control_UnitTarget:
+			args.push_back(convert_from_byte<DCS::Control::UnitTarget>(payload, it, size));
+			it += sizeof(DCS::Control::UnitTarget);
+			break;
 		case SV_ARG_DCS_DAQ_TaskSettings:
 			args.push_back(convert_from_byte<DCS::DAQ::TaskSettings>(payload, it, size));
 			it += sizeof(DCS::DAQ::TaskSettings);
@@ -37,10 +41,6 @@ const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const u
 		case SV_ARG_DCS_Utils_BasicString:
 			args.push_back(convert_from_byte<DCS::Utils::BasicString>(payload, it, size));
 			it += sizeof(DCS::Utils::BasicString);
-			break;
-		case SV_ARG_DCS_Control_UnitTarget:
-			args.push_back(convert_from_byte<DCS::Control::UnitTarget>(payload, it, size));
-			it += sizeof(DCS::Control::UnitTarget);
 			break;
 		default:
 			__assume(0); // Hint the compiler to optimize a jump table even further disregarding arg_code checks
