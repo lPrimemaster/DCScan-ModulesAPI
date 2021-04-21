@@ -25,7 +25,7 @@ find_package(LibNIDAQmx REQUIRED)
 
 include_directories("${LIBNIDAQMX_INCLUDE_DIR}")
 
-target_link_libraries(DCSModuleAcquisition DCSModuleUtils "${LIBNIDAQMX_LIBRARY}")
+target_link_libraries(DCSModuleAcquisition DCSModuleUtils DCSModuleNetwork "${LIBNIDAQMX_LIBRARY}")
 
 set_target_properties(DCSModuleAcquisition PROPERTIES
   PUBLIC_HEADER "include/DCS_ModuleAcquisition.h"

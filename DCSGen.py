@@ -113,16 +113,17 @@ namespace DCS {
 			return val;
 		}
 
-        typedef void (*EventCallbackFunc)(u8* data);
+        typedef void (*EventCallbackFunc)(u8* data, u8* userData);
 
         /**
          * \\brief Set up event to subscribe by ID SV_EVT_*.
          */
-        static DCS_API const i32 SetupEvent(unsigned char* buffer, u8 id, EventCallbackFunc f)
+        static DCS_API const i32 SetupEvent(unsigned char* buffer, u8 id, EventCallbackFunc f, u8* userData = nullptr)
         {
             memcpy(buffer, &id, sizeof(u8));
 
             evt_callbacks.emplace(id, f);
+			evt_userData.emplace(id, userData);
 
             return sizeof(u8);
         }
@@ -135,11 +136,15 @@ namespace DCS {
             memcpy(buffer, &id, sizeof(u8));
 
 			if (id <= MAX_SUB)
+			{
             	evt_callbacks.erase(id);
+				evt_userData.erase(id);
+			}
 
             return sizeof(u8);
         }
 
+		// NOTE : This might fail
         static DCS_API const EventCallbackFunc GetEventCallback(u8 id)
         {
             if (id <= MAX_SUB)
@@ -158,6 +163,14 @@ namespace DCS {
 		static DCS_API const u8 GetEvent(const char* func)
 		{
 			return evt_named_func.at(func);
+		}
+
+		// NOTE : This might fail
+		static DCS_API u8* GetEventUserData(u8 id)
+		{
+			if (id <= MAX_SUB)
+				return evt_userData.at(id);
+			return nullptr;
 		}
 
 		static DCS_API void SetEvent(u8 id)
@@ -214,6 +227,7 @@ namespace DCS {
 		};
 
         inline static std::unordered_map<u8, EventCallbackFunc> evt_callbacks;
+		inline static std::unordered_map<u8, u8*> evt_userData;
 
 	public:
 		/**

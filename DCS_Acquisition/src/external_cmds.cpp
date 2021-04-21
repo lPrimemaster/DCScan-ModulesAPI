@@ -1,39 +1,23 @@
 #include "../include/DCS_ModuleAcquisition.h"
 #include "../include/internal.h"
+#include "../../DCS_Network/include/internal.h"
 
 #include <NIDAQmx.h>
 
 static std::map<DCS::DAQ::Task, DCS::DAQ::InternalTask> tasks_map;
 
-static FILE* f_test = nullptr;
-
-static DCS::i32 InternalNICallback(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData)
+DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData)
 {
-    LOG_DEBUG("Fired DCS internal acq callback.");
-
-    if(f_test == nullptr)
-    {
-        f_test = fopen("Dump Data.txt", "w");
-    }
-
     DCS::f64 samples[1000];
     DCS::i32 aread;
-
-    DCS::u32 count[1000];
-    DCS::i32 aread_c;
-
     DAQmxReadAnalogF64(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &aread, NULL);
 
-    DAQmxReadCounterU32(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, count, nSamples, &aread_c, NULL);
+    //DCS::u32 count[1000];
+    //DCS::i32 aread_c;
+    //DAQmxReadCounterU32(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, count, nSamples, &aread_c, NULL);
 
-    for(int i = 0; i < 1000; i++)
-    {
-        std::string str = std::to_string(count[i]) + '\n';
-        fwrite(str.c_str(), 1, str.size(), f_test);
-    }
-
-    // TODO : Call user defined callbacks here
-    
+    // NOTE : Maybe use named event to reduce cpu time finding event name
+    DCS_EMIT_EVT((DCS::u8*)samples, 1000 * sizeof(DCS::f64));
     return 0;
 }
 
@@ -77,7 +61,7 @@ DCS::DAQ::Task DCS::DAQ::NewTask(DCS::DAQ::TaskSettings setup)
     switch(setup.channel_type)
     {
         case ChannelType::Voltage:
-            SetupTask(tp, setup.clock.buffer, setup.clock_rate, InternalNICallback);
+            SetupTask(tp, setup.clock.buffer, setup.clock_rate, VoltageEvent);
             break;
         case ChannelType::Counter:
             break;
@@ -112,9 +96,6 @@ void DCS::DAQ::StartNamedTask(DCS::Utils::BasicString task_name)
 
 void DCS::DAQ::StopTask(Task task)
 {
-    if(f_test)
-        fclose(f_test);
-    f_test = nullptr;
     StopTask(&tasks_map.at(task));
 }
 

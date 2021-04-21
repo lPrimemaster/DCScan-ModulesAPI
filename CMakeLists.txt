@@ -56,7 +56,7 @@ endif()
 
 # Change this to SHARED if you want to build a dynamic library (.dll) specially useful for loading from external programs/scripts.
 # There is the option of using STATIC libraries as well, however they are not supported yet
-set(LIB_TYPE SHARED)
+set(LIB_TYPE STATIC)
 
 # Offer the user the choice of overriding the installation directories
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")

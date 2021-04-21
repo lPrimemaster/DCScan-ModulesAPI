@@ -173,7 +173,7 @@ int main()
 
 		LOG_DEBUG("Got server max thread concurrency: %d", max_threads_srv);
 
-		size_written = DCS::Registry::SetupEvent(buffer, SV_EVT_DCS_Network_Message_FibSeqEvt, [](DCS::u8* data) {
+		size_written = DCS::Registry::SetupEvent(buffer, SV_EVT_DCS_Network_Message_FibSeqEvt, [](DCS::u8* data, DCS::u8* userData) {
 			LOG_DEBUG("FibEvent returned: %llu", *(DCS::u64*)data);
 		});
 

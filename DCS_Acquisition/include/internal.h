@@ -1,5 +1,6 @@
 #pragma once
 #include "DCS_ModuleAcquisition.h"
+#include "../../config/exports.h"
 
 /**
  * @file
@@ -18,6 +19,9 @@ namespace DCS
     namespace DAQ
     {
         typedef void* TaskHandle;
+
+        DCS_REGISTER_EVENT
+        DCS::i32 VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData);
 
         typedef DCS::i32 (*NIDataCallback)(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData); 
         typedef DCS::i32 (*NIErrorCallback)(TaskHandle taskHandle, DCS::i32 status, void *callbackData);
