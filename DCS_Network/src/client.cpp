@@ -12,7 +12,8 @@ static DCS::Utils::SMessageQueue inbound_data_queue;
 static std::thread* client_send_thread = nullptr;
 static DCS::Utils::SMessageQueue outbound_data_queue;
 
-static DCS::Utils::ByteQueue inbound_bytes(4096);
+constexpr DCS::u64 ib_buff_size = 4096 * 1024;
+static DCS::Utils::ByteQueue inbound_bytes(ib_buff_size);
 
 static std::atomic<bool> client_running = false;
 static std::atomic<DCS::i16> server_latency_ms = 0;
@@ -52,7 +53,7 @@ bool DCS::Network::Client::StartThread(Socket connection)
 			client_running.store(true);
 
 			std::thread* decode_msg = new std::thread([=]()->void {
-				unsigned char buffer[4096] = { 0 };
+				unsigned char* buffer = new unsigned char[ib_buff_size];
 				
 				// Start server heartbeat
 				/*DCS::Timer::SystemTimer timer = DCS::Timer::New();
@@ -99,7 +100,6 @@ bool DCS::Network::Client::StartThread(Socket connection)
 					break;
 					case DCS::Network::Message::InternalOperation::ASYNC_RESPONSE:
 					{
-						// TODO : Test NotifyPromise
 						DCS::Network::Message::NotifyPromise(msg);
 					}
 					break;
@@ -112,7 +112,8 @@ bool DCS::Network::Client::StartThread(Socket connection)
 					case DCS::Network::Message::InternalOperation::EVT_RESPONSE:
 					{
 						// Call client-side user callback
-						DCS::Registry::GetEventCallback(*(u8*)msg.ptr)(msg.ptr + 1);
+						u8 evt_id = *(u8*)msg.ptr;
+						DCS::Registry::GetEventCallback(evt_id)(msg.ptr + 1, DCS::Registry::GetEventUserData(evt_id));
 					}
 					break;
 					case DCS::Network::Message::InternalOperation::EVT_UNSUB:
@@ -146,6 +147,7 @@ bool DCS::Network::Client::StartThread(Socket connection)
 
 					Message::Delete(msg);
 				}
+				delete[] buffer;
 				inbound_bytes.notify_restart();
 			});
 

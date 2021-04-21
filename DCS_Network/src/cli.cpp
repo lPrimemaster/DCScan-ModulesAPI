@@ -129,9 +129,7 @@ static void CommandRegistry()
 	// - Override remote commands
 	// - Suspend -> Pause current task to resume later
 	// - Resume
-
-	// TODO : Implement easter eggs commands 
-	// - Funny statistics ( # data collected, # time collecting, # deg spun, ... )
+	// - Implement easter eggs commands : Funny statistics ( # data collected, # time collecting, # deg spun, ... )
 
 #pragma warning( pop )
 }

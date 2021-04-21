@@ -11,7 +11,7 @@ set_pretty_filenames()
 
 #find_package(OpenSSL REQUIRED)
 
-add_library(DCSModuleNetwork ${LIB_TYPE}
+add_library(DCSModuleNetwork STATIC
   src/socket.cpp
   src/server.cpp
   src/client.cpp

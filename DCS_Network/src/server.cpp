@@ -10,7 +10,7 @@ static DCS::Utils::SMessageQueue inbound_data_queue;
 static std::thread *server_send_thread = nullptr;
 static DCS::Utils::SMessageQueue outbound_data_queue;
 
-constexpr DCS::u64 ib_buff_size = 4096;
+constexpr DCS::u64 ib_buff_size = 4096 * 1024;
 static DCS::Utils::ByteQueue inbound_bytes(ib_buff_size);
 
 static std::thread* server_listen_thread = nullptr;
@@ -53,7 +53,7 @@ void DCS::Network::Message::EmitEvent(u8 EVT_ID, u8 *evtData, i32 size)
 		memcpy(msg.ptr + 1, evtData, size);
 
 		Message::SetNew(msg, DCS::Utils::toUnderlyingType(Message::InternalOperation::EVT_RESPONSE), nullptr);
-
+		
 		outbound_data_queue.push(msg);
 	}
 }
@@ -150,7 +150,7 @@ bool DCS::Network::Server::StartThread(Socket client)
 			LOG_DEBUG("Starting server_receive_thread thread...");
 
 			std::thread *decode_msg = new std::thread([=]() -> void {
-				unsigned char buffer[ib_buff_size] = {0};
+				unsigned char* buffer = new unsigned char[ib_buff_size];
 
 				while (server_running.load())
 				{
@@ -230,6 +230,7 @@ bool DCS::Network::Server::StartThread(Socket client)
 
 					Message::Delete(msg);
 				}
+				delete[] buffer;
 				inbound_bytes.notify_restart();
 			});
 
@@ -295,10 +296,10 @@ bool DCS::Network::Server::StartThread(Socket client)
 					if (to_send.ptr != nullptr)
 					{
 						i32 full_size = (i32)(to_send.size + MESSAGE_XTRA_SPACE);
-						DCS::Network::SendData(target_client, (const u8 *)&full_size, 4) > 0;
-						DCS::Network::SendData(target_client, (const u8 *)&to_send.op, 1) > 0;
-						DCS::Network::SendData(target_client, (const u8 *)&to_send.id, 8) > 0;
-						DCS::Network::SendData(target_client, (const u8 *)to_send.ptr, (i32)to_send.size) > 0;
+						DCS::Network::SendData(target_client, (const u8 *)&full_size, 4);
+						DCS::Network::SendData(target_client, (const u8 *)&to_send.op, 1);
+						DCS::Network::SendData(target_client, (const u8 *)&to_send.id, 8);
+						DCS::Network::SendData(target_client, (const u8 *)to_send.ptr, (i32)to_send.size);
 						Message::Delete(to_send);
 					}
 				}

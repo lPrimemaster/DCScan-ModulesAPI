@@ -24,6 +24,8 @@ namespace DCS
     {
         typedef DCS::u32 Task;
 
+        typedef void (*DataCallback)(Task task, DCS::u32 nSamples, void* data);
+
         enum class ChannelType
         {
             None,

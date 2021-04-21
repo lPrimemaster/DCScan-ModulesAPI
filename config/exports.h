@@ -96,28 +96,25 @@
   */
 #define DCS_REGISTER_EVENT
 
+#ifdef SHARED
 #ifdef API_EXPORT
 /**
  * \brief Defines the export interface acessible via the dll-interface.
  * \todo Do not define API for Cmake's STATIC lib configuration
  * \todo Use Boost.Python to export to python via ctypes
  */
-//#ifdef __cplusplus
 #define DCS_API __declspec(dllexport)
-//#else
-//#define DCS_API extern "C" __declspec(dllexport)
-//#endif
 #else
-//#ifdef __cplusplus
 /**
  * \brief Defines the export interface acessible via the dll-interface.
  * \todo Do not define API for Cmake's STATIC lib configuration
  */
 #define DCS_API __declspec(dllimport)
-//#else
-//#define DCS_API extern "C" __declspec(dllimport)
-//#endif
 #endif
+#else
+#define DCS_API
+#endif
+
 
 #ifdef ENABLE_TESTING
 /**

@@ -25,17 +25,17 @@ newtest(usb test_usb)
 newtest(nidaq test_nidaq)
 
 
-set(BNAME ${CMAKE_BINARY_DIR}/DCS_Utils/Release/DCSModuleUtils.dll)
-add_custom_command(TARGET test_timer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${BNAME} ${BDEST})
+# set(BNAME ${CMAKE_BINARY_DIR}/DCS_Utils/Release/DCSModuleUtils.dll)
+# add_custom_command(TARGET test_timer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${BNAME} ${BDEST})
 
-set(BNAME ${CMAKE_BINARY_DIR}/DCS_Core/Release/DCSModuleCore.dll)
-add_custom_command(TARGET test_timer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${BNAME} ${BDEST})
+# set(BNAME ${CMAKE_BINARY_DIR}/DCS_Core/Release/DCSModuleCore.dll)
+# add_custom_command(TARGET test_timer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${BNAME} ${BDEST})
 
-set(BNAME ${CMAKE_BINARY_DIR}/DCS_Network/Release/DCSModuleNetwork.dll)
-add_custom_command(TARGET test_timer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${BNAME} ${BDEST})
+# set(BNAME ${CMAKE_BINARY_DIR}/DCS_Network/Release/DCSModuleNetwork.dll)
+# add_custom_command(TARGET test_timer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${BNAME} ${BDEST})
 
-set(BNAME ${CMAKE_BINARY_DIR}/DCS_EngineControl/Release/DCSModuleEngineControl.dll)
-add_custom_command(TARGET test_timer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${BNAME} ${BDEST})
+# set(BNAME ${CMAKE_BINARY_DIR}/DCS_EngineControl/Release/DCSModuleEngineControl.dll)
+# add_custom_command(TARGET test_timer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${BNAME} ${BDEST})
 
-set(BNAME ${CMAKE_BINARY_DIR}/DCS_Acquisition/Release/DCSModuleAcquisition.dll)
-add_custom_command(TARGET test_timer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${BNAME} ${BDEST})
+# set(BNAME ${CMAKE_BINARY_DIR}/DCS_Acquisition/Release/DCSModuleAcquisition.dll)
+# add_custom_command(TARGET test_timer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${BNAME} ${BDEST})

@@ -37,9 +37,9 @@
 #include <any>
 #include "../DCS_Utils/include/DCS_ModuleUtils.h"
 
-#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_Acquisition\include\DCS_ModuleAcquisition.h"
-#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
-#include "C:\Users\Utilizador\Desktop\Source\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_Acquisition\include\DCS_ModuleAcquisition.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
+#include "H:\Data\C++\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
 
 #define SV_CALL_NULL 0x0 ///< Indicates a non existant call [Not to use].
 #define SV_CALL_DCS_DAQ_NewTask 0x1 ///< A call to `DCS::DAQ::NewTask` \ingroup calls_id
@@ -54,18 +54,19 @@
 #define SV_CALL_DCS_Control_IssueGenericCommandResponse 0xa ///< A call to `DCS::Control::IssueGenericCommandResponse` \ingroup calls_id
 
 #define SV_ARG_NULL 0x0 ///< Indicates a non existant argument [Not to use].
-#define SV_ARG_DCS_Control_UnitTarget 0x1 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
+#define SV_ARG_DCS_DAQ_Task 0x1 ///< Refers to argument `DCS::DAQ::Task` \ingroup args_id
 #define SV_ARG_DCS_DAQ_TaskSettings 0x2 ///< Refers to argument `DCS::DAQ::TaskSettings` \ingroup args_id
-#define SV_ARG_DCS_DAQ_Task 0x3 ///< Refers to argument `DCS::DAQ::Task` \ingroup args_id
+#define SV_ARG_DCS_Control_UnitTarget 0x3 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
 #define SV_ARG_DCS_Utils_BasicString 0x4 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
 
 #define SV_RET_VOID 0x0 ///< Indicates a void return type.
-#define SV_RET_DCS_u16 0x1 ///< Refers to return type `DCS::u16` \ingroup ret_id
+#define SV_RET_DCS_DAQ_Task 0x1 ///< Refers to return type `DCS::DAQ::Task` \ingroup ret_id
 #define SV_RET_DCS_Utils_BasicString 0x2 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id
-#define SV_RET_DCS_DAQ_Task 0x3 ///< Refers to return type `DCS::DAQ::Task` \ingroup ret_id
+#define SV_RET_DCS_u16 0x3 ///< Refers to return type `DCS::u16` \ingroup ret_id
 
-#define MAX_SUB 0x1
-#define SV_EVT_DCS_Network_Message_FibSeqEvt 0x1 ///< A event refering to `DCS::Network::Message::FibSeqEvt` \ingroup evt_id
+#define MAX_SUB 0x2
+#define SV_EVT_DCS_DAQ_VoltageEvent 0x1 ///< A event refering to `DCS::DAQ::VoltageEvent` \ingroup evt_id
+#define SV_EVT_DCS_Network_Message_FibSeqEvt 0x2 ///< A event refering to `DCS::Network::Message::FibSeqEvt` \ingroup evt_id
 
 namespace DCS {
 
@@ -99,16 +100,17 @@ namespace DCS {
 			return val;
 		}
 
-        typedef void (*EventCallbackFunc)(u8* data);
+        typedef void (*EventCallbackFunc)(u8* data, u8* userData);
 
         /**
          * \brief Set up event to subscribe by ID SV_EVT_*.
          */
-        static DCS_API const i32 SetupEvent(unsigned char* buffer, u8 id, EventCallbackFunc f)
+        static DCS_API const i32 SetupEvent(unsigned char* buffer, u8 id, EventCallbackFunc f, u8* userData = nullptr)
         {
             memcpy(buffer, &id, sizeof(u8));
 
             evt_callbacks.emplace(id, f);
+			evt_userData.emplace(id, userData);
 
             return sizeof(u8);
         }
@@ -121,11 +123,15 @@ namespace DCS {
             memcpy(buffer, &id, sizeof(u8));
 
 			if (id <= MAX_SUB)
+			{
             	evt_callbacks.erase(id);
+				evt_userData.erase(id);
+			}
 
             return sizeof(u8);
         }
 
+		// NOTE : This might fail
         static DCS_API const EventCallbackFunc GetEventCallback(u8 id)
         {
             if (id <= MAX_SUB)
@@ -144,6 +150,14 @@ namespace DCS {
 		static DCS_API const u8 GetEvent(const char* func)
 		{
 			return evt_named_func.at(func);
+		}
+
+		// NOTE : This might fail
+		static DCS_API u8* GetEventUserData(u8 id)
+		{
+			if (id <= MAX_SUB)
+				return evt_userData.at(id);
+			return nullptr;
 		}
 
 		static DCS_API void SetEvent(u8 id)
@@ -200,15 +214,18 @@ namespace DCS {
 
 		inline static std::unordered_map<u8, bool> subscriptions = 
 		{
+			{SV_EVT_DCS_DAQ_VoltageEvent, false},
 			{SV_EVT_DCS_Network_Message_FibSeqEvt, false}
 		};
 
 		inline static std::unordered_map<const char*, u8> evt_named_func = 
 		{
+			{"DCS::DAQ::VoltageEvent", SV_EVT_DCS_DAQ_VoltageEvent},
 			{"DCS::Network::Message::FibSeqEvt", SV_EVT_DCS_Network_Message_FibSeqEvt}
 		};
 
         inline static std::unordered_map<u8, EventCallbackFunc> evt_callbacks;
+		inline static std::unordered_map<u8, u8*> evt_userData;
 
 	public:
 		/**

@@ -56,9 +56,7 @@ DCS::DAQ::Task DCS::DAQ::NewTask(DCS::DAQ::TaskSettings setup)
 
     InternalTask* tp = &t;
 
-    LOG_DEBUG("Waiting task creation");
     CreateTask(tp, setup.task_name.buffer);
-    LOG_DEBUG("Task creation done");
 
     // Setup all the possible channels
     for(int i = 0; i < 5; i++)
