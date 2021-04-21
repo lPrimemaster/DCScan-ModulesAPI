@@ -4,7 +4,7 @@ var searchData=
   ['sendsync',['SendSync',['../namespace_d_c_s_1_1_network_1_1_message.html#a5570d6200352323c9a373a25a337da58',1,'DCS::Network::Message']]],
   ['setlogwritecallback',['SetLogWriteCallback',['../class_d_c_s_1_1_utils_1_1_logger.html#a40b1cd9dab4d5075f56b1c15761d2fef',1,'DCS::Utils::Logger']]],
   ['settings',['Settings',['../class_d_c_s_1_1_utils_1_1_logger.html#ab9520e71e622804bdc5185fb09cca746',1,'DCS::Utils::Logger']]],
-  ['setupevent',['SetupEvent',['../class_d_c_s_1_1_registry.html#adcefc20c8ce8b22db5354b7f1d0eb997',1,'DCS::Registry']]],
+  ['setupevent',['SetupEvent',['../class_d_c_s_1_1_registry.html#af228b44a3fc656d3abcb33882abeb978',1,'DCS::Registry']]],
   ['size',['size',['../class_d_c_s_1_1_utils_1_1_string.html#ab9172edee1ff0e8ea4f7edcbcda0f79f',1,'DCS::Utils::String']]],
   ['spin',['Spin',['../namespace_d_c_s_1_1_c_l_i.html#a67e6404a60d30007c04aa9986d96bcb5',1,'DCS::CLI']]],
   ['startservices',['StartServices',['../namespace_d_c_s_1_1_control.html#aa6cf401da3b0fe6b80958dc3cc487fea',1,'DCS::Control']]],

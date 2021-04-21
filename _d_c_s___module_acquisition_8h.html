@@ -119,6 +119,9 @@ Typedefs</h2></td></tr>
 <tr class="memitem:af63d3180dc1d5f2f8d40aa585549bdd8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af63d3180dc1d5f2f8d40aa585549bdd8"></a>
 typedef <a class="el" href="_d_c_s___module_utils_8h.html#ab177e2c530f560400a67535bcb757ab1">DCS::u32</a>&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DAQ::Task</b></td></tr>
 <tr class="separator:af63d3180dc1d5f2f8d40aa585549bdd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a0cc180cbc1948150197b06eab15d47"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2a0cc180cbc1948150197b06eab15d47"></a>
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DAQ::DataCallback</b>) (Task task, <a class="el" href="_d_c_s___module_utils_8h.html#ab177e2c530f560400a67535bcb757ab1">DCS::u32</a> nSamples, void *data)</td></tr>
+<tr class="separator:a2a0cc180cbc1948150197b06eab15d47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -142,25 +145,25 @@ Enumerations</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a56d91ca2e6dc104ea8c547a6b8fdea23"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a56d91ca2e6dc104ea8c547a6b8fdea23"></a>
-<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> Task&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DAQ::NewTask</b> (<a class="el" href="struct_d_c_s_1_1_d_a_q_1_1_task_settings.html">DCS::DAQ::TaskSettings</a> setup)</td></tr>
+DCS_API Task&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DAQ::NewTask</b> (<a class="el" href="struct_d_c_s_1_1_d_a_q_1_1_task_settings.html">DCS::DAQ::TaskSettings</a> setup)</td></tr>
 <tr class="separator:a56d91ca2e6dc104ea8c547a6b8fdea23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9630c171d15f53345feec21a5d34b9d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae9630c171d15f53345feec21a5d34b9d"></a>
-<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DAQ::StartTask</b> (Task task)</td></tr>
+DCS_API void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DAQ::StartTask</b> (Task task)</td></tr>
 <tr class="separator:ae9630c171d15f53345feec21a5d34b9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80e28a997ca3a59f1058c14cf79a060d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a80e28a997ca3a59f1058c14cf79a060d"></a>
-<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DAQ::StartNamedTask</b> (<a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> task_name)</td></tr>
+DCS_API void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DAQ::StartNamedTask</b> (<a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> task_name)</td></tr>
 <tr class="separator:a80e28a997ca3a59f1058c14cf79a060d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73a5e7fb848ae34f3439cc1b5e1fc55c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a73a5e7fb848ae34f3439cc1b5e1fc55c"></a>
-<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DAQ::StopTask</b> (Task task)</td></tr>
+DCS_API void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DAQ::StopTask</b> (Task task)</td></tr>
 <tr class="separator:a73a5e7fb848ae34f3439cc1b5e1fc55c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add52981e253689fde4773290329129d2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="add52981e253689fde4773290329129d2"></a>
-<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DAQ::StopNamedTask</b> (<a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> task_name)</td></tr>
+DCS_API void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DAQ::StopNamedTask</b> (<a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> task_name)</td></tr>
 <tr class="separator:add52981e253689fde4773290329129d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abdb16afbbf1a41cadde4f8cc048da30b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abdb16afbbf1a41cadde4f8cc048da30b"></a>
-<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DAQ::DestroyTask</b> (Task task)</td></tr>
+DCS_API void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DAQ::DestroyTask</b> (Task task)</td></tr>
 <tr class="separator:abdb16afbbf1a41cadde4f8cc048da30b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47c8304ef7763eeb55c6bdda09e15787"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a47c8304ef7763eeb55c6bdda09e15787"></a>
-<a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DAQ::DestroyNamedTask</b> (<a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> task_name)</td></tr>
+DCS_API void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DAQ::DestroyNamedTask</b> (<a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> task_name)</td></tr>
 <tr class="separator:a47c8304ef7763eeb55c6bdda09e15787"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>

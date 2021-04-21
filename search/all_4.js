@@ -4,7 +4,6 @@ var searchData=
   ['client',['Client',['../namespace_d_c_s_1_1_network_1_1_client.html',1,'DCS::Network']]],
   ['control',['Control',['../namespace_d_c_s_1_1_control.html',1,'DCS']]],
   ['data',['DATA',['../namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3ae44f9e348e41cb272efa87387728571b',1,'DCS::Network::Message']]],
-  ['dcs_5fapi',['DCS_API',['../exports_8h.html#a240a0f4545ac093f1b6795229b386fb8',1,'exports.h']]],
   ['dcs_5finternal_5ftest',['DCS_INTERNAL_TEST',['../exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2',1,'exports.h']]],
   ['dcs_5fmoduleacquisition_2eh',['DCS_ModuleAcquisition.h',['../_d_c_s___module_acquisition_8h.html',1,'']]],
   ['dcs_5fmodulecore_2eh',['DCS_ModuleCore.h',['../_d_c_s___module_core_8h.html',1,'']]],

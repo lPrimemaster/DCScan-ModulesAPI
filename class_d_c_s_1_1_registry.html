@@ -117,41 +117,44 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a87745441e60159b988f871457a7f10e0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a87745441e60159b988f871457a7f10e0"></a>
-typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>EventCallbackFunc</b>) (<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> *data)</td></tr>
-<tr class="separator:a87745441e60159b988f871457a7f10e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49ca07035f3116f32a8390269acfd4f0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a49ca07035f3116f32a8390269acfd4f0"></a>
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>EventCallbackFunc</b>) (<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> *data, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> *userData)</td></tr>
+<tr class="separator:a49ca07035f3116f32a8390269acfd4f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a01cc73bb34f08abd73687d64ff8338b7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a01cc73bb34f08abd73687d64ff8338b7"></a>
-static <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> const <a class="el" href="_d_c_s___module_utils_8h.html#a0397607df3bf36ef7b9afaa963f80c1b">u16</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_c_s_1_1_registry.html#a01cc73bb34f08abd73687d64ff8338b7">Get</a> (const char *func_signature)</td></tr>
+static DCS_API const <a class="el" href="_d_c_s___module_utils_8h.html#a0397607df3bf36ef7b9afaa963f80c1b">u16</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_c_s_1_1_registry.html#a01cc73bb34f08abd73687d64ff8338b7">Get</a> (const char *func_signature)</td></tr>
 <tr class="memdesc:a01cc73bb34f08abd73687d64ff8338b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a function id [SV_CALL_*] by function name. Syntax: ["ns::func"] Example: "DCS::Threading::GetMaxHardwareConcurrency" -&gt; Returns: SV_CALL_DCS_Threading_GetMaxHardwareConcurrency. <br /></td></tr>
 <tr class="separator:a01cc73bb34f08abd73687d64ff8338b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adcefc20c8ce8b22db5354b7f1d0eb997"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adcefc20c8ce8b22db5354b7f1d0eb997"></a>
-static <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> const <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_c_s_1_1_registry.html#adcefc20c8ce8b22db5354b7f1d0eb997">SetupEvent</a> (unsigned char *buffer, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id, EventCallbackFunc f)</td></tr>
-<tr class="memdesc:adcefc20c8ce8b22db5354b7f1d0eb997"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set up event to subscribe by ID SV_EVT_*. <br /></td></tr>
-<tr class="separator:adcefc20c8ce8b22db5354b7f1d0eb997"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af228b44a3fc656d3abcb33882abeb978"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af228b44a3fc656d3abcb33882abeb978"></a>
+static DCS_API const <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_c_s_1_1_registry.html#af228b44a3fc656d3abcb33882abeb978">SetupEvent</a> (unsigned char *buffer, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id, EventCallbackFunc f, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> *userData=nullptr)</td></tr>
+<tr class="memdesc:af228b44a3fc656d3abcb33882abeb978"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set up event to subscribe by ID SV_EVT_*. <br /></td></tr>
+<tr class="separator:af228b44a3fc656d3abcb33882abeb978"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada814d90579c909c1e997cf42ad94672"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ada814d90579c909c1e997cf42ad94672"></a>
-static <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> const <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_c_s_1_1_registry.html#ada814d90579c909c1e997cf42ad94672">RemoveEvent</a> (unsigned char *buffer, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id)</td></tr>
+static DCS_API const <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_c_s_1_1_registry.html#ada814d90579c909c1e997cf42ad94672">RemoveEvent</a> (unsigned char *buffer, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id)</td></tr>
 <tr class="memdesc:ada814d90579c909c1e997cf42ad94672"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set up event to unsubscribe by ID SV_EVT_*. <br /></td></tr>
 <tr class="separator:ada814d90579c909c1e997cf42ad94672"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07c6050321ff0a75c4498be7c571cbef"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a07c6050321ff0a75c4498be7c571cbef"></a>
-static <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> const EventCallbackFunc&#160;</td><td class="memItemRight" valign="bottom"><b>GetEventCallback</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id)</td></tr>
+static DCS_API const EventCallbackFunc&#160;</td><td class="memItemRight" valign="bottom"><b>GetEventCallback</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id)</td></tr>
 <tr class="separator:a07c6050321ff0a75c4498be7c571cbef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86f39440e53d40b52ac2156ed12b0faa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a86f39440e53d40b52ac2156ed12b0faa"></a>
-static <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> const bool&#160;</td><td class="memItemRight" valign="bottom"><b>CheckEvent</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id)</td></tr>
+static DCS_API const bool&#160;</td><td class="memItemRight" valign="bottom"><b>CheckEvent</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id)</td></tr>
 <tr class="separator:a86f39440e53d40b52ac2156ed12b0faa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affb54efca21b29192670bc355e462985"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="affb54efca21b29192670bc355e462985"></a>
-static <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> const <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetEvent</b> (const char *func)</td></tr>
+static DCS_API const <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a>&#160;</td><td class="memItemRight" valign="bottom"><b>GetEvent</b> (const char *func)</td></tr>
 <tr class="separator:affb54efca21b29192670bc355e462985"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae20ce6de1b9a9544c79a8f20f91f9d9e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae20ce6de1b9a9544c79a8f20f91f9d9e"></a>
+static DCS_API <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>GetEventUserData</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id)</td></tr>
+<tr class="separator:ae20ce6de1b9a9544c79a8f20f91f9d9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c685a4c9599249f115c086c646ba486"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8c685a4c9599249f115c086c646ba486"></a>
-static <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>SetEvent</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id)</td></tr>
+static DCS_API void&#160;</td><td class="memItemRight" valign="bottom"><b>SetEvent</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id)</td></tr>
 <tr class="separator:a8c685a4c9599249f115c086c646ba486"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41ca61dd44583f501f549f13dcf0f2dc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a41ca61dd44583f501f549f13dcf0f2dc"></a>
-static <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>UnsetEvent</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id)</td></tr>
+static DCS_API void&#160;</td><td class="memItemRight" valign="bottom"><b>UnsetEvent</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">u8</a> id)</td></tr>
 <tr class="separator:a41ca61dd44583f501f549f13dcf0f2dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad816680f72e7f55c9ab2373eba591b4a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad816680f72e7f55c9ab2373eba591b4a"></a>
-static <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="struct_d_c_s_1_1_registry_1_1_s_v_return.html">SVReturn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Execute</b> (<a class="el" href="struct_d_c_s_1_1_registry_1_1_s_v_params.html">SVParams</a> params)</td></tr>
+static DCS_API <a class="el" href="struct_d_c_s_1_1_registry_1_1_s_v_return.html">SVReturn</a>&#160;</td><td class="memItemRight" valign="bottom"><b>Execute</b> (<a class="el" href="struct_d_c_s_1_1_registry_1_1_s_v_params.html">SVParams</a> params)</td></tr>
 <tr class="separator:ad816680f72e7f55c9ab2373eba591b4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>

@@ -92,14 +92,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gaf9fd36aa25f09013428e092dac2ea7fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__calls.html#gaf9fd36aa25f09013428e092dac2ea7fc">DCS::Control::IssueGenericCommand</a> (UnitTarget target, <a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> full_command)</td></tr>
+<tr class="memitem:gaf9fd36aa25f09013428e092dac2ea7fc"><td class="memItemLeft" align="right" valign="top">DCS_API void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__calls.html#gaf9fd36aa25f09013428e092dac2ea7fc">DCS::Control::IssueGenericCommand</a> (UnitTarget target, <a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> full_command)</td></tr>
 <tr class="memdesc:gaf9fd36aa25f09013428e092dac2ea7fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Issue a generic command to the specified target.  <a href="group__calls.html#gaf9fd36aa25f09013428e092dac2ea7fc">More...</a><br /></td></tr>
 <tr class="separator:gaf9fd36aa25f09013428e092dac2ea7fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab07308337869f8b12264279e23ac2338"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__calls.html#gab07308337869f8b12264279e23ac2338">DCS::Control::IssueGenericCommandResponse</a> (UnitTarget target, <a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> full_command)</td></tr>
+<tr class="memitem:gab07308337869f8b12264279e23ac2338"><td class="memItemLeft" align="right" valign="top">DCS_API <a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__calls.html#gab07308337869f8b12264279e23ac2338">DCS::Control::IssueGenericCommandResponse</a> (UnitTarget target, <a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a> full_command)</td></tr>
 <tr class="memdesc:gab07308337869f8b12264279e23ac2338"><td class="mdescLeft">&#160;</td><td class="mdescRight">Issue a generic command to the specified target, waiting for a response.  <a href="group__calls.html#gab07308337869f8b12264279e23ac2338">More...</a><br /></td></tr>
 <tr class="separator:gab07308337869f8b12264279e23ac2338"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga16e7b04c4d2927403d5fa081c706d275"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga16e7b04c4d2927403d5fa081c706d275"></a>
-const <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> u16&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__calls.html#ga16e7b04c4d2927403d5fa081c706d275">DCS::Threading::GetMaxHardwareConcurrency</a> ()</td></tr>
+const DCS_API u16&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__calls.html#ga16e7b04c4d2927403d5fa081c706d275">DCS::Threading::GetMaxHardwareConcurrency</a> ()</td></tr>
 <tr class="memdesc:ga16e7b04c4d2927403d5fa081c706d275"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get current machine maximum hardware concurrency (Number of physical threads supported by the current implementation). <br /></td></tr>
 <tr class="separator:ga16e7b04c4d2927403d5fa081c706d275"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -132,7 +132,7 @@ const <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS
 
 <p>Issue a generic command to the specified target. </p>
 <p>This function sends a command to a controller using its commands. See the ESP301-3G and PMC8742 controller manuals for the raw commands to send via this function.</p>
-<p>Separate commands for the ESP301-3G controller's using semicolons. The PMC8742 only supports non separated commands. </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000011">Todo:</a></b></dt><dd>Create a wrapper to emulate PMC8742 command separator via (;).</dd></dl>
+<p>Separate commands for the ESP301-3G controller's using semicolons. The PMC8742 only supports non separated commands. </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000010">Todo:</a></b></dt><dd>Create a wrapper to emulate PMC8742 command separator via (;).</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">target</td><td>The stage to target. </td></tr>
@@ -169,7 +169,7 @@ const <a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS
 
 <p>Issue a generic command to the specified target, waiting for a response. </p>
 <p>This function sends a command to a controller using its commands. See the ESP301-3G and PMC8742 controller manuals for the raw commands to send via this function.</p>
-<p>Separate commands for the ESP301-3G controller's using semicolons. The PMC8742 only supports non separated commands. </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000012">Todo:</a></b></dt><dd>Create a wrapper to emulate PMC8742 command separator via (;).</dd></dl>
+<p>Separate commands for the ESP301-3G controller's using semicolons. The PMC8742 only supports non separated commands. </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000011">Todo:</a></b></dt><dd>Create a wrapper to emulate PMC8742 command separator via (;).</dd></dl>
 <p>The part of the command responsible for requesting data can be anywhere in the command chain.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
