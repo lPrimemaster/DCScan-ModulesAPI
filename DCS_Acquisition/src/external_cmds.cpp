@@ -21,6 +21,19 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     return 0;
 }
 
+DCS::i32 DCS::DAQ::CounterEvent(DCS::u64 totalCount, DCS::u64 diffCount)
+{
+    DCS::u8 buffer[16];
+
+    size_t u64s = sizeof(DCS::u64);
+
+    memcpy(buffer       , &totalCount, u64s);
+    memcpy(buffer + u64s, &diffCount , u64s);
+
+    DCS_EMIT_EVT(buffer, u64s * 2);
+    return 0;
+}
+
 static std::map<DCS::DAQ::Task, DCS::DAQ::InternalTask>::iterator FindByName(DCS::Utils::String name)
 {
     return std::find_if(tasks_map.begin(), tasks_map.end(), [name](std::pair<DCS::DAQ::Task, DCS::DAQ::InternalTask> p) {

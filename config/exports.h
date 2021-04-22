@@ -79,8 +79,6 @@
   * 
   * After running the DCS Preprocessor, integer codes should be generated for each
   * event registered.
-  * 
-  * \todo Create a alias field for events
   *
   * Examples:
   * \code{.cpp}
@@ -100,18 +98,21 @@
 #ifdef API_EXPORT
 /**
  * \brief Defines the export interface acessible via the dll-interface.
- * \todo Do not define API for Cmake's STATIC lib configuration
- * \todo Use Boost.Python to export to python via ctypes
+ * Only important for SHARED LIB  Compile Mode.
  */
 #define DCS_API __declspec(dllexport)
 #else
 /**
  * \brief Defines the export interface acessible via the dll-interface.
- * \todo Do not define API for Cmake's STATIC lib configuration
+ * Only important for SHARED LIB  Compile Mode.
  */
 #define DCS_API __declspec(dllimport)
 #endif
 #else
+/**
+ * \brief Defines the export interface acessible via the dll-interface.
+ * Only important for SHARED LIB  Compile Mode.
+ */
 #define DCS_API
 #endif
 
@@ -123,7 +124,6 @@
  * This is used to expose certain internal features for testing, 
  * declarations with this specifier will not be exported to the
  * final built shared library.
- * \todo Do not define API for Cmake's STATIC lib configuration
  */
 #define DCS_INTERNAL_TEST DCS_API
 #else
@@ -133,7 +133,6 @@
  * This is used to expose certain internal features for testing,
  * declarations with this specifier will not be exported to the
  * final built shared library.
- * \todo Do not define API for Cmake's STATIC lib configuration
  */
 #define DCS_INTERNAL_TEST
 #endif

@@ -24,7 +24,7 @@ namespace DCS
 {
 	/**
 	 * \internal.
-	 * \brief %Serial Control.
+	 * \brief %Serial %Control.
 	 */
 	namespace Serial
 	{
@@ -87,7 +87,7 @@ namespace DCS
 
 	/**
 	 * \internal
-	 * \brief USB Control.
+	 * \brief USB %Control.
 	 * 
 	 * This module is reverse engineered from the PMC8742's DLL (usbdll.dll).
 	 * Found a link with the windows system native usb driver controler, WinUsb.dll.

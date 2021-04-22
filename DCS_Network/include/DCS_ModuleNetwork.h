@@ -136,7 +136,6 @@ namespace DCS
 
 			/**
 			 * \brief Stops the client thread on a established connection (Forces disconnect).
-			 * \todo Stopping the client thread while data is being transfered loops inf on the client.
 			 * \param connection The connection between server and client that is currently active.
 			 */
 			DCS_API void StopThread(Socket connection);
@@ -169,10 +168,6 @@ namespace DCS
 		 * 
 		 * All the data is assumed to be in the same byte-order as the machine. As tought this code will not work if host and client
 		 * are of different endianness. Being most systems x86_64 this should not pose a problem for a simple system.
-		 * 
-		 * \todo Convert everything to network byte-order (big endian)
-		 * 
-		 * \todo Update socket examples
 		 */
 		namespace Message
 		{

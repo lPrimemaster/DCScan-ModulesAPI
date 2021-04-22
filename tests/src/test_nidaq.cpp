@@ -22,7 +22,6 @@ int main()
 
     if(DCS::Network::Client::StartThread(c))
     {
-
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         unsigned char buffer[4096];
 

@@ -17,8 +17,6 @@
  * 
  * Also contains library common code.
  * 
- * \todo Make the String class callable with a C-interface (for python eg.)
- * 
  * \author Cesar Godinho
  *
  * \version 1.0
@@ -270,7 +268,6 @@ namespace DCS
 
 	/**
 	 * \brief Timing related utilities.
-	 * \todo Refactor codebase to classes
 	 */
 	namespace Timer
 	{

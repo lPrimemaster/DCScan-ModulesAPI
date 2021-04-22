@@ -14,24 +14,67 @@
  * \date $Date: 2021/04/13$
  */
 
+// TODO : Refactor internal API calls to the NIDAQmx. Specifcally InternalTask.
 namespace DCS
 {
     namespace DAQ
     {
+        /**
+         * \internal
+         * \brief Forward declare the NIDAQmx TaskHandle opaque type. 
+         */
         typedef void* TaskHandle;
 
+        /**
+         * \internal
+         * \brief Internally checks for n voltage data points.
+         * 
+         * \param taskHandle NIDAQmx handle.
+         * \param everyNsamplesEventType NIDAQmx event type.
+         * \param nSamples Number of samples to call recurring upon.
+         * \param callbackData Back-end custom data passing to the NIDAQmx thread.
+         * \return DCS::i32 Returns 0 upon no error.
+         */
         DCS_REGISTER_EVENT
         DCS::i32 VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData);
 
+        /**
+         * \internal
+         * \brief Internally checks for n voltage data points.
+         * \todo Implement.
+         * \param totalCount Total counts got from the NIDAQmx since counter task start.
+         * \param diffCount Count difference from last emission of the event.
+         * \return DCS::i32 Returns 0 upon no error.
+         */
+        DCS_REGISTER_EVENT
+        DCS::i32 CounterEvent(DCS::u64 totalCount, DCS::u64 diffCount);
+
+        /**
+         * \internal
+         * \brief NIDAQmx internal API onData callback.
+         */
         typedef DCS::i32 (*NIDataCallback)(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData); 
+
+        /**
+         * \internal
+         * \brief NIDAQmx internal API onError callback.
+         */
         typedef DCS::i32 (*NIErrorCallback)(TaskHandle taskHandle, DCS::i32 status, void *callbackData);
         
+        /**
+         * \internal
+         * \brief Stores channel information for later configuration.
+         */
         struct DCS_INTERNAL_TEST InternalChannel
         {
             ChannelType type;
             ChannelRef ref;
         };
 
+        /**
+         * \internal
+         * \brief Stores task information for later configuration.
+         */
         struct DCS_INTERNAL_TEST InternalTask
         {
             TaskHandle ni_opaque_handler;
@@ -45,7 +88,6 @@ namespace DCS
             NIDataCallback acq_callback;
             NIErrorCallback err_callback = nullptr;
 
-            // TODO : Allocate data via some sort of pool for the caller thread to use safely
             DCS::u8* taskData = nullptr;
 
             DCS::Utils::String name;
@@ -53,16 +95,40 @@ namespace DCS
             std::map<const char*, InternalChannel> vchannels;
         };
 
+        /**
+         * \internal
+         * \brief Create a task via NIDAQmx API.
+         */
         DCS_INTERNAL_TEST void CreateTask(InternalTask* t, const char* name);
 
+        /**
+         * \internal
+         * \brief Setup a task (timing, channels, etc.) via NIDAQmx API.
+         */
         DCS_INTERNAL_TEST void SetupTask(InternalTask* t, const char* clk_source, DCS::f64 clk, NIDataCallback func);
 
+        /**
+         * \internal
+         * \brief Add a channel to a task via NIDAQmx API.
+         */
         DCS_INTERNAL_TEST void AddTaskChannel(InternalTask* t, const char* channel_name, ChannelType type, ChannelRef ref, ChannelLimits lims, const char* virtual_channel_name = nullptr);
 
+        /**
+         * \internal
+         * \brief Tell the NIDAQmx API to start the task.
+         */
         DCS_INTERNAL_TEST void StartTask(InternalTask* t);
 
+        /**
+         * \internal
+         * \brief Tell the NIDAQmx API to stop the task.
+         */
         DCS_INTERNAL_TEST void StopTask(InternalTask* t);
 
+        /**
+         * \internal
+         * \brief Tell the NIDAQmx API to clear the task.
+         */
         DCS_INTERNAL_TEST void ClearTask(InternalTask* t);
 
     }
