@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['notifyflag',['NotifyFlag',['../namespace_d_c_s_1_1_threading.html#aa09b7d0162989fea2c839e7e00f466aa',1,'DCS::Threading']]]
+  ['operation',['Operation',['../namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3',1,'DCS::Network::Message']]],
+  ['options',['Options',['../class_d_c_s_1_1_utils_1_1_logger.html#ae34ad54d6c13829913a8082aecf111fe',1,'DCS::Utils::Logger']]]
 ];

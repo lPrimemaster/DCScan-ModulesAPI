@@ -5,6 +5,5 @@ var searchData=
   ['newtask',['NewTask',['../group__calls.html#ga56d91ca2e6dc104ea8c547a6b8fdea23',1,'DCS::DAQ']]],
   ['no_5fop',['NO_OP',['../_d_c_s___network_2include_2internal_8h.html#a43ee249e304e084ebc44226769eff196',1,'NO_OP():&#160;internal.h'],['../namespace_d_c_s_1_1_network_1_1_message.html#aa7033fbcfdb550b00135a10d3ebc45d3a14b52fa379dea9171c3eb958d7fa5795',1,'DCS::Network::Message::NO_OP()']]],
   ['none',['None',['../namespace_d_c_s_1_1_d_a_q.html#ab8fdbfa4b678ea4189df79b2649ab10ca6adf97f83acf6453d4a6a4b1070f3754',1,'DCS::DAQ::None()'],['../namespace_d_c_s_1_1_d_a_q.html#a14db22532f39b49c1df48a874e506411a6adf97f83acf6453d4a6a4b1070f3754',1,'DCS::DAQ::None()']]],
-  ['norefsingleended',['NoRefSingleEnded',['../namespace_d_c_s_1_1_d_a_q.html#a14db22532f39b49c1df48a874e506411a940b0c3e2941d262844b6dc3fd3c8987',1,'DCS::DAQ']]],
-  ['notifyflag',['NotifyFlag',['../namespace_d_c_s_1_1_threading.html#aa09b7d0162989fea2c839e7e00f466aa',1,'DCS::Threading']]]
+  ['norefsingleended',['NoRefSingleEnded',['../namespace_d_c_s_1_1_d_a_q.html#a14db22532f39b49c1df48a874e506411a940b0c3e2941d262844b6dc3fd3c8987',1,'DCS::DAQ']]]
 ];
