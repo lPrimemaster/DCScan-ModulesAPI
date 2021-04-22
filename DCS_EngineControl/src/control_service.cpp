@@ -41,7 +41,7 @@ void DCS::Control::StartServices()
 			char response[256];
 			DWORD rbSize;
 
-			// FIXME : This as the issue of blocking operations on one target if the other is waiting for something.
+			// FIXME : This has the issue of blocking operations on one target if the other is waiting for something.
 			// Create a working thread for each instead.
 			while (control_service_running.load())
 			{

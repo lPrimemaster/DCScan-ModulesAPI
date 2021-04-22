@@ -13,7 +13,7 @@
  * 
  * \internal
  * 
- * \brief Internal file eposing multiple functionalities (see specific documentation of members in this file \todo Doc members here.
+ * \brief Internal file eposing multiple functionalities (see specific documentation of members in this file.
  *
  * \author Cesar Godinho
  *
@@ -25,22 +25,6 @@ namespace DCS
 {
 	namespace Threading
 	{
-		/**
-		 * \todo ???
-		 */
-		struct TSignal
-		{
-
-		};
-
-		/**
-		 * \todo ???
-		 */
-		enum NotifyFlag
-		{
-			START
-		};
-
 		/**
 		 * \internal
 		 * \brief A struct that holds data for a worker thread pool.

@@ -144,7 +144,7 @@ namespace DCS {
             return sizeof(u8);
         }
 
-		// NOTE : This might fail
+		// HACK : GetEventCallback might fail in index referencing.
         static DCS_API const EventCallbackFunc GetEventCallback(u8 id)
         {
             if (id <= MAX_SUB)
@@ -165,7 +165,7 @@ namespace DCS {
 			return evt_named_func.at(func);
 		}
 
-		// NOTE : This might fail
+		// HACK : GetEventUserData might fail in index referencing.
 		static DCS_API u8* GetEventUserData(u8 id)
 		{
 			if (id <= MAX_SUB)
