@@ -87,7 +87,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>DCS</b></li><li class="navelem"><b>DAQ</b></li><li class="navelem"><a class="el" href="struct_d_c_s_1_1_d_a_q_1_1_task_settings.html">TaskSettings</a></li>  </ul>
+<li class="navelem"><b>DCS</b></li><li class="navelem"><a class="el" href="namespace_d_c_s_1_1_d_a_q.html">DAQ</a></li><li class="navelem"><a class="el" href="struct_d_c_s_1_1_d_a_q_1_1_task_settings.html">TaskSettings</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -98,35 +98,46 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">DCS::DAQ::TaskSettings Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Struct used to transfer all the relevant task settings to the server on task creation.  
+ <a href="struct_d_c_s_1_1_d_a_q_1_1_task_settings.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_d_c_s___module_acquisition_8h_source.html">DCS_ModuleAcquisition.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a776d5b222c1f8c14a84829ec5dba270a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a776d5b222c1f8c14a84829ec5dba270a"></a>
-<a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a>&#160;</td><td class="memItemRight" valign="bottom"><b>task_name</b> = { &quot;&quot; }</td></tr>
+<a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_d_a_q_1_1_task_settings.html#a776d5b222c1f8c14a84829ec5dba270a">task_name</a> = { &quot;&quot; }</td></tr>
+<tr class="memdesc:a776d5b222c1f8c14a84829ec5dba270a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The name to give to the task. <br /></td></tr>
 <tr class="separator:a776d5b222c1f8c14a84829ec5dba270a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e438fd82224026d40ef3981e2b09ab3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4e438fd82224026d40ef3981e2b09ab3"></a>
-<a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a>&#160;</td><td class="memItemRight" valign="bottom"><b>channel_name</b> [5] = { &quot;&quot; }</td></tr>
+<a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_d_a_q_1_1_task_settings.html#a4e438fd82224026d40ef3981e2b09ab3">channel_name</a> [5] = { &quot;&quot; }</td></tr>
+<tr class="memdesc:a4e438fd82224026d40ef3981e2b09ab3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The channels the task reads/writes from/to. Max 5. <br /></td></tr>
 <tr class="separator:a4e438fd82224026d40ef3981e2b09ab3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:accc8ee23c167d71495f1663701cc3184"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="accc8ee23c167d71495f1663701cc3184"></a>
-ChannelType&#160;</td><td class="memItemRight" valign="bottom"><b>channel_type</b> = ChannelType::None</td></tr>
+<a class="el" href="namespace_d_c_s_1_1_d_a_q.html#ab8fdbfa4b678ea4189df79b2649ab10c">ChannelType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_d_a_q_1_1_task_settings.html#accc8ee23c167d71495f1663701cc3184">channel_type</a> = <a class="el" href="namespace_d_c_s_1_1_d_a_q.html#ab8fdbfa4b678ea4189df79b2649ab10ca6adf97f83acf6453d4a6a4b1070f3754">ChannelType::None</a></td></tr>
+<tr class="memdesc:accc8ee23c167d71495f1663701cc3184"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the channels. <br /></td></tr>
 <tr class="separator:accc8ee23c167d71495f1663701cc3184"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aacdf64c3aac98abb9772cecae869bcbf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aacdf64c3aac98abb9772cecae869bcbf"></a>
-ChannelRef&#160;</td><td class="memItemRight" valign="bottom"><b>channel_ref</b> [5] = { ChannelRef::None }</td></tr>
+<a class="el" href="namespace_d_c_s_1_1_d_a_q.html#a14db22532f39b49c1df48a874e506411">ChannelRef</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_d_a_q_1_1_task_settings.html#aacdf64c3aac98abb9772cecae869bcbf">channel_ref</a> [5] = { <a class="el" href="namespace_d_c_s_1_1_d_a_q.html#ab8fdbfa4b678ea4189df79b2649ab10ca6adf97f83acf6453d4a6a4b1070f3754">ChannelRef::None</a> }</td></tr>
+<tr class="memdesc:aacdf64c3aac98abb9772cecae869bcbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">The reference type for each channel. Max 5. <br /></td></tr>
 <tr class="separator:aacdf64c3aac98abb9772cecae869bcbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f66f3ce692ecf83616ade45d1eb764b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8f66f3ce692ecf83616ade45d1eb764b"></a>
-<a class="el" href="struct_d_c_s_1_1_d_a_q_1_1_channel_limits.html">ChannelLimits</a>&#160;</td><td class="memItemRight" valign="bottom"><b>channel_lim</b> [5]</td></tr>
+<a class="el" href="struct_d_c_s_1_1_d_a_q_1_1_channel_limits.html">ChannelLimits</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_d_a_q_1_1_task_settings.html#a8f66f3ce692ecf83616ade45d1eb764b">channel_lim</a> [5]</td></tr>
+<tr class="memdesc:a8f66f3ce692ecf83616ade45d1eb764b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The limit for each channel, if applicable. Max 5. <br /></td></tr>
 <tr class="separator:a8f66f3ce692ecf83616ade45d1eb764b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a583af71c2217e5ef4c6908b906fcdc45"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a583af71c2217e5ef4c6908b906fcdc45"></a>
-<a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a>&#160;</td><td class="memItemRight" valign="bottom"><b>clock</b> = { &quot;OnBoardClock&quot; }</td></tr>
+<a class="el" href="struct_d_c_s_1_1_utils_1_1_basic_string.html">DCS::Utils::BasicString</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_d_a_q_1_1_task_settings.html#a583af71c2217e5ef4c6908b906fcdc45">clock</a> = { &quot;OnBoardClock&quot; }</td></tr>
+<tr class="memdesc:a583af71c2217e5ef4c6908b906fcdc45"><td class="mdescLeft">&#160;</td><td class="mdescRight">The clock the task will be timed upon, if applicable. <br /></td></tr>
 <tr class="separator:a583af71c2217e5ef4c6908b906fcdc45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4304db33e5907c5cf0ab1df103e31983"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4304db33e5907c5cf0ab1df103e31983"></a>
-<a class="el" href="_d_c_s___module_utils_8h.html#a04a12932623412e50e1cae85bd19af57">DCS::f64</a>&#160;</td><td class="memItemRight" valign="bottom"><b>clock_rate</b> = 10000</td></tr>
+<a class="el" href="_d_c_s___module_utils_8h.html#a04a12932623412e50e1cae85bd19af57">DCS::f64</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_d_c_s_1_1_d_a_q_1_1_task_settings.html#a4304db33e5907c5cf0ab1df103e31983">clock_rate</a> = 10000</td></tr>
+<tr class="memdesc:a4304db33e5907c5cf0ab1df103e31983"><td class="mdescLeft">&#160;</td><td class="mdescRight">The clock rate to be set. <br /></td></tr>
 <tr class="separator:a4304db33e5907c5cf0ab1df103e31983"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0f819357c6d546e52e410d098f926de"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa0f819357c6d546e52e410d098f926de"></a>
-<a class="el" href="_d_c_s___module_utils_8h.html#a0075e27a0ece07f1d9cf36c9109584ae">DCS::u64</a>&#160;</td><td class="memItemRight" valign="bottom"><b>samples_per_event</b> = 1000</td></tr>
-<tr class="separator:aa0f819357c6d546e52e410d098f926de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this struct was generated from the following file:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Struct used to transfer all the relevant task settings to the server on task creation. </p>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>DCS_Acquisition/include/<a class="el" href="_d_c_s___module_acquisition_8h_source.html">DCS_ModuleAcquisition.h</a></li>
 </ul>
 </div><!-- contents -->

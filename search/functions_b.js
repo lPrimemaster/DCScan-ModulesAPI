@@ -7,10 +7,14 @@ var searchData=
   ['setupevent',['SetupEvent',['../class_d_c_s_1_1_registry.html#af228b44a3fc656d3abcb33882abeb978',1,'DCS::Registry']]],
   ['size',['size',['../class_d_c_s_1_1_utils_1_1_string.html#ab9172edee1ff0e8ea4f7edcbcda0f79f',1,'DCS::Utils::String']]],
   ['spin',['Spin',['../namespace_d_c_s_1_1_c_l_i.html#a67e6404a60d30007c04aa9986d96bcb5',1,'DCS::CLI']]],
+  ['startnamedtask',['StartNamedTask',['../group__calls.html#ga80e28a997ca3a59f1058c14cf79a060d',1,'DCS::DAQ']]],
   ['startservices',['StartServices',['../namespace_d_c_s_1_1_control.html#aa6cf401da3b0fe6b80958dc3cc487fea',1,'DCS::Control']]],
+  ['starttask',['StartTask',['../group__calls.html#gae9630c171d15f53345feec21a5d34b9d',1,'DCS::DAQ']]],
   ['startthread',['StartThread',['../namespace_d_c_s_1_1_network_1_1_server.html#af40c8dbbdd48e95f28dc1f87ad6064cc',1,'DCS::Network::Server::StartThread()'],['../namespace_d_c_s_1_1_network_1_1_client.html#aa65aedb936b03232808070accccd7a65',1,'DCS::Network::Client::StartThread()']]],
   ['stoplistening',['StopListening',['../namespace_d_c_s_1_1_network_1_1_server.html#ab8c93e8a3e623584e74ad355223ea5d3',1,'DCS::Network::Server']]],
+  ['stopnamedtask',['StopNamedTask',['../group__calls.html#gadd52981e253689fde4773290329129d2',1,'DCS::DAQ']]],
   ['stopservices',['StopServices',['../namespace_d_c_s_1_1_control.html#a13e193dd3f54eaccba73d8bfb8ccf520',1,'DCS::Control']]],
+  ['stoptask',['StopTask',['../group__calls.html#ga73a5e7fb848ae34f3439cc1b5e1fc55c',1,'DCS::DAQ']]],
   ['stopthread',['StopThread',['../namespace_d_c_s_1_1_network_1_1_server.html#a012a35b8d7ecbdaf52f65fea44df6e75',1,'DCS::Network::Server::StopThread()'],['../namespace_d_c_s_1_1_network_1_1_client.html#a5cfe87ec13fd591d20a45592f62a555b',1,'DCS::Network::Client::StopThread()']]],
   ['string',['String',['../class_d_c_s_1_1_utils_1_1_string.html#a2500ea75abfeb8a6c36fe59594bcfdfa',1,'DCS::Utils::String']]]
 ];

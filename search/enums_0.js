@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['notifyflag',['NotifyFlag',['../namespace_d_c_s_1_1_threading.html#aa09b7d0162989fea2c839e7e00f466aa',1,'DCS::Threading']]]
+  ['channelref',['ChannelRef',['../namespace_d_c_s_1_1_d_a_q.html#a14db22532f39b49c1df48a874e506411',1,'DCS::DAQ']]],
+  ['channeltype',['ChannelType',['../namespace_d_c_s_1_1_d_a_q.html#ab8fdbfa4b678ea4189df79b2649ab10c',1,'DCS::DAQ']]]
 ];

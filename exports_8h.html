@@ -108,7 +108,8 @@ Macros</h2></td></tr>
 <tr class="memdesc:a414e39cabf37e22214d38a46141c9cef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Append this definition before function declarations (or anywhere in the code) to register a tcp connection event.  <a href="#a414e39cabf37e22214d38a46141c9cef">More...</a><br /></td></tr>
 <tr class="separator:a414e39cabf37e22214d38a46141c9cef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a240a0f4545ac093f1b6795229b386fb8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a240a0f4545ac093f1b6795229b386fb8"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>DCS_API</b></td></tr>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a></td></tr>
+<tr class="memdesc:a240a0f4545ac093f1b6795229b386fb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the export interface acessible via the dll-interface. Only important for SHARED LIB Compile Mode. <br /></td></tr>
 <tr class="separator:a240a0f4545ac093f1b6795229b386fb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a67c09fac060b3dbcd04e20442c9578b2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a></td></tr>
 <tr class="memdesc:a67c09fac060b3dbcd04e20442c9578b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the export interface acessible via the dll-interface applicable for internal functions only.  <a href="#a67c09fac060b3dbcd04e20442c9578b2">More...</a><br /></td></tr>
@@ -126,7 +127,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Defines the export interface acessible via the dll-interface applicable for internal functions only. </p>
-<p>This is used to expose certain internal features for testing, declarations with this specifier will not be exported to the final built shared library. </p><dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Do not define API for Cmake's STATIC lib configuration </dd></dl>
+<p>This is used to expose certain internal features for testing, declarations with this specifier will not be exported to the final built shared library. </p>
 
 </div>
 </div>
@@ -162,7 +163,6 @@ Macros</h2></td></tr>
 
 <p>Append this definition before function declarations (or anywhere in the code) to register a tcp connection event. </p>
 <p>After running the DCS Preprocessor, integer codes should be generated for each event registered.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>Create a alias field for events</dd></dl>
 <p>Examples: </p><div class="fragment"><div class="line"><a class="code" href="exports_8h.html#a414e39cabf37e22214d38a46141c9cef">DCS_REGISTER_EVENT</a></div><div class="line"><span class="keywordtype">void</span> onData(<span class="keywordtype">int</span> x);</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> onData(<span class="keywordtype">int</span> x)</div><div class="line">{</div><div class="line">    <span class="comment">// Emits the the SV_EVT_onData event, passing param x everytime the function onData is called.</span></div><div class="line">    DCS_EMIT_EVT((u8*)&amp;x, <span class="keyword">sizeof</span>(<span class="keywordtype">int</span>));</div><div class="line">}</div></div><!-- fragment --> 
 </div>
 </div>
