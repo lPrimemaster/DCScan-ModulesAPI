@@ -61,8 +61,8 @@
 
 #define SV_RET_VOID 0x0 ///< Indicates a void return type.
 #define SV_RET_DCS_DAQ_Task 0x1 ///< Refers to return type `DCS::DAQ::Task` \ingroup ret_id
-#define SV_RET_DCS_Utils_BasicString 0x2 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id
-#define SV_RET_DCS_u16 0x3 ///< Refers to return type `DCS::u16` \ingroup ret_id
+#define SV_RET_DCS_u16 0x2 ///< Refers to return type `DCS::u16` \ingroup ret_id
+#define SV_RET_DCS_Utils_BasicString 0x3 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id
 
 #define MAX_SUB 0x3
 #define SV_EVT_DCS_DAQ_VoltageEvent 0x1 ///< A event refering to `DCS::DAQ::VoltageEvent` \ingroup evt_id

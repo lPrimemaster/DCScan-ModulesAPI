@@ -30,7 +30,7 @@ DCS::i32 DCS::DAQ::CounterEvent(DCS::u64 totalCount, DCS::u64 diffCount)
     memcpy(buffer       , &totalCount, u64s);
     memcpy(buffer + u64s, &diffCount , u64s);
 
-    DCS_EMIT_EVT(buffer, u64s * 2);
+    DCS_EMIT_EVT(buffer, (i32)u64s * 2);
     return 0;
 }
 

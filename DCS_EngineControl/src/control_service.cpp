@@ -14,17 +14,13 @@ DCS::Coms::CmdBuffer &DCS::Coms::GetCmdBuffer()
 	return cmd_buffer;
 }
 
-void DCS::Control::StartServices()
+void DCS::Control::StartServices(const char* esp301_com, const char* pmc8742_usb)
 {
 	if (control_service_thread == nullptr)
 	{
 		control_service_running.store(true);
 
 		control_service_thread = new std::thread([=]() -> void {
-			// TODO : Change the init_handle and init_usb_handle from hardcoded port names for COM and USB.
-			/*char com_port[16];
-			Serial::comnumber_to_string(com_port, 3);*/
-
 			Serial::SerialArgs serial_args;
 
 			serial_args.baudRate = 921600;	   // 900 kbps
@@ -34,9 +30,9 @@ void DCS::Control::StartServices()
 			serial_args.stopBits = ONESTOPBIT; // One stop bit
 
 			// Open both ports for communication
-			HANDLE esp301_handle = Serial::init_handle("COM3", GENERIC_READ | GENERIC_WRITE, serial_args);
+			HANDLE esp301_handle = Serial::init_handle(esp301_com, GENERIC_READ | GENERIC_WRITE, serial_args);
 
-			USerial::USBIntHandle pmc8742_handle = USerial::init_usb_handle("104D-4000");
+			USerial::USBIntHandle pmc8742_handle = USerial::init_usb_handle(pmc8742_usb);
 
 			char response[256];
 			DWORD rbSize;

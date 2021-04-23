@@ -7,9 +7,9 @@ int main()
     DCS_START_TEST;
 
     DCS::DAQ::TaskSettings settings;
-
+    
     settings.task_name = { "MyTask" };
-
+    
     settings.channel_name[0] = { "PXI_Slot2/ai0" };
     settings.channel_type    = DCS::DAQ::ChannelType::Voltage;
     settings.channel_ref[0]  = DCS::DAQ::ChannelRef::Differential;

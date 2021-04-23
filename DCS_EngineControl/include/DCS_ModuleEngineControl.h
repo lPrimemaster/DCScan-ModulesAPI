@@ -11,7 +11,7 @@
  *
  * \author Cesar Godinho
  *
- * \version 1.0 $Revision: 1.5 $
+ * \version 1.0
  *
  * \date $Date: 2020/10/12$
  */
@@ -38,10 +38,12 @@ namespace DCS
 		 * \brief Starts the COM and USB port services.
 		 * 
 		 * This creates a thread responsible for sending commands for all the targets.
+		 * \param esp301_com  The com port (or virtual com port) connecting the pc and the ESP301. Default = "COM3".
+		 * \param pmc8742_usb The usb vid/pid of the PMC8742 controller. Default = "104D-4000".
 		 * 
 		 * \todo Create a thread for each target. Allowing for simultaneous operation of the stages.
 		 */
-		DCS_API void StartServices();
+		DCS_API void StartServices(const char* esp301_com = "COM3", const char* pmc8742_usb = "104D-4000");
 
 		/**
 		 * \brief Stops the COM and USB port services.

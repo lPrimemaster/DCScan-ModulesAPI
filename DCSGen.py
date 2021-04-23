@@ -482,7 +482,7 @@ def getTokenSymbols(all_files):
 cFiles = cleanFiles()
 func, return_type, header_def, args_name, evt_name, evt_func = getTokenSymbols(cFiles)
 
-pp.pprint(cFiles)
+#pp.pprint(cFiles)
 
 print('Registering functions:')
 pp.pprint('Signature: {0}'.format(func))

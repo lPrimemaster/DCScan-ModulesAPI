@@ -67,7 +67,7 @@ void DCS::DAQ::SetupTask(InternalTask* t, const char* clk_source, DCS::f64 clk, 
         LOG_MESSAGE("Setting the task clock rate to max OnBoardClock rate: %lf", maxrate);
     }
 
-    // TODO : Make these arguments
+    // FIXME : NIDAQmx API - Make these arguments
     t->clock_edge  = DAQmx_Val_Rising;
     t->clock_rate  = clk > maxrate ? maxrate : clk;
     t->sample_mode = DAQmx_Val_ContSamps;
