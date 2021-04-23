@@ -111,9 +111,9 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aa6cf401da3b0fe6b80958dc3cc487fea"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_control.html#aa6cf401da3b0fe6b80958dc3cc487fea">StartServices</a> ()</td></tr>
-<tr class="memdesc:aa6cf401da3b0fe6b80958dc3cc487fea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the COM and USB port services.  <a href="#aa6cf401da3b0fe6b80958dc3cc487fea">More...</a><br /></td></tr>
-<tr class="separator:aa6cf401da3b0fe6b80958dc3cc487fea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b2eb3a427f4dd70ef4f2981a6990095"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_control.html#a4b2eb3a427f4dd70ef4f2981a6990095">StartServices</a> (const char *esp301_com=&quot;COM3&quot;, const char *pmc8742_usb=&quot;104D-4000&quot;)</td></tr>
+<tr class="memdesc:a4b2eb3a427f4dd70ef4f2981a6990095"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the COM and USB port services.  <a href="#a4b2eb3a427f4dd70ef4f2981a6990095">More...</a><br /></td></tr>
+<tr class="separator:a4b2eb3a427f4dd70ef4f2981a6990095"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13e193dd3f54eaccba73d8bfb8ccf520"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_control.html#a13e193dd3f54eaccba73d8bfb8ccf520">StopServices</a> ()</td></tr>
 <tr class="memdesc:a13e193dd3f54eaccba73d8bfb8ccf520"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the COM and USB port services.  <a href="#a13e193dd3f54eaccba73d8bfb8ccf520">More...</a><br /></td></tr>
 <tr class="separator:a13e193dd3f54eaccba73d8bfb8ccf520"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,21 +159,38 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="aa6cf401da3b0fe6b80958dc3cc487fea"></a>
+<a class="anchor" id="a4b2eb3a427f4dd70ef4f2981a6990095"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void DCS::Control::StartServices </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>esp301_com</em> = <code>&quot;COM3&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>pmc8742_usb</em> = <code>&quot;104D-4000&quot;</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Starts the COM and USB port services. </p>
-<p>This creates a thread responsible for sending commands for all the targets.</p>
+<p>This creates a thread responsible for sending commands for all the targets. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">esp301_com</td><td>The com port (or virtual com port) connecting the pc and the ESP301. Default = "COM3". </td></tr>
+    <tr><td class="paramname">pmc8742_usb</td><td>The usb vid/pid of the PMC8742 controller. Default = "104D-4000".</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>Create a thread for each target. Allowing for simultaneous operation of the stages. </dd></dl>
 
 </div>

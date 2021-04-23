@@ -13,7 +13,7 @@ var searchData=
   ['socket',['Socket',['../namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74',1,'DCS::Network']]],
   ['spin',['Spin',['../namespace_d_c_s_1_1_c_l_i.html#a67e6404a60d30007c04aa9986d96bcb5',1,'DCS::CLI']]],
   ['startnamedtask',['StartNamedTask',['../group__calls.html#ga80e28a997ca3a59f1058c14cf79a060d',1,'DCS::DAQ']]],
-  ['startservices',['StartServices',['../namespace_d_c_s_1_1_control.html#aa6cf401da3b0fe6b80958dc3cc487fea',1,'DCS::Control']]],
+  ['startservices',['StartServices',['../namespace_d_c_s_1_1_control.html#a4b2eb3a427f4dd70ef4f2981a6990095',1,'DCS::Control']]],
   ['starttask',['StartTask',['../group__calls.html#gae9630c171d15f53345feec21a5d34b9d',1,'DCS::DAQ']]],
   ['startthread',['StartThread',['../namespace_d_c_s_1_1_network_1_1_server.html#af40c8dbbdd48e95f28dc1f87ad6064cc',1,'DCS::Network::Server::StartThread()'],['../namespace_d_c_s_1_1_network_1_1_client.html#aa65aedb936b03232808070accccd7a65',1,'DCS::Network::Client::StartThread()']]],
   ['stoplistening',['StopListening',['../namespace_d_c_s_1_1_network_1_1_server.html#ab8c93e8a3e623584e74ad355223ea5d3',1,'DCS::Network::Server']]],
