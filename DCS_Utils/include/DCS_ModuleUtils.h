@@ -131,8 +131,11 @@ namespace DCS
 		 */
 		class Logger
 		{
+		public:
+			enum class Verbosity : int;
 		private:
-			typedef void (*WriteNotifyCallback)(DCS::Utils::String string, void*);
+			
+			typedef void (*WriteNotifyCallback)(DCS::Utils::String string, Verbosity v, void*);
 
 		public:
 			/**
@@ -213,6 +216,11 @@ namespace DCS
 			 * \brief Changes Logger Options.
 			 */
 			static DCS_API void Settings(Options opt);
+
+			/**
+			 * \brief Changes the verbosity level. 
+			 */
+			static DCS_API void ChangeVerbosity(Verbosity v);
 
 		private:
 			static void WriteData(std::string buffer[], Verbosity v);

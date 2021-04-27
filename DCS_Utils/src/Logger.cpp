@@ -53,11 +53,11 @@ void DCS::Utils::Logger::WriteData(std::string buffer[], Verbosity v)
 		{
 			if (obj != nullptr)
 			{
-				writenotify(buffer[0].c_str(), obj);
+				writenotify(buffer[0].c_str(), v, obj);
 			}
 			else
 			{
-				writenotify(buffer[0].c_str(), nullptr);
+				writenotify(buffer[0].c_str(), v, nullptr);
 			}
 		}
 	}
@@ -65,13 +65,21 @@ void DCS::Utils::Logger::WriteData(std::string buffer[], Verbosity v)
 	// If there is a file to write the data to...
 	if (handle)
 	{
-		fwrite((buffer[0] + '\n').c_str(), sizeof(char), buffer[0].size()+1, handle);
+		const char* data = (buffer[0] + '\n').c_str();
+		fwrite(data, sizeof(char), strlen(data), handle);
 	}
 }
 
 void DCS::Utils::Logger::Settings(Options opt)
 {
+	const std::lock_guard<std::mutex> lock(_log_mtx);
 	options = opt;
+}
+
+void DCS::Utils::Logger::ChangeVerbosity(Verbosity v)
+{
+	const std::lock_guard<std::mutex> lock(_log_mtx);
+	verbosity_level = v;
 }
 
 void DCS::Utils::Logger::Init(Verbosity level, DCS::Utils::String file)
@@ -204,5 +212,6 @@ void DCS::Utils::Logger::Critical(const char* file, const char* msg, ...)
 		"[" + timestamp() + "][" + file + "][CRITICAL]: " + buffer, // Color Stripped buffer
 		LOGGER_RED + s[0] + LOGGER_DEFAULT // Color Normal buffer
 	};
+
 	WriteData(s, Verbosity::CRITICAL);
 }
