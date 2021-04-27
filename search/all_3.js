@@ -1,6 +1,7 @@
 var searchData=
 [
   ['c_5fstr',['c_str',['../class_d_c_s_1_1_utils_1_1_string.html#ad191039e197ce19cb665d59027a2b4bb',1,'DCS::Utils::String']]],
+  ['changeverbosity',['ChangeVerbosity',['../class_d_c_s_1_1_utils_1_1_logger.html#a00116a73105d4f78eb73099b35bf7e16',1,'DCS::Utils::Logger']]],
   ['channel_5flim',['channel_lim',['../struct_d_c_s_1_1_d_a_q_1_1_task_settings.html#a8f66f3ce692ecf83616ade45d1eb764b',1,'DCS::DAQ::TaskSettings']]],
   ['channel_5fname',['channel_name',['../struct_d_c_s_1_1_d_a_q_1_1_task_settings.html#a4e438fd82224026d40ef3981e2b09ab3',1,'DCS::DAQ::TaskSettings']]],
   ['channel_5fref',['channel_ref',['../struct_d_c_s_1_1_d_a_q_1_1_task_settings.html#aacdf64c3aac98abb9772cecae869bcbf',1,'DCS::DAQ::TaskSettings']]],
