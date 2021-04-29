@@ -67,4 +67,35 @@ namespace DCS
 		 */
 		DCS_INTERNAL_TEST void DestroyPool(TPool* pool);
 	}
+
+	/**
+	 * \internal 
+	 * \brief Database holding usernames, passwords, permissions, etc.
+	 * 
+	 * The database files and functions are not thread-safe.
+	 */
+	namespace DB
+	{
+#pragma pack( push )
+		struct User
+		{
+			char u[32];
+			char p[32];
+		};
+#pragma pack( pop )
+
+		DCS_INTERNAL_TEST void LoadDefaultDB();
+
+		DCS_INTERNAL_TEST void CloseDB();
+
+		DCS_INTERNAL_TEST void LoadUsers();
+
+		DCS_INTERNAL_TEST void AddUser(User usr);
+
+		DCS_INTERNAL_TEST void RemoveUserByUsername(const char* username);
+
+		DCS_INTERNAL_TEST u64  FindUserByUsername(const char* username);
+
+		DCS_INTERNAL_TEST User GetUser(const char* username);
+	}
 }

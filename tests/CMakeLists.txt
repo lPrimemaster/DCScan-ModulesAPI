@@ -23,6 +23,7 @@ newtest(message test_message)
 newtest(serialcom test_serialcom)
 newtest(usb test_usb)
 newtest(nidaq test_nidaq)
+newtest(db test_db)
 
 
 # set(BNAME ${CMAKE_BINARY_DIR}/DCS_Utils/Release/DCSModuleUtils.dll)

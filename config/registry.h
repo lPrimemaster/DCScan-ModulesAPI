@@ -54,9 +54,9 @@
 #define SV_CALL_DCS_Control_IssueGenericCommandResponse 0xa ///< A call to `DCS::Control::IssueGenericCommandResponse` \ingroup calls_id
 
 #define SV_ARG_NULL 0x0 ///< Indicates a non existant argument [Not to use].
-#define SV_ARG_DCS_DAQ_Task 0x1 ///< Refers to argument `DCS::DAQ::Task` \ingroup args_id
-#define SV_ARG_DCS_DAQ_TaskSettings 0x2 ///< Refers to argument `DCS::DAQ::TaskSettings` \ingroup args_id
-#define SV_ARG_DCS_Utils_BasicString 0x3 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
+#define SV_ARG_DCS_DAQ_TaskSettings 0x1 ///< Refers to argument `DCS::DAQ::TaskSettings` \ingroup args_id
+#define SV_ARG_DCS_Utils_BasicString 0x2 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
+#define SV_ARG_DCS_DAQ_Task 0x3 ///< Refers to argument `DCS::DAQ::Task` \ingroup args_id
 #define SV_ARG_DCS_Control_UnitTarget 0x4 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
 
 #define SV_RET_VOID 0x0 ///< Indicates a void return type.
