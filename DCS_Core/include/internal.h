@@ -98,4 +98,9 @@ namespace DCS
 
 		DCS_INTERNAL_TEST User GetUser(const char* username);
 	}
+
+	namespace Auth
+	{
+
+	}
 }

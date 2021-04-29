@@ -13,12 +13,19 @@ add_library(DCSModuleCore ${LIB_TYPE}
   src/memory.cpp
   src/threading.cpp
   src/db.cpp
+  src/auth.cpp
   ../config/exports.h
   include/internal.h
   include/DCS_ModuleCore.h
   )
 
-target_link_libraries(DCSModuleCore DCSModuleUtils)
+#list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/")
+
+set(OPENSSL_ROOT_DIR "C:/Program Files (x86)/openssl")
+find_package(OpenSSL REQUIRED)
+include_directories("${OPENSSL_INCLUDE_DIR}")
+
+target_link_libraries(DCSModuleCore DCSModuleUtils "${OPENSSL_LIBRARIES}")
 
 set_target_properties(DCSModuleCore PROPERTIES
   PUBLIC_HEADER "include/DCS_ModuleCore.h"
