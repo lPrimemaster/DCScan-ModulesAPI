@@ -8,6 +8,8 @@
 #include <functional>
 #include "../../DCS_Utils/include/DCS_ModuleUtils.h"
 
+#define DCS_SHA256_DIGEST_LENGTH 32
+
 /**
  * @file
  * 
@@ -74,7 +76,7 @@ namespace DCS
 	 * 
 	 * The database files and functions are not thread-safe.
 	 */
-	namespace DB
+	namespace DB // TODO : Document
 	{
 #pragma pack( push )
 		struct User
@@ -99,8 +101,16 @@ namespace DCS
 		DCS_INTERNAL_TEST User GetUser(const char* username);
 	}
 
-	namespace Auth
+	namespace Auth // TODO : Document
 	{
+		DCS_INTERNAL_TEST void InitCryptoRand();
 
+		DCS_INTERNAL_TEST void GenerateSalt(DCS::u8 salt[8]);
+
+		DCS_INTERNAL_TEST void GenerateRandSafeIV128(DCS::u8 iv[16]);
+
+		DCS_INTERNAL_TEST void SHA256Str(char* string, DCS::u8 hash[DCS_SHA256_DIGEST_LENGTH]);
+
+		DCS_INTERNAL_TEST void HexStringifyBytes(char* out, DCS::u8* hash, DCS::u64 size);
 	}
 }
