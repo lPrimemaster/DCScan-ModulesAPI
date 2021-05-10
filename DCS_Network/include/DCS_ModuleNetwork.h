@@ -128,6 +128,15 @@ namespace DCS
 			DCS_API Socket Connect(DCS::Utils::String host, i32 port);
 
 			/**
+			 * \brief Authenticates a valid connection. Call after Connect.
+			 * 
+			 * \param socket The connection's socket.
+			 * \param username Username.
+			 * \param password Password.
+			 */
+			DCS_API void Authenticate(Socket socket, DCS::Utils::String username, DCS::Utils::String password);
+
+			/**
 			 * \brief Starts the client thread on a established connection.
 			 * \param connection The connection between server and client returned by Connect(DCS::Utils::String, i32).
 			 * \return Thread init success.

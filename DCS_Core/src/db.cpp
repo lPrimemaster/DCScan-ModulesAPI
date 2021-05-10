@@ -3,29 +3,40 @@
 static FILE* database = nullptr;
 static DCS::DB::User* users = nullptr;
 static DCS::u64 num_users = 0;
+static std::mutex mtx;
 
 // TODO : users.db name / directory could vary (not really important but...)
+// TODO : improve thread safety mutex implementation
 void DCS::DB::LoadDefaultDB()
 {
-    LOG_DEBUG("Opening user database.");
-
-    database = fopen("users.db", "rb+");
-
-    if(database == nullptr)
+    std::lock_guard<std::mutex> lock(mtx);
+    if(database != nullptr)
     {
-        LOG_WARNING("Failed to find users.db. Creating new database file.");
+        LOG_DEBUG("Opening user database.");
 
-        database = fopen("users.db", "wb+");
+        database = fopen("users.db", "rb+");
 
         if(database == nullptr)
         {
-            LOG_CRITICAL("Failed to open user database file. Maybe is already in use?");
+            LOG_WARNING("Failed to find users.db. Creating new database file.");
+
+            database = fopen("users.db", "wb+");
+
+            if(database == nullptr)
+            {
+                LOG_CRITICAL("Failed to open user database file. Maybe is already in use?");
+            }
         }
+    }
+    else
+    {
+        LOG_DEBUG("User database already opened.");
     }
 }
 
 void DCS::DB::CloseDB()
 {
+    std::lock_guard<std::mutex> lock(mtx);
     if(database != nullptr)
     {
         LOG_DEBUG("Closing users.db file.");
@@ -36,6 +47,7 @@ void DCS::DB::CloseDB()
 
 void DCS::DB::LoadUsers()
 {
+    std::lock_guard<std::mutex> lock(mtx);
     if(database != nullptr)
     {
         LOG_DEBUG("Loading users from users.db");
@@ -75,9 +87,13 @@ void DCS::DB::LoadUsers()
     }
 }
 
-void DCS::DB::AddUser(User usr)
+void DCS::DB::AddUser(const char* username, const char* password)
 {
-    std::string ps = std::string(usr.p);
+    std::lock_guard<std::mutex> lock(mtx);
+    std::string ps = std::string(password);
+
+    User usr;
+    strcpy(usr.u, username);
 
     // Guard vs spaces in username and password
     if(std::string(usr.u).find(' ') != std::string::npos || ps.find(' ') != std::string::npos)
@@ -97,6 +113,11 @@ void DCS::DB::AddUser(User usr)
         LOG_ERROR("Failed adding new user. Password must contain at least one digit.");
         return;
     }
+
+    // Save password hash
+    u8 hash[32];
+    Auth::SHA256Str(password, hash);
+    memcpy(usr.p, hash, 32);
 
     if(num_users == 0)
     {
@@ -144,6 +165,7 @@ void DCS::DB::AddUser(User usr)
 
 void DCS::DB::RemoveUserByUsername(const char* username)
 {
+    std::lock_guard<std::mutex> lock(mtx);
     u64 offset = FindUserByUsername(username);
     if(offset != num_users)
     {
@@ -190,6 +212,7 @@ void DCS::DB::RemoveUserByUsername(const char* username)
 
 DCS::u64 DCS::DB::FindUserByUsername(const char* username)
 {
+    std::lock_guard<std::mutex> lock(mtx);
     for(u64 i = 0; i < num_users; i++)
     {
         if(std::string((*(users + i)).u) == username)
@@ -200,8 +223,9 @@ DCS::u64 DCS::DB::FindUserByUsername(const char* username)
 
 DCS::DB::User DCS::DB::GetUser(const char* username)
 {
+    std::lock_guard<std::mutex> lock(mtx);
     User u; 
-    strcpy(u.u, "INVALID USER");
+    strcpy(u.u, "INVALID_USER");
 
     u64 offset = FindUserByUsername(username);
     if(offset != num_users)

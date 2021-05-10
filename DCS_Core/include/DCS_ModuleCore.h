@@ -142,6 +142,11 @@ namespace DCS
 		DCS_REGISTER_CALL(DCS::u16)
 		const DCS_API u16 GetMaxHardwareConcurrency();
 	}
+
+	namespace Auth
+	{
+		DCS_API void Encrypt(DCS::u8* to_encrypt, int size, DCS::u8* key, DCS::u8* iv, DCS::u8* encrypted_out, DCS::u8* tag);
+	}
 }
 
 #endif _DCS_CORE_H

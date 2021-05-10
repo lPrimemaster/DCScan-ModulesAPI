@@ -136,7 +136,7 @@ namespace DCS
 		 * \brief Get the Socket Ip Address
 		 * 
 		 * \param s socket
-		 * \param buffer place to write ip string
+		 * \param buffer buffer to write the ip string to
 		 */
 		DCS_INTERNAL_TEST void GetSocketIpAddress(SOCKET s, char* buffer);
 

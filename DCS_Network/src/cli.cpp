@@ -1,6 +1,7 @@
 #include "../include/DCS_ModuleNetwork.h"
 #include "../include/internal.h"
 #include "../../DCS_Core/include/DCS_ModuleCore.h"
+#include "../../DCS_Core/include/internal.h"
 
 static DCS::Timer::SystemTimer cli_uptime;
 
@@ -121,6 +122,35 @@ static void CommandRegistry()
 
 	Command("uptime", "Prints how long the server (CLI) has been running.", [](bool* brk) {
 		LOG_MESSAGE("[%s]", DCS::Timer::GetTimestampStringSimple(cli_uptime).c_str());
+	});
+
+	// TODO : remove std::cin echo for passwords
+	// BUG : Fix DB here or when empty crash server
+	Command("addusr", "Creates a new remote user in the server database.", [](bool* brk) {
+		DCS::DB::LoadDefaultDB();
+
+		std::string username;
+		std::string password;
+		std::string password_v;
+
+		std::cout << "Insert username: ";
+		std::cin >> username;
+
+		std::cout << "Insert password: ";
+		std::cin >> password;
+
+		std::cout << "Verify password: ";
+		std::cin >> password_v;
+
+		if(password != password_v)
+		{
+			LOG_ERROR("Passwords don't match. Aborting...");
+		}
+		else
+		{
+			DCS::DB::AddUser(username.c_str(), password.c_str());
+		}
+
 	});
 
 	// TODO : Add more CLI commands

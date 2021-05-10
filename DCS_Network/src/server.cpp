@@ -1,6 +1,7 @@
 #include "../include/DCS_ModuleNetwork.h"
 #include "../include/internal.h"
 #include "../../DCS_Utils/include/internal.h"
+#include "../../DCS_Core/include/internal.h"
 #include <vector>
 #include <future>
 
@@ -137,6 +138,69 @@ static void IssueValidity(SOCKET client, DCS::u8 validity)
 	DCS::Network::SendData(client, (const DCS::u8 *)&validity, cval_size);
 }
 
+// TODO : Maybe use the tag for auth (?)
+static bool Authenticate(SOCKET client)
+{
+	using namespace DCS;
+
+	// Send user a challenge with a random iv
+	Auth::InitCryptoRand();
+
+	u8 r[32];
+	Auth::GenerateRandSafeIV128(r);
+	Auth::GenerateRandSafeIV128(&r[16]);
+	Network::SendData(client, r, 32);
+
+	u8 iv[16];
+	Auth::GenerateRandSafeIV128(iv);
+	Network::SendData(client, iv, 16);
+
+
+	u8 username_buff[32] = { 0 };
+	i32 username_buff_size = 0;
+	while(username_buff_size < 32)
+	{
+		username_buff_size += Network::ReceiveData(client, &username_buff[username_buff_size], 32 - username_buff_size);
+	}
+
+	LOG_DEBUG("Attempt to login with username: %s", (char*)username_buff);
+
+	// Get this user name's password hash
+	DB::LoadDefaultDB();
+	DB::LoadUsers();
+	DB::User user = DB::GetUser((const char*)username_buff);
+	if(std::string(user.u) == "INVALID_USER")
+	{
+		SendErrorToClient(client, "Incorrect username or password.");
+		IssueValidity(client, 2); // Not a valid connection
+
+		return false;
+	}
+
+	u8 aes_buff[48];
+	i32 aes_buff_size = 0;
+	while(aes_buff_size < 48)
+	{
+		aes_buff_size += Network::ReceiveData(client, &aes_buff[aes_buff_size], 48 - aes_buff_size);
+	}
+
+	u8 result[32] = { 0 };
+	u8 tag[16] = { 0 };
+	Auth::EncryptAES256(r, 32, nullptr, 0, user.p, iv, result, tag);
+
+	for(int i = 0; i < 32; i++)
+	{
+		if(result[i] != aes_buff[i])
+		{
+			SendErrorToClient(client, "Incorrect username or password.");
+			IssueValidity(client, 2); // Not a valid connection
+			return false;
+		}
+	}
+
+	return true;
+}
+
 bool DCS::Network::Server::StartThread(Socket client)
 {
 	SOCKET target_client = (SOCKET)client;
@@ -144,6 +208,27 @@ bool DCS::Network::Server::StartThread(Socket client)
 	{
 		if (server_receive_thread == nullptr)
 		{
+			if(!Authenticate((SOCKET)client))
+			{
+				LOG_WARNING("User authentication failed.");
+
+				char ip[128];
+				GetSocketIpAddress((SOCKET)client, ip);
+				LOG_WARNING("Failed at ip address: %s", ip);
+
+				std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+				shutdown((SOCKET)client, SD_BOTH);
+				CloseSocketConnection((SOCKET)client);
+
+				return false;
+			}
+			else
+			{
+				char ip[128];
+				GetSocketIpAddress((SOCKET)client, ip);
+				LOG_DEBUG("User authentication successful. [%s]", ip);
+			}
+
 			server_client_sock.store(client);
 			server_running.store(true);
 			

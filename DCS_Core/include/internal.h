@@ -74,15 +74,17 @@ namespace DCS
 	 * \internal 
 	 * \brief Database holding usernames, passwords, permissions, etc.
 	 * 
-	 * The database files and functions are not thread-safe.
+	 * The database files and functions are thread-safe.
 	 */
 	namespace DB // TODO : Document
 	{
 #pragma pack( push )
+		// NOTE : Using a salt is nice but requires to send the plai text password which is okay but such security is not needed.
+		// Just ensure the user has a strong password.
 		struct User
 		{
-			char u[32];
-			char p[32];
+			char u[32]; ///< Holds the username.
+			u8   p[32]; ///< Holds the sha-256 of the password.
 		};
 #pragma pack( pop )
 
@@ -92,7 +94,7 @@ namespace DCS
 
 		DCS_INTERNAL_TEST void LoadUsers();
 
-		DCS_INTERNAL_TEST void AddUser(User usr);
+		DCS_INTERNAL_TEST void AddUser(const char* username, const char* password);
 
 		DCS_INTERNAL_TEST void RemoveUserByUsername(const char* username);
 
@@ -109,8 +111,16 @@ namespace DCS
 
 		DCS_INTERNAL_TEST void GenerateRandSafeIV128(DCS::u8 iv[16]);
 
-		DCS_INTERNAL_TEST void SHA256Str(char* string, DCS::u8 hash[DCS_SHA256_DIGEST_LENGTH]);
+		DCS_INTERNAL_TEST void SHA256Str(const char* string, DCS::u8 hash[DCS_SHA256_DIGEST_LENGTH]);
 
 		DCS_INTERNAL_TEST void HexStringifyBytes(char* out, DCS::u8* hash, DCS::u64 size);
+
+		DCS_INTERNAL_TEST void EncryptAES256(DCS::u8* to_encrypt, int to_encrypt_size, 
+											 DCS::u8* aad, int aad_size, DCS::u8* key, 
+											 DCS::u8* iv, DCS::u8* encrypted_out, DCS::u8* tag);
+
+		DCS_INTERNAL_TEST int  DecryptAES256(DCS::u8* cipher, int cipher_size, 
+											 DCS::u8* aad, int aad_size, DCS::u8* key, 
+											 DCS::u8* iv, DCS::u8* plain_out, DCS::u8* tag);
 	}
 }

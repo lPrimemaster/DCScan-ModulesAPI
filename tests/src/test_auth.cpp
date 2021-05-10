@@ -14,17 +14,35 @@ int main()
     HexStringifyBytes(hs_str, hs, DCS_SHA256_DIGEST_LENGTH);
     printf("hjf7$ - sha256: %s\n", hs_str);
 
-    DCS::u8 salt[8];
-    GenerateSalt(salt);
-    printf("Random salt: ");
-    for(int i = 0; i < 8; i++) printf("%02x", salt[i]);
-    printf("\n");
-
     DCS::u8 iv[16];
     GenerateRandSafeIV128(iv);
-    printf("Random IV128: ");
-    for(int i = 0; i < 16; i++) printf("%02x", iv[i]);
+
+    DCS::u8 original[32];
+    DCS::u8 got_original[32];
+    DCS::u8 em[32];
+    DCS::u8 tag[16];
+
+    const char* odata = "This is the original data!32Sz!";
+
+    memcpy(original, odata, 32);
+    EncryptAES256(original, 32, nullptr, 0, hs, iv, em, tag);
+
+    printf("Original: ");
+    for(int i = 0; i < 32; i++) printf("%02x", original[i]);
+    printf("\nEncrypted (AES256 GCM): ");
+    for(int i = 0; i < 32; i++) printf("%02x", em[i]);
+    printf("\nTag: ");
+    for(int i = 0; i < 16; i++) printf("%02x", tag[i]);
     printf("\n");
+
+    //GenerateRandSafeIV128(iv);
+    DecryptAES256(em, 32, nullptr, 0, hs, iv, got_original, tag);
+
+    printf("Decrypted original: ");
+    for(int i = 0; i < 16; i++) printf("%02x", got_original[i]);
+    printf("\n");
+
+    printf("Converted output: %s\n", (char*)got_original);
     
     return 0;
 }

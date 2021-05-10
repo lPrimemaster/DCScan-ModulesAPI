@@ -18,6 +18,8 @@ int test()
 
 		Socket c = Client::Connect("127.0.0.1", 15777);
 
+		Client::Authenticate(c, "Prime", "alfa77");
+
 		if(Client::StartThread(c))
 		{
 			unsigned char buffer[1024];
@@ -31,7 +33,7 @@ int test()
 			LOG_DEBUG("Got: %d", *(DCS::u16*)task.get().ptr);
 
 
-			std::this_thread::sleep_for(std::chrono::milliseconds(7000));
+			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 			Client::StopThread(c);
 		}
