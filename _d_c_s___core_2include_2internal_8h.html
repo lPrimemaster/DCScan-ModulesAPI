@@ -152,9 +152,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a5c0e4b0aa4c2d16b9fbf37e5eddd4374"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5c0e4b0aa4c2d16b9fbf37e5eddd4374"></a>
 <a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DB::LoadUsers</b> ()</td></tr>
 <tr class="separator:a5c0e4b0aa4c2d16b9fbf37e5eddd4374"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2aa92feffa1be5d535bd5a99d70079f6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2aa92feffa1be5d535bd5a99d70079f6"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DB::AddUser</b> (User usr)</td></tr>
-<tr class="separator:a2aa92feffa1be5d535bd5a99d70079f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2e5fedafdc68e8e4f329202298bb594"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab2e5fedafdc68e8e4f329202298bb594"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DB::AddUser</b> (const char *username, const char *password)</td></tr>
+<tr class="separator:ab2e5fedafdc68e8e4f329202298bb594"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a47c88d42fb847df2879186d1e6b239e6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a47c88d42fb847df2879186d1e6b239e6"></a>
 <a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::DB::RemoveUserByUsername</b> (const char *username)</td></tr>
 <tr class="separator:a47c88d42fb847df2879186d1e6b239e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -173,12 +173,18 @@ Functions</h2></td></tr>
 <tr class="memitem:a9c3cbc8116fc62f8cd69e35e94c5a8a6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9c3cbc8116fc62f8cd69e35e94c5a8a6"></a>
 <a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Auth::GenerateRandSafeIV128</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> iv[16])</td></tr>
 <tr class="separator:a9c3cbc8116fc62f8cd69e35e94c5a8a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a197e76cc4833468800ba4a9d91b939c9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a197e76cc4833468800ba4a9d91b939c9"></a>
-<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Auth::SHA256Str</b> (char *string, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> hash[DCS_SHA256_DIGEST_LENGTH])</td></tr>
-<tr class="separator:a197e76cc4833468800ba4a9d91b939c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af936b9b751e44e01ba6b71fc19df839f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af936b9b751e44e01ba6b71fc19df839f"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Auth::SHA256Str</b> (const char *string, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> hash[DCS_SHA256_DIGEST_LENGTH])</td></tr>
+<tr class="separator:af936b9b751e44e01ba6b71fc19df839f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6472f95a786a36a8f85432bb495c5b7f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6472f95a786a36a8f85432bb495c5b7f"></a>
 <a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Auth::HexStringifyBytes</b> (char *out, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> *hash, <a class="el" href="_d_c_s___module_utils_8h.html#a0075e27a0ece07f1d9cf36c9109584ae">DCS::u64</a> size)</td></tr>
 <tr class="separator:a6472f95a786a36a8f85432bb495c5b7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c5103e03ec114c4a6237ba104ecba60"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9c5103e03ec114c4a6237ba104ecba60"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> void&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Auth::EncryptAES256</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> *to_encrypt, int to_encrypt_size, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> *aad, int aad_size, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> *key, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> *iv, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> *encrypted_out, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> *tag)</td></tr>
+<tr class="separator:a9c5103e03ec114c4a6237ba104ecba60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52159692b008bd702b0f0bba4fe6cfe8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a52159692b008bd702b0f0bba4fe6cfe8"></a>
+<a class="el" href="exports_8h.html#a67c09fac060b3dbcd04e20442c9578b2">DCS_INTERNAL_TEST</a> int&#160;</td><td class="memItemRight" valign="bottom"><b>DCS::Auth::DecryptAES256</b> (<a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> *cipher, int cipher_size, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> *aad, int aad_size, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> *key, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> *iv, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> *plain_out, <a class="el" href="_d_c_s___module_utils_8h.html#a96d419836bdda13c4c329102842c3149">DCS::u8</a> *tag)</td></tr>
+<tr class="separator:a52159692b008bd702b0f0bba4fe6cfe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

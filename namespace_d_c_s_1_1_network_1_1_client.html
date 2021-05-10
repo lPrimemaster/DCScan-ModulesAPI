@@ -105,6 +105,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a4ee6eb135d9c3b3529c72f0b11c6cc83"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> <a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_client.html#a4ee6eb135d9c3b3529c72f0b11c6cc83">Connect</a> (<a class="el" href="class_d_c_s_1_1_utils_1_1_string.html">DCS::Utils::String</a> host, <a class="el" href="_d_c_s___module_utils_8h.html#a9e83daab7684d18cdce93112aed782ab">i32</a> port)</td></tr>
 <tr class="memdesc:a4ee6eb135d9c3b3529c72f0b11c6cc83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connect to a running server.  <a href="#a4ee6eb135d9c3b3529c72f0b11c6cc83">More...</a><br /></td></tr>
 <tr class="separator:a4ee6eb135d9c3b3529c72f0b11c6cc83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4829ab7f593cf3c0c8ac05ecb53e8376"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_client.html#a4829ab7f593cf3c0c8ac05ecb53e8376">Authenticate</a> (<a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> socket, <a class="el" href="class_d_c_s_1_1_utils_1_1_string.html">DCS::Utils::String</a> username, <a class="el" href="class_d_c_s_1_1_utils_1_1_string.html">DCS::Utils::String</a> password)</td></tr>
+<tr class="memdesc:a4829ab7f593cf3c0c8ac05ecb53e8376"><td class="mdescLeft">&#160;</td><td class="mdescRight">Authenticates a valid connection. Call after Connect.  <a href="#a4829ab7f593cf3c0c8ac05ecb53e8376">More...</a><br /></td></tr>
+<tr class="separator:a4829ab7f593cf3c0c8ac05ecb53e8376"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa65aedb936b03232808070accccd7a65"><td class="memItemLeft" align="right" valign="top"><a class="el" href="exports_8h.html#a240a0f4545ac093f1b6795229b386fb8">DCS_API</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_d_c_s_1_1_network_1_1_client.html#aa65aedb936b03232808070accccd7a65">StartThread</a> (<a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a> connection)</td></tr>
 <tr class="memdesc:aa65aedb936b03232808070accccd7a65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the client thread on a established connection.  <a href="#aa65aedb936b03232808070accccd7a65">More...</a><br /></td></tr>
 <tr class="separator:aa65aedb936b03232808070accccd7a65"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,6 +121,48 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Client-side handling features. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a4829ab7f593cf3c0c8ac05ecb53e8376"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DCS::Network::Client::Authenticate </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespace_d_c_s_1_1_network.html#a9bee27a48f2a0c02394bbe5a1af82e74">Socket</a>&#160;</td>
+          <td class="paramname"><em>socket</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_d_c_s_1_1_utils_1_1_string.html">DCS::Utils::String</a>&#160;</td>
+          <td class="paramname"><em>username</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_d_c_s_1_1_utils_1_1_string.html">DCS::Utils::String</a>&#160;</td>
+          <td class="paramname"><em>password</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Authenticates a valid connection. Call after Connect. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">socket</td><td>The connection's socket. </td></tr>
+    <tr><td class="paramname">username</td><td>Username. </td></tr>
+    <tr><td class="paramname">password</td><td>Password. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="a4ee6eb135d9c3b3529c72f0b11c6cc83"></a>
 <div class="memitem">
 <div class="memproto">
