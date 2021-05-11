@@ -76,10 +76,10 @@ namespace DCS
 	 * 
 	 * The database files and functions are thread-safe.
 	 */
-	namespace DB // TODO : Document
+	namespace DB // TODO : Document & Add user login statistics / trace
 	{
 #pragma pack( push )
-		// NOTE : Using a salt is nice but requires to send the plai text password which is okay but such security is not needed.
+		// NOTE : Using a salt is nice but requires to send the plain text password which is okay but such security is not needed.
 		// Just ensure the user has a strong password.
 		struct User
 		{
@@ -101,6 +101,10 @@ namespace DCS
 		DCS_INTERNAL_TEST u64  FindUserByUsername(const char* username);
 
 		DCS_INTERNAL_TEST User GetUser(const char* username);
+
+		DCS_INTERNAL_TEST const User* GetAllUsers();
+
+		DCS_INTERNAL_TEST u64  GetUserCount();
 	}
 
 	namespace Auth // TODO : Document

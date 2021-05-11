@@ -200,5 +200,7 @@ namespace DCS
 		DCS_INTERNAL_TEST void SetConsoleMargins(int t, int b);
 
 		DCS_INTERNAL_TEST void WriteConsoleLine(int b, const char* str);
+
+		DCS_INTERNAL_TEST void SetStdinEcho(bool enable);
 	}
 }

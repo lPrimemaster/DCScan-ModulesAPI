@@ -47,3 +47,21 @@ void DCS::Utils::WriteConsoleLine(int b, const char* str)
 	std::cout << "\x1b[f";
 	//std::cout << "\x1b\x8";
 }
+
+void DCS::Utils::SetStdinEcho(bool enable)
+{
+	HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+	DWORD mode;
+	GetConsoleMode(hStdin, &mode);
+
+	if(!enable)
+	{
+		mode &= ~ENABLE_ECHO_INPUT;
+	}
+	else
+	{
+		mode |= ENABLE_ECHO_INPUT;
+	}
+
+	SetConsoleMode(hStdin, mode);
+}

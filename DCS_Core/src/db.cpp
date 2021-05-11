@@ -5,12 +5,11 @@ static DCS::DB::User* users = nullptr;
 static DCS::u64 num_users = 0;
 static std::mutex mtx;
 
-// TODO : users.db name / directory could vary (not really important but...)
 // TODO : improve thread safety mutex implementation
 void DCS::DB::LoadDefaultDB()
 {
     std::lock_guard<std::mutex> lock(mtx);
-    if(database != nullptr)
+    if(database == nullptr)
     {
         LOG_DEBUG("Opening user database.");
 
@@ -212,7 +211,6 @@ void DCS::DB::RemoveUserByUsername(const char* username)
 
 DCS::u64 DCS::DB::FindUserByUsername(const char* username)
 {
-    std::lock_guard<std::mutex> lock(mtx);
     for(u64 i = 0; i < num_users; i++)
     {
         if(std::string((*(users + i)).u) == username)
@@ -231,4 +229,15 @@ DCS::DB::User DCS::DB::GetUser(const char* username)
     if(offset != num_users)
         return *(users + offset);
     return u;
+}
+
+const DCS::DB::User* DCS::DB::GetAllUsers()
+{
+    std::lock_guard<std::mutex> lock(mtx);
+    return users;
+}
+
+DCS::u64 DCS::DB::GetUserCount()
+{
+    return num_users;
 }

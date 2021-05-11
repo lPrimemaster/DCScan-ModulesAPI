@@ -177,6 +177,7 @@ static bool Authenticate(SOCKET client)
 		return false;
 	}
 
+
 	u8 aes_buff[48];
 	i32 aes_buff_size = 0;
 	while(aes_buff_size < 48)

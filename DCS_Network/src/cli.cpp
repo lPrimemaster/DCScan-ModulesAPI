@@ -2,6 +2,7 @@
 #include "../include/internal.h"
 #include "../../DCS_Core/include/DCS_ModuleCore.h"
 #include "../../DCS_Core/include/internal.h"
+#include "../../DCS_Utils/include/internal.h"
 
 static DCS::Timer::SystemTimer cli_uptime;
 
@@ -124,10 +125,9 @@ static void CommandRegistry()
 		LOG_MESSAGE("[%s]", DCS::Timer::GetTimestampStringSimple(cli_uptime).c_str());
 	});
 
-	// TODO : remove std::cin echo for passwords
-	// BUG : Fix DB here or when empty crash server
 	Command("addusr", "Creates a new remote user in the server database.", [](bool* brk) {
 		DCS::DB::LoadDefaultDB();
+		DCS::DB::LoadUsers();
 
 		std::string username;
 		std::string password;
@@ -136,11 +136,17 @@ static void CommandRegistry()
 		std::cout << "Insert username: ";
 		std::cin >> username;
 
+		DCS::Utils::SetStdinEcho(false);
+
 		std::cout << "Insert password: ";
 		std::cin >> password;
+		std::cout << "\n";
 
 		std::cout << "Verify password: ";
 		std::cin >> password_v;
+		std::cout << "\n";
+
+		DCS::Utils::SetStdinEcho(true);
 
 		if(password != password_v)
 		{
@@ -149,6 +155,42 @@ static void CommandRegistry()
 		else
 		{
 			DCS::DB::AddUser(username.c_str(), password.c_str());
+		}
+	});
+
+	Command("delusr", "Deletes an existing user from the database.", [](bool* brk) {
+		DCS::DB::LoadDefaultDB();
+		DCS::DB::LoadUsers();
+
+		std::string username;
+
+		std::cout << "Insert username: ";
+		std::cin >> username;
+
+		DCS::DB::User u = DCS::DB::GetUser(username.c_str());
+
+		if(u.u == "INVALID_USER")
+		{
+			LOG_ERROR("Username %s not found. Aborting...", username.c_str());
+		}
+		else
+		{
+			DCS::DB::RemoveUserByUsername(username.c_str());
+		}
+	});
+
+	Command("lstusr", "Lists all the users present in the database.", [](bool* brk) {
+		DCS::DB::LoadDefaultDB();
+		DCS::DB::LoadUsers();
+
+		DCS::u64 uc = DCS::DB::GetUserCount();
+		const DCS::DB::User* users = DCS::DB::GetAllUsers();
+
+		LOG_MESSAGE("Users in database:");
+
+		for(DCS::u64 i = 0; i < uc; i++)
+		{
+			LOG_MESSAGE("User %u: %s.", i, users[i].u);
 		}
 
 	});
@@ -187,6 +229,8 @@ void DCS::CLI::Spin()
 			LOG_MESSAGE("Type \"help\" to see the valid commands.");
 		}
 	}
+
+	DCS::DB::CloseDB();
 
 	DCS::Timer::Delete(cli_uptime);
 }
