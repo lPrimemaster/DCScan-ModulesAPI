@@ -14,6 +14,7 @@ add_library(DCSModuleCore ${LIB_TYPE}
   src/threading.cpp
   src/db.cpp
   src/auth.cpp
+  src/pid.cpp
   ../config/exports.h
   include/internal.h
   include/DCS_ModuleCore.h

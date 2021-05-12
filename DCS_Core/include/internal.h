@@ -6,6 +6,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <functional>
+#include <type_traits>
 #include "../../DCS_Utils/include/DCS_ModuleUtils.h"
 
 #define DCS_SHA256_DIGEST_LENGTH 32
@@ -126,5 +127,38 @@ namespace DCS
 		DCS_INTERNAL_TEST int  DecryptAES256(DCS::u8* cipher, int cipher_size, 
 											 DCS::u8* aad, int aad_size, DCS::u8* key, 
 											 DCS::u8* iv, DCS::u8* plain_out, DCS::u8* tag);
+	}
+
+	namespace Core // TODO : Document
+	{
+		class DCS_INTERNAL_TEST PID
+		{
+		public:
+			PID(float min, float max, float Kp, float Kd, float Ki);
+
+			void setTargetAndBias(float target, float bias);
+
+			float calculate(float value);
+
+			float calculate(float value, float dt);
+
+		private:
+			float min;
+			float max;
+			float Kp;
+			float Kd;
+			float Ki;
+
+			float dt;
+
+			float target;
+			float bias;
+
+			float le;
+			float integral;
+
+			// HACK : What is the default value of this?
+			std::chrono::steady_clock::time_point last_point;
+		};
 	}
 }

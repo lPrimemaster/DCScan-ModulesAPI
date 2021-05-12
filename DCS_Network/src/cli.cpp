@@ -192,7 +192,6 @@ static void CommandRegistry()
 		{
 			LOG_MESSAGE("User %u: %s.", i, users[i].u);
 		}
-
 	});
 
 	// TODO : Add more CLI commands
