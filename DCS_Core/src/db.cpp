@@ -68,7 +68,7 @@ void DCS::DB::LoadUsers()
 
         if(users != nullptr) free(users);
 
-        users = (User*)malloc(db_size);
+        users = (User*)malloc(db_size * sizeof(User));
 
         if(users == nullptr)
         {

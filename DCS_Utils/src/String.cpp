@@ -2,7 +2,7 @@
 
 DCS::Utils::String::String(const char* text)
 {
-	buffer_size = strlen(text);
+	buffer_size = strlen(text) + 1;
 
 	buffer = (char*)malloc(sizeof(char) * buffer_size);
 
@@ -20,7 +20,7 @@ DCS::Utils::String::String(const String& s)
 {
 	if (buffer_size > 0) free(buffer);
 
-	buffer_size = strlen(s.buffer);
+	buffer_size = strlen(s.buffer) + 1;
 
 	buffer = (char*)malloc(sizeof(char) * buffer_size);
 
@@ -38,7 +38,7 @@ DCS::Utils::String& DCS::Utils::String::operator=(const DCS::Utils::String& s) n
 {
 	if (buffer_size > 0) free(buffer);
 
-	buffer_size = strlen(s.buffer);
+	buffer_size = strlen(s.buffer) + 1;
 
 	buffer = (char*)malloc(sizeof(char) * buffer_size);
 
