@@ -444,7 +444,9 @@ void DCS::Network::Server::StopThread(Socket client, StopMode mode)
 		LOG_DEBUG("Stopping server_send_thread thread...");
 
 		// Wait for disconnect
+		LOG_DEBUG("A");
 		server_send_thread->join();
+		LOG_DEBUG("B");
 
 		delete server_send_thread;
 		server_send_thread = nullptr;

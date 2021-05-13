@@ -47,52 +47,56 @@ DCS::Network::Socket DCS::Network::Client::Connect(DCS::Utils::String host, i32 
 void DCS::Network::Client::Authenticate(Socket socket, DCS::Utils::String username, DCS::Utils::String password)
 {
 	SOCKET s = (SOCKET)socket;
-	
-	Auth::InitCryptoRand();
 
-	// Get server challenge
-	u8 r[32];
-	i32 r_buff_size = 0;
-	while(r_buff_size < 32)
+	if (ValidateSocket(s))
 	{
-		r_buff_size += Network::ReceiveData(s, &r[r_buff_size], 32 - r_buff_size);
+		Auth::InitCryptoRand();
+
+		// Get server challenge
+		u8 r[32];
+		i32 r_buff_size = 0;
+		while(r_buff_size < 32)
+		{
+			r_buff_size += Network::ReceiveData(s, &r[r_buff_size], 32 - r_buff_size);
+		}
+
+		u8 iv[16];
+		i32 iv_buff_size = 0;
+		while(iv_buff_size < 16)
+		{
+			iv_buff_size += Network::ReceiveData(s, &iv[iv_buff_size], 16 - iv_buff_size);
+		}
+
+		char hstream[64];
+		Auth::HexStringifyBytes(hstream, r, 32);
+		LOG_DEBUG("Got challenge: %s", hstream);
+
+		if(username.size() >= 32)
+		{
+			u8 garbage[64];
+			LOG_ERROR("Username can only have 32 characters at most.");
+			Network::SendData(s, (const u8*)garbage, 64);
+			return;
+		}
+
+		char user[32];
+		strcpy(user, username.c_str());
+
+		// Send username
+		Network::SendData(s, (const u8*)user, 32);
+
+		// Send encrypted random challenge
+		u8 hash[DCS_SHA256_DIGEST_LENGTH];
+		u8 result[48];
+		u8 tag[16];
+		Auth::SHA256Str(password.c_str(), hash);
+
+		Auth::EncryptAES256(r, 32, nullptr, 0, hash, iv, result, tag);
+
+
+		memcpy(&result[32], tag, 16);
+		Network::SendData(s, result, 48);
 	}
-
-	u8 iv[16];
-	i32 iv_buff_size = 0;
-	while(iv_buff_size < 16)
-	{
-		iv_buff_size += Network::ReceiveData(s, &iv[iv_buff_size], 16 - iv_buff_size);
-	}
-
-	char hstream[64];
-	Auth::HexStringifyBytes(hstream, r, 32);
-	LOG_DEBUG("Got challenge: %s", hstream);
-
-	if(username.size() >= 32)
-	{
-		u8 garbage[64];
-		LOG_ERROR("Username can only have 32 characters at most.");
-		Network::SendData(s, (const u8*)garbage, 64);
-		return;
-	}
-
-	char user[32];
-	strcpy(user, username.c_str());
-
-	// Send username
-	Network::SendData(s, (const u8*)user, 32);
-
-	// Send encrypted random challenge
-	u8 hash[DCS_SHA256_DIGEST_LENGTH];
-	u8 result[48];
-	u8 tag[16];
-	Auth::SHA256Str(password.c_str(), hash);
-
-	Auth::EncryptAES256(r, 32, nullptr, 0, hash, iv, result, tag);
-
-	memcpy(&result[32], tag, 16);
-	Network::SendData(s, result, 48);
 }
 
 bool DCS::Network::Client::StartThread(Socket connection)
@@ -188,8 +192,6 @@ bool DCS::Network::Client::StartThread(Socket connection)
 						{
 							LOG_DEBUG("Server connection is INVALID.");
 					        conn_valid.store(C_INVALID); // Connection not valid
-							client_running.store(false); // Stop the client
-							inbound_bytes.notify_unblock();
 						}
 					}
 					break;
@@ -200,7 +202,6 @@ bool DCS::Network::Client::StartThread(Socket connection)
 					Message::Delete(msg);
 				}
 				delete[] buffer;
-				inbound_bytes.notify_restart();
 			});
 
 			client_receive_thread = new std::thread([=]()->void {
@@ -218,6 +219,7 @@ bool DCS::Network::Client::StartThread(Socket connection)
 				inbound_bytes.notify_unblock();
 				decode_msg->join();
 				delete decode_msg;
+				inbound_bytes.notify_restart();
 			});
 			if (client_receive_thread == nullptr)
 			{
@@ -228,9 +230,7 @@ bool DCS::Network::Client::StartThread(Socket connection)
 		{
 			LOG_WARNING("Could not start client_receive_thread thread. Perhaps is already running?");
 		}
-
-		// BUG : App crash when client reconnect after failed connection because of other connected client
-		// Reason unkown
+		
 		if (client_send_thread == nullptr)
 		{
 			// This is just a very cheap way... Just use std::condition_variable...
@@ -253,6 +253,9 @@ bool DCS::Network::Client::StartThread(Socket connection)
 						CloseSocketConnection((SOCKET)connection);
 				}
 
+				client_running.store(false); // Stop the client
+				
+
 				LOG_DEBUG("Stopping client_receive_thread thread...");
 
 				// Wait for disconnect
@@ -261,6 +264,8 @@ bool DCS::Network::Client::StartThread(Socket connection)
 				delete client_receive_thread;
 				client_receive_thread = nullptr;
 				LOG_DEBUG("Done!");
+
+
 				return false;
 			}
 
