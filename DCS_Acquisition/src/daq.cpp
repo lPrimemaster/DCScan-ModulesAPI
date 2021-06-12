@@ -48,7 +48,7 @@ void DCS::DAQ::CreateTask(InternalTask* t, const char* name)
     }
 }
 
-void DCS::DAQ::SetupTask(InternalTask* t, const char* clk_source, DCS::f64 clk, NIDataCallback func)
+void DCS::DAQ::SetupTask(InternalTask* t, const char* clk_source, DCS::f64 clk, DCS::u64 num_samp, NIDataCallback func)
 {
     DCS::f64 maxrate;
 	DCS::i32 err = DAQmxGetSampClkMaxRate(t->ni_opaque_handler, &maxrate);
@@ -66,12 +66,11 @@ void DCS::DAQ::SetupTask(InternalTask* t, const char* clk_source, DCS::f64 clk, 
         LOG_WARNING("Reason: Requested clock rate is larger than the max hardware rate limit.");
         LOG_MESSAGE("Setting the task clock rate to max OnBoardClock rate: %lf", maxrate);
     }
-
-    // FIXME : NIDAQmx API - Make these arguments
+    
     t->clock_edge  = DAQmx_Val_Rising;
     t->clock_rate  = clk > maxrate ? maxrate : clk;
     t->sample_mode = DAQmx_Val_ContSamps;
-    t->num_samples = 1000;
+    t->num_samples = INTERNAL_SAMP_SIZE;
     t->acq_callback = func;
 
     err = DAQmxCfgSampClkTiming(t->ni_opaque_handler, clk_source, t->clock_rate, t->clock_edge, t->sample_mode, t->num_samples);

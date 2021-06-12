@@ -6,19 +6,11 @@ int main()
 {
     DCS_START_TEST;
 
-    DCS::DAQ::TaskSettings settings;
-    
-    settings.task_name = { "MyTask" };
-    
-    settings.channel_name[0] = { "PXI_Slot2/ai0" };
-    settings.channel_type    = DCS::DAQ::ChannelType::Voltage;
-    settings.channel_ref[0]  = DCS::DAQ::ChannelRef::Differential;
-    settings.channel_lim[0].min = -10.0;
-    settings.channel_lim[0].max =  10.0;
-
     DCS::Network::Init();
 
     auto c = DCS::Network::Client::Connect("127.0.0.1", 15777);
+
+    DCS::Network::Client::Authenticate(c, "Prime", "alfa77");
 
     if(DCS::Network::Client::StartThread(c))
     {
@@ -48,25 +40,24 @@ int main()
             }, (DCS::u8*)f);
         DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::EVT_SUB, buffer, size);
 
-        size = DCS::Registry::SVParams::GetDataFromParams(buffer, SV_CALL_DCS_DAQ_NewTask, settings);
+        DCS::DAQ::ChannelLimits l;
+        l.min = -10.0;
+        l.max =  10.0;
 
-        auto task = DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::REQUEST, buffer, size);
-
-        task.wait();
-
-        size = DCS::Registry::SVParams::GetDataFromParams<DCS::Utils::BasicString>(buffer, SV_CALL_DCS_DAQ_StartNamedTask, { "MyTask" });
+        size = DCS::Registry::SVParams::GetDataFromParams<DCS::Utils::BasicString, DCS::Utils::BasicString, DCS::DAQ::ChannelRef, DCS::DAQ::ChannelLimits>(buffer, SV_CALL_DCS_DAQ_NewAIVChannel, 
+            { "Channel0Name" }, { "PXI_Slot2/ai0" }, DCS::DAQ::ChannelRef::Default, l);
 
         DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::REQUEST, buffer, size);
+
+        size = DCS::Registry::SVParams::GetDataFromParams(buffer, SV_CALL_DCS_DAQ_StartAIAcquisition, 1000.0);
+
+        DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::REQUEST, buffer, size).wait();
 
         LOG_DEBUG("Wait to signal task end.");
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
         LOG_DEBUG("Signal task end.");
 
-        size = DCS::Registry::SVParams::GetDataFromParams(buffer, SV_CALL_DCS_DAQ_StopTask, *(DCS::DAQ::Task*)task.get().ptr);
-
-        DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::REQUEST, buffer, size);
-
-        size = DCS::Registry::SVParams::GetDataFromParams(buffer, SV_CALL_DCS_DAQ_DestroyTask, *(DCS::DAQ::Task*)task.get().ptr);
+        size = DCS::Registry::SVParams::GetDataFromParams(buffer, SV_CALL_DCS_DAQ_StopAIAcquisition);
 
         DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::REQUEST, buffer, size);
 

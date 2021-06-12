@@ -25,11 +25,6 @@ namespace DCS
     namespace DAQ
     {
         /**
-         * \brief Task opaque identifier. 
-         */
-        typedef DCS::u32 Task;
-
-        /**
          * \brief Classifies a channel type of the DAQ.
          */
         enum class ChannelType
@@ -65,107 +60,26 @@ namespace DCS
         };
 
         /**
-         * \brief Struct used to transfer all the relevant task settings to the server on task creation.
+         * \brief Initializes the Acquisition API.
          */
-        struct DCS_API TaskSettings
-        {
-            DCS::Utils::BasicString task_name = { "" };          ///< The name to give to the task.
-            DCS::Utils::BasicString channel_name[5] = { "" };    ///< The channels the task reads/writes from/to. Max 5.
-
-            // NOTE : A task only supports channels of the same type (not true, but close enough for this application).
-            ChannelType   channel_type   = ChannelType::None;    ///< The type of the channels.
-            ChannelRef    channel_ref[5] = { ChannelRef::None }; ///< The reference type for each channel. Max 5.
-            ChannelLimits channel_lim[5];                        ///< The limit for each channel, if applicable. Max 5.
-
-            DCS::Utils::BasicString clock = { "OnBoardClock" };  ///< The clock the task will be timed upon, if applicable.
-            DCS::f64 clock_rate = 10000;                         ///< The clock rate to be set.
-        };
+        DCS_API void Init();
 
         /**
-		 * \brief Create a new DAQ task on the server-side.
-		 * 
-		 * Registers and configures a task in the DAQmx system.
-		 * 
-		 * \param setup The options of the task to create.
-         * \return Task opaque id handle.
-		 * 
-		 * \ingroup calls
-		 */
-        DCS_REGISTER_CALL(DCS::DAQ::Task, DCS::DAQ::TaskSettings)
-        DCS_API Task NewTask(DCS::DAQ::TaskSettings setup);
+         * \brief Cleans up the Acquisition API.
+         */
+        DCS_API void Terminate();
 
-        /**
-		 * \brief Starts a DAQ task on the server-side by id.
-         * 
-         * This function marks the start of acquisition.
-		 * 
-		 * \param task The task id.
-		 * 
-		 * \ingroup calls
-		 */
-        DCS_REGISTER_CALL(void, DCS::DAQ::Task)
-        DCS_API void StartTask(Task task);
+        DCS_REGISTER_CALL(void, DCS::Utils::BasicString, DCS::Utils::BasicString, DCS::DAQ::ChannelRef, DCS::DAQ::ChannelLimits)
+        DCS_API void NewAIVChannel(DCS::Utils::BasicString name, DCS::Utils::BasicString channel_name, ChannelRef ref, ChannelLimits lim);
 
-        /**
-		 * \brief Starts a DAQ task on the server-side by name.
-		 * 
-         * This function marks the start of acquisition.
-         * 
-		 * \param task_name The task name.
-		 * 
-		 * \ingroup calls
-		 */
         DCS_REGISTER_CALL(void, DCS::Utils::BasicString)
-        DCS_API void StartNamedTask(DCS::Utils::BasicString task_name);
+        DCS_API void DeleteAIVChannel(DCS::Utils::BasicString name);
 
-        /**
-		 * \brief Stops a DAQ task on the server-side by id.
-		 * 
-         * This function marks the end of acquisition, if not automatically finished by the server already.
-         * 
-		 * \param task The task id.
-		 * 
-		 * \ingroup calls
-		 */
-        DCS_REGISTER_CALL(void, DCS::DAQ::Task)
-        DCS_API void StopTask(Task task);
+        DCS_REGISTER_CALL(void, DCS::f64)
+        DCS_API void StartAIAcquisition(DCS::f64 samplerate);
 
-
-        /**
-		 * \brief Stops a DAQ task on the server-side by name.
-		 * 
-         * This function marks the end of acquisition, if not automatically finished by the server already.
-         * 
-		 * \param task_name The task name.
-		 * 
-		 * \ingroup calls
-		 */
-        DCS_REGISTER_CALL(void, DCS::Utils::BasicString)
-        DCS_API void StopNamedTask(DCS::Utils::BasicString task_name);
-
-        /**
-		 * \brief Clears a DAQ task on the server-side by id.
-		 * 
-         * Created functions must always be destroyed.
-         * 
-		 * \param task The task id.
-		 * 
-		 * \ingroup calls
-		 */
-        DCS_REGISTER_CALL(void, DCS::DAQ::Task)
-        DCS_API void DestroyTask(Task task);
-
-        /**
-		 * \brief Clears a DAQ task on the server-side by name.
-		 * 
-         * Created functions must always be destroyed.
-         * 
-		 * \param task_name The task name.
-		 * 
-		 * \ingroup calls
-		 */
-        DCS_REGISTER_CALL(void, DCS::Utils::BasicString)
-        DCS_API void DestroyNamedTask(DCS::Utils::BasicString task_name);
+        DCS_REGISTER_CALL(void)
+        DCS_API void StopAIAcquisition();
     }
 }
 

@@ -14,7 +14,8 @@
  * \date $Date: 2021/04/13$
  */
 
-// TODO : Refactor internal API calls to the NIDAQmx. Specifcally InternalTask.
+#define INTERNAL_SAMP_SIZE 1000
+
 namespace DCS
 {
     namespace DAQ
@@ -45,9 +46,10 @@ namespace DCS
          * \param totalCount Total counts got from the NIDAQmx since counter task start.
          * \param diffCount Count difference from last emission of the event.
          * \return DCS::i32 Returns 0 upon no error.
+         * \todo Implement.
          */
-        DCS_REGISTER_EVENT
-        DCS::i32 CounterEvent(DCS::u64 totalCount, DCS::u64 diffCount);
+        //DCS_REGISTER_EVENT
+        //DCS::i32 CounterEvent(DCS::u64 totalCount, DCS::u64 diffCount);
 
         /**
          * \internal
@@ -97,6 +99,20 @@ namespace DCS
 
         /**
          * \internal
+         * \brief Holds data from a single VoltageEvent callback.
+         */
+        struct DCS_INTERNAL_TEST InternalVoltageData
+        {
+            f64 ptr[INTERNAL_SAMP_SIZE];
+
+            Timer::Timestamp timestamp;
+
+            f64 measured_angle;
+            f64 predicted_angle;
+        };
+
+        /**
+         * \internal
          * \brief Create a task via NIDAQmx API.
          */
         DCS_INTERNAL_TEST void CreateTask(InternalTask* t, const char* name);
@@ -105,7 +121,7 @@ namespace DCS
          * \internal
          * \brief Setup a task (timing, channels, etc.) via NIDAQmx API.
          */
-        DCS_INTERNAL_TEST void SetupTask(InternalTask* t, const char* clk_source, DCS::f64 clk, NIDataCallback func);
+        DCS_INTERNAL_TEST void SetupTask(InternalTask* t, const char* clk_source, DCS::f64 clk, DCS::u64 num_samp, NIDataCallback func);
 
         /**
          * \internal

@@ -1,144 +1,146 @@
 #include "../include/DCS_ModuleAcquisition.h"
+#include "../../DCS_Core/include/DCS_ModuleCore.h"
 #include "../include/internal.h"
 #include "../../DCS_Network/include/internal.h"
 
+#include <queue>
+
 #include <NIDAQmx.h>
 
-static std::map<DCS::DAQ::Task, DCS::DAQ::InternalTask> tasks_map;
+struct VCData
+{
+    std::string channel_name;
+    DCS::DAQ::ChannelType type;
+    DCS::DAQ::ChannelRef ref;
+    DCS::DAQ::ChannelLimits lim;
+};
+
+static DCS::DAQ::InternalTask voltage_task;
+static DCS::Timer::SystemTimer voltage_task_timer;
+static std::queue<DCS::DAQ::InternalVoltageData> voltage_task_data;
+static DCS::f64 voltage_task_rate;
+static std::map<const char*, VCData> voltage_vcs;
+static bool voltage_task_running = false;
+static bool voltage_task_inited = false;
+
+// NOTE : Using circular buffer instead of allocating memory every time (?)
+//static DCS::Memory::CircularBuffer crb(INTERNAL_SAMP_SIZE, 32);
+
+// TODO : Create a global SendErrorToClient (also, check if it is being called from server-side only)
+
+void DCS::DAQ::Init()
+{
+    LOG_DEBUG("DAQ Services Running.");
+    voltage_task_rate = 1000.0;
+}
+
+void DCS::DAQ::Terminate()
+{
+    LOG_DEBUG("Terminating DAQ Services.");
+    DCS::Timer::Delete(voltage_task_timer);
+    voltage_task_inited = false;
+}
+
+static void InitAITask()
+{
+    LOG_DEBUG("Creating voltage task.");
+    CreateTask(&voltage_task, "T_AI");
+    voltage_task_inited = true;
+}
+
+static void TerminateAITask()
+{
+    LOG_DEBUG("Terminating voltage task.");
+    ClearTask(&voltage_task);
+    DCS::Timer::Delete(voltage_task_timer);
+    voltage_task_inited = false;
+}
 
 DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData)
 {
-    DCS::f64 samples[1000];
+    auto ts = DCS::Timer::GetTimestamp(voltage_task_timer);
+    DCS::f64 samples[INTERNAL_SAMP_SIZE];
     DCS::i32 aread;
     DAQmxReadAnalogF64(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &aread, NULL);
 
-    //DCS::u32 count[1000];
-    //DCS::i32 aread_c;
-    //DAQmxReadCounterU32(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, count, nSamples, &aread_c, NULL);
+    InternalVoltageData data;
+    data.timestamp = ts;
+    memcpy(data.ptr, samples, INTERNAL_SAMP_SIZE * sizeof(f64));
+    voltage_task_data.push(data);
 
     // NOTE : Maybe use named event to reduce cpu time finding event name
-    DCS_EMIT_EVT((DCS::u8*)samples, 1000 * sizeof(DCS::f64));
+    DCS_EMIT_EVT((DCS::u8*)samples, INTERNAL_SAMP_SIZE * sizeof(f64));
     return 0;
 }
 
-DCS::i32 DCS::DAQ::CounterEvent(DCS::u64 totalCount, DCS::u64 diffCount)
+void DCS::DAQ::NewAIVChannel(DCS::Utils::BasicString name, DCS::Utils::BasicString channel_name, ChannelRef ref, ChannelLimits lim)
 {
-    DCS::u8 buffer[16];
-
-    size_t u64s = sizeof(DCS::u64);
-
-    memcpy(buffer       , &totalCount, u64s);
-    memcpy(buffer + u64s, &diffCount , u64s);
-
-    DCS_EMIT_EVT(buffer, (i32)u64s * 2);
-    return 0;
-}
-
-static std::map<DCS::DAQ::Task, DCS::DAQ::InternalTask>::iterator FindByName(DCS::Utils::String name)
-{
-    return std::find_if(tasks_map.begin(), tasks_map.end(), [name](std::pair<DCS::DAQ::Task, DCS::DAQ::InternalTask> p) {
-            if(strcmp(p.second.name.c_str(), name.c_str()) == 0)
-                return true;
-            return false;
-        });
-}
-
-DCS::DAQ::Task DCS::DAQ::NewTask(DCS::DAQ::TaskSettings setup)
-{
-    LOG_DEBUG("Creating task: %s", setup.task_name.buffer);
-
-    static Task l_task = 0;
-
-    InternalTask t;
-
-    InternalTask* tp = &t;
-
-    CreateTask(tp, setup.task_name.buffer);
-
-    // Setup all the possible channels
-    for(int i = 0; i < 5; i++)
+    for(auto vc : voltage_vcs)
     {
-        // Skip empty channel
-        if(std::string(setup.channel_name[i].buffer) == "")
-            continue;
+        if(std::string(vc.first) == std::string(name.buffer))
+        {
+            LOG_ERROR("Voltage channel naming already exists. Choose another name.");
+            return;
+        }
 
-        LOG_DEBUG("Adding channel %d", i);
-
-        AddTaskChannel(tp,
-            setup.channel_name[i].buffer, 
-            setup.channel_type,
-            setup.channel_ref[i],
-            setup.channel_lim[i]);
+        if(vc.second.channel_name == std::string(channel_name.buffer))
+        {
+            LOG_ERROR("Voltage channel hardware name already in use. Choose another connector.");
+            return;
+        }
     }
+    
+    LOG_DEBUG("Adding voltage channel %s to the voltage task.", channel_name.buffer);
 
-    switch(setup.channel_type)
-    {
-        case ChannelType::Voltage:
-            SetupTask(tp, setup.clock.buffer, setup.clock_rate, VoltageEvent);
-            break;
-        case ChannelType::Counter:
-            break;
-        default:
-            break;
-    }
+    VCData vcd;
+    vcd.channel_name = channel_name.buffer;
+    vcd.ref = ref;
+    vcd.lim = lim;
+    vcd.type = ChannelType::Voltage;
 
-    tasks_map.emplace(l_task, t);
-
-    LOG_DEBUG("Done");
-
-    return l_task++;
+    voltage_vcs.emplace(name.buffer, vcd);
 }
 
-void DCS::DAQ::StartTask(Task task)
+void DCS::DAQ::DeleteAIVChannel(DCS::Utils::BasicString name)
 {
-    StartTask(&tasks_map.at(task));
+    voltage_vcs.erase(name.buffer);
 }
 
-void DCS::DAQ::StartNamedTask(DCS::Utils::BasicString task_name)
+void DCS::DAQ::StartAIAcquisition(DCS::f64 samplerate)
 {
-    auto it = FindByName(task_name.buffer);
-    if(it == tasks_map.end())
+    voltage_task_rate = samplerate;
+
+    if(!voltage_task_running)
     {
-        LOG_ERROR("Could not find task named: %s", task_name.buffer);
+        InitAITask();
+        LOG_DEBUG("Sample rate set to: %.2f S/s.", voltage_task_rate);
+        for(auto vcs : voltage_vcs)
+        {
+            VCData vchannel = vcs.second;
+            AddTaskChannel(&voltage_task, vchannel.channel_name.c_str(), ChannelType::Voltage, vchannel.ref, vchannel.lim);
+        }
+
+        // Always use the internal clock for continuous acquisition
+        SetupTask(&voltage_task, "OnBoardClock", voltage_task_rate, INTERNAL_SAMP_SIZE, VoltageEvent);
+
+        DCS::Timer::Delete(voltage_task_timer);
+        StartTask(&voltage_task);
+        voltage_task_timer = DCS::Timer::New();
+        voltage_task_running = true;
     }
     else
-    {
-        StartTask(&it->second);
-    }
+        LOG_ERROR("Error starting AI Acquisition: VoltageAI task is already running.");
 }
 
-void DCS::DAQ::StopTask(Task task)
+void DCS::DAQ::StopAIAcquisition()
 {
-    StopTask(&tasks_map.at(task));
-}
-
-void DCS::DAQ::StopNamedTask(DCS::Utils::BasicString task_name)
-{
-    auto it = FindByName(task_name.buffer);
-    if(it == tasks_map.end())
+    if(voltage_task_running)
     {
-        LOG_ERROR("Could not find task named: %s", task_name.buffer);
+        StopTask(&voltage_task);
+        DCS::Timer::Delete(voltage_task_timer);
+        voltage_task_running = false;
+        TerminateAITask();
     }
     else
-    {
-        StopTask(&it->second);
-    }
-}
-
-void DCS::DAQ::DestroyTask(Task task)
-{
-    ClearTask(&tasks_map.at(task));
-}
-
-void DCS::DAQ::DestroyNamedTask(DCS::Utils::BasicString task_name)
-{
-    auto it = FindByName(task_name.buffer);
-    if(it == tasks_map.end())
-    {
-        LOG_ERROR("Could not find task named: %s", task_name.buffer);
-    }
-    else
-    {
-        ClearTask(&it->second);
-    }
+        LOG_ERROR("Error stopping AI Acquisition: VoltageAI task is not running.");
 }
