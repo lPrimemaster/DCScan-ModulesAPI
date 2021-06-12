@@ -22,6 +22,82 @@ namespace DCS
 {
 	namespace Memory
 	{
+		// class CircularBuffer
+		// {
+		// public:
+		// 	CircularBuffer(u64 block_size, u64 num_blocks);
+		// 	~CircularBuffer();
+
+		// 	inline u8* write(u8* data, u64 sz)
+		// 	{
+		// 		if(sz > block_size)
+		// 		{
+		// 			LOG_CRITICAL("CircularBuffer: Write operation size exceeded block_size.");
+		// 			return nullptr;
+		// 		}
+
+		// 		while(read_tag.load() & (1 << o_write))
+		// 		{
+		// 			std::this_thread::yield();
+		// 		}
+
+		// 		std::unique_lock<std::mutex> lck(m);
+
+		// 		cv.wait(lck, []() { return (read_tag.load() & (1 << o_write)) == 0; });
+
+		// 		lck.unlock();
+		// 		u8* p = data + (o_write++ * block_size);
+		// 		memcpy(p, data, sz);
+
+		// 		read_tag |= (1 << (o_write-1));
+
+		// 		o_write %= num_blocks;
+		// 		write_cycle++;
+		// 		return p;
+		// 	}
+
+		// 	inline void read(u8* dst_buffer, u64 sz)
+		// 	{
+		// 		if(dst_buffer == nullptr)
+		// 		{
+		// 			LOG_CRITICAL("CircularBuffer: Read operation destination buffer is NULL.");
+		// 			return;
+		// 		}
+
+		// 		std::unique_lock<std::mutex> lck(m);
+
+		// 		cv.wait(lck, []() { return (read_tag.load() & (1 << o_read)) == 1; });
+
+
+		// 		u8* p = data + (o_read++ * block_size);
+		// 		memcpy(dst_buffer, p, sz);
+		// 		read_tag &= ~(1 << (o_read-1));
+
+		// 		o_read %= num_blocks;
+		// 		read_cycle++;
+				
+		// 		lck.unlock();
+		// 	}
+
+		// private:
+		// 	u8* data = nullptr;
+		// 	u64 block_size = 0;
+		// 	u64 num_blocks = 0;
+		// 	u64 total_size = 0;
+
+		// 	u64 o_read = 0;
+		// 	u64 o_write = 0;
+
+		// 	std::atomic<u64> read_tag = 0xFFFFFFFFFFFFFFFF;
+
+		// 	std::condition_variable cv;
+		// 	std::mutex m;
+
+		// 	u64 read_cycle = 0;
+		// 	u64 write_cycle = 0;
+		// };
+
+
 		/**
 		 * \internal
 		 * \brief Struct to store data linearly
@@ -146,6 +222,41 @@ namespace DCS
 	namespace Auth
 	{
 		DCS_API void Encrypt(DCS::u8* to_encrypt, int size, DCS::u8* key, DCS::u8* iv, DCS::u8* encrypted_out, DCS::u8* tag);
+	}
+
+	namespace Math
+	{
+		struct CountResult
+		{
+			u64 num_detected;
+			u64* maximizers = nullptr;
+			f64* maxima = nullptr;
+
+			~CountResult()
+			{
+				if(maximizers != nullptr)
+				{
+					delete[] maximizers;
+				}
+
+				if(maxima != nullptr)
+				{
+					delete[] maxima;
+				}
+			}
+		};
+
+		class DetectionRange
+		{
+		public:
+			DetectionRange(f64 vlo, f64 vhi) : vlo(vlo), vhi(vhi) {  }
+
+		private:
+			f64 vlo;
+			f64 vhi;
+		};
+		
+		CountResult countArrayPeak(f64* arr, u64 size, DetectionRange range);
 	}
 }
 

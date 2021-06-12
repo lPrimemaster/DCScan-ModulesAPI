@@ -77,11 +77,16 @@ namespace DCS
 	 * 
 	 * The database files and functions are thread-safe.
 	 */
-	namespace DB // TODO : Document & Add user login statistics / trace
+	namespace DB // TODO : Add user login statistics / trace
 	{
 #pragma pack( push )
 		// NOTE : Using a salt is nice but requires to send the plain text password which is okay but such security is not needed.
 		// Just ensure the user has a strong password.
+
+		/**
+		 * \internal
+		 * \brief Structure that holds everything thats is (or will be) related with a single user.
+		 */
 		struct User
 		{
 			char u[32]; ///< Holds the username.
@@ -89,47 +94,115 @@ namespace DCS
 		};
 #pragma pack( pop )
 
+		/**
+		 * \internal
+		 * \brief Opens the default database file in the disk.
+		 */
 		DCS_INTERNAL_TEST void LoadDefaultDB();
 
+		/**
+		 * \internal
+		 * \brief Closes the default database file in the disk.
+		 */
 		DCS_INTERNAL_TEST void CloseDB();
 
+		/**
+		 * \internal
+		 * \brief Loads all the users stored in the default database file handle to a memory location.
+		 */
 		DCS_INTERNAL_TEST void LoadUsers();
 
+		/**
+		 * \internal
+		 * \brief Adds an user to the default database file handle and memory location.
+		 */
 		DCS_INTERNAL_TEST void AddUser(const char* username, const char* password);
 
+		/**
+		 * \internal
+		 * \brief Removes an existing user from the default database file handle and memory location.
+		 */
 		DCS_INTERNAL_TEST void RemoveUserByUsername(const char* username);
 
+		/**
+		 * \internal
+		 * \brief Finds an existing user index from the memory location.
+		 * \return User index in the database.
+		 */
 		DCS_INTERNAL_TEST u64  FindUserByUsername(const char* username);
 
+		/**
+		 * \internal
+		 * \brief Finds an existing user from the memory location.
+		 * \return User struct of the found user.
+		 */
 		DCS_INTERNAL_TEST User GetUser(const char* username);
 
+		/**
+		 * \internal
+		 * \brief Gets a read only copy of the database memory location.
+		 * \return Array of all the User structs in the database.
+		 */
 		DCS_INTERNAL_TEST const User* GetAllUsers();
 
+		/**
+		 * \internal
+		 * \brief Gets the user count in the database memory location.
+		 * \return Array of all the User structs in the database.
+		 */
 		DCS_INTERNAL_TEST u64  GetUserCount();
 	}
 
-	namespace Auth // TODO : Document
+	namespace Auth
 	{
+		/**
+		 * \internal
+		 * \brief Initializes a safe crypto random generator.
+		 */
 		DCS_INTERNAL_TEST void InitCryptoRand();
 
+		/**
+		 * \internal
+		 * \brief Generates a cryptographically secure random 64-bit value.
+		 */
 		DCS_INTERNAL_TEST void GenerateSalt(DCS::u8 salt[8]);
 
+		/**
+		 * \internal
+		 * \brief Generates a cryptographically secure random 128-bit value.
+		 */
 		DCS_INTERNAL_TEST void GenerateRandSafeIV128(DCS::u8 iv[16]);
 
+		/**
+		 * \internal
+		 * \brief Generates a string's SHA-256 hash.
+		 */
 		DCS_INTERNAL_TEST void SHA256Str(const char* string, DCS::u8 hash[DCS_SHA256_DIGEST_LENGTH]);
 
+		/**
+		 * \internal
+		 * \brief Returns bytes as a string (for debugging purposes only).
+		 */
 		DCS_INTERNAL_TEST void HexStringifyBytes(char* out, DCS::u8* hash, DCS::u64 size);
 
+		/**
+		 * \internal
+		 * \brief Encrypts bytes with the AES-256 (GCM) cypher using a key and iv.
+		 */
 		DCS_INTERNAL_TEST void EncryptAES256(DCS::u8* to_encrypt, int to_encrypt_size, 
 											 DCS::u8* aad, int aad_size, DCS::u8* key, 
 											 DCS::u8* iv, DCS::u8* encrypted_out, DCS::u8* tag);
 
+		/**
+		 * \internal
+		 * \brief Decrypts bytes with the AES-256 (GCM) cypher using a key and iv.
+		 */
 		DCS_INTERNAL_TEST int  DecryptAES256(DCS::u8* cipher, int cipher_size, 
 											 DCS::u8* aad, int aad_size, DCS::u8* key, 
 											 DCS::u8* iv, DCS::u8* plain_out, DCS::u8* tag);
 	}
 
-	namespace Core // TODO : Document
+	namespace Core // NOTE : Might deprecate this (using external firmware)
 	{
 		class DCS_INTERNAL_TEST PID
 		{
@@ -157,7 +230,6 @@ namespace DCS
 			float le;
 			float integral;
 
-			// HACK : What is the default value of this?
 			std::chrono::steady_clock::time_point last_point;
 		};
 	}

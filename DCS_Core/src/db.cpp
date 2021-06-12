@@ -5,7 +5,7 @@ static DCS::DB::User* users = nullptr;
 static DCS::u64 num_users = 0;
 static std::mutex mtx;
 
-// TODO : improve thread safety mutex implementation
+// NOTE : If it becomes an issue, improve thread safety mutex implementation
 void DCS::DB::LoadDefaultDB()
 {
     std::lock_guard<std::mutex> lock(mtx);
