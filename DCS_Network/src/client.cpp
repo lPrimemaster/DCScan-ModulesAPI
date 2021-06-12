@@ -140,7 +140,7 @@ bool DCS::Network::Client::StartThread(Socket connection)
 						//auto now = DCS::Timer::GetTimestamp(timer);
 						//server_latency_ms.store((now.millis - ts.millis + (now.sec - ts.sec) * 1000));
 
-						//// BUG : If server disconnect happens at same time of keepalive (Message::SendAsync still runs)
+						//// BUG : If server disconnect happens at same time of keepalive (Message::SendAsync still runs) FIX Keep Alive!
 						//// causing socket send error
 						//nblock = std::async(std::launch::async, [&]() {
 						//	// Heartbeat for 10 seconds to keepalive

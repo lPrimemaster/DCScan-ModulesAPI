@@ -138,7 +138,7 @@ static void IssueValidity(SOCKET client, DCS::u8 validity)
 	DCS::Network::SendData(client, (const DCS::u8 *)&validity, cval_size);
 }
 
-// TODO : Maybe use the tag for auth (?)
+// NOTE : Could also use the tag for auth (?)
 static bool Authenticate(SOCKET client)
 {
 	using namespace DCS;
@@ -273,15 +273,13 @@ bool DCS::Network::Server::StartThread(Socket client)
 						DCS::Registry::SVReturn r = DCS::Registry::Execute(DCS::Registry::SVParams::GetParamsFromData(msg.ptr, (i32)msg.size));
 
 						// Send the return value if it exists
-						if (r.type != SV_RET_VOID)
-						{
-							auto dm = Message::Alloc(sizeof(r) + MESSAGE_XTRA_SPACE);
-							Message::SetCopyId(dm,
-											   DCS::Utils::toUnderlyingType(Message::InternalOperation::ASYNC_RESPONSE),
-											   msg.id,
-											   (u8 *)&r);
-							outbound_data_queue.push(dm);
-						}
+						// Send the return value (even if SV_RET_VOID)
+						auto dm = Message::Alloc(sizeof(r) + MESSAGE_XTRA_SPACE);
+						Message::SetCopyId(dm,
+											DCS::Utils::toUnderlyingType(Message::InternalOperation::ASYNC_RESPONSE),
+											msg.id,
+											(u8 *)&r);
+						outbound_data_queue.push(dm);
 					}
 					break;
 					case DCS::Network::Message::InternalOperation::SYNC_REQUEST:
