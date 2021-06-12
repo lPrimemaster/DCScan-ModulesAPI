@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>DCSModulesAPI: Remote Server Event Types ID List.</title>
+<title>DCSModulesAPI: DCS::DAQ::InternalVoltageData Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -41,9 +41,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li class="current"><a href="modules.html"><span>Modules</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li><a href="examples.html"><span>Examples</span></a></li>
       <li>
@@ -64,7 +64,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </li>
     </ul>
   </div>
-</div><!-- top -->
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
+      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+    </ul>
+  </div>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -79,30 +85,38 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><b>DCS</b></li><li class="navelem"><a class="el" href="namespace_d_c_s_1_1_d_a_q.html">DAQ</a></li><li class="navelem"><a class="el" href="struct_d_c_s_1_1_d_a_q_1_1_internal_voltage_data.html">InternalVoltageData</a></li>  </ul>
+</div>
+</div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="struct_d_c_s_1_1_d_a_q_1_1_internal_voltage_data-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Remote Server Event Types ID List.</div>  </div>
+<div class="title">DCS::DAQ::InternalVoltageData Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>A module containing all the TCP/IP subscribable events IDs.  
-<a href="#details">More...</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:ga9801eb86781644cb9d50357683ae861a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga9801eb86781644cb9d50357683ae861a"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__evt__id.html#ga9801eb86781644cb9d50357683ae861a">SV_EVT_DCS_DAQ_VoltageEvent</a>&#160;&#160;&#160;0x1</td></tr>
-<tr class="memdesc:ga9801eb86781644cb9d50357683ae861a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A event refering to <code>DCS::DAQ::VoltageEvent</code> <br /></td></tr>
-<tr class="separator:ga9801eb86781644cb9d50357683ae861a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaccc010c9d55e263fce57b63054e400a4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gaccc010c9d55e263fce57b63054e400a4"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__evt__id.html#gaccc010c9d55e263fce57b63054e400a4">SV_EVT_DCS_Network_Message_FibSeqEvt</a>&#160;&#160;&#160;0x2</td></tr>
-<tr class="memdesc:gaccc010c9d55e263fce57b63054e400a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">A event refering to <code><a class="el" href="group__events.html#gad87e3b7c23a0e322938a91a72508813d" title="A Sample Event possible to implement in the server/API. When called, returns the next number in the F...">DCS::Network::Message::FibSeqEvt</a></code> <br /></td></tr>
-<tr class="separator:gaccc010c9d55e263fce57b63054e400a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a5970f229ea8859c33baa075be1794813"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5970f229ea8859c33baa075be1794813"></a>
+<a class="el" href="_d_c_s___module_utils_8h.html#a04a12932623412e50e1cae85bd19af57">f64</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ptr</b> [INTERNAL_SAMP_SIZE]</td></tr>
+<tr class="separator:a5970f229ea8859c33baa075be1794813"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab988ba284d32fded2ed87390d4540774"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab988ba284d32fded2ed87390d4540774"></a>
+<a class="el" href="struct_d_c_s_1_1_timer_1_1_timestamp.html">Timer::Timestamp</a>&#160;</td><td class="memItemRight" valign="bottom"><b>timestamp</b></td></tr>
+<tr class="separator:ab988ba284d32fded2ed87390d4540774"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac25c24b47bc7698d70decf1c60e7eef9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac25c24b47bc7698d70decf1c60e7eef9"></a>
+<a class="el" href="_d_c_s___module_utils_8h.html#a04a12932623412e50e1cae85bd19af57">f64</a>&#160;</td><td class="memItemRight" valign="bottom"><b>measured_angle</b></td></tr>
+<tr class="separator:ac25c24b47bc7698d70decf1c60e7eef9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ee76384da2161a0097c0d3e930974a8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8ee76384da2161a0097c0d3e930974a8"></a>
+<a class="el" href="_d_c_s___module_utils_8h.html#a04a12932623412e50e1cae85bd19af57">f64</a>&#160;</td><td class="memItemRight" valign="bottom"><b>predicted_angle</b></td></tr>
+<tr class="separator:a8ee76384da2161a0097c0d3e930974a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>A module containing all the TCP/IP subscribable events IDs. </p>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>DCS_Acquisition/include/<a class="el" href="_d_c_s___acquisition_2include_2internal_8h_source.html">internal.h</a></li>
+</ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
