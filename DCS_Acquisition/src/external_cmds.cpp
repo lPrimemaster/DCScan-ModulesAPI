@@ -70,7 +70,7 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     // TODO : Maybe try a more predictive approach if this is not good enough
     // IMPORTANT : To ensure usability take params -> (Nbuff / Fsamp) * Vtheta = delta_theta_min
     //             For this case -> (1000 / 100'000) * ([estimated?]~100 mdeg/s) = 1 mdeg uncertainty per buffer
-    data.measured_angle = atof(DCS::Control::IssueGenericCommandResponse(DCS::Control::UnitTarget::ESP301, "2TP?").buffer);
+    data.measured_angle = atof(DCS::Control::IssueGenericCommandResponse(DCS::Control::UnitTarget::ESP301, { "2TP?" }).buffer);
 
     DAQmxReadAnalogF64(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &aread, NULL);
     memcpy(data.ptr, samples, INTERNAL_SAMP_SIZE * sizeof(f64));
@@ -157,9 +157,9 @@ void DCS::DAQ::StopAIAcquisition()
         LOG_ERROR("Error stopping AI Acquisition: VoltageAI task is not running.");
 }
 
-void DCS::DAQ::GetLastIVD()
+DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastIVD()
 {
-    std::lock_guard<std::mutex> lck(voltage_mtx);
+    std::unique_lock<std::mutex> lck(voltage_mtx);
     
     if(voltage_task_data.empty())
         voltage_cv.wait(lck);
