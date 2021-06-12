@@ -226,6 +226,11 @@ namespace DCS {
 			$7
 		};
 
+		inline static std::unordered_map<u16, const char*> r_id_debug = 
+		{
+			$8
+		};
+
         inline static std::unordered_map<u8, EventCallbackFunc> evt_callbacks;
 		inline static std::unordered_map<u8, u8*> evt_userData;
 
@@ -295,7 +300,7 @@ namespace DCS {
 				{
 				    switch(fcode)
 				    {
-					    $8
+					    $9
 					    default:
 						    LOG_ERROR("GetDataFromParams() function code (fcode) not found.");
 						    LOG_ERROR("Maybe function signature naming is invalid, or function does not take any arguments.");
@@ -369,8 +374,11 @@ DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 	SVReturn ret; // A generic return type container
 	ret.type = SV_RET_VOID;
 
-    LOG_DEBUG("Executing function code -> %d", params.getFunccode());
-	switch(params.getFunccode())
+	u16 fcode = params.getFunccode();
+
+	if(fcode < MAX_CALL)
+    	LOG_DEBUG("Executing function code -> %d (%s)", fcode, r_id_debug[fcode]);
+	switch(fcode)
 	{
 	case SV_CALL_NULL:
 		LOG_ERROR("Function call from SVParams is illegal. Funccode not in hash table.");
@@ -505,6 +513,7 @@ rtype_defines = []
 evt_def = []
 evt_map = []
 evt_f_map = []
+defines_debug_name = []
 
 registry = []
 number = 1
@@ -572,7 +581,10 @@ for sig in func:
 			'\n\t\t\t\t\t\t\t'.join(switch_reverse_args) + '\n\t\t\t\t\t\t\tbreak;\n\t\t\t\t\t\t}')
 
 	registry.append('{"' + sig + '", ' + hex(number) + '}')
+	defines_debug_name.append('{' + hex(number) + ', "' + definition + '"}')
 	number += 1
+
+defines.append('#define MAX_CALL ' + hex(number))
 
 number = 1
 for evt in evt_name:
@@ -586,16 +598,17 @@ for evt in evt_name:
 with open(curr_dir + '/config/registry.h', 'w') as f:
 	f.write(HEADER)
 
-	DEC = DEC.replace('$0', '\n'.join(hdef)) 			# Place necessary func call headers
-	DEC = DEC.replace('$1', '\n'.join(defines)) 		# Place func call codes definitions
-	DEC = DEC.replace('$2', '\n'.join(arg_def_all)) 	# Place func arg registry codes definitions
-	DEC = DEC.replace('$3', '\n'.join(rtype_defines)) 	# Place func return type registry codes definitions
+	DEC = DEC.replace('$0', '\n'.join(hdef)) 					  # Place necessary func call headers
+	DEC = DEC.replace('$1', '\n'.join(defines)) 				  # Place func call codes definitions
+	DEC = DEC.replace('$2', '\n'.join(arg_def_all)) 			  # Place func arg registry codes definitions
+	DEC = DEC.replace('$3', '\n'.join(rtype_defines)) 			  # Place func return type registry codes definitions
 	DEC = DEC.replace('$4', '#define MAX_SUB ' + 
-		hex(len(evt_def)) + '\n' + '\n'.join(evt_def))  # Place evt codes definitions
-	DEC = DEC.replace('$5', ',\n\t\t\t'.join(registry)) # Register function signatures in unordered_map
-	DEC = DEC.replace('$6', ',\n\t\t\t'.join(evt_map))  # Register events
-	DEC = DEC.replace('$7', ',\n\t\t\t'.join(evt_f_map))# Register event functions
-	DEC = DEC.replace('$8', '\n\t\t\t\t\t\t'.join(switch_reverse))
+		hex(len(evt_def)) + '\n' + '\n'.join(evt_def))  		  # Place evt codes definitions
+	DEC = DEC.replace('$5', ',\n\t\t\t'.join(registry)) 		  # Register function signatures in unordered_map
+	DEC = DEC.replace('$6', ',\n\t\t\t'.join(evt_map))  		  # Register events
+	DEC = DEC.replace('$7', ',\n\t\t\t'.join(evt_f_map))		  # Register event functions
+	DEC = DEC.replace('$8', ',\n\t\t\t'.join(defines_debug_name)) # Register function debug names
+	DEC = DEC.replace('$9', '\n\t\t\t\t\t\t'.join(switch_reverse))
 
 	f.write(DEC)
 
