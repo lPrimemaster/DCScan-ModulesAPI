@@ -36,6 +36,7 @@ var searchData=
   ['sv_5fcall_5fdcs_5fdaq_5fstopaiacquisition',['SV_CALL_DCS_DAQ_StopAIAcquisition',['../group__calls__id.html#gae4970f6be2659cbf677b4c5b865e43bd',1,'registry.h']]],
   ['sv_5fcall_5fdcs_5fthreading_5fgetmaxhardwareconcurrency',['SV_CALL_DCS_Threading_GetMaxHardwareConcurrency',['../group__calls__id.html#ga2748f0220c00a9f6137898f09654e113',1,'registry.h']]],
   ['sv_5fcall_5fnull',['SV_CALL_NULL',['../registry_8h.html#a4ad017fa920aa93c6b1dea8f7aabd796',1,'registry.h']]],
+  ['sv_5fevt_5fdcs_5fdaq_5fpeakdetectwithangleevent',['SV_EVT_DCS_DAQ_PeakDetectWithAngleEvent',['../group__evt__id.html#ga91cdb22e9c81eec98e537ac406b943b1',1,'registry.h']]],
   ['sv_5fevt_5fdcs_5fdaq_5fvoltageevent',['SV_EVT_DCS_DAQ_VoltageEvent',['../group__evt__id.html#ga9801eb86781644cb9d50357683ae861a',1,'registry.h']]],
   ['sv_5fevt_5fdcs_5fnetwork_5fmessage_5ffibseqevt',['SV_EVT_DCS_Network_Message_FibSeqEvt',['../group__evt__id.html#gaccc010c9d55e263fce57b63054e400a4',1,'registry.h']]],
   ['sv_5fret_5fdcs_5fu16',['SV_RET_DCS_u16',['../group__ret__id.html#ga0e746bbe92aa3808366ca1417e42f580',1,'registry.h']]],

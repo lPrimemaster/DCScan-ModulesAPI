@@ -20,7 +20,6 @@ var searchData=
   ['delete',['Delete',['../namespace_d_c_s_1_1_timer.html#a2570944c17768aaa330f9c39889e10fe',1,'DCS::Timer']]],
   ['deleteaivchannel',['DeleteAIVChannel',['../group__calls.html#ga934fc9c37d4b04b790f67f30a9ee7b72',1,'DCS::DAQ']]],
   ['destroy',['Destroy',['../class_d_c_s_1_1_utils_1_1_logger.html#af88d3f142c2a46877046e2339c80de35',1,'DCS::Utils::Logger::Destroy()'],['../namespace_d_c_s_1_1_network.html#a4377e00fb3bb6e4123deaa437e9c2f73',1,'DCS::Network::Destroy()']]],
-  ['detectionrange',['DetectionRange',['../class_d_c_s_1_1_math_1_1_detection_range.html',1,'DCS::Math']]],
   ['differential',['Differential',['../namespace_d_c_s_1_1_d_a_q.html#a14db22532f39b49c1df48a874e506411a1c2eaa5d56340808f2a94368501e5496',1,'DCS::DAQ']]],
   ['disable_5fcolor',['DISABLE_COLOR',['../class_d_c_s_1_1_utils_1_1_logger.html#ae34ad54d6c13829913a8082aecf111fea6a9d07debbde6fcaf05d627742a9e7b5',1,'DCS::Utils::Logger']]],
   ['message',['Message',['../namespace_d_c_s_1_1_network_1_1_message.html',1,'DCS::Network']]],
