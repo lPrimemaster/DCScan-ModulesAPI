@@ -28,7 +28,7 @@ set_target_properties(DCSModuleEngineControl PROPERTIES
   ) #;${CMAKE_CURRENT_BINARY_DIR}/config.h")
 
 install(TARGETS DCSModuleEngineControl
-  # IMPORTANT: Add the DCSModuleEngineControl library to the "export-set"
+  # Add the DCSModuleEngineControl library to the "export-set"
   EXPORT DCSModulesAPITargets
   RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
   LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT lib

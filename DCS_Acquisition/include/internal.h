@@ -149,5 +149,10 @@ namespace DCS
          */
         DCS_INTERNAL_TEST void ClearTask(InternalTask* t);
 
+        /**
+         * \internal
+         * \brief Get last internal voltage data and pop from memory.
+         */
+        DCS_INTERNAL_TEST DCS::DAQ::InternalVoltageData GetLastIVD();
     }
 }

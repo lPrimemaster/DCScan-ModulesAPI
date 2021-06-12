@@ -245,18 +245,8 @@ namespace DCS
 				}
 			}
 		};
-
-		class DetectionRange
-		{
-		public:
-			DetectionRange(f64 vlo, f64 vhi) : vlo(vlo), vhi(vhi) {  }
-
-		private:
-			f64 vlo;
-			f64 vhi;
-		};
 		
-		CountResult countArrayPeak(f64* arr, u64 size, DetectionRange range);
+		CountResult countArrayPeak(f64* arr, u64 size, f64 vlo, f64 vhi, f64 vth);
 	}
 }
 

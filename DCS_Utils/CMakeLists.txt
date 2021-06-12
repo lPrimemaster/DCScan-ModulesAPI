@@ -24,7 +24,7 @@ set_target_properties(DCSModuleUtils PROPERTIES
   ) #;${CMAKE_CURRENT_BINARY_DIR}/config.h")
 
 install(TARGETS DCSModuleUtils
-  # IMPORTANT: Add the DCSModuleUtils library to the "export-set"
+  # Add the DCSModuleUtils library to the "export-set"
   EXPORT DCSModulesAPITargets
   RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
   LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT lib

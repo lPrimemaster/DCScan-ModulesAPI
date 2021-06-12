@@ -59,6 +59,15 @@ namespace DCS
             DCS::f64 max =  10.0; ///< Maximum DAQ accepted value.
         };
 
+        // TODO : Document
+        struct DCS_API PDetectEventData
+        {
+            DCS::u64 counts;
+            DCS::Timer::Timestamp timestamp;
+            DCS::f64 expected_angle;
+            DCS::f64 measured_angle;
+        };
+
         /**
          * \brief Initializes the Acquisition API.
          */
@@ -125,6 +134,10 @@ namespace DCS
          */
         DCS_REGISTER_CALL(void)
         DCS_API void StopAIAcquisition();
+
+        // TODO : Document
+        DCS_REGISTER_EVENT
+        DCS_API void PeakDetectWithAngleEvent();
     }
 }
 

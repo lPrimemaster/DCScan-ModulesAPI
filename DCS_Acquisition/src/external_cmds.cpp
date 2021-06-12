@@ -20,6 +20,8 @@ static DCS::Timer::SystemTimer voltage_task_timer;
 static std::queue<DCS::DAQ::InternalVoltageData> voltage_task_data;
 static DCS::f64 voltage_task_rate;
 static std::map<const char*, VCData> voltage_vcs;
+static std::mutex voltage_mtx;
+static std::condition_variable voltage_cv;
 static bool voltage_task_running = false;
 static bool voltage_task_inited = false;
 
@@ -59,15 +61,24 @@ static void TerminateAITask()
 // NOTE : This works because only one channel is being used. If more channels are used, this needs to be refactored
 DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData)
 {
-    auto ts = DCS::Timer::GetTimestamp(voltage_task_timer);
+    InternalVoltageData data;
     DCS::f64 samples[INTERNAL_SAMP_SIZE];
     DCS::i32 aread;
-    DAQmxReadAnalogF64(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &aread, NULL);
 
-    InternalVoltageData data;
-    data.timestamp = ts;
+    data.timestamp = DCS::Timer::GetTimestamp(voltage_task_timer);
+
+    // TODO : Maybe try a more predictive approach if this is not good enough
+    // IMPORTANT : To ensure usability take params -> (Nbuff / Fsamp) * Vtheta = delta_theta_min
+    //             For this case -> (1000 / 100'000) * ([estimated?]~100 mdeg/s) = 1 mdeg uncertainty per buffer
+    data.measured_angle = atof(DCS::Control::IssueGenericCommandResponse(DCS::Control::UnitTarget::ESP301, "2TP?").buffer);
+
+    DAQmxReadAnalogF64(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &aread, NULL);
     memcpy(data.ptr, samples, INTERNAL_SAMP_SIZE * sizeof(f64));
+
+    std::unique_lock<std::mutex> lck(voltage_mtx);
     voltage_task_data.push(data);
+    lck.unlock();
+    voltage_cv.notify_one();
 
     // NOTE : Maybe use named event to reduce cpu time finding event name
     DCS_EMIT_EVT((DCS::u8*)samples, INTERNAL_SAMP_SIZE * sizeof(f64));
@@ -144,4 +155,16 @@ void DCS::DAQ::StopAIAcquisition()
     }
     else
         LOG_ERROR("Error stopping AI Acquisition: VoltageAI task is not running.");
+}
+
+void DCS::DAQ::GetLastIVD()
+{
+    std::lock_guard<std::mutex> lck(voltage_mtx);
+    
+    if(voltage_task_data.empty())
+        voltage_cv.wait(lck);
+
+    InternalVoltageData ivd = voltage_task_data.front();
+    voltage_task_data.pop();
+    return ivd;
 }
