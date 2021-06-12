@@ -53,10 +53,10 @@
 
 #define SV_ARG_NULL 0x0 ///< Indicates a non existant argument [Not to use].
 #define SV_ARG_DCS_Utils_BasicString 0x1 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
-#define SV_ARG_DCS_DAQ_ChannelRef 0x2 ///< Refers to argument `DCS::DAQ::ChannelRef` \ingroup args_id
+#define SV_ARG_DCS_Control_UnitTarget 0x2 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
 #define SV_ARG_DCS_DAQ_ChannelLimits 0x3 ///< Refers to argument `DCS::DAQ::ChannelLimits` \ingroup args_id
-#define SV_ARG_DCS_Control_UnitTarget 0x4 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
-#define SV_ARG_DCS_f64 0x5 ///< Refers to argument `DCS::f64` \ingroup args_id
+#define SV_ARG_DCS_f64 0x4 ///< Refers to argument `DCS::f64` \ingroup args_id
+#define SV_ARG_DCS_DAQ_ChannelRef 0x5 ///< Refers to argument `DCS::DAQ::ChannelRef` \ingroup args_id
 
 #define SV_RET_VOID 0x0 ///< Indicates a void return type.
 #define SV_RET_DCS_u16 0x1 ///< Refers to return type `DCS::u16` \ingroup ret_id

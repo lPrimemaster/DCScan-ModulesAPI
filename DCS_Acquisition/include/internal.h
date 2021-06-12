@@ -35,6 +35,8 @@ namespace DCS
          * \param nSamples Number of samples to call recurring upon.
          * \param callbackData Back-end custom data passing to the NIDAQmx thread.
          * \return DCS::i32 Returns 0 upon no error.
+         * 
+         * \ingroup events
          */
         DCS_REGISTER_EVENT
         DCS::i32 VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData);

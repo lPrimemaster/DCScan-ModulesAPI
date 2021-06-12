@@ -56,6 +56,7 @@ static void TerminateAITask()
     voltage_task_inited = false;
 }
 
+// NOTE : This works because only one channel is being used. If more channels are used, this needs to be refactored
 DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData)
 {
     auto ts = DCS::Timer::GetTimestamp(voltage_task_timer);
