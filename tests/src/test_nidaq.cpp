@@ -37,6 +37,17 @@ int main()
                     std::string sdata = std::to_string(fdata[i]) + '\n';
                     fwrite(sdata.c_str(), 1, sdata.size(), f);
                 }
+
+                static DCS::u64 c = 0;
+                DCS::Math::CountResult cr = DCS::Math::countArrayPeak(fdata, 1000, 7.0, 0.0, 1.0);
+                c += cr.num_detected;
+
+                LOG_DEBUG("Total count until now: %u.", c);
+
+
+                //std::string sdata = std::to_string(cr.num_detected) + '\n';
+                //fwrite(sdata.c_str(), 1, sdata.size(), f);
+
             }, (DCS::u8*)f);
         DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::EVT_SUB, buffer, size);
 
@@ -49,17 +60,17 @@ int main()
 
         DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::REQUEST, buffer, size);
 
-        size = DCS::Registry::SVParams::GetDataFromParams(buffer, SV_CALL_DCS_DAQ_StartAIAcquisition, 1000.0);
+        size = DCS::Registry::SVParams::GetDataFromParams(buffer, SV_CALL_DCS_DAQ_StartAIAcquisition, 10000.0);
 
         DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::REQUEST, buffer, size).wait();
 
         LOG_DEBUG("Wait to signal task end.");
-        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10000));
         LOG_DEBUG("Signal task end.");
 
         size = DCS::Registry::SVParams::GetDataFromParams(buffer, SV_CALL_DCS_DAQ_StopAIAcquisition);
 
-        DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::REQUEST, buffer, size);
+        DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::REQUEST, buffer, size).wait();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 

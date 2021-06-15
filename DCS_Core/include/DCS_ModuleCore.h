@@ -219,18 +219,33 @@ namespace DCS
 		const DCS_API u16 GetMaxHardwareConcurrency();
 	}
 
+	/**
+	 * \brief Handles authentication and cryptography.
+	 */
 	namespace Auth
 	{
+		/**
+		 * \brief Encrypts bytes with the AES-256 (GCM) cypher using a key and iv.
+		 * \deprecated This function is no longer required to be called directly on the client.
+		 */
 		DCS_API void Encrypt(DCS::u8* to_encrypt, int size, DCS::u8* key, DCS::u8* iv, DCS::u8* encrypted_out, DCS::u8* tag);
 	}
 
+	/**
+	 * \brief Holds math utilities and tools.
+	 */
 	namespace Math
 	{
+		/**
+		 * \brief Struct that holds the data retrieved from DCS::Math::countArrayPeak.
+		 * 
+		 * Automatically cleans up used memory.
+		 */
 		struct CountResult
 		{
-			u64 num_detected;
-			u64* maximizers = nullptr;
-			f64* maxima = nullptr;
+			u64 num_detected = 0;	   ///< Number of detected peaks.
+			u64* maximizers = nullptr; ///< x positions array of the detected peaks (in samples).
+			f64* maxima = nullptr;     ///< y values array of the detected peaks.
 
 			~CountResult()
 			{
@@ -246,6 +261,23 @@ namespace DCS
 			}
 		};
 		
+		/**
+		 * \brief Counts the total ocurrences of peaks between vlo and vhi, with the specified sensitivity threshold.
+		 * 
+		 * Has two modes:
+		 * Legacy - Slower but more reliable (use by defining '#define DCS_MATH_USE_LEGACY_COUNTER' in the server).
+		 * Core   - Faster but can fail n certain edge scenarios (default).
+		 * 
+		 * Remark: Only the legacy mode is currently supported (and is enabled by default).
+		 * 
+		 * \param arr The data array to be analyzed.
+		 * \param size The size of the data array.
+		 * \param vlo The low limit to consider peaks.
+		 * \param vhi The high lmti to consider peaks.
+		 * \param vth The sensitivity threshold.
+		 * 
+		 * \return A DCS::Math::CountResult struct with data of analyzed array.
+		 */
 		CountResult countArrayPeak(f64* arr, u64 size, f64 vlo, f64 vhi, f64 vth);
 	}
 }

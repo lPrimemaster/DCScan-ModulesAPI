@@ -58,7 +58,7 @@ static void TerminateAITask()
     voltage_task_inited = false;
 }
 
-// NOTE : This works because only one channel is being used. If more channels are used, this needs to be refactored
+// NOTE : This works because only one channel is being used. If more channels are used, this needs to be refactored.
 DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData)
 {
     InternalVoltageData data;
@@ -70,7 +70,8 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     // TODO : Maybe try a more predictive approach if this is not good enough
     // IMPORTANT : To ensure usability take params -> (Nbuff / Fsamp) * Vtheta = delta_theta_min
     //             For this case -> (1000 / 100'000) * ([estimated?]~100 mdeg/s) = 1 mdeg uncertainty per buffer
-    data.measured_angle = atof(DCS::Control::IssueGenericCommandResponse(DCS::Control::UnitTarget::ESP301, { "2TP?" }).buffer);
+    // TODO : Create a way to check for the ESP301 handle without any overhead. (Store value perhaps)
+    //data.measured_angle = atof(DCS::Control::IssueGenericCommandResponse(DCS::Control::UnitTarget::ESP301, { "2TP?" }).buffer);
 
     DAQmxReadAnalogF64(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &aread, NULL);
     memcpy(data.ptr, samples, INTERNAL_SAMP_SIZE * sizeof(f64));

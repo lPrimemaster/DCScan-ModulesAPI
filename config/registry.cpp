@@ -26,6 +26,10 @@ const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const u
 		case SV_ARG_NULL:
 			LOG_ERROR("Arg type not recognized.");
 			break;
+		case SV_ARG_DCS_f64:
+			args.push_back(convert_from_byte<DCS::f64>(payload, it, size));
+			it += sizeof(DCS::f64);
+			break;
 		case SV_ARG_DCS_DAQ_ChannelRef:
 			args.push_back(convert_from_byte<DCS::DAQ::ChannelRef>(payload, it, size));
 			it += sizeof(DCS::DAQ::ChannelRef);
@@ -37,10 +41,6 @@ const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const u
 		case SV_ARG_DCS_DAQ_ChannelLimits:
 			args.push_back(convert_from_byte<DCS::DAQ::ChannelLimits>(payload, it, size));
 			it += sizeof(DCS::DAQ::ChannelLimits);
-			break;
-		case SV_ARG_DCS_f64:
-			args.push_back(convert_from_byte<DCS::f64>(payload, it, size));
-			it += sizeof(DCS::f64);
 			break;
 		case SV_ARG_DCS_Utils_BasicString:
 			args.push_back(convert_from_byte<DCS::Utils::BasicString>(payload, it, size));
