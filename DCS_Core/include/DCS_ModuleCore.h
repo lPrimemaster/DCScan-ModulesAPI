@@ -266,7 +266,7 @@ namespace DCS
 		 * 
 		 * Has two modes:
 		 * Legacy - Slower but more reliable (use by defining '#define DCS_MATH_USE_LEGACY_COUNTER' in the server).
-		 * Core   - Faster but can fail n certain edge scenarios (default).
+		 * Core   - Faster but can fail in certain edge scenarios (default).
 		 * 
 		 * Remark: Only the legacy mode is currently supported (and is enabled by default).
 		 * 
