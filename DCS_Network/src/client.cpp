@@ -67,7 +67,7 @@ void DCS::Network::Client::Authenticate(Socket socket, DCS::Utils::String userna
 			iv_buff_size += Network::ReceiveData(s, &iv[iv_buff_size], 16 - iv_buff_size);
 		}
 
-		char hstream[64];
+		char hstream[65];
 		Auth::HexStringifyBytes(hstream, r, 32);
 		LOG_DEBUG("Got challenge: %s", hstream);
 
@@ -130,6 +130,8 @@ bool DCS::Network::Client::StartThread(Socket connection)
 
 					// Push message to buffer
 					Message::SetCopyIdAndCode(msg, buffer);
+
+					LOG_DEBUG("Client received opcode: %u", msg.op);
 
 					// Decide what to do with the data
 					switch (static_cast<Message::InternalOperation>(msg.op))

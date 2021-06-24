@@ -160,7 +160,7 @@ namespace DCS {
 			return false;
 		}
 
-		static DCS_API const u8 GetEvent(const char* func)
+		static DCS_API const u8 GetEvent(const std::string func)
 		{
 			return evt_named_func.at(func);
 		}
@@ -221,7 +221,7 @@ namespace DCS {
 			$6
 		};
 
-		inline static std::unordered_map<const char*, u8> evt_named_func = 
+		inline static std::unordered_map<std::string, u8> evt_named_func = 
 		{
 			$7
 		};

@@ -20,8 +20,9 @@ void FreeGenericHandle(DCS::GenericHandle hnd)
 {
 	if (hnd)
 	{
-		free(hnd);
 		LOG_DEBUG("Success deallocating GenericHandle %x", hnd);
+		free(hnd);
+		hnd = nullptr;
 	}
 }
 

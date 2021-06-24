@@ -19,7 +19,7 @@ static DCS::DAQ::InternalTask voltage_task;
 static DCS::Timer::SystemTimer voltage_task_timer;
 static std::queue<DCS::DAQ::InternalVoltageData> voltage_task_data;
 static DCS::f64 voltage_task_rate;
-static std::map<const char*, VCData> voltage_vcs;
+static std::map<std::string, VCData> voltage_vcs;
 static std::mutex voltage_mtx;
 static std::condition_variable voltage_cv;
 static bool voltage_task_running = false;
@@ -54,7 +54,6 @@ static void TerminateAITask()
 {
     LOG_DEBUG("Terminating voltage task.");
     ClearTask(&voltage_task);
-    DCS::Timer::Delete(voltage_task_timer);
     voltage_task_inited = false;
 }
 
@@ -65,7 +64,7 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     DCS::f64 samples[INTERNAL_SAMP_SIZE];
     DCS::i32 aread;
 
-    data.timestamp = DCS::Timer::GetTimestamp(voltage_task_timer);
+    //data.timestamp = DCS::Timer::GetTimestamp(voltage_task_timer);
 
     // TODO : Maybe try a more predictive approach if this is not good enough
     // IMPORTANT : To ensure usability take params -> (Nbuff / Fsamp) * Vtheta = delta_theta_min
@@ -90,7 +89,7 @@ void DCS::DAQ::NewAIVChannel(DCS::Utils::BasicString name, DCS::Utils::BasicStri
 {
     for(auto vc : voltage_vcs)
     {
-        if(std::string(vc.first) == std::string(name.buffer))
+        if(vc.first == std::string(name.buffer))
         {
             LOG_ERROR("Voltage channel naming already exists. Choose another name.");
             return;
@@ -111,12 +110,12 @@ void DCS::DAQ::NewAIVChannel(DCS::Utils::BasicString name, DCS::Utils::BasicStri
     vcd.lim = lim;
     vcd.type = ChannelType::Voltage;
 
-    voltage_vcs.emplace(name.buffer, vcd);
+    voltage_vcs.emplace(std::string(name.buffer), vcd);
 }
 
 void DCS::DAQ::DeleteAIVChannel(DCS::Utils::BasicString name)
 {
-    voltage_vcs.erase(name.buffer);
+    voltage_vcs.erase(std::string(name.buffer));
 }
 
 void DCS::DAQ::StartAIAcquisition(DCS::f64 samplerate)
@@ -135,11 +134,14 @@ void DCS::DAQ::StartAIAcquisition(DCS::f64 samplerate)
 
         // Always use the internal clock for continuous acquisition
         SetupTask(&voltage_task, "OnBoardClock", voltage_task_rate, INTERNAL_SAMP_SIZE, VoltageEvent);
-
-        DCS::Timer::Delete(voltage_task_timer);
+        LOG_DEBUG("A");
+        //DCS::Timer::Delete(voltage_task_timer);
+        LOG_DEBUG("B");
         StartTask(&voltage_task);
-        voltage_task_timer = DCS::Timer::New();
+        LOG_DEBUG("C");
+        //voltage_task_timer = DCS::Timer::New();
         voltage_task_running = true;
+        LOG_DEBUG("D");
     }
     else
         LOG_ERROR("Error starting AI Acquisition: VoltageAI task is already running.");
@@ -150,7 +152,7 @@ void DCS::DAQ::StopAIAcquisition()
     if(voltage_task_running)
     {
         StopTask(&voltage_task);
-        DCS::Timer::Delete(voltage_task_timer);
+        //DCS::Timer::Delete(voltage_task_timer);
         voltage_task_running = false;
         TerminateAITask();
     }

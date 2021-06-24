@@ -57,7 +57,6 @@ void DCS::Control::StartServices(const char* esp301_com, const char* pmc8742_usb
 						Serial::read_bytes(esp301_handle, (LPTSTR)response, 256, &rbSize);
 						cmd_buffer.reply(response);
 					}
-
 					break;
 				case Control::UnitTarget::PMC8742:
 					USerial::write_bulk_bytes(pmc8742_handle, (PUCHAR)cmd.full_cmd.c_str(), (DWORD)(cmd.full_cmd.size()));

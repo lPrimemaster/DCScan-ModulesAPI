@@ -110,6 +110,7 @@ void DCS::Utils::Logger::Destroy()
 	//std::cout << "\x1b[H";
 
 	fclose(Logger::handle);
+	Logger::handle = nullptr;
 }
 
 void DCS::Utils::Logger::SetLogWriteCallback(DCS::Utils::Logger::WriteNotifyCallback wnc, void* obj)
