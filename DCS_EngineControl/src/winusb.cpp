@@ -156,7 +156,7 @@ static ULONG WriteToBulkEndpoint(WINUSB_INTERFACE_HANDLE hDeviceHandle, UCHAR pI
 
 static ULONG ReadFromBulkEndpoint(WINUSB_INTERFACE_HANDLE hDeviceHandle, UCHAR pID, UCHAR* buffer, ULONG size)
 {
-	if (hDeviceHandle == INVALID_HANDLE_VALUE)
+	if (hDeviceHandle == INVALID_HANDLE_VALUE || hDeviceHandle == NULL)
 	{
 		LOG_ERROR("Attempting to Read from usb endpoint using an invalid WinUSB handle. Aborting...");
 		return 0;
@@ -170,15 +170,16 @@ static ULONG ReadFromBulkEndpoint(WINUSB_INTERFACE_HANDLE hDeviceHandle, UCHAR p
 
 ULONG DCS::USerial::write_bulk_bytes(USBIntHandle hnd, PUCHAR buffer, DWORD size)
 {
-	//LOG_DEBUG("Writting...");
 	return WriteToBulkEndpoint(hnd.usb_handle, hnd.pipe_id.PipeOutId, buffer, size);
 }
 
 ULONG DCS::USerial::read_bulk_bytes(USBIntHandle hnd, PUCHAR buffer, DWORD size)
 {
 	ULONG sz = ReadFromBulkEndpoint(hnd.usb_handle, hnd.pipe_id.PipeInId, buffer, size);
-	buffer[sz - 1] = '\0';
-
+	if(sz > 0)
+	{
+		buffer[sz - 1] = '\0';
+	}
 	return sz;
 }
 
