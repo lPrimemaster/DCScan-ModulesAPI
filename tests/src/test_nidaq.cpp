@@ -26,7 +26,7 @@ int main()
         FILE* f = fopen("Data Dump.txt", "w");
 
         size = DCS::Registry::SetupEvent(buffer, SV_EVT_DCS_DAQ_VoltageEvent, [](DCS::u8* data, DCS::u8* userData){
-                LOG_DEBUG("Got Voltage Event on client side.");
+                //LOG_DEBUG("Got Voltage Event on client side.");
 
                 DCS::f64* fdata = (DCS::f64*)data;
 
@@ -39,14 +39,10 @@ int main()
                 }
 
                 static DCS::u64 c = 0;
-                DCS::Math::CountResult cr = DCS::Math::countArrayPeak(fdata, 1000, 7.0, 0.0, 1.0);
+                DCS::Math::CountResult cr = DCS::Math::countArrayPeak(fdata, 1000, 3.0, 0.0, 1.0);
                 c += cr.num_detected;
 
                 LOG_DEBUG("Total count until now: %u.", c);
-
-
-                //std::string sdata = std::to_string(cr.num_detected) + '\n';
-                //fwrite(sdata.c_str(), 1, sdata.size(), f);
 
             }, (DCS::u8*)f);
         DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::EVT_SUB, buffer, size);
@@ -60,12 +56,12 @@ int main()
 
         DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::REQUEST, buffer, size);
 
-        size = DCS::Registry::SVParams::GetDataFromParams(buffer, SV_CALL_DCS_DAQ_StartAIAcquisition, 10000.0);
+        size = DCS::Registry::SVParams::GetDataFromParams(buffer, SV_CALL_DCS_DAQ_StartAIAcquisition, 100000.0);
 
         DCS::Network::Message::SendAsync(DCS::Network::Message::Operation::REQUEST, buffer, size).wait();
 
         LOG_DEBUG("Wait to signal task end.");
-        std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+        std::this_thread::sleep_for(std::chrono::seconds(2));
         LOG_DEBUG("Signal task end.");
 
         size = DCS::Registry::SVParams::GetDataFromParams(buffer, SV_CALL_DCS_DAQ_StopAIAcquisition);
