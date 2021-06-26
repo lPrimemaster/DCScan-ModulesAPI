@@ -2,6 +2,7 @@
 #include "../../DCS_Core/include/DCS_ModuleCore.h"
 #include "../include/internal.h"
 #include "../../DCS_Network/include/internal.h"
+#include "../../DCS_Utils/include/internal.h"
 
 #include <queue>
 
@@ -39,7 +40,6 @@ void DCS::DAQ::Init()
 void DCS::DAQ::Terminate()
 {
     LOG_DEBUG("Terminating DAQ Services.");
-    DCS::Timer::Delete(voltage_task_timer);
     voltage_task_inited = false;
 }
 
@@ -64,7 +64,7 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     DCS::f64 samples[INTERNAL_SAMP_SIZE];
     DCS::i32 aread;
 
-    //data.timestamp = DCS::Timer::GetTimestamp(voltage_task_timer);
+    //data.timestamp = voltage_task_timer.getTimestamp();
 
     // TODO : Maybe try a more predictive approach if this is not good enough
     // IMPORTANT : To ensure usability take params -> (Nbuff / Fsamp) * Vtheta = delta_theta_min
@@ -134,14 +134,9 @@ void DCS::DAQ::StartAIAcquisition(DCS::f64 samplerate)
 
         // Always use the internal clock for continuous acquisition
         SetupTask(&voltage_task, "OnBoardClock", voltage_task_rate, INTERNAL_SAMP_SIZE, VoltageEvent);
-        LOG_DEBUG("A");
-        //DCS::Timer::Delete(voltage_task_timer);
-        LOG_DEBUG("B");
         StartTask(&voltage_task);
-        LOG_DEBUG("C");
-        //voltage_task_timer = DCS::Timer::New();
+        voltage_task_timer.start();
         voltage_task_running = true;
-        LOG_DEBUG("D");
     }
     else
         LOG_ERROR("Error starting AI Acquisition: VoltageAI task is already running.");
@@ -152,7 +147,6 @@ void DCS::DAQ::StopAIAcquisition()
     if(voltage_task_running)
     {
         StopTask(&voltage_task);
-        //DCS::Timer::Delete(voltage_task_timer);
         voltage_task_running = false;
         TerminateAITask();
     }

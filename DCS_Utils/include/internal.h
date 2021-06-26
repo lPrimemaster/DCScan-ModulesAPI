@@ -203,4 +203,56 @@ namespace DCS
 
 		DCS_INTERNAL_TEST void SetStdinEcho(bool enable);
 	}
+
+	namespace Timer
+	{
+		/**
+		 * \brief Holds timing data.
+		 *
+		 * Used to get relative timestamps with 100 nanoseconds precision.
+		 */
+		class DCS_INTERNAL_TEST SystemTimer
+		{
+		public:
+			SystemTimer() = default;
+			~SystemTimer() = default;
+
+			/**
+			 * \brief Starts/restarts timer. Setting timing zero as now.
+			 */
+			void start();
+
+			/**
+			 * \brief Gives a timestamp relative to timer in Timestamp format.
+			 * 
+			 * \return Timestamp.
+			 */
+			Timestamp getTimestamp();
+
+			/**
+			 * \brief Gives a timestamp relative to timer in Utils::String format.
+			 *
+			 * \return Utils::String timestamp [XXh XXm XXs XXms XXus XXns].
+			 */
+			Utils::String getTimestampString();
+
+			
+			/**
+			 * \brief Gives a timestamp relative to timer in Utils::String format (displays day/hour/minute duration only).
+			 * 
+			 * \return Utils::String timestamp [XXd XXh XXm].
+			 */
+			Utils::String getTimestampStringSimple();
+
+			/**
+			 * \brief Gives number of nanoseconds passed relative to timer.
+			 *
+			 * \return Number of nanoseconds stored in a DCS::i64.
+			 */
+			i64 getNanoseconds();
+
+		private:
+			std::chrono::time_point<std::chrono::steady_clock> point;
+		};
+	}
 }

@@ -279,16 +279,7 @@ namespace DCS
 	 */
 	namespace Timer
 	{
-		/**
-		 * \brief Holds data about when a timer was first created.
-		 *
-		 * Used to get relative timestamps with 100 nanoseconds precision.
-		 */
-		struct DCS_API SystemTimer
-		{
-			GenericHandle point; ///< Represents a time point.
-		};
-
+		// BUG : Timer is not working
 		/**
 		 * \brief Represents a timestamp divided fieldwise.
 		 */
@@ -307,48 +298,6 @@ namespace DCS
 			 */
 			const Utils::String to_string() const;
 		};
-
-		/**
-		 * \brief Creates a new SystemTimer.
-		 */
-		DCS_API SystemTimer New();
-
-		/**
-		 * \brief Deletes a SystemTimer.
-		 */
-		DCS_API void Delete(SystemTimer timer);
-
-		/**
-		 * \brief Gives a timestamp relative to timer in Timestamp format.
-		 * 
-		 * \param timer Relative point to measure.
-		 * \return Timestamp.
-		 */
-		DCS_API Timestamp GetTimestamp(SystemTimer timer);
-
-		/**
-		 * \brief Gives a timestamp relative to timer in Utils::String format.
-		 *
-		 * \param timer Relative point to measure.
-		 * \return Utils::String timestamp [XXh XXm XXs XXms XXus XXns].
-		 */
-		DCS_API Utils::String GetTimestampString(SystemTimer timer);
-
-		/**
-		 * \brief Gives a timestamp relative to timer in Utils::String format (displays day/hour/minute duration only).
-		 * 
-		 * \param timer Relative point to measure.
-		 * \return Utils::String timestamp [XXd XXh XXm].
-		 */
-		DCS_API Utils::String GetTimestampStringSimple(SystemTimer timer);
-
-		/**
-		 * \brief Gives number of nanoseconds passed relative to timer.
-		 *
-		 * \param timer Relative point to measure.
-		 * \return Number of nanoseconds stored in a DCS::i64.
-		 */
-		DCS_API i64 GetNanoseconds(SystemTimer timer);
 	}
 }
 

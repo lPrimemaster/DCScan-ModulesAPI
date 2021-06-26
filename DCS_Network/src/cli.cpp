@@ -122,7 +122,7 @@ static void CommandRegistry()
 	});
 
 	Command("uptime", "Prints how long the server (CLI) has been running.", [](bool* brk) {
-		LOG_MESSAGE("[%s]", DCS::Timer::GetTimestampStringSimple(cli_uptime).c_str());
+		LOG_MESSAGE("[%s]", cli_uptime.getTimestampStringSimple().c_str());
 	});
 
 	Command("addusr", "Creates a new remote user in the server database.", [](bool* brk) {
@@ -207,7 +207,7 @@ static void CommandRegistry()
 
 void DCS::CLI::Spin()
 {
-	cli_uptime = DCS::Timer::New();
+	cli_uptime.start();
 
 	CommandRegistry();
 
@@ -230,6 +230,4 @@ void DCS::CLI::Spin()
 	}
 
 	DCS::DB::CloseDB();
-
-	DCS::Timer::Delete(cli_uptime);
 }

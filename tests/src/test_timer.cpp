@@ -1,4 +1,5 @@
 #include "../../DCS_Utils/include/DCS_ModuleUtils.h"
+#include "../../DCS_Utils/include/internal.h"
 #include "../include/DCS_Assert.h"
 #include <chrono>
 
@@ -8,14 +9,13 @@ int test()
 	using namespace DCS::Timer;
 	using namespace std::chrono_literals;
 
-	auto timer = New();
+	auto timer = SystemTimer();
+	timer.start();
 
 	auto a = std::chrono::steady_clock::now();
 	while ((std::chrono::steady_clock::now() - a) < 100ms) continue;
 
-	auto ts = GetTimestamp(timer);
-
-	Delete(timer);
+	auto ts = timer.getTimestamp();
 
 	// Ensure ms total precision
 	DCS_ASSERT_EQ(ts.millis, 100);
