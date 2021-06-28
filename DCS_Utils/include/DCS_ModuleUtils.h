@@ -279,7 +279,6 @@ namespace DCS
 	 */
 	namespace Timer
 	{
-		// BUG : Timer is not working
 		/**
 		 * \brief Represents a timestamp divided fieldwise.
 		 */
