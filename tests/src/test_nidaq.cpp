@@ -25,9 +25,7 @@ int main()
 
         FILE* f = fopen("Data Dump.txt", "w");
 
-        size = DCS::Registry::SetupEvent(buffer, SV_EVT_DCS_DAQ_VoltageEvent, [](DCS::u8* data, DCS::u8* userData){
-                //LOG_DEBUG("Got Voltage Event on client side.");
-
+        size = DCS::Registry::SetupEvent(buffer, SV_EVT_DCS_DAQ_VoltageEvent, [](DCS::u8* data, DCS::u8* userData) {
                 DCS::f64* fdata = (DCS::f64*)data;
 
                 FILE* f = (FILE*)userData;

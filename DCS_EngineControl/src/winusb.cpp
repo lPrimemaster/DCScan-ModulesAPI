@@ -142,7 +142,7 @@ static BOOL QueryDeviceEndpoints(WINUSB_INTERFACE_HANDLE hDeviceHandle, DCS::USe
 
 static ULONG WriteToBulkEndpoint(WINUSB_INTERFACE_HANDLE hDeviceHandle, UCHAR pID, UCHAR* buffer, ULONG size)
 {
-	if (hDeviceHandle == INVALID_HANDLE_VALUE)
+	if (hDeviceHandle == INVALID_HANDLE_VALUE || hDeviceHandle == NULL)
 	{
 		LOG_ERROR("Attempting to Write to usb endpoint using an invalid WinUSB handle. Aborting...");
 		return 0;
