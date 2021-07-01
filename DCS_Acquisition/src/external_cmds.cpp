@@ -72,6 +72,8 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     // TODO : Create a way to check for the ESP301 handle without any overhead. (Store value perhaps)
     //data.measured_angle = atof(DCS::Control::IssueGenericCommandResponse(DCS::Control::UnitTarget::ESP301, { "2TP?" }).buffer);
 
+    // TODO : Channels not in the task also queue in the buffer?
+
     DAQmxReadAnalogF64(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &aread, NULL);
     memcpy(data.ptr, samples, INTERNAL_SAMP_SIZE * sizeof(f64));
 
