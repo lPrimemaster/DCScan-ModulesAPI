@@ -25,6 +25,7 @@ int main()
 
         FILE* f = fopen("Data Dump.txt", "w");
 
+        // BUG : Events waiting for response hangs due to server not sending a message on these occasions -> FIX - Send response aswell (SV_RET_VOID)
         size = DCS::Registry::SetupEvent(buffer, SV_EVT_DCS_DAQ_VoltageEvent, [](DCS::u8* data, DCS::u8* userData) {
                 DCS::f64* fdata = (DCS::f64*)data;
 
