@@ -96,7 +96,74 @@ static std::vector<size_t> countPacketLegacy(DCS::f64 * data, size_t size, DCS::
 	}
 }
 
-#define DCS_MATH_USE_LEGACY_COUNTER
+static DCS::Math::CountResult countPacketCore(DCS::f64* arr, DCS::u64 size, DCS::f64 vlo, DCS::f64 vhi, DCS::f64 vth)
+{
+	// TODO : Implement cross packet peak detection
+	// TODO : Use descent time to detect pile-up
+	bool waitDescent = false;
+	bool discard = false;
+	DCS::f64 localMaximum = 0.0;
+	DCS::u64 localMaximizer = 0;
+
+	std::vector<DCS::f64> maxima;
+	std::vector<DCS::u64> maximizers;
+
+	for(DCS::u64 i = 0; i < size; i++)
+	{
+		if(waitDescent && arr[i] > vlo)
+			continue;
+		else if(waitDescent)
+			waitDescent = false;
+
+		if(arr[i] > vhi)
+		{
+			waitDescent = true;
+			continue;
+		}
+		else if(arr[i] <= vlo)
+			continue;
+		else if(arr[i] > vlo)
+		{
+			while(i < size && arr[i] > vlo)
+			{
+				if(arr[i] > vhi)
+					discard = true;
+				if(arr[i] > localMaximum)
+				{
+					localMaximum = arr[i];
+					localMaximizer = i + 1;
+				}
+				i++;
+			}
+
+			if(!discard)
+			{
+				maxima.push_back(localMaximum);
+				maximizers.push_back(localMaximizer);
+			}
+
+			localMaximum = 0.0;
+			discard = false;
+		}
+	}
+
+	DCS::Math::CountResult result;
+
+	result.num_detected = maxima.size();
+
+	if(result.num_detected > 0)
+	{
+		result.maxima = new DCS::f64[result.num_detected];
+		result.maximizers = new DCS::u64[result.num_detected];
+
+		memcpy(result.maxima, maxima.data(), sizeof(DCS::f64) * result.num_detected);
+		memcpy(result.maximizers, maximizers.data(), sizeof(DCS::u64) * result.num_detected);
+	}
+
+	return result;
+}
+
+//#define DCS_MATH_USE_LEGACY_COUNTER
 
 DCS::Math::CountResult DCS::Math::countArrayPeak(f64* arr, u64 size, f64 vlo, f64 vhi, f64 vth)
 {
@@ -108,7 +175,7 @@ DCS::Math::CountResult DCS::Math::countArrayPeak(f64* arr, u64 size, f64 vlo, f6
     result.maximizers = new DCS::u64[result.num_detected]; 
     memcpy(result.maximizers, &values.front(), result.num_detected * sizeof(DCS::u64));
     #else
-    // TODO : Create the core counter
+    result = countPacketCore(arr, size, vlo, vhi, vth);
     #endif
 
     return result;
