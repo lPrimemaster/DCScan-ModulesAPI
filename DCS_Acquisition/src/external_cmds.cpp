@@ -77,6 +77,10 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     DAQmxReadAnalogF64(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &aread, NULL);
     memcpy(data.ptr, samples, INTERNAL_SAMP_SIZE * sizeof(f64));
 
+    DCS::Math::CountResult cr = DCS::Math::countArrayPeak(samples, INTERNAL_SAMP_SIZE, 2.0, 10.0, 0.0);
+
+    LOG_DEBUG("Counts per buffer: %d", cr.num_detected);
+
     std::unique_lock<std::mutex> lck(voltage_mtx);
     voltage_task_data.push(data);
     lck.unlock();

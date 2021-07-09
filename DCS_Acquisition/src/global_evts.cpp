@@ -9,7 +9,7 @@ void DCS::DAQ::PeakDetectWithAngleEvent()
 {
     InternalVoltageData ivd = GetLastIVD();
 
-    DCS::Math::CountResult cr = DCS::Math::countArrayPeak(ivd.ptr, INTERNAL_SAMP_SIZE, 0.0, 10.0, 1.0);
+    DCS::Math::CountResult cr = DCS::Math::countArrayPeak(ivd.ptr, INTERNAL_SAMP_SIZE, 2.0, 10.0, 0.0);
 
     PDetectEventData evt_data;
     evt_data.counts = cr.num_detected;
