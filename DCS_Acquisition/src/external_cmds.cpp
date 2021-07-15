@@ -26,6 +26,8 @@ static std::condition_variable voltage_cv;
 static bool voltage_task_running = false;
 static bool voltage_task_inited = false;
 
+static FILE* f;
+
 // NOTE : Using circular buffer instead of allocating memory every time (?)
 //static DCS::Memory::CircularBuffer crb(INTERNAL_SAMP_SIZE, 32);
 
@@ -48,6 +50,7 @@ static void InitAITask()
     LOG_DEBUG("Creating voltage task.");
     CreateTask(&voltage_task, "T_AI");
     voltage_task_inited = true;
+    f = fopen("count_test_bins.csv", "w");
 }
 
 static void TerminateAITask()
@@ -55,6 +58,7 @@ static void TerminateAITask()
     LOG_DEBUG("Terminating voltage task.");
     ClearTask(&voltage_task);
     voltage_task_inited = false;
+    fclose(f);
 }
 
 // NOTE : This works because only one channel is being used. If more channels are used, this needs to be refactored.
@@ -74,12 +78,23 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
 
     // TODO : Channels not in the task also queue in the buffer?
 
+    static DCS::u64 max_count = 0;
+    
+
     DAQmxReadAnalogF64(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &aread, NULL);
     memcpy(data.ptr, samples, INTERNAL_SAMP_SIZE * sizeof(f64));
 
-    DCS::Math::CountResult cr = DCS::Math::countArrayPeak(samples, INTERNAL_SAMP_SIZE, 2.0, 10.0, 0.0);
+    DCS::Math::CountResult cr = DCS::Math::countArrayPeak(samples, INTERNAL_SAMP_SIZE, 0.2, 10.0, 0.0);
 
     LOG_DEBUG("Counts per buffer: %d", cr.num_detected);
+    max_count += cr.num_detected;
+
+    LOG_DEBUG("Total count: %u", max_count);
+
+    for(int i = 0; i < cr.num_detected; i++)
+    {
+        fprintf(f, "%u\n", (u64)floor((cr.maxima[i] / 10.0) * 2048));
+    }
 
     std::unique_lock<std::mutex> lck(voltage_mtx);
     voltage_task_data.push(data);

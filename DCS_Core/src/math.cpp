@@ -145,7 +145,7 @@ static DCS::Math::CountResult countPacketCore(DCS::f64* arr, DCS::u64 size, DCS:
 			localMaximum = 0.0;
 			discard = false;
 		}
-		LOG_DEBUG("%d", i);
+		//LOG_DEBUG("%d", i);
 	}
 
 	DCS::Math::CountResult result;
