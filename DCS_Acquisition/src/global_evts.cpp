@@ -5,9 +5,9 @@
 
 #include <queue>
 
-void DCS::DAQ::PeakDetectWithAngleEvent()
+void DCS::DAQ::PeakDetectWithAngleEvent() // TODO : Rename to DCS Event
 {
-    InternalVoltageData ivd = GetLastIVD();
+    InternalVoltageData ivd = GetLastDCS_IVD();
 
     DCS::Math::CountResult cr = DCS::Math::countArrayPeak(ivd.ptr, INTERNAL_SAMP_SIZE, 2.0, 10.0, 0.0);
 

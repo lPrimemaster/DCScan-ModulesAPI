@@ -18,13 +18,19 @@ struct VCData
 
 static DCS::DAQ::InternalTask voltage_task;
 static DCS::Timer::SystemTimer voltage_task_timer;
-static std::queue<DCS::DAQ::InternalVoltageData> voltage_task_data;
 static DCS::f64 voltage_task_rate;
 static std::map<std::string, VCData> voltage_vcs;
-static std::mutex voltage_mtx;
-static std::condition_variable voltage_cv;
 static bool voltage_task_running = false;
 static bool voltage_task_inited = false;
+
+static std::queue<DCS::DAQ::InternalVoltageData> dcs_task_data;
+static std::mutex dcs_mtx;
+static std::condition_variable dcs_cv;
+
+static std::queue<DCS::DAQ::InternalVoltageData> mca_task_data;
+static std::mutex mca_mtx;
+static std::condition_variable mca_cv;
+
 
 static FILE* f;
 
@@ -32,6 +38,24 @@ static FILE* f;
 //static DCS::Memory::CircularBuffer crb(INTERNAL_SAMP_SIZE, 32);
 
 // TODO : Create a global SendErrorToClient (also, check if it is being called from server-side only)
+
+// TODO : Make the pushTo* functions to copy the data only once for all the tasks
+
+static void pushToDCSTask(DCS::DAQ::InternalVoltageData& data)
+{
+    std::unique_lock<std::mutex> lck(dcs_mtx);
+    dcs_task_data.push(data);
+    lck.unlock();
+    dcs_cv.notify_one();
+}
+
+static void pushToMCATask(DCS::DAQ::InternalVoltageData& data)
+{
+    std::unique_lock<std::mutex> lck(mca_mtx);
+    mca_task_data.push(data);
+    lck.unlock();
+    mca_cv.notify_one();
+}
 
 void DCS::DAQ::Init()
 {
@@ -76,30 +100,18 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     // TODO : Create a way to check for the ESP301 handle without any overhead. (Store value perhaps)
     //data.measured_angle = atof(DCS::Control::IssueGenericCommandResponse(DCS::Control::UnitTarget::ESP301, { "2TP?" }).buffer);
 
-    // TODO : Channels not in the task also queue in the buffer?
-
-    static DCS::u64 max_count = 0;
-    
+    // TODO : Channels not in the task also queue in the buffer?  
 
     DAQmxReadAnalogF64(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &aread, NULL);
-    memcpy(data.ptr, samples, INTERNAL_SAMP_SIZE * sizeof(f64));
 
-    DCS::Math::CountResult cr = DCS::Math::countArrayPeak(samples, INTERNAL_SAMP_SIZE, 0.2, 10.0, 0.0);
+    memcpy(data.ptr, samples, INTERNAL_SAMP_SIZE * sizeof(f64));                      // TODO : Remove - Copy data.ptr
+    data.cr = DCS::Math::countArrayPeak(samples, INTERNAL_SAMP_SIZE, 0.2, 10.0, 0.0); // Copy data.cr
 
-    LOG_DEBUG("Counts per buffer: %d", cr.num_detected);
-    max_count += cr.num_detected;
+    // push to dcs
+    pushToDCSTask(data);
 
-    LOG_DEBUG("Total count: %u", max_count);
-
-    for(int i = 0; i < cr.num_detected; i++)
-    {
-        fprintf(f, "%u\n", (u64)floor((cr.maxima[i] / 10.0) * 2048));
-    }
-
-    std::unique_lock<std::mutex> lck(voltage_mtx);
-    voltage_task_data.push(data);
-    lck.unlock();
-    voltage_cv.notify_one();
+    // push to mca
+    // pushToMCATask(data);
 
     // NOTE : Maybe use named event to reduce cpu time finding event name
     DCS_EMIT_EVT((DCS::u8*)samples, INTERNAL_SAMP_SIZE * sizeof(f64));
@@ -175,7 +187,19 @@ void DCS::DAQ::StopAIAcquisition()
         LOG_ERROR("Error stopping AI Acquisition: VoltageAI task is not running.");
 }
 
-DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastIVD()
+DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastDCS_IVD()
+{
+    std::unique_lock<std::mutex> lck(voltage_mtx);
+    
+    if(dcs_task_data.empty())
+        voltage_cv.wait(lck);
+
+    InternalVoltageData ivd = dcs_task_data.front();
+    dcs_task_data.pop();
+    return ivd;
+}
+
+DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastMCA_IVD()
 {
     std::unique_lock<std::mutex> lck(voltage_mtx);
     

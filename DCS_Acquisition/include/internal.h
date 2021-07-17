@@ -106,6 +106,7 @@ namespace DCS
         struct DCS_INTERNAL_TEST InternalVoltageData
         {
             f64 ptr[INTERNAL_SAMP_SIZE];
+            Math::CountResult cr;
 
             Timer::Timestamp timestamp;
 
@@ -151,8 +152,14 @@ namespace DCS
 
         /**
          * \internal
-         * \brief Get last internal voltage data and pop from memory.
+         * \brief Get last internal voltage data for the DCS system and pop from memory.
          */
-        DCS_INTERNAL_TEST DCS::DAQ::InternalVoltageData GetLastIVD();
+        DCS_INTERNAL_TEST DCS::DAQ::InternalVoltageData GetLastDCS_IVD();
+
+        /**
+         * \internal
+         * \brief Get last internal voltage data for the MCA system and pop from memory.
+         */
+        DCS_INTERNAL_TEST DCS::DAQ::InternalVoltageData GetLastMCA_IVD();
     }
 }
