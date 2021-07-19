@@ -52,20 +52,21 @@
 #define MAX_CALL 0x8
 
 #define SV_ARG_NULL 0x0 ///< Indicates a non existant argument [Not to use].
-#define SV_ARG_DCS_Utils_BasicString 0x1 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
-#define SV_ARG_DCS_DAQ_ChannelRef 0x2 ///< Refers to argument `DCS::DAQ::ChannelRef` \ingroup args_id
-#define SV_ARG_DCS_f64 0x3 ///< Refers to argument `DCS::f64` \ingroup args_id
-#define SV_ARG_DCS_DAQ_ChannelLimits 0x4 ///< Refers to argument `DCS::DAQ::ChannelLimits` \ingroup args_id
-#define SV_ARG_DCS_Control_UnitTarget 0x5 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
+#define SV_ARG_DCS_DAQ_ChannelLimits 0x1 ///< Refers to argument `DCS::DAQ::ChannelLimits` \ingroup args_id
+#define SV_ARG_DCS_Control_UnitTarget 0x2 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
+#define SV_ARG_DCS_Utils_BasicString 0x3 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
+#define SV_ARG_DCS_f64 0x4 ///< Refers to argument `DCS::f64` \ingroup args_id
+#define SV_ARG_DCS_DAQ_ChannelRef 0x5 ///< Refers to argument `DCS::DAQ::ChannelRef` \ingroup args_id
 
 #define SV_RET_VOID 0x0 ///< Indicates a void return type.
 #define SV_RET_DCS_u16 0x1 ///< Refers to return type `DCS::u16` \ingroup ret_id
 #define SV_RET_DCS_Utils_BasicString 0x2 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id
 
-#define MAX_SUB 0x3
-#define SV_EVT_DCS_DAQ_PeakDetectWithAngleEvent 0x1 ///< A event refering to `DCS::DAQ::PeakDetectWithAngleEvent` \ingroup evt_id
-#define SV_EVT_DCS_DAQ_VoltageEvent 0x2 ///< A event refering to `DCS::DAQ::VoltageEvent` \ingroup evt_id
-#define SV_EVT_DCS_Network_Message_FibSeqEvt 0x3 ///< A event refering to `DCS::Network::Message::FibSeqEvt` \ingroup evt_id
+#define MAX_SUB 0x4
+#define SV_EVT_DCS_DAQ_DCSCountEvent 0x1 ///< A event refering to `DCS::DAQ::DCSCountEvent` \ingroup evt_id
+#define SV_EVT_DCS_DAQ_MCACountEvent 0x2 ///< A event refering to `DCS::DAQ::MCACountEvent` \ingroup evt_id
+#define SV_EVT_DCS_DAQ_VoltageEvent 0x3 ///< A event refering to `DCS::DAQ::VoltageEvent` \ingroup evt_id
+#define SV_EVT_DCS_Network_Message_FibSeqEvt 0x4 ///< A event refering to `DCS::Network::Message::FibSeqEvt` \ingroup evt_id
 
 namespace DCS {
 
@@ -210,14 +211,16 @@ namespace DCS {
 
 		inline static std::unordered_map<u8, bool> subscriptions = 
 		{
-			{SV_EVT_DCS_DAQ_PeakDetectWithAngleEvent, false},
+			{SV_EVT_DCS_DAQ_DCSCountEvent, false},
+			{SV_EVT_DCS_DAQ_MCACountEvent, false},
 			{SV_EVT_DCS_DAQ_VoltageEvent, false},
 			{SV_EVT_DCS_Network_Message_FibSeqEvt, false}
 		};
 
 		inline static std::unordered_map<std::string, u8> evt_named_func = 
 		{
-			{"DCS::DAQ::PeakDetectWithAngleEvent", SV_EVT_DCS_DAQ_PeakDetectWithAngleEvent},
+			{"DCS::DAQ::DCSCountEvent", SV_EVT_DCS_DAQ_DCSCountEvent},
+			{"DCS::DAQ::MCACountEvent", SV_EVT_DCS_DAQ_MCACountEvent},
 			{"DCS::DAQ::VoltageEvent", SV_EVT_DCS_DAQ_VoltageEvent},
 			{"DCS::Network::Message::FibSeqEvt", SV_EVT_DCS_Network_Message_FibSeqEvt}
 		};

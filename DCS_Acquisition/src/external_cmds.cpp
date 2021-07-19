@@ -99,19 +99,25 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     //             For this case -> (1000 / 100'000) * ([estimated?]~100 mdeg/s) = 1 mdeg uncertainty per buffer
     // TODO : Create a way to check for the ESP301 handle without any overhead. (Store value perhaps)
     //data.measured_angle = atof(DCS::Control::IssueGenericCommandResponse(DCS::Control::UnitTarget::ESP301, { "2TP?" }).buffer);
-
     // TODO : Channels not in the task also queue in the buffer?  
+    // TODO : Cout peaks in a separate thread if it gets slow in the live callback (FIFO Style as always =])
 
     DAQmxReadAnalogF64(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &aread, NULL);
 
-    memcpy(data.ptr, samples, INTERNAL_SAMP_SIZE * sizeof(f64));                      // TODO : Remove - Copy data.ptr
+    //memcpy(data.ptr, samples, INTERNAL_SAMP_SIZE * sizeof(f64));
     data.cr = DCS::Math::countArrayPeak(samples, INTERNAL_SAMP_SIZE, 0.2, 10.0, 0.0); // Copy data.cr
 
     // push to dcs
-    pushToDCSTask(data);
+    if(DCS::Registry::CheckEvent(SV_EVT_DCS_DAQ_DCSCountEvent))
+    {
+        pushToDCSTask(data);
+    }
 
     // push to mca
-    // pushToMCATask(data);
+    if(DCS::Registry::CheckEvent(SV_EVT_DCS_DAQ_MCACountEvent))
+    {
+        pushToMCATask(data);
+    }
 
     // NOTE : Maybe use named event to reduce cpu time finding event name
     DCS_EMIT_EVT((DCS::u8*)samples, INTERNAL_SAMP_SIZE * sizeof(f64));
@@ -189,10 +195,10 @@ void DCS::DAQ::StopAIAcquisition()
 
 DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastDCS_IVD()
 {
-    std::unique_lock<std::mutex> lck(voltage_mtx);
+    std::unique_lock<std::mutex> lck(dcs_mtx);
     
     if(dcs_task_data.empty())
-        voltage_cv.wait(lck);
+        dcs_cv.wait(lck);
 
     InternalVoltageData ivd = dcs_task_data.front();
     dcs_task_data.pop();
@@ -201,12 +207,12 @@ DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastDCS_IVD()
 
 DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastMCA_IVD()
 {
-    std::unique_lock<std::mutex> lck(voltage_mtx);
+    std::unique_lock<std::mutex> lck(mca_mtx);
     
-    if(voltage_task_data.empty())
-        voltage_cv.wait(lck);
+    if(mca_task_data.empty())
+        mca_cv.wait(lck);
 
-    InternalVoltageData ivd = voltage_task_data.front();
-    voltage_task_data.pop();
+    InternalVoltageData ivd = mca_task_data.front();
+    mca_task_data.pop();
     return ivd;
 }

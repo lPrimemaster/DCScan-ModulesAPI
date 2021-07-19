@@ -4,6 +4,7 @@
 #pragma once
 #include "../../config/exports.h"
 #include "../../DCS_Utils/include/DCS_ModuleUtils.h"
+#include "../../DCS_Core/include/DCS_ModuleCore.h"
 
 
 /**
@@ -59,13 +60,36 @@ namespace DCS
             DCS::f64 max =  10.0; ///< Maximum DAQ accepted value.
         };
 
-        // TODO : Document
-        struct DCS_API PDetectEventData
+        /**
+         * \brief Holds all DCS data relative to a count event.
+         */
+        struct DCS_API DCSCountEventData
         {
-            DCS::u64 counts;
-            DCS::Timer::Timestamp timestamp;
-            DCS::f64 expected_angle;
-            DCS::f64 measured_angle;
+            DCS::u64 counts;                 ///< The total X-ray unique counts.
+            DCS::Timer::Timestamp timestamp; ///< The time these counts were performed (software time).
+            DCS::f64 expected_angle;         ///< The expected angle of the engine at time of counts (x = vt).
+            DCS::f64 measured_angle;         ///< The measured angle of the engine at time of counts.
+        };
+
+        /**
+         * \brief Holds all MCA data relative to a count event.
+         */
+        struct DCS_API MCACountEventData
+        {
+            DCS::u64 count;                  ///< Stores `bins` array size in words (16-bit windows like for 64-bit machines).
+            DCS::Timer::Timestamp timestamp; ///< The time these counts were performed (software time).
+            DCS::u16 total_max_bin_count;    ///< Max size of channels in the MCA (typically 1024 / 2048 / ... / 65535 (max for NI-6229))
+            DCS::u16* bins = nullptr;        ///< The bins value array (this is not a frequency list).
+
+            ~MCACountEventData()
+            {
+                if(bins != nullptr && count > 0)
+                {
+                    delete[] bins;
+                    bins = nullptr;
+                    count = 0;
+                }
+            }
         };
 
         /**
@@ -137,7 +161,11 @@ namespace DCS
 
         // TODO : Document
         DCS_REGISTER_EVENT
-        DCS_API void PeakDetectWithAngleEvent();
+        DCS_API void DCSCountEvent();
+
+        // TODO : Document
+        DCS_REGISTER_EVENT
+        DCS_API void MCACountEvent();
     }
 }
 
