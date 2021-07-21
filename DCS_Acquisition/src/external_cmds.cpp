@@ -92,7 +92,7 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     DCS::f64 samples[INTERNAL_SAMP_SIZE];
     DCS::i32 aread;
 
-    //data.timestamp = voltage_task_timer.getTimestamp();
+    data.timestamp = voltage_task_timer.getTimestamp();
 
     // TODO : Maybe try a more predictive approach if this is not good enough
     // IMPORTANT : To ensure usability take params -> (Nbuff / Fsamp) * Vtheta = delta_theta_min
