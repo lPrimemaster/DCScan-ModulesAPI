@@ -159,6 +159,27 @@ namespace DCS
         DCS_REGISTER_CALL(void)
         DCS_API void StopAIAcquisition();
 
+
+        /**
+         * \brief Retreives the number of channels outputing from the MCA event counter.
+         * Defaults to 2048.
+         * 
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(DCS::u16)
+        DCS_API u16 GetMCANumChannels();
+
+        /**
+         * \brief Retreives the number of channels outputing from the MCA event counter.
+         * Defaults to 2048.
+         * 
+         * \param nChannels The number of channels to attribute. Must be smaller than INTERNAL_ADC_MAX_CHAN.
+         * 
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(void, DCS::u16)
+        DCS_API void SetMCANumChannels(u16 nChannels);
+
         // TODO : Document
         DCS_REGISTER_EVENT
         DCS_API void DCSCountEvent();

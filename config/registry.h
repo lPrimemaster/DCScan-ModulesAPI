@@ -46,17 +46,20 @@
 #define SV_CALL_DCS_DAQ_DeleteAIVChannel 0x2 ///< A call to `DCS::DAQ::DeleteAIVChannel` \ingroup calls_id
 #define SV_CALL_DCS_DAQ_StartAIAcquisition 0x3 ///< A call to `DCS::DAQ::StartAIAcquisition` \ingroup calls_id
 #define SV_CALL_DCS_DAQ_StopAIAcquisition 0x4 ///< A call to `DCS::DAQ::StopAIAcquisition` \ingroup calls_id
-#define SV_CALL_DCS_Threading_GetMaxHardwareConcurrency 0x5 ///< A call to `DCS::Threading::GetMaxHardwareConcurrency` \ingroup calls_id
-#define SV_CALL_DCS_Control_IssueGenericCommand 0x6 ///< A call to `DCS::Control::IssueGenericCommand` \ingroup calls_id
-#define SV_CALL_DCS_Control_IssueGenericCommandResponse 0x7 ///< A call to `DCS::Control::IssueGenericCommandResponse` \ingroup calls_id
-#define MAX_CALL 0x8
+#define SV_CALL_DCS_DAQ_GetMCANumChannels 0x5 ///< A call to `DCS::DAQ::GetMCANumChannels` \ingroup calls_id
+#define SV_CALL_DCS_DAQ_SetMCANumChannels 0x6 ///< A call to `DCS::DAQ::SetMCANumChannels` \ingroup calls_id
+#define SV_CALL_DCS_Threading_GetMaxHardwareConcurrency 0x7 ///< A call to `DCS::Threading::GetMaxHardwareConcurrency` \ingroup calls_id
+#define SV_CALL_DCS_Control_IssueGenericCommand 0x8 ///< A call to `DCS::Control::IssueGenericCommand` \ingroup calls_id
+#define SV_CALL_DCS_Control_IssueGenericCommandResponse 0x9 ///< A call to `DCS::Control::IssueGenericCommandResponse` \ingroup calls_id
+#define MAX_CALL 0xa
 
 #define SV_ARG_NULL 0x0 ///< Indicates a non existant argument [Not to use].
-#define SV_ARG_DCS_DAQ_ChannelLimits 0x1 ///< Refers to argument `DCS::DAQ::ChannelLimits` \ingroup args_id
-#define SV_ARG_DCS_Control_UnitTarget 0x2 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
-#define SV_ARG_DCS_Utils_BasicString 0x3 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
-#define SV_ARG_DCS_f64 0x4 ///< Refers to argument `DCS::f64` \ingroup args_id
-#define SV_ARG_DCS_DAQ_ChannelRef 0x5 ///< Refers to argument `DCS::DAQ::ChannelRef` \ingroup args_id
+#define SV_ARG_DCS_u16 0x1 ///< Refers to argument `DCS::u16` \ingroup args_id
+#define SV_ARG_DCS_f64 0x2 ///< Refers to argument `DCS::f64` \ingroup args_id
+#define SV_ARG_DCS_DAQ_ChannelLimits 0x3 ///< Refers to argument `DCS::DAQ::ChannelLimits` \ingroup args_id
+#define SV_ARG_DCS_Utils_BasicString 0x4 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
+#define SV_ARG_DCS_Control_UnitTarget 0x5 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
+#define SV_ARG_DCS_DAQ_ChannelRef 0x6 ///< Refers to argument `DCS::DAQ::ChannelRef` \ingroup args_id
 
 #define SV_RET_VOID 0x0 ///< Indicates a void return type.
 #define SV_RET_DCS_u16 0x1 ///< Refers to return type `DCS::u16` \ingroup ret_id
@@ -204,9 +207,11 @@ namespace DCS {
 			{"DCS::DAQ::DeleteAIVChannel", 0x2},
 			{"DCS::DAQ::StartAIAcquisition", 0x3},
 			{"DCS::DAQ::StopAIAcquisition", 0x4},
-			{"DCS::Threading::GetMaxHardwareConcurrency", 0x5},
-			{"DCS::Control::IssueGenericCommand", 0x6},
-			{"DCS::Control::IssueGenericCommandResponse", 0x7}
+			{"DCS::DAQ::GetMCANumChannels", 0x5},
+			{"DCS::DAQ::SetMCANumChannels", 0x6},
+			{"DCS::Threading::GetMaxHardwareConcurrency", 0x7},
+			{"DCS::Control::IssueGenericCommand", 0x8},
+			{"DCS::Control::IssueGenericCommandResponse", 0x9}
 		};
 
 		inline static std::unordered_map<u8, bool> subscriptions = 
@@ -231,9 +236,11 @@ namespace DCS {
 			{0x2, "SV_CALL_DCS_DAQ_DeleteAIVChannel"},
 			{0x3, "SV_CALL_DCS_DAQ_StartAIAcquisition"},
 			{0x4, "SV_CALL_DCS_DAQ_StopAIAcquisition"},
-			{0x5, "SV_CALL_DCS_Threading_GetMaxHardwareConcurrency"},
-			{0x6, "SV_CALL_DCS_Control_IssueGenericCommand"},
-			{0x7, "SV_CALL_DCS_Control_IssueGenericCommandResponse"}
+			{0x5, "SV_CALL_DCS_DAQ_GetMCANumChannels"},
+			{0x6, "SV_CALL_DCS_DAQ_SetMCANumChannels"},
+			{0x7, "SV_CALL_DCS_Threading_GetMaxHardwareConcurrency"},
+			{0x8, "SV_CALL_DCS_Control_IssueGenericCommand"},
+			{0x9, "SV_CALL_DCS_Control_IssueGenericCommandResponse"}
 		};
 
         inline static std::unordered_map<u8, EventCallbackFunc> evt_callbacks;
@@ -333,6 +340,13 @@ namespace DCS {
 							auto A0_v = std::any_cast<DCS::f64>(p.at(0));
 							u8   A0_t = SV_ARG_DCS_f64;
 							cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(DCS::f64), it);
+							break;
+						}
+						case SV_CALL_DCS_DAQ_SetMCANumChannels:
+						{
+							auto A0_v = std::any_cast<DCS::u16>(p.at(0));
+							u8   A0_t = SV_ARG_DCS_u16;
+							cpyArgToBuffer(buffer, (u8*)&A0_v, A0_t, sizeof(DCS::u16), it);
 							break;
 						}
 						case SV_CALL_DCS_Control_IssueGenericCommand:

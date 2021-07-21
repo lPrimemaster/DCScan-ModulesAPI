@@ -26,21 +26,25 @@ const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const u
 		case SV_ARG_NULL:
 			LOG_ERROR("Arg type not recognized.");
 			break;
+		case SV_ARG_DCS_u16:
+			args.push_back(convert_from_byte<DCS::u16>(payload, it, size));
+			it += sizeof(DCS::u16);
+			break;
+		case SV_ARG_DCS_f64:
+			args.push_back(convert_from_byte<DCS::f64>(payload, it, size));
+			it += sizeof(DCS::f64);
+			break;
 		case SV_ARG_DCS_DAQ_ChannelLimits:
 			args.push_back(convert_from_byte<DCS::DAQ::ChannelLimits>(payload, it, size));
 			it += sizeof(DCS::DAQ::ChannelLimits);
-			break;
-		case SV_ARG_DCS_Control_UnitTarget:
-			args.push_back(convert_from_byte<DCS::Control::UnitTarget>(payload, it, size));
-			it += sizeof(DCS::Control::UnitTarget);
 			break;
 		case SV_ARG_DCS_Utils_BasicString:
 			args.push_back(convert_from_byte<DCS::Utils::BasicString>(payload, it, size));
 			it += sizeof(DCS::Utils::BasicString);
 			break;
-		case SV_ARG_DCS_f64:
-			args.push_back(convert_from_byte<DCS::f64>(payload, it, size));
-			it += sizeof(DCS::f64);
+		case SV_ARG_DCS_Control_UnitTarget:
+			args.push_back(convert_from_byte<DCS::Control::UnitTarget>(payload, it, size));
+			it += sizeof(DCS::Control::UnitTarget);
 			break;
 		case SV_ARG_DCS_DAQ_ChannelRef:
 			args.push_back(convert_from_byte<DCS::DAQ::ChannelRef>(payload, it, size));
@@ -90,6 +94,19 @@ DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 	case SV_CALL_DCS_DAQ_StopAIAcquisition:
 	{
 		DCS::DAQ::StopAIAcquisition();
+		break;
+	}
+	case SV_CALL_DCS_DAQ_GetMCANumChannels:
+	{
+		DCS::u16 local = DCS::DAQ::GetMCANumChannels();
+		if(sizeof(DCS::u16) > 1024) LOG_ERROR("SVReturn value < sizeof(DCS::u16).");
+		memcpy(ret.ptr, &local, sizeof(DCS::u16));
+		ret.type = SV_RET_DCS_u16;
+		break;
+	}
+	case SV_CALL_DCS_DAQ_SetMCANumChannels:
+	{
+		DCS::DAQ::SetMCANumChannels(params.getArg<DCS::u16>(0));
 		break;
 	}
 	case SV_CALL_DCS_Threading_GetMaxHardwareConcurrency:

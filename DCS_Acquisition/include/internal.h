@@ -15,6 +15,7 @@
  */
 
 #define INTERNAL_SAMP_SIZE 1000
+#define INTERNAL_ADC_MAX_CHAN 65535
 
 namespace DCS
 {

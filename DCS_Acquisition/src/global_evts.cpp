@@ -4,6 +4,26 @@
 #include "../../DCS_Network/include/internal.h"
 
 #include <queue>
+#include <atomic>
+
+static std::atomic<DCS::u16> MCA_NumChannels = 2048;
+
+DCS::u16 DCS::DAQ::GetMCANumChannels()
+{
+    return MCA_NumChannels.load();
+}
+
+void DCS::DAQ::SetMCANumChannels(DCS::u16 nChannels)
+{
+    u16 c = nChannels;
+    if(nChannels > INTERNAL_ADC_MAX_CHAN)
+    {
+        c = MCA_NumChannels.load();
+        LOG_ERROR("Attempting to set MCA channels to a value larger than INTERNAL_ADC_MAX_CHAN (%u).", INTERNAL_ADC_MAX_CHAN);
+    }
+    MCA_NumChannels.store(c);
+    LOG_MESSAGE("MCA Channel number set to: %u", c);
+}
 
 void DCS::DAQ::DCSCountEvent()
 {
@@ -27,7 +47,7 @@ void DCS::DAQ::MCACountEvent()
     MCACountEventData evt_data;
     evt_data.count = ivd.cr.num_detected;
     evt_data.timestamp = ivd.timestamp;
-    evt_data.total_max_bin_count = 2048; // TODO : Don't hard code MCA num channels...
+    evt_data.total_max_bin_count = MCA_NumChannels.load();
 
     if(evt_data.count > 0)
     {
