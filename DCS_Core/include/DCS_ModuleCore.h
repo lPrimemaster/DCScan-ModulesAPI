@@ -243,22 +243,9 @@ namespace DCS
 		 */
 		struct CountResult
 		{
-			u64 num_detected = 0;	   ///< Number of detected peaks.
-			u64* maximizers = nullptr; ///< x positions array of the detected peaks (in samples).
-			f64* maxima = nullptr;     ///< y values array of the detected peaks.
-
-			~CountResult()
-			{
-				if(maximizers != nullptr)
-				{
-					delete[] maximizers;
-				}
-
-				if(maxima != nullptr)
-				{
-					delete[] maxima;
-				}
-			}
+			u64 num_detected = 0;	     ///< Number of detected peaks.
+			std::vector<u64> maximizers; ///< x positions array of the detected peaks (in samples).
+			std::vector<f64> maxima;     ///< y values array of the detected peaks.
 		};
 		
 		/**

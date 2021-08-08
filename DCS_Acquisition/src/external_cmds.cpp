@@ -5,8 +5,11 @@
 #include "../../DCS_Utils/include/internal.h"
 
 #include <queue>
+#include <atomic>
 
 #include <NIDAQmx.h>
+
+#undef max
 
 struct VCData
 {
@@ -33,6 +36,8 @@ static std::condition_variable mca_cv;
 
 
 static FILE* f;
+
+static std::atomic<DCS::u16> MCA_NumChannels = 2048;
 
 // NOTE : Using circular buffer instead of allocating memory every time (?)
 //static DCS::Memory::CircularBuffer crb(INTERNAL_SAMP_SIZE, 32);
@@ -163,6 +168,8 @@ void DCS::DAQ::StartAIAcquisition(DCS::f64 samplerate)
 
     if(!voltage_task_running)
     {
+        StartEventLoop(MCA_NumChannels.load());
+
         InitAITask();
         LOG_DEBUG("Sample rate set to: %.2f S/s.", voltage_task_rate);
         for(auto vcs : voltage_vcs)
@@ -188,6 +195,8 @@ void DCS::DAQ::StopAIAcquisition()
         StopTask(&voltage_task);
         voltage_task_running = false;
         TerminateAITask();
+
+        StopEventLoop();
     }
     else
         LOG_ERROR("Error stopping AI Acquisition: VoltageAI task is not running.");
@@ -200,9 +209,19 @@ DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastDCS_IVD()
     if(dcs_task_data.empty())
         dcs_cv.wait(lck);
 
-    InternalVoltageData ivd = dcs_task_data.front();
-    dcs_task_data.pop();
-    return ivd;
+    if(!dcs_task_data.empty())
+    {
+        InternalVoltageData ivd = dcs_task_data.front();
+        dcs_task_data.pop();
+        return ivd;
+    }
+    else
+    {
+        // Notify unlock
+        InternalVoltageData ivd_nu;
+        ivd_nu.cr.num_detected = std::numeric_limits<u64>::max();
+        return ivd_nu;
+    }
 }
 
 DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastMCA_IVD()
@@ -212,7 +231,45 @@ DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastMCA_IVD()
     if(mca_task_data.empty())
         mca_cv.wait(lck);
 
-    InternalVoltageData ivd = mca_task_data.front();
-    mca_task_data.pop();
-    return ivd;
+    if(!mca_task_data.empty())
+    {
+        InternalVoltageData ivd = mca_task_data.front();
+        mca_task_data.pop();
+        return ivd;
+    }
+    else
+    {
+        // Notify unlock
+        InternalVoltageData ivd_nu;
+        ivd_nu.cr.num_detected = std::numeric_limits<u64>::max();
+        return ivd_nu;
+    }
+}
+
+DCS::u16 DCS::DAQ::GetMCANumChannels()
+{
+    return MCA_NumChannels.load();
+}
+
+void DCS::DAQ::SetMCANumChannels(DCS::u16 nChannels)
+{
+    u16 c = nChannels;
+    if(nChannels > INTERNAL_ADC_MAX_CHAN)
+    {
+        c = MCA_NumChannels.load();
+        LOG_ERROR("Attempting to set MCA channels to a value larger than INTERNAL_ADC_MAX_CHAN (%u).", INTERNAL_ADC_MAX_CHAN);
+    }
+    MCA_NumChannels.store(c);
+    LOG_MESSAGE("MCA Channel number set to: %u", c);
+}
+
+DCS::f64 DCS::DAQ::GetADCMaxInternalClock()
+{
+    return INTERNAL_ADC_MAX_CLK; 
+}
+
+void DCS::DAQ::NotifyUnblockEventLoop()
+{
+    mca_cv.notify_one();
+    dcs_cv.notify_one();
 }

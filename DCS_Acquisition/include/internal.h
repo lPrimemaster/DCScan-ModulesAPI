@@ -14,8 +14,10 @@
  * \date $Date: 2021/04/13$
  */
 
+// TODO : Pass config values to a config section for ease of modification
 #define INTERNAL_SAMP_SIZE 1000
 #define INTERNAL_ADC_MAX_CHAN 65535
+#define INTERNAL_ADC_MAX_CLK 250000.0
 
 namespace DCS
 {
@@ -162,5 +164,23 @@ namespace DCS
          * \brief Get last internal voltage data for the MCA system and pop from memory.
          */
         DCS_INTERNAL_TEST DCS::DAQ::InternalVoltageData GetLastMCA_IVD();
+
+        /**
+         * \internal
+         * \brief Starts the DCS and MCA's event listener on the server side 
+         */
+        DCS_INTERNAL_TEST void StartEventLoop(u16 mca_num_channels);
+
+        /**
+         * \internal
+         * \brief Stops the DCS and MCA's event listener on the server side 
+         */
+        DCS_INTERNAL_TEST void StopEventLoop();
+
+        /**
+         * \internal
+         * \brief Notify callbacks about eventloop stop.
+         */
+        DCS_INTERNAL_TEST void NotifyUnblockEventLoop();
     }
 }

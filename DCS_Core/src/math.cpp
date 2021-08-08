@@ -105,8 +105,8 @@ static DCS::Math::CountResult countPacketCore(DCS::f64* arr, DCS::u64 size, DCS:
 	DCS::f64 localMaximum = 0.0;
 	DCS::u64 localMaximizer = 0;
 
-	std::vector<DCS::f64> maxima;
-	std::vector<DCS::u64> maximizers;
+	//NOTE : Allocate result capacity based on mean detection frequency
+	DCS::Math::CountResult result;
 
 	for(DCS::u64 i = 0; i < size; i++)
 	{
@@ -138,8 +138,8 @@ static DCS::Math::CountResult countPacketCore(DCS::f64* arr, DCS::u64 size, DCS:
 
 			if(!discard)
 			{
-				maxima.push_back(localMaximum);
-				maximizers.push_back(localMaximizer);
+				result.maxima.push_back(localMaximum);
+				result.maximizers.push_back(localMaximizer);
 			}
 
 			localMaximum = 0.0;
@@ -148,19 +148,7 @@ static DCS::Math::CountResult countPacketCore(DCS::f64* arr, DCS::u64 size, DCS:
 		//LOG_DEBUG("%d", i);
 	}
 
-	DCS::Math::CountResult result;
-
-	result.num_detected = maxima.size();
-
-	if(result.num_detected > 0)
-	{
-		result.maxima = new DCS::f64[result.num_detected];
-		result.maximizers = new DCS::u64[result.num_detected];
-
-		memcpy(result.maxima, maxima.data(), sizeof(DCS::f64) * result.num_detected);
-		memcpy(result.maximizers, maximizers.data(), sizeof(DCS::u64) * result.num_detected);
-	}
-
+	result.num_detected = result.maxima.size();
 	return result;
 }
 
@@ -173,8 +161,7 @@ DCS::Math::CountResult DCS::Math::countArrayPeak(f64* arr, u64 size, f64 vlo, f6
     #ifdef DCS_MATH_USE_LEGACY_COUNTER
     auto values = countPacketLegacy(arr, size, vlo, vth);
     result.num_detected = values.size();
-    result.maximizers = new DCS::u64[result.num_detected]; 
-    memcpy(result.maximizers, &values.front(), result.num_detected * sizeof(DCS::u64));
+    result.maximizers = values; // Deep copy
     #else
     result = countPacketCore(arr, size, vlo, vhi, vth);
     #endif

@@ -180,13 +180,23 @@ namespace DCS
         DCS_REGISTER_CALL(void, DCS::u16)
         DCS_API void SetMCANumChannels(u16 nChannels);
 
+        /**
+         * \brief Returns the maximum clock speed allowed by the ADC.
+         * 
+         * \param nChannels The number of channels to attribute. Must be smaller than INTERNAL_ADC_MAX_CHAN.
+         * 
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(DCS::f64)
+        DCS_API f64 GetADCMaxInternalClock();
+
         // TODO : Document
         DCS_REGISTER_EVENT
         DCS_API void DCSCountEvent();
 
         // TODO : Document
         DCS_REGISTER_EVENT
-        DCS_API void MCACountEvent();
+        DCS_API void MCACountEvent(u16 mca_num_channels);
     }
 }
 
