@@ -122,29 +122,27 @@ static DCS::Math::CountResult countPacketCore(DCS::f64* arr, DCS::u64 size, DCS:
 		}
 		else if(arr[i] <= vlo)
 			continue;
-		else if(arr[i] > vlo)
+		
+		while(i < size && arr[i] > vlo)
 		{
-			while(i < size && arr[i] > vlo)
+			if(arr[i] > vhi)
+				discard = true;
+			if(arr[i] > localMaximum)
 			{
-				if(arr[i] > vhi)
-					discard = true;
-				if(arr[i] > localMaximum)
-				{
-					localMaximum = arr[i];
-					localMaximizer = i + 1;
-				}
-				i++;
+				localMaximum = arr[i];
+				localMaximizer = i + 1;
 			}
-
-			if(!discard)
-			{
-				result.maxima.push_back(localMaximum);
-				result.maximizers.push_back(localMaximizer);
-			}
-
-			localMaximum = 0.0;
-			discard = false;
+			i++;
 		}
+
+		if(!discard)
+		{
+			result.maxima.push_back(localMaximum);
+			result.maximizers.push_back(localMaximizer);
+		}
+
+		localMaximum = 0.0;
+		discard = false;
 		//LOG_DEBUG("%d", i);
 	}
 
