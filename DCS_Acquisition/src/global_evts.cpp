@@ -75,7 +75,6 @@ void DCS::DAQ::MCACountEvent(DCS::u16 mca_num_channels)
 
         if(evt_data.count > 0)
         {
-            evt_data.bins = new u16[evt_data.count];
             for(int i = 0 ; i < evt_data.count; i++)
             {
                 // TODO : Don't hard code DAQ range... (currently: [0.0, 10.0] V)
@@ -84,5 +83,7 @@ void DCS::DAQ::MCACountEvent(DCS::u16 mca_num_channels)
         }
         
         DCS_EMIT_EVT((DCS::u8*)&evt_data, sizeof(MCACountEventData)); // HACK : This can operate with a move ctor instead
+
+        //delete[] evt_data.bins; // BUG : I dont like this at all, Get a system to handle it automatically
     }
 }

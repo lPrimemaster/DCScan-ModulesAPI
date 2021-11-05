@@ -79,17 +79,7 @@ namespace DCS
             DCS::u64 count;                  ///< Stores `bins` array size in words (16-bit windows like for 64-bit machines).
             DCS::Timer::Timestamp timestamp; ///< The time these counts were performed (software time).
             DCS::u16 total_max_bin_count;    ///< Max size of channels in the MCA (typically 1024 / 2048 / ... / 65535 (max for NI-6229))
-            DCS::u16* bins = nullptr;        ///< The bins value array (this is not a frequency list).
-
-            ~MCACountEventData()
-            {
-                if(bins != nullptr && count > 0)
-                {
-                    delete[] bins;
-                    bins = nullptr;
-                    count = 0;
-                }
-            }
+            DCS::u16 bins[128];              ///< The bins value array (this is not a frequency list).
         };
 
         /**
