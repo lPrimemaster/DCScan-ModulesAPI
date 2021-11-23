@@ -10,12 +10,12 @@
 using namespace DCS::Utils;
 using namespace DCS::Network;
 
-static void RunToWaitPoll(int rep, float acc_min = 1.0f, float acc_max = 200.0f, bool open_loop = false)
+static void RunToWaitPoll(int rep, int batch, float acc_min = 1.0f, float acc_max = 200.0f, bool open_loop = false)
 {
 	LOG_DEBUG("Starting RotDev full loop test battery [Bi-directional]...");
-	LOG_DEBUG("Setting:");
+	LOG_DEBUG("Settings:");
 	LOG_DEBUG("Max acc     = 2500");
-	LOG_DEBUG("Max vel     = 40");
+	LOG_DEBUG("Cur vel     = 40");
 	LOG_DEBUG("Prec        = 6");
 	LOG_DEBUG("DC OpenLoop = %s", open_loop ? "ON" : "OFF");
 
@@ -74,13 +74,12 @@ static void RunToWaitPoll(int rep, float acc_min = 1.0f, float acc_max = 200.0f,
 			reqstr
 		);
 
-		for (int j = 0; j < 100; j++)
+		for(int j = 0; j < batch; j++)
 		{
 			auto ret = Message::SendSync(Message::Operation::REQUEST, buffer, size_written);
 			float rpos = (float)atof((*(DCS::Utils::BasicString*)ret.ptr).buffer);
 			LOG_DEBUG("Acc: %f || Dev: %f", acc, rpos - 360.0f);
 			data.at(i).push_back(rpos);
-			std::system("pause");
 		}
 	}
 
@@ -157,6 +156,7 @@ int main()
 	Init();
 
 	Socket c = Client::Connect("127.0.0.1", 15777);
+	Client::Authenticate(c, "Prime", "alfa77");
 	bool valid = Client::StartThread(c);
 
 	if (valid)
@@ -170,17 +170,10 @@ int main()
 
 		auto max_threads_srv_b = Message::SendSync(Message::Operation::REQUEST, buffer, size_written);
 		auto max_threads_srv = *(DCS::u16*)max_threads_srv_b.ptr;
-
 		LOG_DEBUG("Got server max thread concurrency: %d", max_threads_srv);
 
-		size_written = DCS::Registry::SetupEvent(buffer, SV_EVT_DCS_Network_Message_FibSeqEvt, [](DCS::u8* data, DCS::u8* userData) {
-			LOG_DEBUG("FibEvent returned: %llu", *(DCS::u64*)data);
-		});
-
-		//Message::SendAsync(Message::Operation::EVT_SUB, buffer, size_written);
-
 		//RunToWaitPoll(0, 25.0f, 200.0f, true); // Zero reps -> Initialize only
-		RunToWaitPoll(1, 25.0f, 200.0f, true);
+		RunToWaitPoll(10, 10, 20.0f, 200.0f, false);
 
 		LOG_DEBUG("Run relative increment started!");
 
@@ -188,7 +181,7 @@ int main()
 
 		std::this_thread::sleep_for(std::chrono::seconds(5));
 
-		size_written = DCS::Registry::RemoveEvent(buffer, SV_EVT_DCS_Network_Message_FibSeqEvt);
+		//size_written = DCS::Registry::RemoveEvent(buffer, SV_EVT_DCS_Network_Message_FibSeqEvt);
 
 		//Message::SendAsync(Message::Operation::EVT_UNSUB, buffer, size_written);
 
