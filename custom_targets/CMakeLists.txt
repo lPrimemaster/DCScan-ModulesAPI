@@ -8,8 +8,8 @@ target_link_libraries(EncoderPrecTest DCSModuleUtils DCSModuleCore DCSModuleNetw
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/")
 find_package(LibNIDAQmx REQUIRED)
 add_executable(DAQLocalTest src/local_daq_test.cpp)
-include_directories("${LIBNIDAQMX_INCLUDE_DIR}")
-target_link_libraries(DAQLocalTest DCSModuleUtils "${LIBNIDAQMX_LIBRARY}")
+include_directories(${LIBNIDAQMX_INCLUDE_DIR})
+target_link_libraries(DAQLocalTest DCSModuleUtils ${LIBNIDAQMX_LIBRARY})
 
 add_custom_target(CTARGETS)
 add_dependencies(CTARGETS EncoderPrecTest DAQLocalTest)

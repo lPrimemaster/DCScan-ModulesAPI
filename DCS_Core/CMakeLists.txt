@@ -27,7 +27,7 @@ set(OPENSSL_ROOT_DIR "C:/Program Files (x86)/openssl")
 find_package(OpenSSL REQUIRED)
 include_directories("${OPENSSL_INCLUDE_DIR}")
 
-target_link_libraries(DCSModuleCore DCSModuleUtils "${OPENSSL_LIBRARIES}")
+target_link_libraries(DCSModuleCore DCSModuleUtils ${OPENSSL_LIBRARIES})
 
 set_target_properties(DCSModuleCore PROPERTIES
   PUBLIC_HEADER "include/DCS_ModuleCore.h"
