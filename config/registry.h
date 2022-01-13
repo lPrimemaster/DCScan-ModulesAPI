@@ -37,9 +37,9 @@
 #include <any>
 #include "../DCS_Utils/include/DCS_ModuleUtils.h"
 
-#include "C:\Users\adminator\Desktop\Source\DCScan-ModulesAPI\DCS_Acquisition\include\DCS_ModuleAcquisition.h"
-#include "C:\Users\adminator\Desktop\Source\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
-#include "C:\Users\adminator\Desktop\Source\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
+#include "C:\Users\simpa\Desktop\Source\DCScan-ModulesAPI\DCS_Acquisition\include\DCS_ModuleAcquisition.h"
+#include "C:\Users\simpa\Desktop\Source\DCScan-ModulesAPI\DCS_Core\include\DCS_ModuleCore.h"
+#include "C:\Users\simpa\Desktop\Source\DCScan-ModulesAPI\DCS_EngineControl\include\DCS_ModuleEngineControl.h"
 
 #define SV_CALL_NULL 0x0 ///< Indicates a non existant call [Not to use].
 #define SV_CALL_DCS_DAQ_NewAIVChannel 0x1 ///< A call to `DCS::DAQ::NewAIVChannel` \ingroup calls_id
@@ -55,17 +55,17 @@
 #define MAX_CALL 0xb
 
 #define SV_ARG_NULL 0x0 ///< Indicates a non existant argument [Not to use].
-#define SV_ARG_DCS_Utils_BasicString 0x1 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
-#define SV_ARG_DCS_DAQ_ChannelLimits 0x2 ///< Refers to argument `DCS::DAQ::ChannelLimits` \ingroup args_id
-#define SV_ARG_DCS_Control_UnitTarget 0x3 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
-#define SV_ARG_DCS_f64 0x4 ///< Refers to argument `DCS::f64` \ingroup args_id
-#define SV_ARG_DCS_DAQ_ChannelRef 0x5 ///< Refers to argument `DCS::DAQ::ChannelRef` \ingroup args_id
-#define SV_ARG_DCS_u16 0x6 ///< Refers to argument `DCS::u16` \ingroup args_id
+#define SV_ARG_DCS_DAQ_ChannelLimits 0x1 ///< Refers to argument `DCS::DAQ::ChannelLimits` \ingroup args_id
+#define SV_ARG_DCS_Utils_BasicString 0x2 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
+#define SV_ARG_DCS_f64 0x3 ///< Refers to argument `DCS::f64` \ingroup args_id
+#define SV_ARG_DCS_Control_UnitTarget 0x4 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
+#define SV_ARG_DCS_u16 0x5 ///< Refers to argument `DCS::u16` \ingroup args_id
+#define SV_ARG_DCS_DAQ_ChannelRef 0x6 ///< Refers to argument `DCS::DAQ::ChannelRef` \ingroup args_id
 
 #define SV_RET_VOID 0x0 ///< Indicates a void return type.
 #define SV_RET_DCS_f64 0x1 ///< Refers to return type `DCS::f64` \ingroup ret_id
-#define SV_RET_DCS_u16 0x2 ///< Refers to return type `DCS::u16` \ingroup ret_id
-#define SV_RET_DCS_Utils_BasicString 0x3 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id
+#define SV_RET_DCS_Utils_BasicString 0x2 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id
+#define SV_RET_DCS_u16 0x3 ///< Refers to return type `DCS::u16` \ingroup ret_id
 
 #define MAX_SUB 0x4
 #define SV_EVT_DCS_DAQ_DCSCountEvent 0x1 ///< A event refering to `DCS::DAQ::DCSCountEvent` \ingroup evt_id

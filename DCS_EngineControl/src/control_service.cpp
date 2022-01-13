@@ -1,4 +1,7 @@
 #include "../include/DCS_ModuleEngineControl.h"
+// Socket for communication with XPS-RLD4 
+#include "../../DCS_Network/include/internal.h"
+
 #include "../include/internal.h"
 
 #include <thread>
@@ -29,8 +32,20 @@ void DCS::Control::StartServices(const char* esp301_com, const char* pmc8742_usb
 			serial_args.parity = NOPARITY;	   // No parity
 			serial_args.stopBits = ONESTOPBIT; // One stop bit
 
-			// Open both ports for communication
+			// Using a ESP301 controller
 			HANDLE esp301_handle = Serial::init_handle(esp301_com, GENERIC_READ | GENERIC_WRITE, serial_args);
+
+			// Using a XPS-RLD4 controller
+			SOCKET xps_rld4 = Network::CreateClientSocket("192.168.254.254", 5001);
+			if(!Network::ValidateSocket(xps_rld4))
+			{
+				LOG_ERROR("Failed to open XPS-RLD4 at: %s:%d", "192.168.254.254", 5001);
+			}
+			else
+			{
+				LOG_DEBUG("Success connecting to XPS-RLD4 at: %s:%d", "192.168.254.254", 5001);
+			}
+
 
 			USerial::USBIntHandle pmc8742_handle = USerial::init_usb_handle(pmc8742_usb);
 
@@ -69,10 +84,29 @@ void DCS::Control::StartServices(const char* esp301_com, const char* pmc8742_usb
 						cmd_buffer.reply(response);
 					}
 					break;
+				case Control::UnitTarget::XPSRLD4:
+					Network::SendData(xps_rld4, (u8*)cmd.full_cmd.c_str(), (i32)cmd.full_cmd.size());
+
+					if(cmd.wait_response)
+					{
+						// Just make sure the buffer is large enough
+						// i32 recv_sz = 1;
+						// while(recv_sz > 0)
+						i32 recv_sz = Network::ReceiveData(xps_rld4, (u8*)response, 255);
+						if(recv_sz > 255) 
+						{
+							LOG_CRITICAL("XPS-RLD4 response buffer to small for data.");
+							LOG_CRITICAL("%d bytes received out of a maximum of %d.", recv_sz, 255);
+						}
+						response[recv_sz] = '\0';
+						cmd_buffer.reply(response);
+					}
+					break;
 				}
 			}
 
 			Serial::close_handle(esp301_handle);
+			Network::CloseSocketConnection(xps_rld4);
 			DCS::USerial::term_usb_handle(pmc8742_handle);
 		});
 		if (control_service_thread == nullptr)

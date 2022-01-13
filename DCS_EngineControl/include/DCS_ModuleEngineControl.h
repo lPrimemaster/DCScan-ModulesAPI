@@ -30,8 +30,9 @@ namespace DCS
 		 */
 		enum class UnitTarget
 		{
-			ESP301, ///< The ESP301 rotation stage controller target.
-			PMC8742 ///< The PMC8742 tilt stage controller target.
+			ESP301,  ///< The ESP301 rotation stage controller target.
+			PMC8742, ///< The PMC8742 tilt stage controller target.
+			XPSRLD4  ///< The XPS-RLD4 rotation stage controller target.
 		};
 
 		/**

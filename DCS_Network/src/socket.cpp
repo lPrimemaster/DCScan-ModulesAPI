@@ -120,8 +120,8 @@ SOCKET DCS::Network::CreateClientSocket(const char *host, i32 port)
 	if (iResult != 0)
 	{
 		LOG_ERROR("getaddrinfo (WSAAPI) failed: %d", iResult);
-		LOG_ERROR("Terminating WSA...");
-		WSACleanup();
+		// LOG_ERROR("Terminating WSA...");
+		// WSACleanup();
 		return INVALID_SOCKET;
 	}
 
@@ -133,9 +133,9 @@ SOCKET DCS::Network::CreateClientSocket(const char *host, i32 port)
 		if (c_socket == INVALID_SOCKET)
 		{
 			LOG_ERROR("Socket creation (WSAAPI) failed: %ld", WSAGetLastError());
-			LOG_ERROR("Terminating WSA...");
+			// LOG_ERROR("Terminating WSA...");
 			freeaddrinfo(result);
-			WSACleanup();
+			// WSACleanup();
 			return INVALID_SOCKET;
 		}
 
