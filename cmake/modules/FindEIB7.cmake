@@ -11,13 +11,11 @@ find_library(EIB7_LIBRARY
             PATHS ${EIB7_PATH}
             PATH_SUFFIXES "lib64")
             
-find_path(EIB7_INCLUDE_DIR
-            NAMES "eib7"
-            PATHS ${EIB7_PATH}
-            PATH_SUFFIXES "include")
+# find_path(EIB7_INCLUDE_DIR
+#             PATHS ${EIB7_PATH}
+#             PATH_SUFFIXES "include")
 
-message("EIB7 Lib: " ${EIB7_LIBRARY})
-message("EIB7 Lib: " ${EIB7_INCLUDE_DIR})
+set(EIB7_INCLUDE_DIR "${EIB7_PATH}/include")
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(EIB7 DEFAULT_MSG EIB7_LIBRARY EIB7_INCLUDE_DIR)
