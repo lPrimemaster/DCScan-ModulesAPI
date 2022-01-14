@@ -24,9 +24,11 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
 find_package(LibNIDAQmx REQUIRED)
 
-include_directories("${LIBNIDAQMX_INCLUDE_DIR}")
+find_package(EIB7 REQUIRED)
 
-target_link_libraries(DCSModuleAcquisition DCSModuleUtils DCSModuleNetwork "${LIBNIDAQMX_LIBRARY}")
+include_directories("${LIBNIDAQMX_INCLUDE_DIR}" "${EIB7_INCLUDE_DIR}")
+
+target_link_libraries(DCSModuleAcquisition DCSModuleUtils DCSModuleNetwork "${LIBNIDAQMX_LIBRARY}" "${EIB7_LIBRARY}")
 
 set_target_properties(DCSModuleAcquisition PROPERTIES
   PUBLIC_HEADER "include/DCS_ModuleAcquisition.h"
