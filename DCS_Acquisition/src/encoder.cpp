@@ -185,7 +185,8 @@ void DCS::ENC::EIB7SoftModeLoopStart(DCS::f64 sigperiods)
                 }
                 else
                 {
-                    std::this_thread::yield();
+                    static constexpr i32 spleeptime = TRIGGER_PERIOD / 10;
+                    std::this_thread::sleep_for(std::chrono::microseconds(spleeptime));
                 }
             }
         });
@@ -244,13 +245,14 @@ DCS::ENC::EncoderData DCS::ENC::InspectLastEncoderValues()
     return data;
 }
 
-// FIXME: This is just to test!!
-void DCS::ENC::Init()
+
+void DCS::ENC::Init(const char* ip, i8 axis)
 {
-    InitEIB7Encoder("10.80.0.99", 0b0001);
+    InitEIB7Encoder(ip, axis);
 
     StartEIB7SoftModeTrigger();
 
+    // FIXME: Transform sigperiods in param
     EIB7SoftModeLoopStart(5000.0);
 }
 

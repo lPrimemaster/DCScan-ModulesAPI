@@ -410,7 +410,7 @@ void DCS::Network::Server::StopThread(Socket client, StopMode mode)
 		if (mode == StopMode::WAIT)
 		{
 			while (server_running.load())
-				std::this_thread::yield();
+				std::this_thread::sleep_for(std::chrono::milliseconds(10));
 				
 			if (stop_forced.load())
 				return;

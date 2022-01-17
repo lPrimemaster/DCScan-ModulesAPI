@@ -44,7 +44,7 @@ namespace DCS
 		 * 
 		 * \todo Create a thread for each target. Allowing for simultaneous operation of the stages.
 		 */
-		DCS_API void StartServices(const char* esp301_com = "COM3", const char* pmc8742_usb = "104D-4000");
+		DCS_API void StartServices(const char* esp301_com = "COM3", const char* pmc8742_usb = "104D-4000", const char* xps_rld4 = "10.80.0.100");
 
 		/**
 		 * \brief Stops the COM and USB port services.
