@@ -183,4 +183,43 @@ namespace DCS
          */
         DCS_INTERNAL_TEST void NotifyUnblockEventLoop();
     }
+
+    namespace ENC
+    {
+        /**
+         * \internal
+         * \brief Loads an encoder with controller ip and axes numbers to read.
+         */
+        DCS_INTERNAL_TEST void InitEIB7Encoder(const char* hostname, i8 axes);
+        
+        /**
+         * \internal
+         * \brief Starts encoder trigger.
+         */
+        DCS_INTERNAL_TEST void StartEIB7SoftModeTrigger();
+
+        /**
+         * \internal
+         * \brief Starts encoder data acquisition.
+         */
+        DCS_INTERNAL_TEST void EIB7SoftModeLoopStart();
+
+        /**
+         * \internal
+         * \brief Stops encoder data acquisition.
+         */
+        DCS_INTERNAL_TEST void EIB7SoftModeLoopStop();
+
+        /**
+         * \internal
+         * \brief Stops encoder trigger.
+         */
+        DCS_INTERNAL_TEST void StopEIB7SoftModeTrigger();
+
+        /**
+         * \internal
+         * \brief Closes the encoder.
+         */
+        DCS_INTERNAL_TEST void DeleteEIB7Encoder();
+    }
 }

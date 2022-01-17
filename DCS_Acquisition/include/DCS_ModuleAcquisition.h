@@ -188,6 +188,24 @@ namespace DCS
         DCS_REGISTER_EVENT
         DCS_API void MCACountEvent(u16 mca_num_channels);
     }
+
+    /**
+     * \brief Exposes %ENC functionalities of the API to the end user.
+     */
+    namespace ENC
+    {
+        /* 
+         *  \brief Struct for encoder soft realtime mode data.
+         */
+        struct DCS_API EncoderData
+        {
+            i64 position;        //< Position value
+            u16 status;          //< Status word
+            u16 triggerCounter;  //< Trigger counter value
+            u32 timestamp;       //< Timestamp
+            i64 ref[2];          //< Reference position values
+        };
+    }
 }
 
 #endif _DCS_ACQ_H

@@ -23,7 +23,7 @@ add_library(DCSModuleAcquisition ${LIB_TYPE}
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
-find_package(LibNIDAQmx REQUIRED)
+# find_package(LibNIDAQmx REQUIRED)
 
 find_package(EIB7 REQUIRED)
 
