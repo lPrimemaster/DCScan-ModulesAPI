@@ -195,16 +195,47 @@ namespace DCS
     namespace ENC
     {
         /* 
-         *  \brief Struct for encoder soft realtime mode data.
+         *  \brief Struct for encoder soft realtime mode data (per axis).
          */
-        struct DCS_API EncoderData
+        struct DCS_API EncoderAxisData
         {
+            i8  axis;            //< Axis value
             i64 position;        //< Position value
+            f64 calpos;          //< Double converted position
             u16 status;          //< Status word
             u16 triggerCounter;  //< Trigger counter value
             u32 timestamp;       //< Timestamp
             i64 ref[2];          //< Reference position values
         };
+
+        /* 
+         *  \brief Struct for encoder soft realtime mode data (all axes).
+         */
+        struct DCS_API EncoderData
+        {
+            i8 numAxis;              //< Number of axis present;
+            EncoderAxisData axis[4]; //< Encoder axes list
+        };
+
+        /**
+         * \brief Returns the last value output from the angular encoder.
+         * 
+         * Returns EncoderData with zero numAxis if failed.
+         * 
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(DCS::ENC::EncoderData)
+        DCS_API EncoderData InspectLastEncoderValues();
+
+        /**
+         * \brief Initializes the rotary encoder API.
+         */
+        DCS_API void Init();
+
+        /**
+         * \brief Cleans up the rotary encoder API.
+         */
+        DCS_API void Terminate();
     }
 }
 

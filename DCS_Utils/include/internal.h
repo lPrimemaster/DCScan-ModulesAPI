@@ -43,10 +43,11 @@ namespace DCS
 		 * \internal 
 		 * \brief A thread-safe message queue. Similar to std::queue.
 		 */
+		template<typename Type>
 		class DCS_INTERNAL_TEST SMessageQueue
 		{
 		public:
-			using Type = DCS::Network::Message::DefaultMessage;
+			// using Type = DCS::Network::Message::DefaultMessage;
 			SMessageQueue() {};
 			~SMessageQueue() {};
 
@@ -61,6 +62,36 @@ namespace DCS
 				{
 					Type copy = q.front();
 					q.pop();
+					return copy;
+				}
+				return Type();
+			}
+
+			Type peek()
+			{
+				std::unique_lock<std::mutex> lock(m);
+				if (q.empty())
+				{
+					c.wait(lock);
+				}
+				if (!q.empty())
+				{
+					Type copy = q.front();
+					return copy;
+				}
+				return Type();
+			}
+
+			Type peekBack()
+			{
+				std::unique_lock<std::mutex> lock(m);
+				if (q.empty())
+				{
+					c.wait(lock);
+				}
+				if (!q.empty())
+				{
+					Type copy = q.back();
 					return copy;
 				}
 				return Type();

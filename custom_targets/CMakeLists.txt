@@ -11,8 +11,13 @@ add_executable(DAQLocalTest src/local_daq_test.cpp)
 include_directories(${LIBNIDAQMX_INCLUDE_DIR})
 target_link_libraries(DAQLocalTest DCSModuleUtils ${LIBNIDAQMX_LIBRARY})
 
+find_package(EIB7 REQUIRED)
+add_executable(EIBTest src/eib_test.cpp)
+target_include_directories(EIBTest PRIVATE ${EIB7_INCLUDE_DIR})
+target_link_libraries(EIBTest DCSModuleUtils DCSModuleAcquisition ${EIB7_LIBRARY})
+
 add_custom_target(CTARGETS)
-add_dependencies(CTARGETS EncoderPrecTest DAQLocalTest)
+add_dependencies(CTARGETS EncoderPrecTest DAQLocalTest EIBTest)
 
 # Copy the libs dll
 # add_custom_command(TARGET EncoderPrecTest 

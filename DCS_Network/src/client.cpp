@@ -7,11 +7,11 @@
 #include <future>
 
 static std::thread* client_receive_thread = nullptr;
-static DCS::Utils::SMessageQueue inbound_data_queue;
+static DCS::Utils::SMessageQueue<DCS::Network::Message::DefaultMessage> inbound_data_queue;
 
 
 static std::thread* client_send_thread = nullptr;
-static DCS::Utils::SMessageQueue outbound_data_queue;
+static DCS::Utils::SMessageQueue<DCS::Network::Message::DefaultMessage> outbound_data_queue;
 
 constexpr DCS::u64 ib_buff_size = 4096 * 1024;
 static DCS::Utils::ByteQueue inbound_bytes(ib_buff_size);

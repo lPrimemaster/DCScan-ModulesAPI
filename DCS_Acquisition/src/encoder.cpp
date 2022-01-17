@@ -16,6 +16,8 @@ static EIB7_HANDLE eib;
 static std::thread* eib_loop = nullptr;
 static std::atomic<bool> eib_loop_running;
 
+static DCS::Utils::SMessageQueue<DCS::ENC::EncoderData> outbound_data_queue;
+
 static EIB7_AXIS axis[NUM_OF_AXIS];
 static EIB7_DataRegion regions[NUM_OF_AXIS] = {
     EIB7_DR_Encoder1,
@@ -23,7 +25,7 @@ static EIB7_DataRegion regions[NUM_OF_AXIS] = {
     EIB7_DR_Encoder3,
     EIB7_DR_Encoder4
 };
-static i8 inited_axes = 0;;
+static DCS::i8 inited_axes = 0;
 
 static bool CheckError(EIB7_ERR error)
 {
@@ -53,13 +55,13 @@ void DCS::ENC::InitEIB7Encoder(const char* hostname, i8 axes)
     if(CheckError(EIB7GetAxis(eib, axis, NUM_OF_AXIS, &numAxes))) return;
 
     // Init encoder axes for 1App
-    for(i32 i = 0; i < numAxes; i++)
+    for(i32 i = 0; i < (i32)numAxes; i++)
     {
         if(!(axes & (1 << i))) continue;
-        if(CheckError(EIB7InitAxis(axis[i], // TODO: Change Vpp to App
-                EIB7_IT_Incremental,
-                EIB7_EC_Linear,
-                EIB7_RM_None,         /* reference marks not used */
+        if(CheckError(EIB7InitAxis(axis[i], // TODO: Change Vpp to uApp
+                EIB7_IT_Incremental_11u,
+                EIB7_EC_Rotary,
+                EIB7_RM_None,          /* reference marks not used */
                 0,                    /* reference marks not used */
                 0,                    /* reference marks not used */
                 EIB7_HS_None,
@@ -102,16 +104,17 @@ void DCS::ENC::StartEIB7SoftModeTrigger()
     CheckError(EIB7GlobalTriggerEnable(eib, EIB7_MD_Enable, EIB7_TS_TrgTimer));
 }
 
-void DCS::ENC::EIB7SoftModeLoopStart()
+void DCS::ENC::EIB7SoftModeLoopStart(DCS::f64 sigperiods)
 {
     if(eib_loop == nullptr)
     {
         eib_loop_running.store(true);
-        eib_loop = new std::thread([&]() -> void {
+        eib_loop = new std::thread([&, sigperiods]() -> void {
             u8 udp_data[MAX_SRT_DATA];
             u32 entries;
             void* field;
             u32 sz;
+            EncoderAxisData eadata;
             EncoderData edata;
 
             while(eib_loop_running.load())
@@ -126,38 +129,39 @@ void DCS::ENC::EIB7SoftModeLoopStart()
 
                 if(entries > 0)
                 {
-                    
+                    edata.numAxis = 0;
+                    // TODO: Change this to numAxes. Don't waste cycles.
                     for(i32 i = 0; i < NUM_OF_AXIS; i++)
                     {
                         if(!(inited_axes & (1 << i))) continue;
-                        
+                        edata.numAxis++;
                         // read trigger counter
                         CheckError(EIB7GetDataFieldPtr(eib, udp_data, 
                                     EIB7_DR_Global, 
                                     EIB7_PDF_TriggerCounter, 
                                     &field, &sz));
-                        edata.triggerCounter = *(u16*)field;
+                        eadata.triggerCounter = *(u16*)field;
 
                         // read timestamp
                         CheckError(EIB7GetDataFieldPtr(eib, udp_data, 
                                     regions[i], 
                                     EIB7_PDF_Timestamp, 
                                     &field, &sz));
-                        edata.timestamp = *(u16*)field;
+                        eadata.timestamp = *(u16*)field;
 
                         // read position
                         CheckError(EIB7GetDataFieldPtr(eib, udp_data, 
                                     regions[i], 
                                     EIB7_PDF_PositionData, 
                                     &field, &sz));
-                        edata.position = *(i64*)field;
+                        eadata.position = *(i64*)field;
 
                         // read status
                         CheckError(EIB7GetDataFieldPtr(eib, udp_data, 
                                     regions[i], 
                                     EIB7_PDF_StatusWord, 
                                     &field, &sz));
-                        edata.status = *(u16*)field;
+                        eadata.status = *(u16*)field;
 
                         // read ref
                         CheckError(EIB7GetDataFieldPtr(eib, udp_data, 
@@ -165,9 +169,19 @@ void DCS::ENC::EIB7SoftModeLoopStart()
                                     EIB7_PDF_ReferencePos, 
                                     &field, &sz));
                         i64* posVal = (i64*)field;
-                        edata.ref[0] = posVal[0];
-                        edata.ref[1] = posVal[1];
+                        eadata.ref[0] = posVal[0];
+                        eadata.ref[1] = posVal[1];
+
+                        CheckError(EIB7IncrPosToDouble(eadata.position, &eadata.calpos));
+                        eadata.calpos *= 360.0 / sigperiods;
+
+                        eadata.axis = (i8)i + 1;
+
+                        edata.axis[i] = eadata;
                     }
+
+                    if(edata.numAxis > 0)
+                        outbound_data_queue.push(edata);
                 }
                 else
                 {
@@ -214,3 +228,37 @@ void DCS::ENC::DeleteEIB7Encoder()
     EIB7Close(eib);
 }
 
+DCS::ENC::EncoderData DCS::ENC::InspectLastEncoderValues()
+{
+    EncoderData data;
+
+    if(outbound_data_queue.size() > 0)
+    {
+        data = outbound_data_queue.peekBack();
+    }
+    else
+    {
+        data.numAxis = 0;
+    }
+
+    return data;
+}
+
+// FIXME: This is just to test!!
+void DCS::ENC::Init()
+{
+    InitEIB7Encoder("10.80.0.99", 0b0001);
+
+    StartEIB7SoftModeTrigger();
+
+    EIB7SoftModeLoopStart(5000.0);
+}
+
+void DCS::ENC::Terminate()
+{
+    EIB7SoftModeLoopStop();
+
+    StopEIB7SoftModeTrigger();
+
+    DeleteEIB7Encoder();
+}

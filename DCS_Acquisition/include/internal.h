@@ -202,7 +202,7 @@ namespace DCS
          * \internal
          * \brief Starts encoder data acquisition.
          */
-        DCS_INTERNAL_TEST void EIB7SoftModeLoopStart();
+        DCS_INTERNAL_TEST void EIB7SoftModeLoopStart(DCS::f64 sigperiods);
 
         /**
          * \internal

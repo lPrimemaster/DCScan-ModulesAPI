@@ -30,14 +30,6 @@ const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const u
 			args.push_back(convert_from_byte<DCS::DAQ::ChannelLimits>(payload, it, size));
 			it += sizeof(DCS::DAQ::ChannelLimits);
 			break;
-		case SV_ARG_DCS_u16:
-			args.push_back(convert_from_byte<DCS::u16>(payload, it, size));
-			it += sizeof(DCS::u16);
-			break;
-		case SV_ARG_DCS_Control_UnitTarget:
-			args.push_back(convert_from_byte<DCS::Control::UnitTarget>(payload, it, size));
-			it += sizeof(DCS::Control::UnitTarget);
-			break;
 		case SV_ARG_DCS_Utils_BasicString:
 			args.push_back(convert_from_byte<DCS::Utils::BasicString>(payload, it, size));
 			it += sizeof(DCS::Utils::BasicString);
@@ -45,6 +37,14 @@ const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const u
 		case SV_ARG_DCS_f64:
 			args.push_back(convert_from_byte<DCS::f64>(payload, it, size));
 			it += sizeof(DCS::f64);
+			break;
+		case SV_ARG_DCS_Control_UnitTarget:
+			args.push_back(convert_from_byte<DCS::Control::UnitTarget>(payload, it, size));
+			it += sizeof(DCS::Control::UnitTarget);
+			break;
+		case SV_ARG_DCS_u16:
+			args.push_back(convert_from_byte<DCS::u16>(payload, it, size));
+			it += sizeof(DCS::u16);
 			break;
 		case SV_ARG_DCS_DAQ_ChannelRef:
 			args.push_back(convert_from_byte<DCS::DAQ::ChannelRef>(payload, it, size));
@@ -115,6 +115,14 @@ DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 		if(sizeof(DCS::f64) > 1024) LOG_ERROR("SVReturn value < sizeof(DCS::f64).");
 		memcpy(ret.ptr, &local, sizeof(DCS::f64));
 		ret.type = SV_RET_DCS_f64;
+		break;
+	}
+	case SV_CALL_DCS_ENC_InspectLastEncoderValues:
+	{
+		DCS::ENC::EncoderData local = DCS::ENC::InspectLastEncoderValues();
+		if(sizeof(DCS::ENC::EncoderData) > 1024) LOG_ERROR("SVReturn value < sizeof(DCS::ENC::EncoderData).");
+		memcpy(ret.ptr, &local, sizeof(DCS::ENC::EncoderData));
+		ret.type = SV_RET_DCS_ENC_EncoderData;
 		break;
 	}
 	case SV_CALL_DCS_Threading_GetMaxHardwareConcurrency:
