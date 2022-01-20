@@ -104,18 +104,19 @@ void DCS::ENC::StartEIB7SoftModeTrigger()
     CheckError(EIB7GlobalTriggerEnable(eib, EIB7_MD_Enable, EIB7_TS_TrgTimer));
 }
 
-void DCS::ENC::EIB7SoftModeLoopStart(DCS::f64 sigperiods)
+void DCS::ENC::EIB7SoftModeLoopStart(f64 sigperiods[NUM_OF_AXIS])
 {
     if(eib_loop == nullptr)
     {
         eib_loop_running.store(true);
-        eib_loop = new std::thread([&, sigperiods]() -> void {
+        eib_loop = new std::thread([&](f64 s0, f64 s1, f64 s2, f64 s3) -> void {
             u8 udp_data[MAX_SRT_DATA];
             u32 entries;
             void* field;
             u32 sz;
             EncoderAxisData eadata;
             EncoderData edata;
+            f64 isigperiods[NUM_OF_AXIS] = {s0, s1, s2, s3};
 
             while(eib_loop_running.load())
             {
@@ -173,7 +174,7 @@ void DCS::ENC::EIB7SoftModeLoopStart(DCS::f64 sigperiods)
                         eadata.ref[1] = posVal[1];
 
                         CheckError(EIB7IncrPosToDouble(eadata.position, &eadata.calpos));
-                        eadata.calpos *= 360.0 / sigperiods;
+                        eadata.calpos *= 360.0 / isigperiods[i];
 
                         eadata.axis = (i8)i + 1;
 
@@ -189,7 +190,7 @@ void DCS::ENC::EIB7SoftModeLoopStart(DCS::f64 sigperiods)
                     std::this_thread::sleep_for(std::chrono::microseconds(spleeptime));
                 }
             }
-        });
+        }, sigperiods[3], sigperiods[2], sigperiods[1], sigperiods[0]);
     }
     else
     {
@@ -246,14 +247,13 @@ DCS::ENC::EncoderData DCS::ENC::InspectLastEncoderValues()
 }
 
 
-void DCS::ENC::Init(const char* ip, i8 axis)
+void DCS::ENC::Init(const char* ip, i8 axis, f64 sigperiods[NUM_OF_AXIS])
 {
     InitEIB7Encoder(ip, axis);
 
     StartEIB7SoftModeTrigger();
-
-    // FIXME: Transform sigperiods in param
-    EIB7SoftModeLoopStart(5000.0);
+    
+    EIB7SoftModeLoopStart(sigperiods);
 }
 
 void DCS::ENC::Terminate()

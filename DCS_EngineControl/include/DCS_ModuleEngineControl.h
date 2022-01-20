@@ -41,6 +41,7 @@ namespace DCS
 		 * This creates a thread responsible for sending commands for all the targets.
 		 * \param esp301_com  The com port (or virtual com port) connecting the pc and the ESP301. Default = "COM3".
 		 * \param pmc8742_usb The usb vid/pid of the PMC8742 controller. Default = "104D-4000".
+		 * \param xps_rld4    The socket ip for the XPSRLD4 controller. Default = "10.80.0.100".
 		 * 
 		 * \todo Create a thread for each target. Allowing for simultaneous operation of the stages.
 		 */

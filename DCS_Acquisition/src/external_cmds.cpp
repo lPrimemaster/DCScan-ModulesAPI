@@ -97,15 +97,8 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     DCS::f64 samples[INTERNAL_SAMP_SIZE];
     DCS::i32 aread;
 
+    /// TODO: Calculate a deterministic timestamp instead
     data.timestamp = voltage_task_timer.getTimestamp();
-
-    // TODO : Maybe try a more predictive approach if this is not good enough
-    // IMPORTANT : To ensure usability take params -> (Nbuff / Fsamp) * Vtheta = delta_theta_min
-    //             For this case -> (1000 / 100'000) * ([estimated?]~100 mdeg/s) = 1 mdeg uncertainty per buffer
-    // TODO : Create a way to check for the ESP301 handle without any overhead. (Store value perhaps)
-    //data.measured_angle = atof(DCS::Control::IssueGenericCommandResponse(DCS::Control::UnitTarget::ESP301, { "2TP?" }).buffer);
-    // TODO : Channels not in the task also queue in the buffer?  
-    // TODO : Cout peaks in a separate thread if it gets slow in the live callback (FIFO Style as always =])
 
     DAQmxReadAnalogF64(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &aread, NULL);
 

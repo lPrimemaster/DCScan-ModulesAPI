@@ -230,9 +230,10 @@ namespace DCS
         /**
          * \brief Initializes the rotary encoder API.
          * \param ip The rotary encoder LAN ip address.
-         * \param axis The axis to enable. Bit flags type: b0 - axis1, b1 - axis2, ... => e.g. 0b0101 enables axis 1 and 3 
+         * \param axis The axis to enable. Bit flags type: b0 - axis1, b1 - axis2, ... => e.g. 0b0101 enables axis 1 and 3
+         * \param sigperiods Encoder signal period revolutions array. Filled in the same order as axis bitfield. => {axis4, axis3, axis2, axis1}
          */
-        DCS_API void Init(const char* ip, i8 axis);
+        DCS_API void Init(const char* ip, i8 axis, f64 sigperiods[4]);
 
         /**
          * \brief Cleans up the rotary encoder API.

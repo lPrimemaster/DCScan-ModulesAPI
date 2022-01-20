@@ -9,7 +9,8 @@ int main()
 
     StartEIB7SoftModeTrigger();
 
-    EIB7SoftModeLoopStart(5000.0);
+    DCS::f64 f[] = {0, 0, 0, 5000.0};
+    EIB7SoftModeLoopStart(f);
     
     getchar();
 
