@@ -18,68 +18,28 @@ int test()
 
 		Socket c = Client::Connect("127.0.0.1", 15777);
 
-		Client::StartThread(c);
+		Client::Authenticate(c, "Prime", "alfa77");
 
-		unsigned char buffer[1024];
-		/*auto size_written = DCS::Registry::SVParams::GetDataFromParams(buffer,
-			SV_CALL_DCS_Threading_displayFloat,
-			1.7f
-		);
-
-		Message::SendAsync(Message::Operation::REQUEST, buffer, size_written);
-
-		for (int i = 0; i < 100; i++)
+		if(Client::StartThread(c))
 		{
-			Message::SendAsync(Message::Operation::REQUEST, buffer, size_written);
-		}*/
+			unsigned char buffer[1024];
+			auto size_written = DCS::Registry::SVParams::GetDataFromParams(buffer,
+				SV_CALL_DCS_Threading_GetMaxHardwareConcurrency
+			);
 
-		/*DCS::u8 evt = SV_EVT_OnTest;
-		Message::SendAsync(Message::Operation::EVT_SUB, &evt, sizeof(DCS::u8));
-		LOG_DEBUG("Subscribing...");
+			auto task = Message::SendAsync(Message::Operation::REQUEST, buffer, size_written);
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-
-		Message::SendAsync(Message::Operation::EVT_UNSUB, &evt, sizeof(DCS::u8));
-		LOG_DEBUG("Unsubscribing...");
-
-		std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-
-		Message::SendAsync(Message::Operation::EVT_SUB, &evt, sizeof(DCS::u8));
-		LOG_DEBUG("Subscribing...");*/
-
-		auto size_written = DCS::Registry::SVParams::GetDataFromParams<DCS::Control::UnitTarget, DCS::Utils::BasicString>(buffer,
-			SV_CALL_DCS_Control_IssueGenericCommand,
-			DCS::Control::UnitTarget::ESP301,
-			{ "2MO;2PA45.0;2WS;2MF" }
-		);
-
-		Message::SendAsync(Message::Operation::REQUEST, buffer, size_written);
+			LOG_DEBUG("Waiting for task...");
+			LOG_DEBUG("Got: %d", *(DCS::u16*)task.get().ptr);
 
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(7000));
+			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-		Client::StopThread(c);
-	});
-
-	//Socket client = Server::WaitForConnection(s);
-
-	//Server::StartThread(client);
-
-
-	/*std::thread nt2([&]() {
-		while (true)
-		{ 
-			Message::callRandom(); 
-			std::this_thread::sleep_for(std::chrono::milliseconds(100)); 
+			Client::StopThread(c);
 		}
-	});*/
-
-	//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-
-	//Server::StopThread(client, Server::StopMode::WAIT);
-
+	});
+	
 	nt.join();
-	//nt2.join();
 
 	Destroy();
 

@@ -1,4 +1,5 @@
 #include "../include/DCS_ModuleUtils.h"
+#include "../include/internal.h"
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -52,11 +53,11 @@ void DCS::Utils::Logger::WriteData(std::string buffer[], Verbosity v)
 		{
 			if (obj != nullptr)
 			{
-				writenotify(buffer[0].c_str(), obj);
+				writenotify(buffer[0].c_str(), v, obj);
 			}
 			else
 			{
-				writenotify(buffer[0].c_str(), nullptr);
+				writenotify(buffer[0].c_str(), v, nullptr);
 			}
 		}
 	}
@@ -64,13 +65,21 @@ void DCS::Utils::Logger::WriteData(std::string buffer[], Verbosity v)
 	// If there is a file to write the data to...
 	if (handle)
 	{
-		fwrite((buffer[0] + '\n').c_str(), sizeof(char), buffer[0].size()+1, handle);
+		const char* data = (buffer[0] + '\n').c_str();
+		fwrite(data, sizeof(char), strlen(data), handle);
 	}
 }
 
 void DCS::Utils::Logger::Settings(Options opt)
 {
+	const std::lock_guard<std::mutex> lock(_log_mtx);
 	options = opt;
+}
+
+void DCS::Utils::Logger::ChangeVerbosity(Verbosity v)
+{
+	const std::lock_guard<std::mutex> lock(_log_mtx);
+	verbosity_level = v;
 }
 
 void DCS::Utils::Logger::Init(Verbosity level, DCS::Utils::String file)
@@ -82,12 +91,26 @@ void DCS::Utils::Logger::Init(Verbosity level, DCS::Utils::String file)
 	dwMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 	SetConsoleMode(outHandle, dwMode);
 
+	//int x, y;
+	//GetConsoleSize(&x, &y);
+	//SetConsoleMargins(1, y - 1);
+
+	//// Set the help bar text
+	//WriteConsoleLine(y, "> Type \"help\" for commands.");
+
 	Logger::handle = fopen(file.c_str(), "w");
 }
 
 void DCS::Utils::Logger::Destroy()
 {
+	//// Clear screen (Keep buffer)
+	//std::cout << "\x1b[2J";
+
+	//// Move to top
+	//std::cout << "\x1b[H";
+
 	fclose(Logger::handle);
+	Logger::handle = nullptr;
 }
 
 void DCS::Utils::Logger::SetLogWriteCallback(DCS::Utils::Logger::WriteNotifyCallback wnc, void* obj)
@@ -190,5 +213,6 @@ void DCS::Utils::Logger::Critical(const char* file, const char* msg, ...)
 		"[" + timestamp() + "][" + file + "][CRITICAL]: " + buffer, // Color Stripped buffer
 		LOGGER_RED + s[0] + LOGGER_DEFAULT // Color Normal buffer
 	};
+
 	WriteData(s, Verbosity::CRITICAL);
 }

@@ -24,8 +24,7 @@ print('Processing files...')
 pp.pprint(filenames)
 print('\n\n')
 
-# TODO : Make this token_call an argument
-# TODO : Document (remember default parameters cannot be used [value must be passed via args])
+
 token_call = 'DCS_REGISTER_CALL'
 token_evt  = 'DCS_REGISTER_EVENT'
 
@@ -37,6 +36,31 @@ HEADER = '''////////////////////////////////////////
 ////////////////////////////////////////
 '''
 DEC = '''
+
+/**
+ * @file
+ */
+
+/**
+ * \\defgroup calls_id Remote Server Callables ID List.
+ * \\brief A module containing all the API functions callable via TCP/IP IDs.
+ */
+
+/**
+ * \\defgroup args_id Remote Server Arguments ID List.
+ * \\brief A module containing all the TCP/IP passable argument IDs.
+ */
+
+/**
+ * \\defgroup ret_id Remote Server Return Types ID List.
+ * \\brief A module containing all the TCP/IP passable return type IDs.
+ */
+
+/**
+ * \\defgroup evt_id Remote Server Event Types ID List.
+ * \\brief A module containing all the TCP/IP subscribable events IDs.
+ */
+
 #pragma once
 #include "exports.h"
 #include <unordered_map>
@@ -46,13 +70,13 @@ DEC = '''
 
 $0
 
-#define SV_CALL_NULL 0x0
+#define SV_CALL_NULL 0x0 ///< Indicates a non existant call [Not to use].
 $1
 
-#define SV_ARG_NULL 0x0
+#define SV_ARG_NULL 0x0 ///< Indicates a non existant argument [Not to use].
 $2
 
-#define SV_RET_VOID 0x0
+#define SV_RET_VOID 0x0 ///< Indicates a void return type.
 $3
 
 $4
@@ -73,6 +97,11 @@ namespace DCS {
 		struct SVParams;
 		struct SVReturn;
 
+        /**
+         * \\brief Get a function id [SV_CALL_*] by function name.
+         * Syntax: ["ns::func"]
+         * Example: "DCS::Threading::GetMaxHardwareConcurrency" -> Returns: SV_CALL_DCS_Threading_GetMaxHardwareConcurrency
+         */
 		static DCS_API const u16 Get(const char* func_signature)
 		{
 			u16 val = 0;
@@ -84,11 +113,64 @@ namespace DCS {
 			return val;
 		}
 
+        typedef void (*EventCallbackFunc)(u8* data, u8* userData);
+
+        /**
+         * \\brief Set up event to subscribe by ID SV_EVT_*.
+         */
+        static DCS_API const i32 SetupEvent(unsigned char* buffer, u8 id, EventCallbackFunc f, u8* userData = nullptr)
+        {
+            memcpy(buffer, &id, sizeof(u8));
+
+            evt_callbacks.emplace(id, f);
+			evt_userData.emplace(id, userData);
+
+            return sizeof(u8);
+        }
+
+        /**
+         * \\brief Set up event to unsubscribe by ID SV_EVT_*.
+         */
+        static DCS_API const i32 RemoveEvent(unsigned char* buffer, u8 id)
+        {
+            memcpy(buffer, &id, sizeof(u8));
+
+			if (id <= MAX_SUB)
+			{
+            	evt_callbacks.erase(id);
+				evt_userData.erase(id);
+			}
+
+            return sizeof(u8);
+        }
+
+		// HACK : GetEventCallback might fail in index referencing.
+        static DCS_API const EventCallbackFunc GetEventCallback(u8 id)
+        {
+            if (id <= MAX_SUB)
+                return evt_callbacks.at(id);
+            LOG_ERROR("Event id -> %d. No callback found.", id);
+            return nullptr;
+        }
+
 		static DCS_API const bool CheckEvent(u8 id)
 		{
 			if (id <= MAX_SUB)
 				return subscriptions.at(id);
 			return false;
+		}
+
+		static DCS_API const u8 GetEvent(const std::string func)
+		{
+			return evt_named_func.at(func);
+		}
+
+		// HACK : GetEventUserData might fail in index referencing.
+		static DCS_API u8* GetEventUserData(u8 id)
+		{
+			if (id <= MAX_SUB)
+				return evt_userData.at(id);
+			return nullptr;
 		}
 
 		static DCS_API void SetEvent(u8 id)
@@ -139,15 +221,41 @@ namespace DCS {
 			$6
 		};
 
+		inline static std::unordered_map<std::string, u8> evt_named_func = 
+		{
+			$7
+		};
+
+		inline static std::unordered_map<u16, const char*> r_id_debug = 
+		{
+			$8
+		};
+
+        inline static std::unordered_map<u8, EventCallbackFunc> evt_callbacks;
+		inline static std::unordered_map<u8, u8*> evt_userData;
+
 	public:
+		/**
+		* \\brief Auto-generated class that allows for buffer <-> parameters conversion.
+		*/
 		struct DCS_API SVParams
 		{
 		public:
+			/**
+			* \\brief Retrieve the function code of the currently held parameter list.
+			* \\return u16 Func code
+			*/
 			const u16 getFunccode() const
 			{
 				return fcode;
 			}
 
+			/**
+			* \\brief Get the i'th positional argument.
+			* Mostly internal use.
+			* \\tparam T parameter type
+			* \\return T parameter
+			*/
 			template<typename T>
 			const T getArg(u64 i) const
 			{
@@ -163,8 +271,24 @@ namespace DCS {
 				return rv;
 			}
 
+			/**
+			* \\brief Get all the positional arguments from byte buffer.
+			* Mostly internal use.
+			* \\param payload char buffer
+			* \\param size buffer size
+			* \\return SVParams parameter list
+			*/
 			static const SVParams GetParamsFromData(const unsigned char* payload, i32 size);
 
+			/**
+			* \\brief Fill a byte buffer with a list of arguments. use this function to populate the buffer passed to
+			* DCS::Network::Message::SendSync / DCS::Network::Message::SendAsync when calling a function.
+			* Make sure buffer has enough size to hold the data. Error checking is disabled for speed.
+			* \\param buffer char buffer to store function code to be executed + its params
+			* \\param fcode function code
+			* \\param args the arguments passed to the function represented by fcode
+			* \\return DCS::i32 size written to buffer
+			*/
 			template<typename... Args>
 			static i32 GetDataFromParams(unsigned char* buffer, u16 fcode, Args... args)
 			{
@@ -172,14 +296,17 @@ namespace DCS {
 				i32 it = sizeof(u16);
 				memcpy(buffer, &fcode, sizeof(u16));
 
-				switch(fcode)
+                if(p.size() > 0)
 				{
-					$7
-					default:
-						LOG_ERROR("GetDataFromParams() function code (fcode) not found.");
-						LOG_ERROR("Maybe function signature naming is invalid, or function does not take any arguments.");
-						break;
-				}
+				    switch(fcode)
+				    {
+					    $9
+					    default:
+						    LOG_ERROR("GetDataFromParams() function code (fcode) not found.");
+						    LOG_ERROR("Maybe function signature naming is invalid, or function does not take any arguments.");
+						    break;
+				    }
+                }
 
 				return it;
 			}
@@ -199,6 +326,9 @@ namespace DCS {
 		};
 
 #pragma pack(push, 1)
+		/**
+		 * \\brief Holds messages return types.
+		 */
 		struct DCS_API SVReturn
 		{
 			i8 type;
@@ -239,12 +369,16 @@ const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const u
 	return DCS::Registry::SVParams(func_code, args);
 }
 
-// TODO : error directive if parameter is not registered via token_call 
 DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 {
 	SVReturn ret; // A generic return type container
 	ret.type = SV_RET_VOID;
-	switch(params.getFunccode())
+
+	u16 fcode = params.getFunccode();
+
+	if(fcode < MAX_CALL)
+    	LOG_DEBUG("Executing function code -> %d (%s)", fcode, r_id_debug[fcode]);
+	switch(fcode)
 	{
 	case SV_CALL_NULL:
 		LOG_ERROR("Function call from SVParams is illegal. Funccode not in hash table.");
@@ -302,6 +436,7 @@ def getTokenSymbols(all_files):
 	header_def = []
 	args_name = []
 	evt_name = []
+	evt_func = []
 
 	for one_file in all_files:
 		f_prefix = []
@@ -311,14 +446,14 @@ def getTokenSymbols(all_files):
 			if (v.startswith('namespace') or
 			 v.startswith('class') or
 			 v.startswith('struct')):
-				scope = v.split(' ')[1]
+				scope = v.split(' ')[-2]
 				f_prefix.append(scope)
 				oc[scope] = 1
 			elif scope:
 				if ('{' in v):
-					oc[scope] += 1
-				elif ('}' in v):
-					oc[scope] -= 1
+					oc[scope] += v.count('{')
+				if ('}' in v):
+					oc[scope] -= v.count('}')
 
 				if (oc[scope] == 0 and len(f_prefix) > 0):
 					f_prefix.pop()
@@ -347,12 +482,15 @@ def getTokenSymbols(all_files):
 					header_def.append(one_file['name'])
 
 			elif v.startswith(token_evt):
-				evt_name.append(re.findall('\((.*?)\)', v, re.DOTALL)[0].split(',')[0].strip())
-	return func, return_type, header_def, args_name, evt_name
+				evt_f_name = '::'.join(f_prefix) + '::' + v.split('(')[-2].split(' ')[-1]
+				evt_func.append(evt_f_name)
+				evt_name.append(evt_f_name.replace('::', '_'))
+	return func, return_type, header_def, args_name, evt_name, evt_func
 
 cFiles = cleanFiles()
-func, return_type, header_def, args_name, evt_name = getTokenSymbols(cFiles)
+func, return_type, header_def, args_name, evt_name, evt_func = getTokenSymbols(cFiles)
 
+#pp.pprint(cFiles)
 
 print('Registering functions:')
 pp.pprint('Signature: {0}'.format(func))
@@ -374,6 +512,8 @@ arg_defines = []
 rtype_defines = []
 evt_def = []
 evt_map = []
+evt_f_map = []
+defines_debug_name = []
 
 registry = []
 number = 1
@@ -383,7 +523,7 @@ for hd in header_def:
 
 for rt in list(filter(None, list(set(return_type)))):
 	definition = 'SV_RET_' + rt.replace('::', '_')
-	rtype_defines.append('#define ' + definition + ' ' + hex(number))
+	rtype_defines.append('#define ' + definition + ' ' + hex(number) + ' ///< Refers to return type `' + rt + '` \\ingroup ret_id')
 	number += 1
 
 # Concat arg_types and remove empty str ('') (if exists)
@@ -393,7 +533,7 @@ arg_def_all = []
 if(len(arg_defines) > 0):
 	for a in arg_defines:
 		arg_def = 'SV_ARG_' + a.replace('::', '_').replace(' ', '_').replace('*', '_ptr')
-		arg_def_all.append('#define ' + arg_def + ' ' + hex(dn))
+		arg_def_all.append('#define ' + arg_def + ' ' + hex(dn) + ' ///< Refers to argument `' + a + '` \\ingroup args_id')
 		switch_type.append('case ' + arg_def + ':\n\t\t\t' + 
 			'args.push_back(convert_from_byte<' + a + '>(payload, it, size));\n\t\t\t' + 
 			'it += sizeof(' + a + ');\n\t\t\t' + 'break;')
@@ -402,7 +542,7 @@ if(len(arg_defines) > 0):
 number = 1
 for sig in func:
 	definition = 'SV_CALL_' + sig.replace('::', '_')
-	defines.append('#define ' + definition + ' ' + hex(number))
+	defines.append('#define ' + definition + ' ' + hex(number) + ' ///< A call to `' + sig + '` \\ingroup calls_id')
 
 	fargs_casted = []
 	anumber = 0
@@ -433,36 +573,42 @@ for sig in func:
 		for a in args_name[number-1]:
 			switch_reverse_args.append('auto A' + str(anumber) + 
 				'_v = std::any_cast<' + a + '>(p.at(' + str(anumber) + '));\n\t\t\t\t\t\t' + 
-				'u8   A' + str(anumber) + '_t = ' + 'SV_ARG_' + a.replace('::', '_') + ';\n\t\t\t\t\t\t' +
-				'cpyArgToBuffer(buffer, (u8*)&A' + str(anumber) + '_v, A' + str(anumber) + '_t, sizeof(' + a + '), it);')
+				'\tu8   A' + str(anumber) + '_t = ' + 'SV_ARG_' + a.replace('::', '_') + ';\n\t\t\t\t\t\t' +
+				'\tcpyArgToBuffer(buffer, (u8*)&A' + str(anumber) + '_v, A' + str(anumber) + '_t, sizeof(' + a + '), it);')
 			anumber += 1
 
-		switch_reverse.append('case ' + definition + ':\n\t\t\t\t\t{\n\t\t\t\t\t\t' + 
-			'\n\t\t\t\t\t\t'.join(switch_reverse_args) + '\n\t\t\t\t\t\tbreak;\n\t\t\t\t\t}')
+		switch_reverse.append('case ' + definition + ':\n\t\t\t\t\t\t{\n\t\t\t\t\t\t\t' + 
+			'\n\t\t\t\t\t\t\t'.join(switch_reverse_args) + '\n\t\t\t\t\t\t\tbreak;\n\t\t\t\t\t\t}')
 
 	registry.append('{"' + sig + '", ' + hex(number) + '}')
+	defines_debug_name.append('{' + hex(number) + ', "' + definition + '"}')
 	number += 1
+
+defines.append('#define MAX_CALL ' + hex(number))
 
 number = 1
 for evt in evt_name:
 	defi = 'SV_EVT_' + evt
-	evt_def.append('#define '+ defi + ' ' + hex(number))
+	evt_def.append('#define '+ defi + ' ' + hex(number) + ' ///< A event refering to `' + evt_func[number-1] + '` \\ingroup evt_id')
 	evt_map.append('{' + defi + ', false}')
+	evt_f_map.append('{"' + evt_func[number-1] + '", ' + defi + '}')
 	number += 1
 
 
 with open(curr_dir + '/config/registry.h', 'w') as f:
 	f.write(HEADER)
 
-	DEC = DEC.replace('$0', '\n'.join(hdef)) 			# Place necessary func call headers
-	DEC = DEC.replace('$1', '\n'.join(defines)) 		# Place func call codes definitions
-	DEC = DEC.replace('$2', '\n'.join(arg_def_all)) 	# Place func arg registry codes definitions
-	DEC = DEC.replace('$3', '\n'.join(rtype_defines)) 	# Place func return type registry codes definitions
+	DEC = DEC.replace('$0', '\n'.join(hdef)) 					  # Place necessary func call headers
+	DEC = DEC.replace('$1', '\n'.join(defines)) 				  # Place func call codes definitions
+	DEC = DEC.replace('$2', '\n'.join(arg_def_all)) 			  # Place func arg registry codes definitions
+	DEC = DEC.replace('$3', '\n'.join(rtype_defines)) 			  # Place func return type registry codes definitions
 	DEC = DEC.replace('$4', '#define MAX_SUB ' + 
-		hex(len(evt_def)) + '\n' + '\n'.join(evt_def))  # Place evt codes definitions
-	DEC = DEC.replace('$5', ',\n\t\t\t'.join(registry)) # Register function signatures in unordered_map
-	DEC = DEC.replace('$6', ',\n\t\t\t'.join(evt_map))  # Register events
-	DEC = DEC.replace('$7', '\n\t\t\t\t\t'.join(switch_reverse))
+		hex(len(evt_def)) + '\n' + '\n'.join(evt_def))  		  # Place evt codes definitions
+	DEC = DEC.replace('$5', ',\n\t\t\t'.join(registry)) 		  # Register function signatures in unordered_map
+	DEC = DEC.replace('$6', ',\n\t\t\t'.join(evt_map))  		  # Register events
+	DEC = DEC.replace('$7', ',\n\t\t\t'.join(evt_f_map))		  # Register event functions
+	DEC = DEC.replace('$8', ',\n\t\t\t'.join(defines_debug_name)) # Register function debug names
+	DEC = DEC.replace('$9', '\n\t\t\t\t\t\t'.join(switch_reverse))
 
 	f.write(DEC)
 

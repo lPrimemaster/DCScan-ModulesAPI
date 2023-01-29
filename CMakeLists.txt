@@ -14,8 +14,16 @@ function(add_libTargetSubDir sd)
   add_subdirectory(${sd})
 endfunction()
 
+function(add_libTargetSubDirNamingOnly sd)
+  set(CMAKE_LIBS_SOURCE_DIR ${CMAKE_LIBS_SOURCE_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/${sd}" PARENT_SCOPE)
+endfunction()
+
 # Disable MSVC nasty deprecations
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+
+# Do not hide any production important warnings (MSVC only)
+# /W4 and /Wall are just nonsensical
+set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /W3")
 
 function(set_pretty_filenames)
 	string(LENGTH "${CMAKE_CURRENT_SOURCE_DIR}/" SOURCE_PATH_SIZE)
@@ -34,6 +42,7 @@ set_pretty_filenames()
 # Enable testing (DISABLE THIS FOR RELEASE)
 option(BUILD_TESTS "Build tests" OFF)
 option(INTERNAL_DOCS "Generate internal documentation" OFF)
+option(CI_DOC_GENERATE "Generate documentation only for CI." OFF)
 
 if(BUILD_TESTS)
   add_definitions(-DENABLE_TESTING)
@@ -47,7 +56,7 @@ endif()
 
 # Change this to SHARED if you want to build a dynamic library (.dll) specially useful for loading from external programs/scripts.
 # There is the option of using STATIC libraries as well, however they are not supported yet
-set(LIB_TYPE SHARED)
+set(LIB_TYPE STATIC)
 
 # Offer the user the choice of overriding the installation directories
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
@@ -76,13 +85,37 @@ include_directories(
   "${PROJECT_BINARY_DIR}")  # to find foo/config.h
 
 # Add sub-directories (These are the libraries basically)
-add_libTargetSubDir(DCS_Network)
-add_libTargetSubDir(DCS_EngineControl)
-add_libTargetSubDir(DCS_Utils)
-add_libTargetSubDir(DCS_Core)
-set(CONF_TARGETS DCSModuleEngineControl DCSModuleUtils DCSModuleCore DCSModuleNetwork)
+if(NOT CI_DOC_GENERATE)
+  add_libTargetSubDir(DCS_Network)
+  add_libTargetSubDir(DCS_EngineControl)
+  add_libTargetSubDir(DCS_Utils)
+  add_libTargetSubDir(DCS_Core)
+  add_libTargetSubDir(DCS_Acquisition)
+  set(CONF_TARGETS DCSModuleAcquisition DCSModuleEngineControl DCSModuleUtils DCSModuleCore DCSModuleNetwork)
+  
+  # Add custom targets
+  add_subdirectory(custom_targets)
+else()
+  add_libTargetSubDirNamingOnly(DCS_Network)
+  add_libTargetSubDirNamingOnly(DCS_EngineControl)
+  add_libTargetSubDirNamingOnly(DCS_Utils)
+  add_libTargetSubDirNamingOnly(DCS_Core)
+  add_libTargetSubDirNamingOnly(DCS_Acquisition)
+endif()
 
 string (REPLACE ";" " " CMAKE_LIBS_SOURCE_DIR "${CMAKE_LIBS_SOURCE_DIR}")
+
+# ===================== #
+# Start DCSGen.py setup #
+# ===================== #
+
+# Tell CMake to run python from the directory where this CMakeLists file exists.
+execute_process(COMMAND python DCSGen.py
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+
+# =================== #
+# End DCSGen.py setup #
+# =================== #
 
 # =================== #
 # Begin Doxygen setup #
@@ -123,19 +156,7 @@ endif (DOXYGEN_FOUND)
 # End Doxygen setup #
 # ================= #
 
-# ===================== #
-# Start DCSGen.py setup #
-# ===================== #
-
-# Tell CMake to run python from the directory where this CMakeLists file exists.
-execute_process(COMMAND python DCSGen.py
-    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
-
-# =================== #
-# End DCSGen.py setup #
-# =================== #
-
-if(BUILD_TESTS)
+if(BUILD_TESTS AND NOT CI_DOC_GENERATE)
   # Add testing subdirectory
   enable_testing()
   # Do not add to doxygen target
@@ -144,41 +165,43 @@ endif()
 
 message(STATUS "CML Sources: ${CMAKE_LIBS_SOURCE_DIR}")
 
-# ========================== #
-# Begin Cmake package config #
-# ========================== #
+if(NOT CI_DOC_GENERATE)
+  # ========================== #
+  # Begin Cmake package config #
+  # ========================== #
 
-# Add all targets to the build-tree export set
-export(TARGETS ${CONF_TARGETS}
-  FILE "${PROJECT_BINARY_DIR}/DCSModulesAPITargets.cmake")
+  # Add all targets to the build-tree export set
+  export(TARGETS ${CONF_TARGETS}
+    FILE "${PROJECT_BINARY_DIR}/DCSModulesAPITargets.cmake")
 
-# Export the package for use from the build-tree
-# (this registers the build-tree with a global CMake-registry)
-export(PACKAGE DCSModulesAPI)
+  # Export the package for use from the build-tree
+  # (this registers the build-tree with a global CMake-registry)
+  export(PACKAGE DCSModulesAPI)
 
-# Create the FooBarConfig.cmake and FooBarConfigVersion files
-file(RELATIVE_PATH REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}"
-   "${INSTALL_INCLUDE_DIR}")
-# ... for the build tree
-set(CONF_INCLUDE_DIRS "${INSTALL_INCLUDE_DIR}")
-configure_file(DCSModulesAPIConfig.cmake.in
-  "${PROJECT_BINARY_DIR}/DCSModulesAPIConfig.cmake" @ONLY)
-# ... for the install tree
-set(CONF_INCLUDE_DIRS "\${DCSMODULESAPI_CMAKE_DIR}/${REL_INCLUDE_DIR}")
-configure_file(DCSModulesAPIConfig.cmake.in
-  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/DCSModulesAPIConfig.cmake" @ONLY)
-# ... for both
-configure_file(DCSModulesAPIConfigVersion.cmake.in
-  "${PROJECT_BINARY_DIR}/DCSModulesAPIConfigVersion.cmake" @ONLY)
+  # Create the FooBarConfig.cmake and FooBarConfigVersion files
+  file(RELATIVE_PATH REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}"
+    "${INSTALL_INCLUDE_DIR}")
+  # ... for the build tree
+  set(CONF_INCLUDE_DIRS "${INSTALL_INCLUDE_DIR}")
+  configure_file(DCSModulesAPIConfig.cmake.in
+    "${PROJECT_BINARY_DIR}/DCSModulesAPIConfig.cmake" @ONLY)
+  # ... for the install tree
+  set(CONF_INCLUDE_DIRS "\${DCSMODULESAPI_CMAKE_DIR}/${REL_INCLUDE_DIR}")
+  configure_file(DCSModulesAPIConfig.cmake.in
+    "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/DCSModulesAPIConfig.cmake" @ONLY)
+  # ... for both
+  configure_file(DCSModulesAPIConfigVersion.cmake.in
+    "${PROJECT_BINARY_DIR}/DCSModulesAPIConfigVersion.cmake" @ONLY)
 
-# Install the FooBarConfig.cmake and FooBarConfigVersion.cmake
-install(FILES
-  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/DCSModulesAPIConfig.cmake"
-  "${PROJECT_BINARY_DIR}/DCSModulesAPIConfigVersion.cmake"
-  DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
+  # Install the FooBarConfig.cmake and FooBarConfigVersion.cmake
+  install(FILES
+    "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/DCSModulesAPIConfig.cmake"
+    "${PROJECT_BINARY_DIR}/DCSModulesAPIConfigVersion.cmake"
+    DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
 
-# Install the export set for use with the install-tree
-install(EXPORT DCSModulesAPITargets DESTINATION
-  "${INSTALL_CMAKE_DIR}" COMPONENT dev)
+  # Install the export set for use with the install-tree
+  install(EXPORT DCSModulesAPITargets DESTINATION
+    "${INSTALL_CMAKE_DIR}" COMPONENT dev)
 
-install(DIRECTORY config DESTINATION "${INSTALL_INCLUDE_DIR}" FILES_MATCHING PATTERN "*.h")
+  install(DIRECTORY config DESTINATION "${INSTALL_INCLUDE_DIR}" FILES_MATCHING PATTERN "*.h")
+endif()

@@ -4,10 +4,16 @@
 *.vcxproj
 *.vcxproj.filters
 
+# Leave visual studio code out as well
+.vscode/
+
 # Ignore cmake generator files created at build time
 *.cmake
 *.stamp
 *.stamp.depend
+
+# Track custom made cmake files
+!cmake/modules/*.cmake
 
 # Do not track builds or installations
 [Bb]uild/

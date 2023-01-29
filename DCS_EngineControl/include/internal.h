@@ -3,6 +3,7 @@
 #include "../../DCS_Utils/include/DCS_ModuleUtils.h"
 
 #include <Windows.h>
+#include <winusb.h>
 #include <queue>
 
 /**
@@ -23,7 +24,7 @@ namespace DCS
 {
 	/**
 	 * \internal.
-	 * \brief %Serial Control.
+	 * \brief %Serial %Control.
 	 */
 	namespace Serial
 	{
@@ -49,7 +50,7 @@ namespace DCS
 
 		/**
 		 * \internal
-		 * \brief Initialized COM HANDLE with params.
+		 * \brief Initialize COM HANDLE with params.
 		 */
 		DCS_INTERNAL_TEST HANDLE init_handle(LPCSTR portName, DWORD rwAccess, SerialArgs args);
 
@@ -77,45 +78,95 @@ namespace DCS
 		 */
 		DCS_INTERNAL_TEST i32    enumerate_ports(char* buffer, DCS::i32 buff_size);
 
+		/**
+		 * \internal
+		 * \brief Transforms a COM number to its system accepted string.
+		 */
 		DCS_INTERNAL_TEST void   comnumber_to_string(char pname[7], DCS::u8 n);
 	}
 
 	/**
 	 * \internal
-	 * \brief USB Control.
+	 * \brief USB %Control.
+	 * 
+	 * This module is reverse engineered from the PMC8742's DLL (usbdll.dll).
+	 * Found a link with the windows system native usb driver controler, WinUsb.dll.
 	 */
 	namespace USerial
 	{
-		/* 
-		 * Class     = USBDevice
-		 * ClassGUID = {88BAE032-5A81-49f0-BC3D-A4FF138216D6} 
+		/**
+		 * \internal
+		 * \brief Stores Windows USB pipe ids.
 		 */
-		//static const GUID OSR_DEVICE_INTERFACE = { 0x88BAE032, 0x5A81, 0x49f0, 0xBC, 0x3D, 0xA4, 0xFF, 0x13, 0x82, 0x16, 0xD6 };
-		static const GUID OSR_DEVICE_INTERFACE = { 0x4d36e96e, 0xe325, 0x11ce, 0xbf, 0xc1, 0x08, 0x00, 0x2b, 0xe1, 0x03, 0x18 };
-		static const GUID GUID_DEVINTERFACE_USB_DEVICE = { 0xA5DCBF10L, 0x6530, 0x11D2, { 0x90, 0x1F, 0x00, 0xC0, 0x4F, 0xB9, 0x51, 0xED } };
+		struct DCS_INTERNAL_TEST PIPE_ID
+		{
+			UCHAR  PipeInId;
+			UCHAR  PipeOutId;
+		};
 
-		DCS_INTERNAL_TEST HANDLE init_usb_handle();
+		/**
+		 * \internal
+		 * \brief Stores USB related handles and settings.
+		 */
+		struct DCS_INTERNAL_TEST USBIntHandle
+		{
+			WINUSB_INTERFACE_HANDLE usb_handle;
+			HANDLE dev_handle;
+			PIPE_ID pipe_id;
+		};
+
+		/**
+		 * \internal
+		 * \brief Initialize USB handle for hardware with VID and PID.
+		 * 
+		 * \param VID_PID Accepts a dash formatted string separating vendor and product id.
+		 * Example: "104D-4000"
+		 */
+		DCS_INTERNAL_TEST USBIntHandle init_usb_handle(std::string VID_PID);
+
+		/**
+		 * \internal
+		 * \brief Write raw data to a USB endpoint.
+		 */
+		DCS_INTERNAL_TEST ULONG write_bulk_bytes(USBIntHandle hnd, PUCHAR buffer, DWORD size);
+
+		/**
+		 * \internal
+		 * \brief Read raw data from a USB endpoint.
+		 */
+		DCS_INTERNAL_TEST ULONG read_bulk_bytes(USBIntHandle hnd, PUCHAR buffer, DWORD size);
+
+		/**
+		 * \internal
+		 * \brief Close USB related handles and data. Terminating connection with device.
+		 */
+		DCS_INTERNAL_TEST BOOL term_usb_handle(USBIntHandle handle);
 	}
 
 	/**
 	 * \internal
-	 * \brief Allows for communications request with COM devices in the local machine.
+	 * \brief Allows for communications request with COM and USB devices in the local machine.
 	 */
 	namespace Coms
 	{
-		struct DCS_INTERNAL_TEST COMDevicePrivateProperties
-		{
-			u8 comport_esp301;
-			u8 comport_pmc8742;
-			Serial::SerialArgs serial_args;
-		};
-
 		class CmdBuffer;
 
+		/**
+		 * \internal
+		 * \brief Returns the static CmdBuffer instance.
+		 */
 		DCS_INTERNAL_TEST CmdBuffer& GetCmdBuffer();
 
+		/**
+		 * \internal
+		 * \brief A generic command holding data to be sent to the controllers.
+		 */
 		struct DCS_INTERNAL_TEST Command
 		{
+			/**
+			 * \internal
+			 * \brief An empty, invalid, command.
+			 */
 			Command()
 			{
 				id = 0;
@@ -124,6 +175,10 @@ namespace DCS
 				target = Control::UnitTarget::ESP301;
 			}
 
+			/**
+			 * \internal
+			 * \brief Command to an axis with arguments.
+			 */
 			template<typename T>
 			Command(Control::UnitTarget target, const char* cmd, u16 axis, T argument)
 			{
@@ -135,6 +190,10 @@ namespace DCS
 				full_cmd = std::to_string(axis) + cmd + std::to_string(argument) + ";";
 			}
 
+			/**
+			 * \internal
+			 * \brief Command to an axis with string arguments.
+			 */
 			template<>
 			Command(Control::UnitTarget target, const char* cmd, u16 axis, const char* argument)
 			{
@@ -150,6 +209,10 @@ namespace DCS
 				full_cmd = std::to_string(axis) + cmd + argument + ";";
 			}
 
+			/**
+			 * \internal
+			 * \brief Command to an axis without arguments.
+			 */
 			Command(Control::UnitTarget target, const char* cmd, u16 axis = 0)
 			{
 				this->target = target;
@@ -160,6 +223,10 @@ namespace DCS
 				full_cmd = (axis > 0 ? std::to_string(axis) : "") + cmd + ";";
 			}
 
+			/**
+			 * \internal
+			 * \brief Command with arguments.
+			 */
 			template<typename T>
 			Command(Control::UnitTarget target, const char* cmd, T argument)
 			{
@@ -171,6 +238,10 @@ namespace DCS
 				full_cmd = cmd + std::to_string(argument) + ";";
 			}
 
+			/**
+			 * \internal
+			 * \brief Command with string arguments.
+			 */
 			template<>
 			Command(Control::UnitTarget target, const char* cmd, const char* argument)
 			{
@@ -186,6 +257,10 @@ namespace DCS
 				full_cmd = cmd + std::string(argument) + ";";
 			}
 
+			/**
+			 * \internal
+			 * \brief Custom Command fully described by a string.
+			 */
 			static Command Custom(Control::UnitTarget target, const char* cmd, bool response = false)
 			{
 				Command c;
@@ -198,12 +273,20 @@ namespace DCS
 				return c;
 			}
 
+			/**
+			 * \internal
+			 * \brief Command id generator.
+			 */
 			static const u64 NextId()
 			{
 				static u64 nid = 0;
 				return nid++;
 			}
 
+			/**
+			 * \internal
+			 * \brief Joins two commands using ';'.
+			 */
 			Command operator+(const Command& rhs)
 			{
 				if (target != rhs.target)
@@ -236,6 +319,13 @@ namespace DCS
 
 #pragma warning( push )
 #pragma warning( disable : 4251 )
+
+		/**
+		 * \internal
+		 * \brief A generic command buffer processing unit, schedules and processes commands.
+		 * Thread-safe.
+		 * All FIFO.
+		 */
 		class DCS_INTERNAL_TEST CmdBuffer
 		{
 		public:
@@ -243,6 +333,10 @@ namespace DCS
 			CmdBuffer() {};
 			~CmdBuffer() {};
 
+			/**
+			 * \internal
+			 * \brief Processes a command that was scheduled. This gets the command to be sent to the controller.
+			 */
 			Type process()
 			{
 				std::unique_lock<std::mutex> lock(m);
@@ -259,6 +353,10 @@ namespace DCS
 				return Type();
 			}
 
+			/**
+			 * \internal
+			 * \brief Schedules a command from any thread.
+			 */
 			std::string schedule(const Type& value)
 			{
 				std::unique_lock<std::mutex> lock(m);
@@ -268,10 +366,8 @@ namespace DCS
 
 				if (value.wait_response)
 				{
-					LOG_DEBUG("Waiting for response...");
 					std::unique_lock<std::mutex> lock(mr);
 					cr.wait(lock);
-					LOG_DEBUG("Finished waiting...");
 					return response_buffer;
 				}
 
@@ -279,20 +375,31 @@ namespace DCS
 				return response_buffer;
 			}
 
+			/**
+			 * \internal
+			 * \brief Sends a reply to the scheduler when one was requested.
+			 */
 			void reply(std::string response)
 			{
 				std::unique_lock<std::mutex> lock(mr);
 				response_buffer = response;
 				lock.unlock();
 				cr.notify_one();
-				LOG_DEBUG("Notifying...");
 			}
 
+			/**
+			 * \internal
+			 * \brief Unblocks the CmdBuffer internal queue.
+			 */
 			void notify_unblock()
 			{
 				c.notify_all();
 			}
 
+			/**
+			 * \internal
+			 * \brief Returns the commands currently waiting in queue to be processed.
+			 */
 			int size()
 			{
 				std::unique_lock<std::mutex> lock(m);

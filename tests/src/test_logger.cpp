@@ -1,4 +1,5 @@
 #include "../../DCS_Utils/include/DCS_ModuleUtils.h"
+#include "../../DCS_Utils/include/internal.h"
 #include "../include/DCS_Assert.h"
 
 int test()
@@ -12,6 +13,8 @@ int test()
 	LOG_WARNING("Testing output to console and file.");
 	LOG_ERROR("Testing output to console and file.");
 	LOG_CRITICAL("Testing output to console and file.");
+
+	DCS::Utils::Logger::Destroy();
 
 	DCS_RETURN_TEST;
 }

@@ -11,11 +11,13 @@ set_pretty_filenames()
 
 #find_package(OpenSSL REQUIRED)
 
-add_library(DCSModuleNetwork ${LIB_TYPE}
+add_library(DCSModuleNetwork STATIC
   src/socket.cpp
   src/server.cpp
   src/client.cpp
   src/message.cpp
+
+  src/cli.cpp
 
   ../config/registry.cpp
   ../config/exports.h
@@ -25,7 +27,7 @@ add_library(DCSModuleNetwork ${LIB_TYPE}
   include/DCS_ModuleNetwork.h
   )
 
-target_link_libraries(DCSModuleNetwork DCSModuleCore DCSModuleUtils DCSModuleEngineControl ws2_32)
+target_link_libraries(DCSModuleNetwork DCSModuleCore DCSModuleUtils DCSModuleEngineControl DCSModuleAcquisition ws2_32)
 #target_link_libraries(DCSModuleNetwork INTERFACE OpenSSL::SSL)
 #target_link_libraries(DCSModuleNetwork INTERFACE OpenSSL::Crypto)
 
@@ -37,7 +39,7 @@ set_target_properties(DCSModuleNetwork PROPERTIES
   ) #;${CMAKE_CURRENT_BINARY_DIR}/config.h")
 
 install(TARGETS DCSModuleNetwork
-  # IMPORTANT: Add the DCSModuleNetwork library to the "export-set"
+  # Add the DCSModuleNetwork library to the "export-set"
   EXPORT DCSModulesAPITargets
   RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
   LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT lib

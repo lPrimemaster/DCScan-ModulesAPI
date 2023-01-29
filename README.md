@@ -20,9 +20,10 @@ To build DCScan-ModulesAPI is as simple as running the `build.cmd` from console 
 | Argument  |                            Description                           |
 |-----------|------------------------------------------------------------------|
 | ALL_BUILD | Builds all the libraries as dll's inside a folder named `build`. If not configured, runs the CMake generator for Visual Studio. This command supports a second argument that specifies cmake's aditional parameters, like options. See [example](#example) for more details. |
-| INSTALL   | Installs the DCScan-ModulesAPI compiled dependencies on a default directory and registers their location in windows registry, so CMake can locate the package with `find_package()` in config mode (see more [here](https://cmake.org/cmake/help/latest/command/find_package.html)). This is particularly useful if compiling another C++ binary with CMake (see [Using the libraries](#using-the-libraries)).
-| CLEAN     | Deletes all build files.
+| INSTALL   | Installs the DCScan-ModulesAPI compiled dependencies on a default directory and registers their location in windows registry, so CMake can locate the package with `find_package()` in config mode (see more [here](https://cmake.org/cmake/help/latest/command/find_package.html)). This is particularly useful if compiling another C++ binary with CMake (see [Using the libraries](#using-the-libraries)). |
+| CLEAN     | Deletes all build files. |
 | RUN_TESTS | Builds the test package and runs all tests for the API.          |
+| CTARGETS  | Builds teh custom targets only. These targets consist in additional binaries that provide equipment testing. |
 
 ##### Available cmake options
 
@@ -30,6 +31,7 @@ To build DCScan-ModulesAPI is as simple as running the `build.cmd` from console 
 |-------------|---------|-------------|
 | BUILD_TESTS |   OFF   | Enables building tests in the build stage. **DO NOT** build the release version with this option ON, it will expose unecessary internal functions to the API. |
 | INTERNAL_DOCS | OFF   | Enables internal documentation of the API. This is specially usefull if you wish to fiddle with the internal code for further implementation. Note that this documentation might be not as detailed as the one available with the exposed API. |
+| CI_DOC_GENERATE | OFF | Enables building only the docs, skipping the build step and cmake's source configuration. Intended to use with CI for auto doc generation. Can be used to generated only documentation if needed. |
 
 Separate options using a spaces. For example:
 ```shell

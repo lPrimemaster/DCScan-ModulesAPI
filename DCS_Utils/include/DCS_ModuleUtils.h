@@ -8,6 +8,7 @@
 #include <mutex>
 #include <map>
 #include <string>
+#include <future>
 
 /**
  * @file
@@ -16,28 +17,34 @@
  * 
  * Also contains library common code.
  * 
- * \todo Make the String class callable with a C-interface (for python eg.)
- * 
  * \author Cesar Godinho
  *
  * \version 1.0
  *
  * \date 2020/10/16
- * $Modified: 2020/10/19$
  */
 
 
 #ifdef SOURCE_PATH_SIZE
-#define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, __VA_ARGS__)
+#define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, __VA_ARGS__) ///< Alias to DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, __VA_ARGS__)
 #else 
-#define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__, msg, __VA_ARGS__)
+#define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__, msg, __VA_ARGS__) ///< Alias to DCS::Utils::Logger::lvl(__FILE__, msg, __VA_ARGS__)
 #endif
 
-#define LOG_DEBUG(msg, ...) LOG_LVL(Debug, msg, __VA_ARGS__)
-#define LOG_MESSAGE(msg, ...) LOG_LVL(Message, msg, __VA_ARGS__)
-#define LOG_WARNING(msg, ...) LOG_LVL(Warning, msg, __VA_ARGS__)
-#define LOG_ERROR(msg, ...) LOG_LVL(Error, msg, __VA_ARGS__)
-#define LOG_CRITICAL(msg, ...) LOG_LVL(Critical, msg, __VA_ARGS__)
+#define LOG_DEBUG(msg, ...) LOG_LVL(Debug, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Debug, msg, __VA_ARGS__)
+#define LOG_MESSAGE(msg, ...) LOG_LVL(Message, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Message, msg, __VA_ARGS__)
+#define LOG_WARNING(msg, ...) LOG_LVL(Warning, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Warning, msg, __VA_ARGS__)
+#define LOG_ERROR(msg, ...) LOG_LVL(Error, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Error, msg, __VA_ARGS__)
+#define LOG_CRITICAL(msg, ...) LOG_LVL(Critical, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Critical, msg, __VA_ARGS__)
+
+#define ENUM_FLAG_OPERATOR(T,X) inline T operator X (T lhs, T rhs) { return (T) (static_cast<std::underlying_type_t <T>>(lhs) X static_cast<std::underlying_type_t <T>>(rhs)); } 
+#define ENUM_FLAGS(T) \
+enum class T; \
+inline T operator ~ (T t) { return (T) (~static_cast<std::underlying_type_t <T>>(t)); } \
+ENUM_FLAG_OPERATOR(T,|) \
+ENUM_FLAG_OPERATOR(T,^) \
+ENUM_FLAG_OPERATOR(T,&) \
+enum class T
 
 namespace DCS
 {
@@ -55,8 +62,6 @@ namespace DCS
 
 	/**
 	 * \brief A generic opaque handle that is only meaningful for the API.
-	 * 
-	 * \todo Maybe change this to intptr?
 	 */
 	typedef void* GenericHandle;
 
@@ -77,6 +82,8 @@ namespace DCS
 			String(const String& s);
 
 			~String();
+
+			String& operator=(const String& s) noexcept;
 
 			/**
 			 * \brief Returns size of the string
@@ -113,20 +120,22 @@ namespace DCS
 		 */
 		struct DCS_API BasicString
 		{
-			char buffer[512];
+			char buffer[512]; ///< The sized string buffer.
 		};
 
 		/**
 		 * \brief This class enables writing to a single (or multiple) buffer(s) for logging.
 		 * Thread-safe.
 		 * 
-		 * \todo Add Deinit static method.
 		 * \todo Make the output redirectable (for stderr or stdout for example).
 		 */
 		class Logger
 		{
+		public:
+			enum class Verbosity : int;
 		private:
-			typedef void (*WriteNotifyCallback)(DCS::Utils::String string, void*);
+			
+			typedef void (*WriteNotifyCallback)(DCS::Utils::String string, Verbosity v, void*);
 
 		public:
 			/**
@@ -208,6 +217,11 @@ namespace DCS
 			 */
 			static DCS_API void Settings(Options opt);
 
+			/**
+			 * \brief Changes the verbosity level. 
+			 */
+			static DCS_API void ChangeVerbosity(Verbosity v);
+
 		private:
 			static void WriteData(std::string buffer[], Verbosity v);
 
@@ -220,24 +234,51 @@ namespace DCS
 			static FILE* handle;
 			static std::mutex _log_mtx;
 		};
+
+		/**
+		 * \brief A class that holds possible future data.
+		 * 
+		 * To be used as a return type when expected data T is returned async.
+		 * 
+		 * \tparam T the type to manipulate.
+		 */
+		template<typename T>
+		class AsyncItem
+		{
+		public:
+			AsyncItem(std::promise<T>& p) { f = p.get_future(); };
+			~AsyncItem() = default;
+
+			/**
+			 * \brief Wait for item to be available.
+			 */
+			inline void wait() const
+			{
+				f.wait();
+			}
+
+			/**
+			 * \brief Get the item stored in the future.
+			 * 
+			 * If item is not available, it waits until it is.
+			 * 
+			 * \return T item
+			 */
+			inline T get() const
+			{
+				return f.get();
+			}
+
+		private:
+			std::shared_future<T> f;
+		};
 	}
 
 	/**
 	 * \brief Timing related utilities.
-	 * \todo Refactor codebase to classes
 	 */
 	namespace Timer
 	{
-		/**
-		 * \brief Holds data about when a timer was first created.
-		 *
-		 * Used to get relative timestamps with 100 nanoseconds precision.
-		 */
-		struct DCS_API SystemTimer
-		{
-			GenericHandle point; ///< Represents a time point.
-		};
-
 		/**
 		 * \brief Represents a timestamp divided fieldwise.
 		 */
@@ -256,40 +297,6 @@ namespace DCS
 			 */
 			const Utils::String to_string() const;
 		};
-
-		/**
-		 * \brief Creates a new SystemTimer.
-		 */
-		DCS_API SystemTimer New();
-
-		/**
-		 * \brief Deletes a SystemTimer.
-		 */
-		DCS_API void Delete(SystemTimer timer);
-
-		/**
-		 * \brief Gives a timestamp relative to timer in Timestamp format.
-		 * 
-		 * \param timer Relative point to measure.
-		 * \return Timestamp.
-		 */
-		DCS_API Timestamp GetTimestamp(SystemTimer timer);
-
-		/**
-		 * \brief Gives a timestamp relative to timer in Utils::String format.
-		 *
-		 * \param timer Relative point to measure.
-		 * \return Utils::String timestamp [XXh XXm XXs XXms XXus XXns].
-		 */
-		DCS_API Utils::String GetTimestampString(SystemTimer timer);
-
-		/**
-		 * \brief Gives number of nanoseconds passed relative to timer.
-		 *
-		 * \param timer Relative point to measure.
-		 * \return Number of nanoseconds stored in a DCS::i64.
-		 */
-		DCS_API i64 GetNanoseconds(SystemTimer timer);
 	}
 }
 

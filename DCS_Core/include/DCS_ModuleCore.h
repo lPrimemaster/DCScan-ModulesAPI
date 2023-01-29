@@ -5,6 +5,8 @@
 #include "../../config/exports.h"
 #include "../../DCS_Utils/include/DCS_ModuleUtils.h"
 
+#include <functional>
+
 /**
  * @file
  * \brief Exposes core functionalities of the API to the end user.
@@ -20,6 +22,82 @@ namespace DCS
 {
 	namespace Memory
 	{
+		// class CircularBuffer
+		// {
+		// public:
+		// 	CircularBuffer(u64 block_size, u64 num_blocks);
+		// 	~CircularBuffer();
+
+		// 	inline u8* write(u8* data, u64 sz)
+		// 	{
+		// 		if(sz > block_size)
+		// 		{
+		// 			LOG_CRITICAL("CircularBuffer: Write operation size exceeded block_size.");
+		// 			return nullptr;
+		// 		}
+
+		// 		while(read_tag.load() & (1 << o_write))
+		// 		{
+		// 			std::this_thread::yield();
+		// 		}
+
+		// 		std::unique_lock<std::mutex> lck(m);
+
+		// 		cv.wait(lck, []() { return (read_tag.load() & (1 << o_write)) == 0; });
+
+		// 		lck.unlock();
+		// 		u8* p = data + (o_write++ * block_size);
+		// 		memcpy(p, data, sz);
+
+		// 		read_tag |= (1 << (o_write-1));
+
+		// 		o_write %= num_blocks;
+		// 		write_cycle++;
+		// 		return p;
+		// 	}
+
+		// 	inline void read(u8* dst_buffer, u64 sz)
+		// 	{
+		// 		if(dst_buffer == nullptr)
+		// 		{
+		// 			LOG_CRITICAL("CircularBuffer: Read operation destination buffer is NULL.");
+		// 			return;
+		// 		}
+
+		// 		std::unique_lock<std::mutex> lck(m);
+
+		// 		cv.wait(lck, []() { return (read_tag.load() & (1 << o_read)) == 1; });
+
+
+		// 		u8* p = data + (o_read++ * block_size);
+		// 		memcpy(dst_buffer, p, sz);
+		// 		read_tag &= ~(1 << (o_read-1));
+
+		// 		o_read %= num_blocks;
+		// 		read_cycle++;
+				
+		// 		lck.unlock();
+		// 	}
+
+		// private:
+		// 	u8* data = nullptr;
+		// 	u64 block_size = 0;
+		// 	u64 num_blocks = 0;
+		// 	u64 total_size = 0;
+
+		// 	u64 o_read = 0;
+		// 	u64 o_write = 0;
+
+		// 	std::atomic<u64> read_tag = 0xFFFFFFFFFFFFFFFF;
+
+		// 	std::condition_variable cv;
+		// 	std::mutex m;
+
+		// 	u64 read_cycle = 0;
+		// 	u64 write_cycle = 0;
+		// };
+
+
 		/**
 		 * \internal
 		 * \brief Struct to store data linearly
@@ -128,13 +206,66 @@ namespace DCS
 		};
 	}
 
+	/**
+	 * \brief Handles threading and asynchronicity.
+	 */
 	namespace Threading
 	{
 		/**
 		 * \brief Get current machine maximum hardware concurrency (Number of physical threads supported by the current implementation).
+		 * \ingroup calls
 		 */
 		DCS_REGISTER_CALL(DCS::u16)
 		const DCS_API u16 GetMaxHardwareConcurrency();
+	}
+
+	/**
+	 * \brief Handles authentication and cryptography.
+	 */
+	namespace Auth
+	{
+		/**
+		 * \brief Encrypts bytes with the AES-256 (GCM) cypher using a key and iv.
+		 * \deprecated This function is no longer required to be called directly on the client.
+		 */
+		DCS_API void Encrypt(DCS::u8* to_encrypt, int size, DCS::u8* key, DCS::u8* iv, DCS::u8* encrypted_out, DCS::u8* tag);
+	}
+
+	/**
+	 * \brief Holds math utilities and tools.
+	 */
+	namespace Math
+	{
+		/**
+		 * \brief Struct that holds the data retrieved from DCS::Math::countArrayPeak.
+		 * 
+		 * Automatically cleans up used memory.
+		 */
+		struct CountResult
+		{
+			u64 num_detected = 0;	     ///< Number of detected peaks.
+			std::vector<u64> maximizers; ///< x positions array of the detected peaks (in samples).
+			std::vector<f64> maxima;     ///< y values array of the detected peaks.
+		};
+		
+		/**
+		 * \brief Counts the total ocurrences of peaks between vlo and vhi, with the specified sensitivity threshold.
+		 * 
+		 * Has two modes:
+		 * Legacy - Slower but more reliable (use by defining '#define DCS_MATH_USE_LEGACY_COUNTER' in the server).
+		 * Core   - Faster but can fail in certain edge scenarios (default).
+		 * 
+		 * Remark: Only the legacy mode is currently supported (and is enabled by default).
+		 * 
+		 * \param arr The data array to be analyzed.
+		 * \param size The size of the data array.
+		 * \param vlo The low limit to consider peaks.
+		 * \param vhi The high lmti to consider peaks.
+		 * \param vth The sensitivity threshold.
+		 * 
+		 * \return A DCS::Math::CountResult struct with data of analyzed array.
+		 */
+		CountResult countArrayPeak(f64* arr, u64 size, f64 vlo, f64 vhi, f64 vth);
 	}
 }
 

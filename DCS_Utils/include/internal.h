@@ -38,6 +38,11 @@ namespace DCS
 	{
 #pragma warning( push )
 #pragma warning( disable : 4251 )
+
+		/**
+		 * \internal 
+		 * \brief A thread-safe message queue. Similar to std::queue.
+		 */
 		class DCS_INTERNAL_TEST SMessageQueue
 		{
 		public:
@@ -88,6 +93,10 @@ namespace DCS
 			std::condition_variable c;
 		};
 
+		/**
+		 * \internal 
+		 * \brief A thread-safe byte queue. Holds message data up to a certain specified header size.
+		 */
 		class DCS_INTERNAL_TEST ByteQueue
 		{
 		public:
@@ -161,6 +170,14 @@ namespace DCS
 				c.notify_all();
 			}
 
+			void notify_restart()
+			{
+				delete[] buffer;
+				internal_buff_size = 0;
+				buffer = new u8[internal_buff_max_size]; 
+				ntf_unblock.store(false);
+			}
+
 		private:
 			u8* buffer;
 			u64 internal_buff_size;
@@ -177,5 +194,65 @@ namespace DCS
 		{
 			return static_cast<typename std::underlying_type<E>::type>(e);
 		}
+
+		DCS_INTERNAL_TEST void GetConsoleSize(int* x, int* y);
+
+		DCS_INTERNAL_TEST void SetConsoleMargins(int t, int b);
+
+		DCS_INTERNAL_TEST void WriteConsoleLine(int b, const char* str);
+
+		DCS_INTERNAL_TEST void SetStdinEcho(bool enable);
+	}
+
+	namespace Timer
+	{
+		/**
+		 * \brief Holds timing data.
+		 *
+		 * Used to get relative timestamps with 100 nanoseconds precision.
+		 */
+		class DCS_INTERNAL_TEST SystemTimer
+		{
+		public:
+			SystemTimer() = default;
+			~SystemTimer() = default;
+
+			/**
+			 * \brief Starts/restarts timer. Setting timing zero as now.
+			 */
+			void start();
+
+			/**
+			 * \brief Gives a timestamp relative to timer in Timestamp format.
+			 * 
+			 * \return Timestamp.
+			 */
+			Timestamp getTimestamp();
+
+			/**
+			 * \brief Gives a timestamp relative to timer in Utils::String format.
+			 *
+			 * \return Utils::String timestamp [XXh XXm XXs XXms XXus XXns].
+			 */
+			Utils::String getTimestampString();
+
+			
+			/**
+			 * \brief Gives a timestamp relative to timer in Utils::String format (displays day/hour/minute duration only).
+			 * 
+			 * \return Utils::String timestamp [XXd XXh XXm].
+			 */
+			Utils::String getTimestampStringSimple();
+
+			/**
+			 * \brief Gives number of nanoseconds passed relative to timer.
+			 *
+			 * \return Number of nanoseconds stored in a DCS::i64.
+			 */
+			i64 getNanoseconds();
+
+		private:
+			std::chrono::time_point<std::chrono::steady_clock> point;
+		};
 	}
 }
