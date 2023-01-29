@@ -21,13 +21,12 @@ add_library(DCSModuleCore ${LIB_TYPE}
   include/DCS_ModuleCore.h
   )
 
-#list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
-set(OPENSSL_ROOT_DIR "C:/Program Files (x86)/openssl")
-find_package(OpenSSL REQUIRED)
-include_directories("${OPENSSL_INCLUDE_DIR}")
-
-target_link_libraries(DCSModuleCore DCSModuleUtils "${OPENSSL_LIBRARIES}")
+add_subdirectory(../submodules/openssl-cmake openssl)
+include_directories("${CMAKE_SOURCE_DIR}/submodules/openssl-cmake/include")
+target_link_libraries(DCSModuleCore 
+  PUBLIC DCSModuleUtils
+  PRIVATE ssl crypto)
 
 set_target_properties(DCSModuleCore PROPERTIES
   PUBLIC_HEADER "include/DCS_ModuleCore.h"
