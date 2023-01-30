@@ -22,11 +22,11 @@ add_library(DCSModuleCore ${LIB_TYPE}
   )
 
 
-add_subdirectory(../submodules/openssl-cmake openssl)
-include_directories("${CMAKE_SOURCE_DIR}/submodules/openssl-cmake/include")
-target_link_libraries(DCSModuleCore 
-  PUBLIC DCSModuleUtils
-  PRIVATE ssl crypto)
+# https://slproweb.com/download/Win64OpenSSL-1_1_1s.exe
+find_package(OpenSSL 1.1.1 REQUIRED)
+
+include_directories("${OPENSSL_INCLUDE_DIR}")
+target_link_libraries(DCSModuleCore DCSModuleUtils ${OPENSSL_LIBRARIES})
 
 set_target_properties(DCSModuleCore PROPERTIES
   PUBLIC_HEADER "include/DCS_ModuleCore.h"

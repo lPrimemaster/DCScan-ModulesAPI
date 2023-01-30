@@ -2,7 +2,8 @@
 # (c) 2018 - 2020 César Godinho
 # Licensed under the MIT License
 
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.12)
+
 project(DCSModulesAPI VERSION 1.0.0 DESCRIPTION "DCS sub project containing all the control modules as libraries.")
 
 set(CMAKE_CXX_STANDARD 17)
@@ -20,6 +21,9 @@ endfunction()
 
 # Disable MSVC nasty deprecations
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+
+# Set default install dir to the install dir
+set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE STRING " " FORCE)
 
 # Do not hide any production important warnings (MSVC only)
 # /W4 and /Wall are just nonsensical

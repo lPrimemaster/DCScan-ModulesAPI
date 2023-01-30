@@ -83,6 +83,14 @@ namespace DCS
         };
 
         /**
+         * \brief Holds all Clinometer data relative to a count event.
+         */
+        struct DCS_API ClinometerEventData
+        {
+            // TODO
+        };
+
+        /**
          * \brief Initializes the Acquisition API.
          */
         DCS_API void Init();
@@ -187,6 +195,10 @@ namespace DCS
         // TODO : Document
         DCS_REGISTER_EVENT
         DCS_API void MCACountEvent(u16 mca_num_channels);
+
+        // TODO : Document
+        DCS_REGISTER_EVENT
+        DCS_API void ClinometerEvent();
     }
 }
 

@@ -34,6 +34,10 @@ static std::queue<DCS::DAQ::InternalVoltageData> mca_task_data;
 static std::mutex mca_mtx;
 static std::condition_variable mca_cv;
 
+static std::queue<DCS::DAQ::InternalVoltageData> clinometer_task_data;
+static std::mutex clinometer_mtx;
+static std::condition_variable clinometer_cv;
+
 
 static FILE* f;
 
@@ -60,6 +64,14 @@ static void pushToMCATask(DCS::DAQ::InternalVoltageData& data)
     mca_task_data.push(data);
     lck.unlock();
     mca_cv.notify_one();
+}
+
+static void pushToClinometerEvt(DCS::DAQ::InternalVoltageData& data)
+{
+    std::unique_lock<std::mutex> lck(clinometer_mtx);
+    clinometer_task_data.push(data);
+    lck.unlock();
+    clinometer_cv.notify_one();
 }
 
 void DCS::DAQ::Init()
@@ -95,7 +107,7 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
 {
     InternalVoltageData data;
     DCS::f64 samples[INTERNAL_SAMP_SIZE];
-    DCS::i32 aread;
+    DCS::i32 samples_per_channel;
 
     data.timestamp = voltage_task_timer.getTimestamp();
 
@@ -107,9 +119,8 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     // TODO : Channels not in the task also queue in the buffer?  
     // TODO : Cout peaks in a separate thread if it gets slow in the live callback (FIFO Style as always =])
 
-    DAQmxReadAnalogF64(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &aread, NULL);
+    DAQmxReadAnalogF64(taskHandle, DAQmx_Val_Auto, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &samples_per_channel, NULL);
 
-    //memcpy(data.ptr, samples, INTERNAL_SAMP_SIZE * sizeof(f64));
     data.cr = DCS::Math::countArrayPeak(samples, INTERNAL_SAMP_SIZE, 0.2, 10.0, 0.0); // Copy data.cr
 
     // push to dcs
@@ -122,6 +133,13 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     if(DCS::Registry::CheckEvent(SV_EVT_DCS_DAQ_MCACountEvent))
     {
         pushToMCATask(data);
+    }
+
+    // push to clinometer display
+    if(DCS::Registry::CheckEvent(SV_EVT_DCS_DAQ_ClinometerEvent))
+    {
+        memcpy(data.ptr, samples, INTERNAL_SAMP_SIZE * sizeof(f64));
+        pushToClinometerEvt(data);
     }
 
     // NOTE : Maybe use named event to reduce cpu time finding event name
@@ -235,6 +253,28 @@ DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastMCA_IVD()
     {
         InternalVoltageData ivd = mca_task_data.front();
         mca_task_data.pop();
+        return ivd;
+    }
+    else
+    {
+        // Notify unlock
+        InternalVoltageData ivd_nu;
+        ivd_nu.cr.num_detected = std::numeric_limits<u64>::max();
+        return ivd_nu;
+    }
+}
+
+DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastClinometer_IVD()
+{
+    std::unique_lock<std::mutex> lck(clinometer_mtx);
+    
+    if(clinometer_task_data.empty())
+        clinometer_cv.wait(lck);
+
+    if(!clinometer_task_data.empty())
+    {
+        InternalVoltageData ivd = clinometer_task_data.front();
+        clinometer_task_data.pop();
         return ivd;
     }
     else

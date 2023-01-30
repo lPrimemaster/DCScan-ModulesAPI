@@ -167,6 +167,12 @@ namespace DCS
 
         /**
          * \internal
+         * \brief Get last internal voltage data for the Clinometer system and pop from memory.
+         */
+        DCS_INTERNAL_TEST DCS::DAQ::InternalVoltageData GetLastClinometer_IVD();
+
+        /**
+         * \internal
          * \brief Starts the DCS and MCA's event listener on the server side 
          */
         DCS_INTERNAL_TEST void StartEventLoop(u16 mca_num_channels);
