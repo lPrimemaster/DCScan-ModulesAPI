@@ -312,4 +312,5 @@ void DCS::DAQ::NotifyUnblockEventLoop()
 {
     mca_cv.notify_one();
     dcs_cv.notify_one();
+    clinometer_cv.notify_one();
 }

@@ -9,6 +9,7 @@
 
 static std::thread* evt_loop_dcs_thread = nullptr;
 static std::thread* evt_loop_mca_thread = nullptr;
+static std::thread* evt_loop_cli_thread = nullptr;
 
 static std::atomic<int> evt_loop_sig;
 
@@ -21,6 +22,7 @@ void DCS::DAQ::StartEventLoop(DCS::u16 mca_num_channels)
     evt_loop_sig.store(EVT_LOOP_RUN);
     evt_loop_dcs_thread = new std::thread(DCSCountEvent);
     evt_loop_mca_thread = new std::thread(MCACountEvent, mca_num_channels);
+    evt_loop_cli_thread = new std::thread(ClinometerEvent);
 }
 
 void DCS::DAQ::StopEventLoop()
@@ -29,9 +31,11 @@ void DCS::DAQ::StopEventLoop()
     NotifyUnblockEventLoop();
     evt_loop_dcs_thread->join();
     evt_loop_mca_thread->join();
+    evt_loop_cli_thread->join();
 
     delete evt_loop_dcs_thread;
     delete evt_loop_mca_thread;
+    delete evt_loop_cli_thread;
 }
 
 
@@ -58,21 +62,30 @@ void DCS::DAQ::DCSCountEvent()
 
 void DCS::DAQ::MCACountEvent(DCS::u16 mca_num_channels)
 {
-    while(evt_loop_sig.load())
+    while (evt_loop_sig.load())
     {
-        InternalVoltageData ivd = GetLastDCS_IVD();
+        InternalVoltageData ivd = GetLastMCA_IVD();
 
-        if(ivd.cr.num_detected == std::numeric_limits<u64>::max())
+        if (ivd.cr.num_detected == std::numeric_limits<u64>::max())
         {
             continue;
         }
 
-        DCSCountEventData evt_data;
-        evt_data.counts = ivd.cr.num_detected;
-        evt_data.measured_angle = ivd.measured_angle;
+        MCACountEventData evt_data;
+        evt_data.count = ivd.cr.num_detected;
         evt_data.timestamp = ivd.timestamp;
-        
-        DCS_EMIT_EVT((DCS::u8*)&evt_data, sizeof(DCSCountEventData)); // HACK : This can operate with a move ctor instead
+        evt_data.total_max_bin_count = mca_num_channels;
+
+        if (evt_data.count > 0)
+        {
+            for (int i = 0; i < evt_data.count; i++)
+            {
+                // TODO : Don't hard code DAQ range... (currently: [0.0, 10.0] V)
+                evt_data.bins[i] = u16((ivd.cr.maxima[i] / 10.0) * evt_data.total_max_bin_count);
+            }
+        }
+
+        DCS_EMIT_EVT((DCS::u8*)&evt_data, sizeof(MCACountEventData)); // HACK : This can operate with a move ctor instead
     }
 }
 
