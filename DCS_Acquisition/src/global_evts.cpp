@@ -99,10 +99,23 @@ void DCS::DAQ::ClinometerEvent()
         {
             continue;
         }
+        
 
         // Guardar os valores de saída aqui
         // TODO: Falta colocar membros nesta estrutura (declarada no ficheiro DCS_ModuleAcquisition.h:88)
+             
+
         ClinometerEventData evt_data;
+        
+        const float max_angle = 10;
+        const float min_angle = -10;
+        float range_angle = max_angle - min_angle; 
+
+            for (int i = 0 ; i < 500 ; ++i)
+            {
+                evt_data.list_cliX[i] = 0.2*ivd.ptr[i]*range_angle + min_angle;
+                evt_data.list_cliY[i] = 0.2*ivd.ptr[i+500]*range_angle + min_angle;
+            }
 
         // TODO
         // Código para ler as samples do inclinómetro e fazer cálculos

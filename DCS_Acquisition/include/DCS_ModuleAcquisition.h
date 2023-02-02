@@ -88,6 +88,9 @@ namespace DCS
         struct DCS_API ClinometerEventData
         {
             // TODO
+            float list_cliX[500];
+            float list_cliY[500];
+            
         };
 
         /**

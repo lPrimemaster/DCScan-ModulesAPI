@@ -34,9 +34,9 @@ static std::queue<DCS::DAQ::InternalVoltageData> mca_task_data;
 static std::mutex mca_mtx;
 static std::condition_variable mca_cv;
 
-static std::queue<DCS::DAQ::InternalVoltageData> clinometer_task_data;
-static std::mutex clinometer_mtx;
-static std::condition_variable clinometer_cv;
+static std::queue<DCS::DAQ::InternalVoltageData> cli_task_data;
+static std::mutex cli_mtx;
+static std::condition_variable cli_cv;
 
 
 static FILE* f;
@@ -68,10 +68,10 @@ static void pushToMCATask(DCS::DAQ::InternalVoltageData& data)
 
 static void pushToClinometerEvt(DCS::DAQ::InternalVoltageData& data)
 {
-    std::unique_lock<std::mutex> lck(clinometer_mtx);
-    clinometer_task_data.push(data);
+    std::unique_lock<std::mutex> lck(cli_mtx);
+    cli_task_data.push(data);
     lck.unlock();
-    clinometer_cv.notify_one();
+    cli_cv.notify_one();
 }
 
 void DCS::DAQ::Init()
@@ -266,15 +266,15 @@ DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastMCA_IVD()
 
 DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastClinometer_IVD()
 {
-    std::unique_lock<std::mutex> lck(clinometer_mtx);
+    std::unique_lock<std::mutex> lck(cli_mtx);
     
-    if(clinometer_task_data.empty())
-        clinometer_cv.wait(lck);
+    if(cli_task_data.empty())
+        cli_cv.wait(lck);
 
-    if(!clinometer_task_data.empty())
+    if(!cli_task_data.empty())
     {
-        InternalVoltageData ivd = clinometer_task_data.front();
-        clinometer_task_data.pop();
+        InternalVoltageData ivd = cli_task_data.front();
+        cli_task_data.pop();
         return ivd;
     }
     else
@@ -312,5 +312,5 @@ void DCS::DAQ::NotifyUnblockEventLoop()
 {
     mca_cv.notify_one();
     dcs_cv.notify_one();
-    clinometer_cv.notify_one();
+    cli_cv.notify_one();
 }
