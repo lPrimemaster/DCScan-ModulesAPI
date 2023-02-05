@@ -30,6 +30,16 @@ static bool HandleNiError(DCS::i32 error)
     }
 }
 
+void DCS::DAQ::GetDevices(char* buffer, u32 size)
+{
+    i32 err = DAQmxGetSysDevNames(buffer, size);
+    if(!HandleNiError(err))
+    {
+        LOG_ERROR("Could not fetch system NI device names.");
+        memcpy(buffer, "\0", 2);
+    }
+}
+
 void DCS::DAQ::CreateTask(InternalTask* t, const char* name)
 {
     if(t == nullptr)

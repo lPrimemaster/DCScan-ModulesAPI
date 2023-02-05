@@ -308,6 +308,13 @@ DCS::f64 DCS::DAQ::GetADCMaxInternalClock()
     return INTERNAL_ADC_MAX_CLK; 
 }
 
+DCS::Utils::BasicString DCS::DAQ::GetConnectedDevicesAliases()
+{
+    DCS::Utils::BasicString string;
+    DCS::DAQ::GetDevices(string.buffer, 512); // BUG: What if BasicString size changes?
+    return string;
+}
+
 void DCS::DAQ::NotifyUnblockEventLoop()
 {
     mca_cv.notify_one();
