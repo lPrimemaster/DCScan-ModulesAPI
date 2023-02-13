@@ -103,6 +103,9 @@ static void TerminateAITask()
 }
 
 // NOTE : This works because only one channel is being used. If more channels are used, this needs to be refactored.
+
+//DAQmxCreateAIVoltageChan(TaskHandle taskHandle, "Dev1/ai0:1", nameToAssignToChannel , DAQmx_Val_RSE , 0.0 , 1000.0 , DAQmx_Val_Volts , NULL);
+
 DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData)
 {
     InternalVoltageData data;
@@ -119,7 +122,11 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     // TODO : Channels not in the task also queue in the buffer?  
     // TODO : Cout peaks in a separate thread if it gets slow in the live callback (FIFO Style as always =])
 
-    DAQmxReadAnalogF64(taskHandle, DAQmx_Val_Auto, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &samples_per_channel, NULL);
+
+    DAQmxReadAnalogF64(taskHandle, 500, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &samples_per_channel, NULL);
+
+    LOG_DEBUG("0 - %f", samples[0]);
+    LOG_DEBUG("1 - %f", samples[500]);
 
     data.cr = DCS::Math::countArrayPeak(samples, INTERNAL_SAMP_SIZE, 0.2, 10.0, 0.0); // Copy data.cr
 

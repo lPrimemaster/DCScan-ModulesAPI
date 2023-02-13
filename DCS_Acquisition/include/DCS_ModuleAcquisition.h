@@ -90,6 +90,7 @@ namespace DCS
             // TODO
             float list_cliX[500];
             float list_cliY[500];
+            DCS::Timer::Timestamp timestamp;
             
         };
 
