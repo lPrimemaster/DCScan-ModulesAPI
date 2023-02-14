@@ -123,10 +123,11 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     // TODO : Cout peaks in a separate thread if it gets slow in the live callback (FIFO Style as always =])
 
 
-    DAQmxReadAnalogF64(taskHandle, 500, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &samples_per_channel, NULL);
+    DAQmxReadAnalogF64(taskHandle, -1, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, INTERNAL_SAMP_SIZE, &samples_per_channel, NULL);
 
     LOG_DEBUG("0 - %f", samples[0]);
     LOG_DEBUG("1 - %f", samples[500]);
+    LOG_DEBUG("Read samples p/channel: %d", samples_per_channel);
 
     data.cr = DCS::Math::countArrayPeak(samples, INTERNAL_SAMP_SIZE, 0.2, 10.0, 0.0); // Copy data.cr
 
@@ -204,7 +205,7 @@ void DCS::DAQ::StartAIAcquisition(DCS::f64 samplerate)
         }
 
         // Always use the internal clock for continuous acquisition
-        SetupTask(&voltage_task, "OnBoardClock", voltage_task_rate, INTERNAL_SAMP_SIZE, VoltageEvent);
+        SetupTask(&voltage_task, "OnBoardClock", voltage_task_rate, INTERNAL_SAMP_SIZE / (i32)voltage_vcs.size(), VoltageEvent);
         StartTask(&voltage_task);
         voltage_task_timer.start();
         voltage_task_running = true;
@@ -313,6 +314,13 @@ void DCS::DAQ::SetMCANumChannels(DCS::u16 nChannels)
 DCS::f64 DCS::DAQ::GetADCMaxInternalClock()
 {
     return INTERNAL_ADC_MAX_CLK; 
+}
+
+DCS::Utils::BasicString DCS::DAQ::GetConnectedDevicesAliases()
+{
+    DCS::Utils::BasicString string;
+    DCS::DAQ::GetDevices(string.buffer, 512); // BUG: What if BasicString size changes?
+    return string;
 }
 
 void DCS::DAQ::NotifyUnblockEventLoop()

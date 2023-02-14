@@ -119,6 +119,12 @@ namespace DCS
 
         /**
          * \internal
+         * \brief Get all the system present devices.
+         */
+        DCS_INTERNAL_TEST void GetDevices(char* buffer, u32 size);
+
+        /**
+         * \internal
          * \brief Create a task via NIDAQmx API.
          */
         DCS_INTERNAL_TEST void CreateTask(InternalTask* t, const char* name);

@@ -30,6 +30,16 @@ static bool HandleNiError(DCS::i32 error)
     }
 }
 
+void DCS::DAQ::GetDevices(char* buffer, u32 size)
+{
+    i32 err = DAQmxGetSysDevNames(buffer, size);
+    if(!HandleNiError(err))
+    {
+        LOG_ERROR("Could not fetch system NI device names.");
+        memcpy(buffer, "\0", 2);
+    }
+}
+
 void DCS::DAQ::CreateTask(InternalTask* t, const char* name)
 {
     if(t == nullptr)
@@ -70,7 +80,7 @@ void DCS::DAQ::SetupTask(InternalTask* t, const char* clk_source, DCS::f64 clk, 
     t->clock_edge  = DAQmx_Val_Rising;
     t->clock_rate  = clk > maxrate ? maxrate : clk;
     t->sample_mode = DAQmx_Val_ContSamps;
-    t->num_samples = INTERNAL_SAMP_SIZE;
+    t->num_samples = num_samp;
     t->acq_callback = func;
 
     err = DAQmxCfgSampClkTiming(t->ni_opaque_handler, clk_source, t->clock_rate, t->clock_edge, t->sample_mode, t->num_samples);

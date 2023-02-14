@@ -192,6 +192,14 @@ namespace DCS
         DCS_REGISTER_CALL(DCS::f64)
         DCS_API f64 GetADCMaxInternalClock();
 
+        /**
+         * \brief Returns the names of the currently system present NI devices.
+         * 
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(DCS::Utils::BasicString)
+        DCS_API DCS::Utils::BasicString GetConnectedDevicesAliases();
+
         // TODO : Document
         DCS_REGISTER_EVENT
         DCS_API void DCSCountEvent();

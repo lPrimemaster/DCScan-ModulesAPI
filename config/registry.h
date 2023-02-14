@@ -49,23 +49,24 @@
 #define SV_CALL_DCS_DAQ_GetMCANumChannels 0x5 ///< A call to `DCS::DAQ::GetMCANumChannels` \ingroup calls_id
 #define SV_CALL_DCS_DAQ_SetMCANumChannels 0x6 ///< A call to `DCS::DAQ::SetMCANumChannels` \ingroup calls_id
 #define SV_CALL_DCS_DAQ_GetADCMaxInternalClock 0x7 ///< A call to `DCS::DAQ::GetADCMaxInternalClock` \ingroup calls_id
-#define SV_CALL_DCS_Threading_GetMaxHardwareConcurrency 0x8 ///< A call to `DCS::Threading::GetMaxHardwareConcurrency` \ingroup calls_id
-#define SV_CALL_DCS_Control_IssueGenericCommand 0x9 ///< A call to `DCS::Control::IssueGenericCommand` \ingroup calls_id
-#define SV_CALL_DCS_Control_IssueGenericCommandResponse 0xa ///< A call to `DCS::Control::IssueGenericCommandResponse` \ingroup calls_id
-#define MAX_CALL 0xb
+#define SV_CALL_DCS_DAQ_GetConnectedDevicesAliases 0x8 ///< A call to `DCS::DAQ::GetConnectedDevicesAliases` \ingroup calls_id
+#define SV_CALL_DCS_Threading_GetMaxHardwareConcurrency 0x9 ///< A call to `DCS::Threading::GetMaxHardwareConcurrency` \ingroup calls_id
+#define SV_CALL_DCS_Control_IssueGenericCommand 0xa ///< A call to `DCS::Control::IssueGenericCommand` \ingroup calls_id
+#define SV_CALL_DCS_Control_IssueGenericCommandResponse 0xb ///< A call to `DCS::Control::IssueGenericCommandResponse` \ingroup calls_id
+#define MAX_CALL 0xc
 
 #define SV_ARG_NULL 0x0 ///< Indicates a non existant argument [Not to use].
 #define SV_ARG_DCS_f64 0x1 ///< Refers to argument `DCS::f64` \ingroup args_id
 #define SV_ARG_DCS_u16 0x2 ///< Refers to argument `DCS::u16` \ingroup args_id
-#define SV_ARG_DCS_Utils_BasicString 0x3 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
-#define SV_ARG_DCS_DAQ_ChannelRef 0x4 ///< Refers to argument `DCS::DAQ::ChannelRef` \ingroup args_id
-#define SV_ARG_DCS_Control_UnitTarget 0x5 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
-#define SV_ARG_DCS_DAQ_ChannelLimits 0x6 ///< Refers to argument `DCS::DAQ::ChannelLimits` \ingroup args_id
+#define SV_ARG_DCS_Control_UnitTarget 0x3 ///< Refers to argument `DCS::Control::UnitTarget` \ingroup args_id
+#define SV_ARG_DCS_Utils_BasicString 0x4 ///< Refers to argument `DCS::Utils::BasicString` \ingroup args_id
+#define SV_ARG_DCS_DAQ_ChannelLimits 0x5 ///< Refers to argument `DCS::DAQ::ChannelLimits` \ingroup args_id
+#define SV_ARG_DCS_DAQ_ChannelRef 0x6 ///< Refers to argument `DCS::DAQ::ChannelRef` \ingroup args_id
 
 #define SV_RET_VOID 0x0 ///< Indicates a void return type.
 #define SV_RET_DCS_f64 0x1 ///< Refers to return type `DCS::f64` \ingroup ret_id
-#define SV_RET_DCS_u16 0x2 ///< Refers to return type `DCS::u16` \ingroup ret_id
-#define SV_RET_DCS_Utils_BasicString 0x3 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id
+#define SV_RET_DCS_Utils_BasicString 0x2 ///< Refers to return type `DCS::Utils::BasicString` \ingroup ret_id
+#define SV_RET_DCS_u16 0x3 ///< Refers to return type `DCS::u16` \ingroup ret_id
 
 #define MAX_SUB 0x5
 #define SV_EVT_DCS_DAQ_DCSCountEvent 0x1 ///< A event refering to `DCS::DAQ::DCSCountEvent` \ingroup evt_id
@@ -213,9 +214,10 @@ namespace DCS {
 			{"DCS::DAQ::GetMCANumChannels", 0x5},
 			{"DCS::DAQ::SetMCANumChannels", 0x6},
 			{"DCS::DAQ::GetADCMaxInternalClock", 0x7},
-			{"DCS::Threading::GetMaxHardwareConcurrency", 0x8},
-			{"DCS::Control::IssueGenericCommand", 0x9},
-			{"DCS::Control::IssueGenericCommandResponse", 0xa}
+			{"DCS::DAQ::GetConnectedDevicesAliases", 0x8},
+			{"DCS::Threading::GetMaxHardwareConcurrency", 0x9},
+			{"DCS::Control::IssueGenericCommand", 0xa},
+			{"DCS::Control::IssueGenericCommandResponse", 0xb}
 		};
 
 		inline static std::unordered_map<u8, bool> subscriptions = 
@@ -245,9 +247,10 @@ namespace DCS {
 			{0x5, "SV_CALL_DCS_DAQ_GetMCANumChannels"},
 			{0x6, "SV_CALL_DCS_DAQ_SetMCANumChannels"},
 			{0x7, "SV_CALL_DCS_DAQ_GetADCMaxInternalClock"},
-			{0x8, "SV_CALL_DCS_Threading_GetMaxHardwareConcurrency"},
-			{0x9, "SV_CALL_DCS_Control_IssueGenericCommand"},
-			{0xa, "SV_CALL_DCS_Control_IssueGenericCommandResponse"}
+			{0x8, "SV_CALL_DCS_DAQ_GetConnectedDevicesAliases"},
+			{0x9, "SV_CALL_DCS_Threading_GetMaxHardwareConcurrency"},
+			{0xa, "SV_CALL_DCS_Control_IssueGenericCommand"},
+			{0xb, "SV_CALL_DCS_Control_IssueGenericCommandResponse"}
 		};
 
         inline static std::unordered_map<u8, EventCallbackFunc> evt_callbacks;
