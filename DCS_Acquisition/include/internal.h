@@ -112,6 +112,7 @@ namespace DCS
             Math::CountResult cr;
 
             Timer::Timestamp timestamp;
+            u64 deterministicET;
 
             f64 measured_angle;
             f64 predicted_angle;

@@ -51,6 +51,7 @@ void DCS::DAQ::DCSCountEvent()
         evt_data.counts = ivd.cr.num_detected;
         evt_data.measured_angle = ivd.measured_angle;
         evt_data.timestamp = ivd.timestamp;
+        evt_data.deterministicET = ivd.deterministicET;
         
         DCS_EMIT_EVT((DCS::u8*)&evt_data, sizeof(DCSCountEventData)); // HACK : This can operate with a move ctor instead
     }

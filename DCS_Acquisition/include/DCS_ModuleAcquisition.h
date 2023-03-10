@@ -67,6 +67,7 @@ namespace DCS
         {
             DCS::u64 counts;                 ///< The total X-ray unique counts.
             DCS::Timer::Timestamp timestamp; ///< The time these counts were performed (software time).
+            DCS::u64 deterministicET;        ///< The time these counts were performed (theoretical time).
             DCS::f64 expected_angle;         ///< The expected angle of the engine at time of counts (x = vt).
             DCS::f64 measured_angle;         ///< The measured angle of the engine at time of counts.
         };

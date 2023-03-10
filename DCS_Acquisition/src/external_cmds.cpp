@@ -25,6 +25,7 @@ static DCS::f64 voltage_task_rate;
 static std::map<std::string, VCData> voltage_vcs;
 static bool voltage_task_running = false;
 static bool voltage_task_inited = false;
+static DCS::u64 voltage_task_dt;
 
 static std::queue<DCS::DAQ::InternalVoltageData> dcs_task_data;
 static std::mutex dcs_mtx;
@@ -33,6 +34,9 @@ static std::condition_variable dcs_cv;
 static std::queue<DCS::DAQ::InternalVoltageData> mca_task_data;
 static std::mutex mca_mtx;
 static std::condition_variable mca_cv;
+
+static DCS::u64 us_timestamp;
+#define INTERNAL_SAMP_US INTERNAL_SAMP_SIZE * 1000000ULL
 
 
 static FILE* f;
@@ -97,8 +101,12 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     DCS::f64 samples[INTERNAL_SAMP_SIZE];
     DCS::i32 aread;
 
-    /// TODO: Calculate a deterministic timestamp instead
+    // Software TS
     data.timestamp = voltage_task_timer.getTimestamp();
+
+    // Theoretical TS
+    data.deterministicET = us_timestamp;
+    us_timestamp += voltage_task_dt; 
 
     DAQmxReadAnalogF64(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &aread, NULL);
 
@@ -158,7 +166,8 @@ void DCS::DAQ::DeleteAIVChannel(DCS::Utils::BasicString name)
 void DCS::DAQ::StartAIAcquisition(DCS::f64 samplerate)
 {
     voltage_task_rate = samplerate;
-
+    us_timestamp = 0;
+    voltage_task_dt = INTERNAL_SAMP_US / (u64)samplerate;
     if(!voltage_task_running)
     {
         StartEventLoop(MCA_NumChannels.load());
