@@ -17,3 +17,6 @@
 # Do not track builds or installations
 [Bb]uild/
 [Ii]nstall/
+
+# No need to track the config files
+/config/registry.*
