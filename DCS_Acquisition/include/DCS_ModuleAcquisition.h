@@ -84,6 +84,18 @@ namespace DCS
         };
 
         /**
+         * \brief Holds all Clinometer data relative to a count event.
+         */
+        struct DCS_API ClinometerEventData
+        {
+            // TODO
+            float list_cliX[500];
+            float list_cliY[500];
+            DCS::Timer::Timestamp timestamp;
+            
+        };
+
+        /**
          * \brief Initializes the Acquisition API.
          */
         DCS_API void Init();
@@ -181,6 +193,14 @@ namespace DCS
         DCS_REGISTER_CALL(DCS::f64)
         DCS_API f64 GetADCMaxInternalClock();
 
+        /**
+         * \brief Returns the names of the currently system present NI devices.
+         * 
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(DCS::Utils::BasicString)
+        DCS_API DCS::Utils::BasicString GetConnectedDevicesAliases();
+
         // TODO : Document
         DCS_REGISTER_EVENT
         DCS_API void DCSCountEvent();
@@ -188,6 +208,10 @@ namespace DCS
         // TODO : Document
         DCS_REGISTER_EVENT
         DCS_API void MCACountEvent(u16 mca_num_channels);
+
+        // TODO : Document
+        DCS_REGISTER_EVENT
+        DCS_API void ClinometerEvent();
     }
 
     /**

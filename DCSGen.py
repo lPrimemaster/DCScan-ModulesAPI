@@ -17,7 +17,7 @@ curr_dir = os.getcwd()
 filenames = []
 for root, dirs, files in os.walk(curr_dir):
      for file in files:
-     	if fnmatch.fnmatch(file, '*.h') and ('install' or 'build') not in root:
+     	if fnmatch.fnmatch(file, '*.h') and not any(x in root for x in ['build', 'install', 'submodules', 'tests', 'config']):
      		filenames.append(os.path.join(root, file))
 
 print('Processing files...')

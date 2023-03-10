@@ -35,6 +35,10 @@ static std::queue<DCS::DAQ::InternalVoltageData> mca_task_data;
 static std::mutex mca_mtx;
 static std::condition_variable mca_cv;
 
+static std::queue<DCS::DAQ::InternalVoltageData> cli_task_data;
+static std::mutex cli_mtx;
+static std::condition_variable cli_cv;
+
 static DCS::u64 us_timestamp;
 #define INTERNAL_SAMP_US INTERNAL_SAMP_SIZE * 1000000ULL
 
@@ -66,6 +70,14 @@ static void pushToMCATask(DCS::DAQ::InternalVoltageData& data)
     mca_cv.notify_one();
 }
 
+static void pushToClinometerEvt(DCS::DAQ::InternalVoltageData& data)
+{
+    std::unique_lock<std::mutex> lck(cli_mtx);
+    cli_task_data.push(data);
+    lck.unlock();
+    cli_cv.notify_one();
+}
+
 void DCS::DAQ::Init()
 {
     LOG_DEBUG("DAQ Services Running.");
@@ -95,22 +107,28 @@ static void TerminateAITask()
 }
 
 // NOTE : This works because only one channel is being used. If more channels are used, this needs to be refactored.
+
+//DAQmxCreateAIVoltageChan(TaskHandle taskHandle, "Dev1/ai0:1", nameToAssignToChannel , DAQmx_Val_RSE , 0.0 , 1000.0 , DAQmx_Val_Volts , NULL);
+
 DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData)
 {
     InternalVoltageData data;
     DCS::f64 samples[INTERNAL_SAMP_SIZE];
-    DCS::i32 aread;
+    DCS::i32 samples_per_channel;
 
     // Software TS
     data.timestamp = voltage_task_timer.getTimestamp();
 
-    // Theoretical TS
-    data.deterministicET = us_timestamp;
-    us_timestamp += voltage_task_dt; 
+    // TODO : Maybe try a more predictive approach if this is not good enough
+    // IMPORTANT : To ensure usability take params -> (Nbuff / Fsamp) * Vtheta = delta_theta_min
+    //             For this case -> (1000 / 100'000) * ([estimated?]~100 mdeg/s) = 1 mdeg uncertainty per buffer
+    // TODO : Create a way to check for the ESP301 handle without any overhead. (Store value perhaps)
+    //data.measured_angle = atof(DCS::Control::IssueGenericCommandResponse(DCS::Control::UnitTarget::ESP301, { "2TP?" }).buffer);
+    // TODO : Channels not in the task also queue in the buffer?  
+    // TODO : Cout peaks in a separate thread if it gets slow in the live callback (FIFO Style as always =])
+    
+    DAQmxReadAnalogF64(taskHandle, -1, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, INTERNAL_SAMP_SIZE, &samples_per_channel, NULL);
 
-    DAQmxReadAnalogF64(taskHandle, nSamples, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, nSamples, &aread, NULL);
-
-    //memcpy(data.ptr, samples, INTERNAL_SAMP_SIZE * sizeof(f64));
     data.cr = DCS::Math::countArrayPeak(samples, INTERNAL_SAMP_SIZE, 0.2, 10.0, 0.0); // Copy data.cr
 
     // push to dcs
@@ -123,6 +141,13 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     if(DCS::Registry::CheckEvent(SV_EVT_DCS_DAQ_MCACountEvent))
     {
         pushToMCATask(data);
+    }
+
+    // push to clinometer display
+    if(DCS::Registry::CheckEvent(SV_EVT_DCS_DAQ_ClinometerEvent))
+    {
+        memcpy(data.ptr, samples, INTERNAL_SAMP_SIZE * sizeof(f64));
+        pushToClinometerEvt(data);
     }
 
     // NOTE : Maybe use named event to reduce cpu time finding event name
@@ -181,7 +206,7 @@ void DCS::DAQ::StartAIAcquisition(DCS::f64 samplerate)
         }
 
         // Always use the internal clock for continuous acquisition
-        SetupTask(&voltage_task, "OnBoardClock", voltage_task_rate, INTERNAL_SAMP_SIZE, VoltageEvent);
+        SetupTask(&voltage_task, "OnBoardClock", voltage_task_rate, INTERNAL_SAMP_SIZE / (i32)voltage_vcs.size(), VoltageEvent);
         StartTask(&voltage_task);
         voltage_task_timer.start();
         voltage_task_running = true;
@@ -248,6 +273,28 @@ DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastMCA_IVD()
     }
 }
 
+DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastClinometer_IVD()
+{
+    std::unique_lock<std::mutex> lck(cli_mtx);
+    
+    if(cli_task_data.empty())
+        cli_cv.wait(lck);
+
+    if(!cli_task_data.empty())
+    {
+        InternalVoltageData ivd = cli_task_data.front();
+        cli_task_data.pop();
+        return ivd;
+    }
+    else
+    {
+        // Notify unlock
+        InternalVoltageData ivd_nu;
+        ivd_nu.cr.num_detected = std::numeric_limits<u64>::max();
+        return ivd_nu;
+    }
+}
+
 DCS::u16 DCS::DAQ::GetMCANumChannels()
 {
     return MCA_NumChannels.load();
@@ -270,8 +317,16 @@ DCS::f64 DCS::DAQ::GetADCMaxInternalClock()
     return INTERNAL_ADC_MAX_CLK; 
 }
 
+DCS::Utils::BasicString DCS::DAQ::GetConnectedDevicesAliases()
+{
+    DCS::Utils::BasicString string;
+    DCS::DAQ::GetDevices(string.buffer, 512); // BUG: What if BasicString size changes?
+    return string;
+}
+
 void DCS::DAQ::NotifyUnblockEventLoop()
 {
     mca_cv.notify_one();
     dcs_cv.notify_one();
+    cli_cv.notify_one();
 }

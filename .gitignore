@@ -1,4 +1,5 @@
 # Leave visual studio settings out of the way
+.vscode/
 .vs/
 *.vcxproj
 *.vcxproj.filters

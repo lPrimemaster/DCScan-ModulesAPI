@@ -120,6 +120,12 @@ namespace DCS
 
         /**
          * \internal
+         * \brief Get all the system present devices.
+         */
+        DCS_INTERNAL_TEST void GetDevices(char* buffer, u32 size);
+
+        /**
+         * \internal
          * \brief Create a task via NIDAQmx API.
          */
         DCS_INTERNAL_TEST void CreateTask(InternalTask* t, const char* name);
@@ -165,6 +171,12 @@ namespace DCS
          * \brief Get last internal voltage data for the MCA system and pop from memory.
          */
         DCS_INTERNAL_TEST DCS::DAQ::InternalVoltageData GetLastMCA_IVD();
+
+        /**
+         * \internal
+         * \brief Get last internal voltage data for the Clinometer system and pop from memory.
+         */
+        DCS_INTERNAL_TEST DCS::DAQ::InternalVoltageData GetLastClinometer_IVD();
 
         /**
          * \internal

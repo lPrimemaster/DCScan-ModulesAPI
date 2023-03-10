@@ -21,12 +21,11 @@ add_library(DCSModuleCore ${LIB_TYPE}
   include/DCS_ModuleCore.h
   )
 
-#list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
-set(OPENSSL_ROOT_DIR "C:/Program Files (x86)/openssl")
-find_package(OpenSSL REQUIRED)
+# https://slproweb.com/download/Win64OpenSSL-1_1_1s.exe
+find_package(OpenSSL 1.1.1 REQUIRED)
+
 include_directories("${OPENSSL_INCLUDE_DIR}")
-
 target_link_libraries(DCSModuleCore DCSModuleUtils ${OPENSSL_LIBRARIES})
 
 set_target_properties(DCSModuleCore PROPERTIES
