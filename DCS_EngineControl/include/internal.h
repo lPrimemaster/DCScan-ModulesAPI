@@ -1,6 +1,7 @@
 #pragma once
 #include "../include/DCS_ModuleEngineControl.h"
 #include "../../DCS_Utils/include/DCS_ModuleUtils.h"
+#include "../../DCS_Core/include/internal.h"
 
 #include <Windows.h>
 #include <winusb.h>
@@ -418,5 +419,23 @@ namespace DCS
 			std::string response_buffer;
 		};
 #pragma warning( pop )
+	}
+
+	/**
+	 * \internal
+	 * \brief Position corrector utilities.
+	 */
+	namespace PositionCorrector
+	{
+		/**
+		 * \internal
+		 * \brief Parameters struct for the PID controller corrector.
+		 */
+		struct DCS_INTERNAL_TEST PIDParams
+		{
+			PIDParams(f64 Kp, f64 Ki, f64 Kd, f64 min, f64 max, f64 bias, i8 ax);
+			Core::PID pid;
+			i8 ax;
+		};
 	}
 }

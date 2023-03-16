@@ -202,33 +202,33 @@ namespace DCS
 											 DCS::u8* iv, DCS::u8* plain_out, DCS::u8* tag);
 	}
 
-	namespace Core // NOTE : Might deprecate this (using external firmware)
+	namespace Core
 	{
 		class DCS_INTERNAL_TEST PID
 		{
 		public:
-			PID(float min, float max, float Kp, float Kd, float Ki);
+			PID(f64 min, f64 max, f64 Kp, f64 Kd, f64 Ki);
 
-			void setTargetAndBias(float target, float bias);
+			void setTargetAndBias(f64 target, f64 bias);
 
-			float calculate(float value);
+			f64 calculate(f64 value);
 
-			float calculate(float value, float dt);
+			f64 calculate(f64 value, f64 dt);
 
 		private:
-			float min;
-			float max;
-			float Kp;
-			float Kd;
-			float Ki;
+			f64 min;
+			f64 max;
+			f64 Kp;
+			f64 Kd;
+			f64 Ki;
 
-			float dt;
+			f64 dt;
 
-			float target;
-			float bias;
+			f64 target;
+			f64 bias;
 
-			float le;
-			float integral;
+			f64 le;
+			f64 integral;
 
 			std::chrono::steady_clock::time_point last_point;
 		};

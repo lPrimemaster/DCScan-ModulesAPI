@@ -9,7 +9,7 @@
 #define NUM_OF_AXIS       4
 #define EIB_TCP_TIMEOUT   5000
 #define TIMESTAMP_PERIOD  1000   // us
-#define TRIGGER_PERIOD    500000 // us
+#define TRIGGER_PERIOD    100000 // us
 #define MAX_SRT_DATA      200
 
 static EIB7_HANDLE eib;

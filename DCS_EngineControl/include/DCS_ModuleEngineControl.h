@@ -95,6 +95,51 @@ namespace DCS
 		 */
 		DCS_REGISTER_CALL(DCS::Utils::BasicString, DCS::Control::UnitTarget, DCS::Utils::BasicString)
 		DCS_API DCS::Utils::BasicString IssueGenericCommandResponse(UnitTarget target, DCS::Utils::BasicString full_command);
+
+		/**
+		 * \brief Set the gain parameters for the controller PID and associate an encoder axis readout.
+		 * 
+		 * This requires an encoder to be connected to the engine. If the encoder is already present on the assembly, two options arise
+		 * Readout of the encoder value associated to using the custom made controller functions.
+		 * Readout of the encoder value associated to using internal closed loop controller funtions.
+		 *
+		 * \param target The stage to target.
+		 * \param group The name of the positioner for the XPS-RLD controller, or the axis number for the ESP301-G.
+		 * \param encoder_axis The number of the encoders' axis that is to controll this motion correction algorithm. Pass -1 to this field if you wish
+		 * to use the internal encoder directly from the ESP301-G or the XPS-RLD controllers.
+		 * \param Kp The constant gain of the PID.
+		 * \param Ki The integral gain of the PID.
+		 * \param Ki The differential gain of the PID.
+		 * 
+		 * 
+		 * \ingroup calls
+		 */
+		DCS_REGISTER_CALL(void, DCS::Control::UnitTarget, DCS::Utils::BasicString, DCS::i8, DCS::f64, DCS::f64, DCS::f64)
+		DCS_API void SetPIDControlVariables(UnitTarget target, DCS::Utils::BasicString group, i8 encoder_axis, f64 Kp, f64 Ki, f64 Kd);
+
+		/**
+		 * \brief Move the specified positioner group / axis according to the parameters set for the PID.
+		 *
+		 * This function sends a command to a controller using its commands.
+		 * See the ESP301-3G and PMC8742 controller manuals for the raw commands to send via this function.
+		 * 
+		 * Separate commands for the ESP301-3G controller's using semicolons.
+		 * The PMC8742 only supports non separated commands.
+		 * \todo Create a wrapper to emulate PMC8742 command separator via (;).
+		 * 
+		 * The part of the command responsible for requesting data can be anywhere in the command chain.
+		 *
+		 * \param target The stage to target.
+		 * \param group The name of the positioner for the XPS-RLD controller, or the axis number for the ESP301-G.
+		 * \param target_position The target absolution position to move to. 
+		 * 
+		 * \return The error between the target position and the actual encoder readout.
+		 * 
+		 * \ingroup calls
+		 */
+		DCS_REGISTER_CALL(DCS::f64, DCS::Control::UnitTarget, DCS::Utils::BasicString, DCS::f64)
+		DCS_API f64 MoveAbsolutePID(UnitTarget target, DCS::Utils::BasicString group, f64 target_position);
+
 	}
 }
 

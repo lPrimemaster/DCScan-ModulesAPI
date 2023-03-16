@@ -16,8 +16,12 @@ add_executable(EIBTest src/eib_test.cpp)
 # target_include_directories(EIBTest PRIVATE ${EIB7_INCLUDE_DIR})
 target_link_libraries(EIBTest DCSModuleUtils DCSModuleAcquisition) #${EIB7_LIBRARY})
 
+# PID Testing
+add_executable(PIDTest src/pid_test.cpp)
+target_link_libraries(PIDTest DCSModuleUtils DCSModuleAcquisition DCSModuleCore DCSModuleEngineControl)
+
 add_custom_target(CTARGETS)
-add_dependencies(CTARGETS EncoderPrecTest DAQLocalTest EIBTest)
+add_dependencies(CTARGETS EncoderPrecTest DAQLocalTest EIBTest PIDTest)
 
 # Copy the libs dll
 # add_custom_command(TARGET EncoderPrecTest 
