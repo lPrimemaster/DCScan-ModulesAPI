@@ -54,11 +54,27 @@ void DCS::ENC::InitEIB7Encoder(const char* hostname, i8 axes)
     
     if(CheckError(EIB7GetAxis(eib, axis, NUM_OF_AXIS, &numAxes))) return;
 
+    u32 timestampTicks;
+    if(CheckError(EIB7GetTimestampTicks(eib, &timestampTicks))) return;
+    u32 timestampPeriod = TIMESTAMP_PERIOD * timestampTicks;
+    if(CheckError(EIB7SetTimestampPeriod(eib, timestampPeriod))) return;
+
+    if(CheckError(EIB7AddDataPacketSection(packet, 0, EIB7_DR_Global, EIB7_PDF_TriggerCounter))) return;
+
+    // enable internal trigger (for now)
+    u32 timerTicks;
+    if(CheckError(EIB7GetTimerTriggerTicks(eib, &timerTicks))) return;
+    u32 timerPeriod = TRIGGER_PERIOD * timerTicks;
+    if(CheckError(EIB7SetTimerTriggerPeriod(eib, timerPeriod))) return;
+    if(CheckError(EIB7MasterTriggerSource(eib, EIB7_AT_TrgTimer))) return;
+
     // Init encoder axes for 1App
+    u32 packetIndex = 1;
     for(i32 i = 0; i < (i32)numAxes; i++)
     {
         if(!(axes & (1 << i))) continue;
-        if(CheckError(EIB7InitAxis(axis[i], // TODO: Change Vpp to uApp
+        LOG_DEBUG("Encoder setting up axis: X1%d...", i+1);
+        if(CheckError(EIB7InitAxis(axis[i],
                 EIB7_IT_Incremental_11u,
                 EIB7_EC_Rotary,
                 EIB7_RM_None,          /* reference marks not used */
@@ -73,30 +89,21 @@ void DCS::ENC::InitEIB7Encoder(const char* hostname, i8 axes)
                 EIB7_CT_Long          /* not used for incremental interface */
         ))) return;
 
-        u32 timestampTicks;
-        if(CheckError(EIB7GetTimestampTicks(eib, &timestampTicks))) return;
-        u32 timestampPeriod = TIMESTAMP_PERIOD * timestampTicks;
-        if(CheckError(EIB7SetTimestampPeriod(eib, timestampPeriod))) return;
         if(CheckError(EIB7SetTimestamp(axis[i], EIB7_MD_Enable))) return;
         if(CheckError(EIB7StartRef(axis[i], EIB7_RP_RefPos2))) return;
-
-        if(CheckError(EIB7AddDataPacketSection(packet, 0, EIB7_DR_Global, EIB7_PDF_TriggerCounter))) return;
-        if(CheckError(EIB7AddDataPacketSection(packet, 1, regions[i], EIB7_PDF_StatusWord | EIB7_PDF_PositionData | EIB7_PDF_Timestamp | EIB7_PDF_ReferencePos))) return;
-        if(CheckError(EIB7ConfigDataPacket(eib, packet, 2))) return;
-
-        // enable internal trigger (for now)
-        u32 timerTicks;
-        if(CheckError(EIB7GetTimerTriggerTicks(eib, &timerTicks))) return;
-        u32 timerPeriod = TRIGGER_PERIOD * timerTicks;
-        if(CheckError(EIB7SetTimerTriggerPeriod(eib, timerPeriod))) return;
-
+        
+        if(CheckError(EIB7AddDataPacketSection(packet, packetIndex++, regions[i], EIB7_PDF_StatusWord | EIB7_PDF_PositionData | EIB7_PDF_Timestamp | EIB7_PDF_ReferencePos))) return;
+        
         if(CheckError(EIB7AxisTriggerSource(axis[i], EIB7_AT_TrgTimer))) return;
-        if(CheckError(EIB7MasterTriggerSource(eib, EIB7_AT_TrgTimer))) return;
 
-        // enable SoftRealtime mode
-        if(CheckError(EIB7SelectMode(eib, EIB7_OM_SoftRealtime))) return;
+        LOG_DEBUG("Done!");
     }
     inited_axes = axes;
+
+    if(CheckError(EIB7ConfigDataPacket(eib, packet, packetIndex))) return;
+
+    // enable SoftRealtime mode
+    if(CheckError(EIB7SelectMode(eib, EIB7_OM_SoftRealtime))) return;
 }
 
 void DCS::ENC::StartEIB7SoftModeTrigger()
@@ -114,12 +121,13 @@ void DCS::ENC::EIB7SoftModeLoopStart(f64 sigperiods[NUM_OF_AXIS])
             u32 entries;
             void* field;
             u32 sz;
-            EncoderAxisData eadata;
-            EncoderData edata;
             f64 isigperiods[NUM_OF_AXIS] = {s0, s1, s2, s3};
 
             while(eib_loop_running.load())
             {
+                EncoderAxisData eadata;
+                EncoderData edata;
+
                 // Read FIFO with UDP
                 EIB7_ERR error = EIB7ReadFIFOData(eib, udp_data, 1, &entries, 0);
                 if(error == EIB7_FIFOOverflow)
@@ -127,11 +135,9 @@ void DCS::ENC::EIB7SoftModeLoopStart(f64 sigperiods[NUM_OF_AXIS])
                     LOG_WARNING("EIB7 FIFO queue overflow. Clearing.");
                     EIB7ClearFIFO(eib);
                 }
-
                 if(entries > 0)
                 {
                     edata.numAxis = 0;
-                    // TODO: Change this to numAxes. Don't waste cycles.
                     for(i32 i = 0; i < NUM_OF_AXIS; i++)
                     {
                         if(!(inited_axes & (1 << i))) continue;
@@ -182,11 +188,13 @@ void DCS::ENC::EIB7SoftModeLoopStart(f64 sigperiods[NUM_OF_AXIS])
                     }
 
                     if(edata.numAxis > 0)
+                    {
                         outbound_data_queue.push(edata);
+                    }
                 }
                 else
                 {
-                    static constexpr i32 spleeptime = TRIGGER_PERIOD / 10;
+                    static constexpr i64 spleeptime = TRIGGER_PERIOD / 10;
                     std::this_thread::sleep_for(std::chrono::microseconds(spleeptime));
                 }
             }
@@ -209,7 +217,7 @@ void DCS::ENC::EIB7SoftModeLoopStop()
     }
     else
     {
-        LOG_WARNING("Cant stop. EIB7 data loop not running.");
+        LOG_WARNING("Can't stop. EIB7 data loop not running.");
     }
 }
 

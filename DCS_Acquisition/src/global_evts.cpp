@@ -100,35 +100,19 @@ void DCS::DAQ::ClinometerEvent()
         {
             continue;
         }
-        
-
-        // Guardar os valores de saída aqui
-        // TODO: Falta colocar membros nesta estrutura (declarada no ficheiro DCS_ModuleAcquisition.h:88)
-             
 
         ClinometerEventData evt_data;
-        
-        const float max_angle = 10;
-        const float min_angle = -10;
-        float range_angle = max_angle - min_angle; 
+        constexpr f64 max_angle = 10.0;
+        constexpr f64 min_angle = -10.0;
+        constexpr f64 range_angle = max_angle - min_angle;
 
         for (int i = 0 ; i < 500 ; ++i)
         {
-            evt_data.list_cliX[i] = 0.2*ivd.ptr[i]*range_angle + min_angle;
-            evt_data.list_cliY[i] = 0.2*ivd.ptr[i+500]*range_angle + min_angle;
+            evt_data.list_cliX[i] = 0.2f*ivd.ptr[i]*range_angle + min_angle;
+            evt_data.list_cliY[i] = 0.2f*ivd.ptr[i+500]*range_angle + min_angle;
             
         }
         evt_data.timestamp = ivd.timestamp;
-        
-
-
-        // TODO
-        // Código para ler as samples do inclinómetro e fazer cálculos
-        // O array ivd.ptr tem os últimos 500 pontos digitalizados da daq em valor de tensão de 0 a 5V para cada eixo medido.
-        // i.e. ivd.ptr[0 a 499] = digit. Axis0, ivd.ptr[500 a 999] = digit. Axis1 (mesmo nome que no projeto DCScan-GUI)
-        // Também têm acesso ao tempo do primeiro valor do array através de ivd.timestamp, o tempo dos valores seguintes do array
-        // é calculado com base na taxa de aquisição, i.e. (se a taxa de aquisição for de 1000 amostras/s cada valor está espaçado
-        // 1/1000 s, caso seja necessário ter essa granularidade)
         
         DCS_EMIT_EVT((DCS::u8*)&evt_data, sizeof(ClinometerEventData)); // HACK : This can operate with a move ctor instead
     }

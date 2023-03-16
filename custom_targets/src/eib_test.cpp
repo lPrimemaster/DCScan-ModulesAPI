@@ -5,18 +5,28 @@
 int main()
 {
     using namespace DCS::ENC;
-    InitEIB7Encoder("10.80.0.99", 0b0001);
 
-    StartEIB7SoftModeTrigger();
+    // InitEIB7Encoder("10.80.0.99", 0b1010);
 
-    DCS::f64 f[] = {0, 0, 0, 5000.0};
-    EIB7SoftModeLoopStart(f);
-    
-    getchar();
+    // StartEIB7SoftModeTrigger();
 
-    EIB7SoftModeLoopStop();
+    DCS::f64 f[] = {36000.0, 36000.0, 36000.0, 36000.0};
+    // EIB7SoftModeLoopStart(f);
 
-    StopEIB7SoftModeTrigger();
+    Init("10.80.0.99", 0b1010, f);
 
-    DeleteEIB7Encoder();
+    while(true)
+    {
+        LOG_DEBUG("%d", InspectLastEncoderValues().numAxis);
+        LOG_DEBUG("%lf", InspectLastEncoderValues().axis[1].calpos);
+        if(getchar() == 's') break;
+    }
+
+    // EIB7SoftModeLoopStop();
+
+    // StopEIB7SoftModeTrigger();
+
+    // DeleteEIB7Encoder();
+
+    Terminate();
 }
