@@ -1,6 +1,10 @@
 #include "../include/internal.h"
 #include "../include/DCS_ModuleNetwork.h"
 
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include <ws2tcpip.h>
+#include <WinSock2.h>
+
 void DCS::Network::Init()
 {
 	if (!is_inited)

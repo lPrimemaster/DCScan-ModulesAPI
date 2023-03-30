@@ -4,6 +4,10 @@
 #include "../../DCS_Core/include/internal.h"
 #include "../../DCS_Utils/include/internal.h"
 
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include <ws2tcpip.h>
+#include <WinSock2.h>
+
 static DCS::Timer::SystemTimer cli_uptime;
 
 static DCS::i32 LevenshteinDistance(std::string s1, std::string s2)

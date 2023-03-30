@@ -254,6 +254,10 @@ DCS::ENC::EncoderData DCS::ENC::InspectLastEncoderValues()
     return data;
 }
 
+DCS::u32 DCS::ENC::GetTriggerPeriod()
+{
+    return TRIGGER_PERIOD;
+}
 
 void DCS::ENC::Init(const char* ip, i8 axis, f64 sigperiods[NUM_OF_AXIS])
 {
@@ -261,11 +265,14 @@ void DCS::ENC::Init(const char* ip, i8 axis, f64 sigperiods[NUM_OF_AXIS])
 
     StartEIB7SoftModeTrigger();
     
+    LOG_DEBUG("Starting encoder data gathering...");
     EIB7SoftModeLoopStart(sigperiods);
 }
 
 void DCS::ENC::Terminate()
 {
+    LOG_DEBUG("Stopping encoder data gathering...");
+
     EIB7SoftModeLoopStop();
 
     StopEIB7SoftModeTrigger();

@@ -48,14 +48,14 @@ enum class T
 
 namespace DCS
 {
-	typedef signed long long i64; ///< Equivalent to int_64t.
-	typedef unsigned long long u64; ///< Equivalent to uint_64t.
-	typedef signed long i32; ///< Equivalent to int_32t.
-	typedef unsigned long u32; ///< Equivalent to uint_32t.
-	typedef short i16; ///< Equivalent to int_16t.
-	typedef unsigned short u16; ///< Equivalent to uint_16t.
-	typedef signed char i8; ///< Equivalent to int_8t.
-	typedef unsigned char u8; ///< Equivalent to uint_8t.
+	typedef signed long long i64; ///< Equivalent to int64_t.
+	typedef unsigned long long u64; ///< Equivalent to uint64_t.
+	typedef signed long i32; ///< Equivalent to int32_t.
+	typedef unsigned long u32; ///< Equivalent to uint32_t.
+	typedef short i16; ///< Equivalent to int16_t.
+	typedef unsigned short u16; ///< Equivalent to uint16_t.
+	typedef signed char i8; ///< Equivalent to int8_t.
+	typedef unsigned char u8; ///< Equivalent to uint8_t.
 
 	typedef float f32; ///< Equivalent to float.
 	typedef double f64; ///< Equivalent to double.

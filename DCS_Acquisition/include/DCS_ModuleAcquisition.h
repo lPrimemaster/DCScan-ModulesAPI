@@ -252,6 +252,14 @@ namespace DCS
         DCS_API EncoderData InspectLastEncoderValues();
 
         /**
+         * \brief Returns The trigger period for the angular encoders in microseconds.
+         * 
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(DCS::u32)
+        DCS_API u32 GetTriggerPeriod();
+
+        /**
          * \brief Initializes the rotary encoder API.
          * \param ip The rotary encoder LAN ip address.
          * \param axis The axis to enable. Bit flags type: b0 - axis1, b1 - axis2, ... => e.g. 0b0101 enables axis 1 and 3

@@ -4,10 +4,6 @@
 #include "DCS_ModuleNetwork.h"
 #include "../config/registry.h"
 
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
-#include <WinSock2.h>
-#include <ws2tcpip.h>
-
 #include <atomic>
 #include <queue>
 
@@ -47,19 +43,17 @@
   */
 #define DCS_EMIT_EVT(data, size) DCS::Network::Message::EmitEvent(DCS::Registry::GetEvent(GET_F_NAME()), data, size)
 
+// TODO: This is not the best solution, but it is a solution
+extern "C" 
+{ 
+	typedef struct WSAData WSADATA;
+	typedef DCS::u64 SOCKET;
+}
+
 namespace DCS
 {
 	namespace Network
 	{
-		/**
-		 * \internal
-		 * \brief Holds windows WSA data.
-		 */
-		struct DCS_INTERNAL_TEST WindowsSocketInformation
-		{
-			WSADATA wsa;
-		};
-
 		inline static bool is_inited = false;
 
 		/**

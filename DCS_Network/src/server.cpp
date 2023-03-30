@@ -2,6 +2,11 @@
 #include "../include/internal.h"
 #include "../../DCS_Utils/include/internal.h"
 #include "../../DCS_Core/include/internal.h"
+
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include <ws2tcpip.h>
+#include <WinSock2.h>
+
 #include <vector>
 #include <future>
 
