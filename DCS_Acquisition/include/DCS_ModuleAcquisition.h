@@ -269,8 +269,8 @@ namespace DCS
             i64 ref[2];          //< Reference position values
         };
 
-        /* 
-         *  \brief Struct for encoder soft realtime mode data (all axes).
+        /** 
+         * \brief Struct for encoder soft realtime mode data (all axes).
          */
         struct DCS_API EncoderData
         {
