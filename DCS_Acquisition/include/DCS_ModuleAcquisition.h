@@ -255,8 +255,8 @@ namespace DCS
      */
     namespace ENC
     {
-        /* 
-         *  \brief Struct for encoder soft realtime mode data (per axis).
+        /** 
+         * \brief Struct for encoder soft realtime mode data (per axis).
          */
         struct DCS_API EncoderAxisData
         {
