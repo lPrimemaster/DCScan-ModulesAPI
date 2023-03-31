@@ -142,22 +142,7 @@ bool DCS::Network::Client::StartThread(Socket connection)
 					{
 					case DCS::Network::Message::InternalOperation::NO_OP:
 					{
-						// Latency check update every 10 sec
-						//auto now = DCS::Timer::GetTimestamp(timer);
-						//server_latency_ms.store((now.millis - ts.millis + (now.sec - ts.sec) * 1000));
-
-						//// FIXME : FIX Keep Alive!
-						//// causing socket send error
-						//nblock = std::async(std::launch::async, [&]() {
-						//	// Heartbeat for 10 seconds to keepalive
-						//	std::this_thread::sleep_for(std::chrono::seconds{ 10 });
-						//	if (client_running.load())
-						//	{
-						//		u8 dd = 0x0;
-						//		Message::SendAsync(Message::Operation::NO_OP, &dd, 1);
-						//		ts = DCS::Timer::GetTimestamp(timer);
-						//	}
-						//});
+						;
 					}
 					break;
 					case DCS::Network::Message::InternalOperation::ASYNC_RESPONSE:

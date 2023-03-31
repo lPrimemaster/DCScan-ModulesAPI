@@ -39,6 +39,9 @@ static std::queue<DCS::DAQ::InternalVoltageData> cli_task_data;
 static std::mutex cli_mtx;
 static std::condition_variable cli_cv;
 
+static DCS::DAQ::InternalTask count_task;
+static bool count_task_running = false;
+
 static DCS::u64 us_timestamp;
 #define INTERNAL_SAMP_US INTERNAL_SAMP_SIZE * 1000000ULL
 
@@ -51,8 +54,6 @@ static std::atomic<DCS::u16> MCA_NumChannels = 2048;
 //static DCS::Memory::CircularBuffer crb(INTERNAL_SAMP_SIZE, 32);
 
 // TODO : Create a global SendErrorToClient (also, check if it is being called from server-side only)
-
-// TODO : Make the pushTo* functions to copy the data only once for all the tasks
 
 static void pushToDCSTask(DCS::DAQ::InternalVoltageData& data)
 {
@@ -107,9 +108,6 @@ static void TerminateAITask()
 }
 
 // NOTE : This works because only one channel is being used. If more channels are used, this needs to be refactored.
-
-//DAQmxCreateAIVoltageChan(TaskHandle taskHandle, "Dev1/ai0:1", nameToAssignToChannel , DAQmx_Val_RSE , 0.0 , 1000.0 , DAQmx_Val_Volts , NULL);
-
 DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData)
 {
     InternalVoltageData data;
@@ -229,6 +227,22 @@ void DCS::DAQ::StopAIAcquisition()
         LOG_ERROR("Error stopping AI Acquisition: VoltageAI task is not running.");
 }
 
+void DCS::DAQ::StartDIAcquisition(DCS::f64 samplerate)
+{
+    // TODO
+    // if(!count_task_running)
+    // {
+    //     CreateTask(&count_task, "T_DI");
+    //     LOG_DEBUG("Sample rate set to: %.2f S/s.", samplerate);
+    // }
+}
+
+void DCS::DAQ::StopDIAcquisition()
+{
+    // TODO
+    // ClearTask(&count_task);
+}
+
 DCS::DAQ::InternalVoltageData DCS::DAQ::GetLastDCS_IVD()
 {
     std::unique_lock<std::mutex> lck(dcs_mtx);
@@ -320,7 +334,7 @@ DCS::f64 DCS::DAQ::GetADCMaxInternalClock()
 DCS::Utils::BasicString DCS::DAQ::GetConnectedDevicesAliases()
 {
     DCS::Utils::BasicString string;
-    DCS::DAQ::GetDevices(string.buffer, 512); // BUG: What if BasicString size changes?
+    DCS::DAQ::GetDevices(string.buffer, sizeof(string.buffer));
     return string;
 }
 

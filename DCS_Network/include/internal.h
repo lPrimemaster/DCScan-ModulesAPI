@@ -43,7 +43,6 @@
   */
 #define DCS_EMIT_EVT(data, size) DCS::Network::Message::EmitEvent(DCS::Registry::GetEvent(GET_F_NAME()), data, size)
 
-// TODO: This is not the best solution, but it is a solution
 extern "C" 
 { 
 	typedef struct WSAData WSADATA;

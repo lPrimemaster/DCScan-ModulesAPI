@@ -161,6 +161,28 @@ namespace DCS
         DCS_REGISTER_CALL(void)
         DCS_API void StopAIAcquisition();
 
+        /**
+         * \brief Starts the DI (Digital Input) data acquisition.
+         * 
+         * All the added channels will start to acquire its value to the SV_EVT_DCS_DAQ_CountEvent event. 
+         * 
+         * \param samplerate The sample rate to use for all channels combined.
+         * 
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(void, DCS::f64)
+        DCS_API void StartDIAcquisition(DCS::f64 samplerate);
+
+        /**
+         * \brief Stops the DI (Digital Input) data acquisition.
+         * 
+         * All the added channels will start to acquire its value to the SV_EVT_DCS_DAQ_CountEvent event. 
+         * 
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(void)
+        DCS_API void StopDIAcquisition();
+
 
         /**
          * \brief Retreives the number of channels outputing from the MCA event counter.
@@ -185,8 +207,6 @@ namespace DCS
         /**
          * \brief Returns the maximum clock speed allowed by the ADC.
          * 
-         * \param nChannels The number of channels to attribute. Must be smaller than INTERNAL_ADC_MAX_CHAN.
-         * 
          * \ingroup calls
          */
         DCS_REGISTER_CALL(DCS::f64)
@@ -200,15 +220,32 @@ namespace DCS
         DCS_REGISTER_CALL(DCS::Utils::BasicString)
         DCS_API DCS::Utils::BasicString GetConnectedDevicesAliases();
 
-        // TODO : Document
+        /**
+         * \brief Callback whenever there is a count event with n counts.
+         * Triggered every buffersize / samplerate set in the task setup.
+         * 
+         * \ingroup events
+         */
         DCS_REGISTER_EVENT
         DCS_API void DCSCountEvent();
 
-        // TODO : Document
+        /**
+         * \brief Callback whenever there is a count event with n counts but in MCA mode.
+         * Triggered every buffersize / samplerate set in the task setup.
+         * 
+         * \param mca_num_channels The number of channels in the MCA. Must be less or equal to INTERNAL_ADC_MAX_CHAN.
+         * 
+         * \ingroup events
+         */
         DCS_REGISTER_EVENT
         DCS_API void MCACountEvent(u16 mca_num_channels);
 
-        // TODO : Document
+        /**
+         * \brief Callback whenever there is a angle readout event with n counts.
+         * Triggered every buffersize / samplerate set in the task setup.
+         * 
+         * \ingroup events
+         */
         DCS_REGISTER_EVENT
         DCS_API void ClinometerEvent();
     }
