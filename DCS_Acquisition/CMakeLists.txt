@@ -10,26 +10,38 @@ message(STATUS "LIBRARY INSTALL BIN LOCATION: ${INSTALL_LIB_DIR}")
 
 set_pretty_filenames()
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/")
+
+find_package(LibNIDAQmx REQUIRED)
+
+find_package(EIB7)
+
+if(EIB7_FOUND)
+  set(ENCODER_SRC "src/encoder.cpp")
+else()
+  message(STATUS "Configuring without EIB7 encoder support.")
+  set(ENCODER_SRC "")
+endif()
+
 add_library(DCSModuleAcquisition ${LIB_TYPE}
   src/daq.cpp
   src/external_cmds.cpp
   src/global_evts.cpp
-  src/encoder.cpp
+  ${ENCODER_SRC}
 
   ../config/exports.h
   include/DCS_ModuleAcquisition.h
   include/internal.h
   )
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/")
-
-find_package(LibNIDAQmx REQUIRED)
-
-find_package(EIB7 REQUIRED)
-
-include_directories("${LIBNIDAQMX_INCLUDE_DIR}" "${EIB7_INCLUDE_DIR}")
-
-target_link_libraries(DCSModuleAcquisition DCSModuleUtils DCSModuleNetwork "${LIBNIDAQMX_LIBRARY}" "${EIB7_LIBRARY}")
+if(EIB7_FOUND)
+  include_directories("${LIBNIDAQMX_INCLUDE_DIR}" "${EIB7_INCLUDE_DIR}")
+  target_link_libraries(DCSModuleAcquisition DCSModuleUtils DCSModuleNetwork "${LIBNIDAQMX_LIBRARY}" "${EIB7_LIBRARY}")
+else()
+  include_directories("${LIBNIDAQMX_INCLUDE_DIR}")
+  target_compile_definitions(DCSModuleAcquisition PUBLIC -DNO_ENCODER_AVAILABLE)
+  target_link_libraries(DCSModuleAcquisition DCSModuleUtils DCSModuleNetwork "${LIBNIDAQMX_LIBRARY}")
+endif()
 
 set_target_properties(DCSModuleAcquisition PROPERTIES
   PUBLIC_HEADER "include/DCS_ModuleAcquisition.h"

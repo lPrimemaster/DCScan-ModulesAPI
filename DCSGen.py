@@ -3,6 +3,7 @@ import os
 import fnmatch
 from pathlib import Path
 import re
+import sys
 
 # WARNING : This file is undocumented and it is advised not to edit its contents unless you know what you are doing.
 # Erroneous edits can cause a DCSModules-API compile error.
@@ -400,7 +401,47 @@ void DCS::Registry::SVParams::cpyArgToBuffer(unsigned char* buffer, u8* value, u
 
 '''
 
-def cleanFiles():
+def handleArgs():
+	if len(sys.argv) != 2:
+		print('DCSGen.py requires 1 argument to run!') # Just inform before a crash ...
+	return sys.argv[1].split(';')
+
+# Return lines to skip on the block (or not) [start, stop]
+def checkBlockActive(content: list[str], compdef: list[str]):
+	if content[0].startswith('#ifndef'):
+		if content[1].startswith('#define'):
+			return (0, 0) # Ignore header guards
+		start_ignore = 0
+		if content[0].split(' ')[-1].strip() not in compdef:
+			for i, line in enumerate(content[1:]):
+				if line.startswith('#else'):
+					start_ignore = i + 1
+				elif line.startswith('#endif'):
+					return (start_ignore, i + 1)
+		else:
+			for i, line in enumerate(content[1:]):
+				if line.startswith('#else'):
+					return (start_ignore, i + 1)
+				elif line.startswith('#endif'):
+					return (start_ignore, i + 1)
+	elif content[0].startswith('#ifdef'):
+		start_ignore = 0
+		if content[0].split(' ')[-1].strip() in compdef:
+			for i, line in enumerate(content[1:]):
+				if line.startswith('#else'):
+					start_ignore = i + 1
+				elif line.startswith('#endif'):
+					return (start_ignore, i + 1)
+		else:
+			for i, line in enumerate(content[1:]):
+				if line.startswith('#else'):
+					return (start_ignore, i + 1)
+				elif line.startswith('#endif'):
+					return (start_ignore, i + 1)
+	return (0, 0)
+
+
+def cleanFiles(compdef: list[str]):
 	blst = []
 	for fnm in filenames:
 		lst = []
@@ -412,10 +453,21 @@ def cleanFiles():
 
 		# Clean file up
 		# Remove comments and includes
-		for v in lst:
-			ns = v.lstrip().replace('\n', '')
+		i = 0
+		while i < len(lst):
+			ns = lst[i].lstrip().replace('\n', '')
+			i += 1
 
 			if not ns:
+				continue
+
+			blk_skip_start, blk_skip_stop = checkBlockActive(lst[i-1:], compdef)
+
+			# Are there lines to skip
+			if blk_skip_stop != 0:
+				print(f'in file: {fnm}')
+				print(f'Deleting lines {i-1+blk_skip_start}:{i-1+blk_skip_stop}')
+				del lst[i-1+blk_skip_start:i-1+blk_skip_stop]
 				continue
 
 			if(ns.startswith('/*') or ns.startswith('*') or ns.startswith('//') or ns.startswith('#')):
@@ -487,7 +539,10 @@ def getTokenSymbols(all_files):
 				evt_name.append(evt_f_name.replace('::', '_'))
 	return func, return_type, header_def, args_name, evt_name, evt_func
 
-cFiles = cleanFiles()
+compdef = handleArgs()
+print('Found definitions:')
+pp.pprint(compdef)
+cFiles = cleanFiles(compdef)
 func, return_type, header_def, args_name, evt_name, evt_func = getTokenSymbols(cFiles)
 
 #pp.pprint(cFiles)
