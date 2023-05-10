@@ -255,6 +255,18 @@ namespace DCS
      */
     namespace ENC
     {
+#ifdef NO_ENCODER_AVAILABLE
+        /** 
+         * \brief Allows the frontend to know if the standalone encoder is available.
+         */
+        static constexpr bool IS_AVAILABLE = false;
+        
+#else
+        /** 
+         * \brief Allows the frontend to know if the standalone encoder is available.
+         */
+        static constexpr bool IS_AVAILABLE = true;
+
         /** 
          * \brief Struct for encoder soft realtime mode data (per axis).
          */
@@ -308,6 +320,7 @@ namespace DCS
          * \brief Cleans up the rotary encoder API.
          */
         DCS_API void Terminate();
+#endif //ENCODER_AVAILABLE
     }
 }
 

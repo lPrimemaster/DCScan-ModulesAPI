@@ -27,6 +27,7 @@ DCS::Utils::BasicString DCS::Control::IssueGenericCommandResponse(UnitTarget tar
 
 void DCS::Control::SetPIDControlVariables(UnitTarget target, DCS::Utils::BasicString group, i8 encoder_axis, f64 Kp, f64 Ki, f64 Kd)
 {
+#ifndef NO_ENCODER_AVAILABLE
 	// Just overwrite the old pid system. This will delete the integral term, but maybe that can be
 	// a plus when testing some values for the gains.
 	pid_targets.insert_or_assign(std::to_string(static_cast<int>(target)) + group.buffer, PositionCorrector::PIDParams(Kp, Ki, Kd, -50.0, 50.0, 0.0, encoder_axis));
@@ -34,10 +35,14 @@ void DCS::Control::SetPIDControlVariables(UnitTarget target, DCS::Utils::BasicSt
 
 	// TODO: Check if the encoder_axis is available (if != -1)
 	// TODO: Check if the target+group is available
+#else
+	LOG_ERROR("SetPIDControlVariables does not work without an external encoder and ENCODER_AVAILABLE is undefined.");
+#endif //ENCODER_AVAILABLE
 }
 
 void DCS::Control::MoveAbsolutePID(UnitTarget target, DCS::Utils::BasicString group, f64 target_position)
 {
+#ifndef NO_ENCODER_AVAILABLE
 	std::string target_id = std::to_string(static_cast<int>(target)) + group.buffer;
 	auto pid_target_it = pid_targets.find(target_id);
 	if(pid_target_it == pid_targets.end())
@@ -104,6 +109,9 @@ void DCS::Control::MoveAbsolutePID(UnitTarget target, DCS::Utils::BasicString gr
 		pid_targets_working[target_id] = false;
 		MoveAbsolutePIDChanged({target, group, PIDStatus::READY});
 	}).detach();
+#else
+	LOG_ERROR("MoveAbsolutePID does not work without an external encoder and ENCODER_AVAILABLE is undefined.");
+#endif //ENCODER_AVAILABLE
 }
 
 void DCS::Control::MoveAbsolutePIDChanged(PIDStatusGroup status_group)
