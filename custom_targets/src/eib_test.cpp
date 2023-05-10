@@ -4,6 +4,7 @@
 
 int main()
 {
+#ifndef NO_ENCODER_AVAILABLE
     using namespace DCS::ENC;
 
     // InitEIB7Encoder("10.80.0.99", 0b1010);
@@ -29,4 +30,6 @@ int main()
     // DeleteEIB7Encoder();
 
     Terminate();
+#endif // NO_ENCODER_AVAILABLE
+    return 0;
 }

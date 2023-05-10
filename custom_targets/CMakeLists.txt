@@ -1,3 +1,12 @@
+# Propagate target definitions to the custom executables build step
+foreach(t ${CONF_TARGETS})
+  get_target_property(TDef ${t} COMPILE_DEFINITIONS)
+  if(TDef)
+    foreach(d ${TDef})
+      add_definitions("-D${d}")
+    endforeach()
+  endif()
+endforeach()
 
 # Encoder test precision client target
 # Builds an executable to test engine precision
