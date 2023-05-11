@@ -53,5 +53,7 @@ install(TARGETS DCSModuleAcquisition
   RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
   LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT lib
   ARCHIVE DESTINATION "${INSTALL_LIB_DIR}" COMPONENT lib
-  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/DCS_Acquisition/include"
   COMPONENT dev)
+
+# Install modified headers
+install(FILES "${CMAKE_BINARY_DIR}/gen/DCS_Acquisition/include/DCS_ModuleAcquisition.h" DESTINATION "${INSTALL_INCLUDE_DIR}/DCS_Acquisition/include")
