@@ -129,7 +129,7 @@ endforeach()
 list(APPEND TARGET_DEFINES_DCSGEN "SOURCE_PATH_SIZE")
 
 # Tell CMake to run python from the directory where this CMakeLists file exists.
-execute_process(COMMAND python DCSGen.py "${TARGET_DEFINES_DCSGEN}"
+execute_process(COMMAND python scripts/DCSGen.py "${TARGET_DEFINES_DCSGEN}"
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 
 # =================== #
@@ -183,6 +183,18 @@ if(BUILD_TESTS AND NOT CI_DOC_GENERATE)
   # Do not add to doxygen target
   add_subdirectory(tests)
 endif()
+
+# ================================ #
+# Start install_configure.py setup #
+# ================================ #
+
+# This could be done after build as well
+execute_process(COMMAND python scripts/install_configure.py "${TARGET_DEFINES_DCSGEN}" "${CMAKE_BINARY_DIR}"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+
+# ============================== #
+# End install_configure.py setup #
+# ============================== #
 
 message(STATUS "CML Sources: ${CMAKE_LIBS_SOURCE_DIR}")
 
