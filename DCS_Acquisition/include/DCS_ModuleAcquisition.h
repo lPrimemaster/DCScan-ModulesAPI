@@ -260,7 +260,6 @@ namespace DCS
          * \brief Allows the frontend to know if the standalone encoder is available.
          */
         static constexpr bool IS_AVAILABLE = false;
-        
 #else
         /** 
          * \brief Allows the frontend to know if the standalone encoder is available.
