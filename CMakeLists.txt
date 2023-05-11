@@ -118,16 +118,6 @@ foreach(t ${CONF_TARGETS})
   endif()
 endforeach()
 
-# Fix: This is not working properly (why?)
-# get_directory_property(TDef ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS)
-# message(STATUS ${TDef})
-# if(TDef)
-#   foreach(d ${TDef})
-#     list(APPEND TARGET_DEFINES_DCSGEN ${d})
-#   endforeach()
-# endif()
-list(APPEND TARGET_DEFINES_DCSGEN "SOURCE_PATH_SIZE")
-
 # Tell CMake to run python from the directory where this CMakeLists file exists.
 execute_process(COMMAND python scripts/DCSGen.py "${TARGET_DEFINES_DCSGEN}"
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
