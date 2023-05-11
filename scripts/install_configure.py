@@ -71,5 +71,3 @@ if __name__ == '__main__':
             w.writelines(lst)
         if mod:
             print('Modified file: ' + ''.join(match.groups()))
-        
-
