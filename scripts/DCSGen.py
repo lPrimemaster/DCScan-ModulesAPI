@@ -4,6 +4,7 @@ import fnmatch
 from pathlib import Path
 import re
 import sys
+from common import checkBlockActive
 
 # WARNING : This file is undocumented and it is advised not to edit its contents unless you know what you are doing.
 # Erroneous edits can cause a DCSModules-API compile error.
@@ -17,9 +18,9 @@ curr_dir = os.getcwd()
 
 filenames = []
 for root, dirs, files in os.walk(curr_dir):
-     for file in files:
-     	if fnmatch.fnmatch(file, '*.h') and not any(x in root for x in ['build', 'install', 'submodules', 'tests', 'config']):
-     		filenames.append(os.path.join(root, file))
+	 for file in files:
+	 	if fnmatch.fnmatch(file, '*.h') and not any(x in root for x in ['build', 'install', 'submodules', 'tests', 'config']):
+	 		filenames.append(os.path.join(root, file))
 
 print('Processing files...')
 pp.pprint(filenames)
@@ -98,11 +99,11 @@ namespace DCS {
 		struct SVParams;
 		struct SVReturn;
 
-        /**
-         * \\brief Get a function id [SV_CALL_*] by function name.
-         * Syntax: ["ns::func"]
-         * Example: "DCS::Threading::GetMaxHardwareConcurrency" -> Returns: SV_CALL_DCS_Threading_GetMaxHardwareConcurrency
-         */
+		/**
+		 * \\brief Get a function id [SV_CALL_*] by function name.
+		 * Syntax: ["ns::func"]
+		 * Example: "DCS::Threading::GetMaxHardwareConcurrency" -> Returns: SV_CALL_DCS_Threading_GetMaxHardwareConcurrency
+		 */
 		static DCS_API const u16 Get(const char* func_signature)
 		{
 			u16 val = 0;
@@ -114,45 +115,45 @@ namespace DCS {
 			return val;
 		}
 
-        typedef void (*EventCallbackFunc)(u8* data, u8* userData);
+		typedef void (*EventCallbackFunc)(u8* data, u8* userData);
 
-        /**
-         * \\brief Set up event to subscribe by ID SV_EVT_*.
-         */
-        static DCS_API const i32 SetupEvent(unsigned char* buffer, u8 id, EventCallbackFunc f, u8* userData = nullptr)
-        {
-            memcpy(buffer, &id, sizeof(u8));
+		/**
+		 * \\brief Set up event to subscribe by ID SV_EVT_*.
+		 */
+		static DCS_API const i32 SetupEvent(unsigned char* buffer, u8 id, EventCallbackFunc f, u8* userData = nullptr)
+		{
+			memcpy(buffer, &id, sizeof(u8));
 
-            evt_callbacks.emplace(id, f);
+			evt_callbacks.emplace(id, f);
 			evt_userData.emplace(id, userData);
 
-            return sizeof(u8);
-        }
+			return sizeof(u8);
+		}
 
-        /**
-         * \\brief Set up event to unsubscribe by ID SV_EVT_*.
-         */
-        static DCS_API const i32 RemoveEvent(unsigned char* buffer, u8 id)
-        {
-            memcpy(buffer, &id, sizeof(u8));
+		/**
+		 * \\brief Set up event to unsubscribe by ID SV_EVT_*.
+		 */
+		static DCS_API const i32 RemoveEvent(unsigned char* buffer, u8 id)
+		{
+			memcpy(buffer, &id, sizeof(u8));
 
 			if (id <= MAX_SUB)
 			{
-            	evt_callbacks.erase(id);
+				evt_callbacks.erase(id);
 				evt_userData.erase(id);
 			}
 
-            return sizeof(u8);
-        }
+			return sizeof(u8);
+		}
 
 		// HACK : GetEventCallback might fail in index referencing.
-        static DCS_API const EventCallbackFunc GetEventCallback(u8 id)
-        {
-            if (id <= MAX_SUB)
-                return evt_callbacks.at(id);
-            LOG_ERROR("Event id -> %d. No callback found.", id);
-            return nullptr;
-        }
+		static DCS_API const EventCallbackFunc GetEventCallback(u8 id)
+		{
+			if (id <= MAX_SUB)
+				return evt_callbacks.at(id);
+			LOG_ERROR("Event id -> %d. No callback found.", id);
+			return nullptr;
+		}
 
 		static DCS_API const bool CheckEvent(u8 id)
 		{
@@ -232,7 +233,7 @@ namespace DCS {
 			$8
 		};
 
-        inline static std::unordered_map<u8, EventCallbackFunc> evt_callbacks;
+		inline static std::unordered_map<u8, EventCallbackFunc> evt_callbacks;
 		inline static std::unordered_map<u8, u8*> evt_userData;
 
 	public:
@@ -263,7 +264,7 @@ namespace DCS {
 				T rv;
 				try 
 				{
-				    rv = std::any_cast<T>(args.at(i));
+					rv = std::any_cast<T>(args.at(i));
 				}
 				catch(const std::bad_any_cast& e) 
 				{
@@ -297,17 +298,17 @@ namespace DCS {
 				i32 it = sizeof(u16);
 				memcpy(buffer, &fcode, sizeof(u16));
 
-                if(p.size() > 0)
+				if(p.size() > 0)
 				{
-				    switch(fcode)
-				    {
-					    $9
-					    default:
-						    LOG_ERROR("GetDataFromParams() function code (fcode) not found.");
-						    LOG_ERROR("Maybe function signature naming is invalid, or function does not take any arguments.");
-						    break;
-				    }
-                }
+					switch(fcode)
+					{
+						$9
+						default:
+							LOG_ERROR("GetDataFromParams() function code (fcode) not found.");
+							LOG_ERROR("Maybe function signature naming is invalid, or function does not take any arguments.");
+							break;
+					}
+				}
 
 				return it;
 			}
@@ -378,7 +379,7 @@ DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 	u16 fcode = params.getFunccode();
 
 	if(fcode < MAX_CALL)
-    	LOG_DEBUG("Executing function code -> %d (%s)", fcode, r_id_debug[fcode]);
+		LOG_DEBUG("Executing function code -> %d (%s)", fcode, r_id_debug[fcode]);
 	switch(fcode)
 	{
 	case SV_CALL_NULL:
@@ -406,41 +407,6 @@ def handleArgs():
 		print('DCSGen.py requires 1 argument to run!') # Just inform before a crash ...
 	return sys.argv[1].split(';')
 
-# Return lines to skip on the block (or not) [start, stop]
-def checkBlockActive(content: list[str], compdef: list[str]):
-	if content[0].startswith('#ifndef'):
-		if content[1].startswith('#define'):
-			return (0, 0) # Ignore header guards
-		start_ignore = 0
-		if content[0].split(' ')[-1].strip() not in compdef:
-			for i, line in enumerate(content[1:]):
-				if line.startswith('#else'):
-					start_ignore = i + 1
-				elif line.startswith('#endif'):
-					return (start_ignore, i + 1)
-		else:
-			for i, line in enumerate(content[1:]):
-				if line.startswith('#else'):
-					return (start_ignore, i + 1)
-				elif line.startswith('#endif'):
-					return (start_ignore, i + 1)
-	elif content[0].startswith('#ifdef'):
-		start_ignore = 0
-		if content[0].split(' ')[-1].strip() in compdef:
-			for i, line in enumerate(content[1:]):
-				if line.startswith('#else'):
-					start_ignore = i + 1
-				elif line.startswith('#endif'):
-					return (start_ignore, i + 1)
-		else:
-			for i, line in enumerate(content[1:]):
-				if line.startswith('#else'):
-					return (start_ignore, i + 1)
-				elif line.startswith('#endif'):
-					return (start_ignore, i + 1)
-	return (0, 0)
-
-
 def cleanFiles(compdef: list[str]):
 	blst = []
 	for fnm in filenames:
@@ -461,14 +427,8 @@ def cleanFiles(compdef: list[str]):
 			if not ns:
 				continue
 
-			blk_skip_start, blk_skip_stop = checkBlockActive(lst[i-1:], compdef)
-
-			# Are there lines to skip
-			if blk_skip_stop != 0:
-				print(f'in file: {fnm}')
-				print(f'Deleting lines {i-1+blk_skip_start}:{i-1+blk_skip_stop}')
-				del lst[i-1+blk_skip_start:i-1+blk_skip_stop]
-				continue
+			plist = checkBlockActive(lst[i-1:], compdef)
+			if plist: lst[i-1:] = plist
 
 			if(ns.startswith('/*') or ns.startswith('*') or ns.startswith('//') or ns.startswith('#')):
 				continue

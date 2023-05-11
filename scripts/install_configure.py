@@ -9,27 +9,7 @@ import fnmatch
 from pathlib import Path
 import re
 import sys
-
-# Return lines to skip on the block (or not) [start, stop]
-def checkBlockActive(content: list[str], compdef: list[str]):
-    if (content[0].startswith('#ifdef') or content[0].startswith('#ifndef')) and not content[1].startswith('#define'):
-        if content[0].startswith('#ifdef'):
-            if content[0].split()[-1].strip() in compdef:
-                rgroup = r'\2'
-            else:
-                rgroup = r'\3'
-        else:
-            if content[0].split()[-1].strip() in compdef:
-                rgroup = r'\3'
-            else:
-                rgroup = r'\2'
-        
-        new_str = re.sub('#ifn?def +(.*?)\n(.*?)#else(.*?)(#endif.*?\n)', rgroup, ''.join(content), flags=re.DOTALL)
-
-        return new_str.splitlines(keepends=True)
-    return []
-        
-        
+from common import checkBlockActive
 
 if __name__ == '__main__':
     compdef = sys.argv[1].split(';')
@@ -52,7 +32,7 @@ if __name__ == '__main__':
         with open(fnm, 'r') as f:
             lst = f.readlines()
         mod = False
-        i = 0
+        i = 1 # Ignore header guards
         while i < len(lst):
             nline = lst[i].lstrip().replace('\n', '')
             i += 1
