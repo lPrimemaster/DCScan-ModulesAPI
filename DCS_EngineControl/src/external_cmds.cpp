@@ -55,7 +55,6 @@ void DCS::Control::MoveAbsolutePID(UnitTarget target, DCS::Utils::BasicString gr
 		return;
 	}
 
-	// TODO: Monitor the process until it is done & Disallow simultaneous pid movements for the same target-group
 	// TODO: This needs a tweak for longer span (> .01 deg) movements, since they are less accurate (tend to overshoot)
 	// NOTE: There seems to be a drift in motion after the mechanical activation (lasts for about ?? mins)
 
