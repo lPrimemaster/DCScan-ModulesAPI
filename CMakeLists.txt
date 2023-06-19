@@ -36,13 +36,6 @@ endfunction()
 
 set_pretty_filenames()
 
-#file(GLOB_RECURSE files "*.cpp" "*.h")
-#foreach(f IN ${files})
-#	string(LENGTH "${CMAKE_SOURCE_DIR}/" SOURCE_PATH_SIZE)
-#	set_source_files_properties(f COMPILE_DEFINITIONS __SPS__=SOURCE_PATH_SIZE)
-#endforeach()
-
-
 # Enable testing (DISABLE THIS FOR RELEASE)
 option(BUILD_TESTS "Build tests" OFF)
 option(INTERNAL_DOCS "Generate internal documentation" OFF)
@@ -90,13 +83,13 @@ include_directories(
 
 # Add sub-directories (These are the libraries basically)
 if(NOT CI_DOC_GENERATE)
+  set(CONF_TARGETS DCSModuleAcquisition DCSModuleEngineControl DCSModuleUtils DCSModuleCore DCSModuleNetwork)
   add_libTargetSubDir(DCS_Network)
   add_libTargetSubDir(DCS_EngineControl)
   add_libTargetSubDir(DCS_Utils)
   add_libTargetSubDir(DCS_Core)
   add_libTargetSubDir(DCS_Acquisition)
-  set(CONF_TARGETS DCSModuleAcquisition DCSModuleEngineControl DCSModuleUtils DCSModuleCore DCSModuleNetwork)
-  
+
   # Add custom targets
   add_subdirectory(custom_targets)
 else()
@@ -113,8 +106,20 @@ string (REPLACE ";" " " CMAKE_LIBS_SOURCE_DIR "${CMAKE_LIBS_SOURCE_DIR}")
 # Start DCSGen.py setup #
 # ===================== #
 
+# DCSGen.py needs to know what portions of the code are disabled when generating
+set(TARGET_DEFINES_DCSGEN "")
+foreach(t ${CONF_TARGETS})
+  get_target_property(TDef ${t} COMPILE_DEFINITIONS)
+  if(TDef)
+    message( STATUS "Found Target with restrictions: ${t} (${TDef})")
+    foreach(d ${TDef})
+      list(APPEND TARGET_DEFINES_DCSGEN ${d})
+    endforeach()
+  endif()
+endforeach()
+
 # Tell CMake to run python from the directory where this CMakeLists file exists.
-execute_process(COMMAND python DCSGen.py
+execute_process(COMMAND python scripts/DCSGen.py "${TARGET_DEFINES_DCSGEN}"
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
 
 # =================== #
@@ -168,6 +173,18 @@ if(BUILD_TESTS AND NOT CI_DOC_GENERATE)
   # Do not add to doxygen target
   add_subdirectory(tests)
 endif()
+
+# ================================ #
+# Start install_configure.py setup #
+# ================================ #
+
+# This could be done after build as well
+execute_process(COMMAND python scripts/install_configure.py "${TARGET_DEFINES_DCSGEN}" "${CMAKE_BINARY_DIR}"
+    WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+
+# ============================== #
+# End install_configure.py setup #
+# ============================== #
 
 message(STATUS "CML Sources: ${CMAKE_LIBS_SOURCE_DIR}")
 

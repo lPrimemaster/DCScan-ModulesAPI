@@ -197,6 +197,7 @@ namespace DCS
         DCS_INTERNAL_TEST void NotifyUnblockEventLoop();
     }
 
+#ifndef NO_ENCODER_AVAILABLE
     namespace ENC
     {
         /**
@@ -235,4 +236,5 @@ namespace DCS
          */
         DCS_INTERNAL_TEST void DeleteEIB7Encoder();
     }
+#endif //ENCODER_AVAILABLE
 }

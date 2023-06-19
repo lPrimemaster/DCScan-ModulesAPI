@@ -21,3 +21,6 @@
 
 # No need to track the config files
 /config/registry.*
+
+# Don't track python cache
+__pycache__/

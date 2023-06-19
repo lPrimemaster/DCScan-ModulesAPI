@@ -250,6 +250,8 @@ namespace DCS
         DCS_API void ClinometerEvent();
     }
 
+#ifndef NO_ENCODER_AVAILABLE
+#define DCS_MODULE_ENCODER
     /**
      * \brief Exposes %ENC functionalities of the API to the end user.
      */
@@ -309,6 +311,7 @@ namespace DCS
          */
         DCS_API void Terminate();
     }
+#endif //NO_ENCODER_AVAILABLE
 }
 
 #endif _DCS_ACQ_H

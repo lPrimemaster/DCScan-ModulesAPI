@@ -4,6 +4,7 @@
 
 int main()
 {
+#ifndef NO_ENCODER_AVAILABLE
     using namespace DCS;
     // Initialize Logger
 	DCS::Utils::Logger::Init(DCS::Utils::Logger::Verbosity::DEBUG);
@@ -47,6 +48,6 @@ int main()
 	DCS::Control::StopServices();
 
 	DCS::Utils::Logger::Destroy();
-
+#endif // NO_ENCODER_AVAILABLE
 	return 0;
 }

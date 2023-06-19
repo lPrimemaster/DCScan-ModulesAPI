@@ -33,5 +33,8 @@ install(TARGETS DCSModuleEngineControl
   RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
   LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT lib
   ARCHIVE DESTINATION "${INSTALL_LIB_DIR}" COMPONENT lib
-  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/DCS_EngineControl/include"
   COMPONENT dev)
+
+# Install modified headers
+install(FILES "${CMAKE_BINARY_DIR}/gen/DCS_EngineControl/include/DCS_ModuleEngineControl.h" 
+  DESTINATION "${INSTALL_INCLUDE_DIR}/DCS_EngineControl/include")
