@@ -77,6 +77,9 @@ namespace DCS
 	 * 
 	 * The database files and functions are thread-safe.
 	 */
+
+	// TODO : Add a value database for any persistent settings (offsets)
+	// C1 Offset to 180 -> -120.6606616 deg
 	namespace DB // TODO : Add user login statistics / trace
 	{
 #pragma pack( push )
