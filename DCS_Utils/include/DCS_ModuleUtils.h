@@ -68,6 +68,159 @@ namespace DCS
 	namespace Utils
 	{
 		/**
+		 * \brief A wrapper class used to export a simple allocatable vector to the client side.
+		 * Similar to std::vector<T>
+		 * \tparam T the type to create the vector out of.
+		 */
+		template<typename T>
+		class DCS_API Vector
+		{
+		public:
+			Vector() = default;
+			~Vector()
+			{
+				destroy();
+			}
+			Vector(Vector<T>&& vector)
+			{
+				vector.data = data;
+				vector.max_size = max_size;
+				vector.end = end;
+			}
+			Vector(const Vector<T>& vector)
+			{
+				destroy();
+				data = (T*)malloc(vector.max_size * sizeof(T));
+				memcpy(data, vector.data, vector.end * sizeof(T));
+				max_size = vector.max_size;
+				end = vector.end;
+			}
+
+			/**
+			 * \brief Reserve size for the Vector<T>.
+			 * \param count count * sizeof(T) size to reserve.
+			 */
+			inline void reserve(size_t count)
+			{
+				reallocate(count);
+			}
+
+			/**
+			 * \brief Push value into the Vector<T>. Similar to std::vector::push_back.
+			 * \param value Value to push.
+			 */
+			inline void push(const T& value)
+			{
+				emplace(value);
+			}
+
+			/**
+			 * \brief Push value into the Vector<T>. Similar to std::vector::push_back.
+			 * \param value Value to push.
+			 */
+			inline void push(T&& value)
+			{
+				emplace(std::move(value));
+			}
+
+			/**
+			 * \brief Emplace value into the Vector<T>. Similar to std::vector::emplace_back.
+			 * \param args Constructor arguments.
+			 */
+			template<typename... Args>
+			inline void emplace(Args&&... args)
+			{
+				if(end >= max_size)
+				{
+					reallocate();
+				}
+				new (data + end++) T(std::forward<Args>(args)...);
+			}
+
+			/**
+			 * \brief Get value at position.
+			 * \param i Index.
+			 */
+			inline const T& operator[](size_t i) const
+			{
+				return data[i];
+			}
+
+			/**
+			 * \brief Get value at position.
+			 * \param i Index.
+			 */
+			inline T& operator[](size_t i)
+			{
+				return data[i];
+			}
+
+			/**
+			 * \brief Get vector size. Similar to std::vector::size.
+			 */
+			inline size_t size() const
+			{
+				return end;
+			}
+
+			/**
+			 * \brief Get vector capacity. Similar to std::vector::capacity.
+			 */
+			inline size_t capacity() const
+			{
+				return max_size;
+			}
+
+		private:
+			inline void destroy()
+			{
+				for(size_t i = 0; i < end; i++)
+				{
+					data[i].~T();
+				}
+
+				if(data != nullptr)
+				{
+					free(data);
+					data = nullptr;
+				}
+			}
+
+			inline void reallocate(size_t sz = 0)
+			{
+				size_t alloc_sz;
+				if(data == nullptr)
+				{
+					alloc_sz = 1;
+				}
+				else if(sz == 0)
+				{
+					alloc_sz = max_size * 2;
+				}
+				else if(sz > max_size)
+				{
+					alloc_sz = sz;
+				}
+				else
+				{
+					return;
+				}
+
+				data = (T*)realloc(data, alloc_sz * sizeof(T));
+				max_size = alloc_sz;
+
+				if(data == nullptr)
+				{
+					LOG_CRITICAL("Failed to allocate memory for Vector<T>.");
+				}
+			}
+
+			T* data = nullptr;
+			size_t max_size = 0;
+			size_t end = 0;
+		};
+
+		/**
 		 * \brief A wrapper class used to export a simple string to the client side.
 		 */
 		class DCS_API String
@@ -79,11 +232,22 @@ namespace DCS
 			 * \brief Create a String object from pointer.
 			 */
 			String(const char* text);
+
+			/**
+			 * \brief Create a String object from pointer begin and end.
+			 */
+			String(const char* begin, const char* end);
+
 			String(const String& s);
 
 			~String();
 
 			String& operator=(const String& s) noexcept;
+			
+			/**
+			 * \brief Split a string.
+			 */
+			Vector<String> split(const char separator = ' ');
 
 			/**
 			 * \brief Returns size of the string

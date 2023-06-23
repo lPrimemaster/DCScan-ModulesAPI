@@ -16,6 +16,23 @@ DCS::Utils::String::String(const char* text)
 	}
 }
 
+DCS::Utils::String::String(const char* begin, const char* end)
+{
+	buffer_size = (size_t)(end - begin) + 1;
+
+	buffer = (char*)malloc(sizeof(char) * buffer_size);
+
+	if (buffer == nullptr)
+	{
+		LOG_ERROR("Failed to allocate string memory.");
+	}
+	else
+	{
+		memcpy(buffer, begin, buffer_size - 1);
+		buffer[buffer_size] = '\0';
+	}
+}
+
 DCS::Utils::String::String(const String& s)
 {
 	if (buffer_size > 0) free(buffer);
@@ -60,4 +77,24 @@ DCS::Utils::String::~String()
 	{
 		free(buffer);
 	}
+}
+
+DCS::Utils::Vector<DCS::Utils::String> DCS::Utils::String::split(const char separator)
+{
+	Vector<String> output;
+
+	int offset = 0;
+	for(int i = 0; i < buffer_size; i++)
+	{
+		if(buffer[i] == separator)
+		{
+			output.emplace(&buffer[offset], &buffer[i]);
+			offset = i + 1;
+		}
+	}
+	output.emplace(&buffer[offset], &buffer[buffer_size]);
+
+	// Not sure if the NRVO would work automatically here
+	// Added move, even though, it might be superfluous
+	return std::move(output);
 }

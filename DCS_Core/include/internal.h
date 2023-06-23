@@ -79,7 +79,8 @@ namespace DCS
 	 */
 
 	// TODO : Add a value database for any persistent settings (offsets)
-	// C1 Offset to 180 -> -120.6606616 deg
+	// C1 Offset to 180 -> -120.637650 deg
+	// C2 Offset to 180 ->  -90.526640 deg
 	namespace DB // TODO : Add user login statistics / trace
 	{
 #pragma pack( push )
