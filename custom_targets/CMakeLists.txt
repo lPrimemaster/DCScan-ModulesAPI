@@ -29,8 +29,12 @@ target_link_libraries(EIBTest DCSModuleUtils DCSModuleAcquisition) #${EIB7_LIBRA
 add_executable(PIDTest src/pid_test.cpp)
 target_link_libraries(PIDTest DCSModuleUtils DCSModuleAcquisition DCSModuleCore DCSModuleEngineControl)
 
+# RDB Testing
+add_executable(RDBTest src/rdb_test.cpp)
+target_link_libraries(RDBTest DCSModuleUtils DCSModuleCore)
+
 add_custom_target(CTARGETS)
-add_dependencies(CTARGETS EncoderPrecTest DAQLocalTest EIBTest PIDTest)
+add_dependencies(CTARGETS EncoderPrecTest DAQLocalTest EIBTest PIDTest RDBTest)
 
 # Copy the libs dll
 # add_custom_command(TARGET EncoderPrecTest 

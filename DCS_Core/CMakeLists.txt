@@ -1,4 +1,5 @@
 #configure_file(config.h.in "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY)
+include(FetchContent)
 
 get_filename_component(PARENT_DIR ${CMAKE_SOURCE_DIR} DIRECTORY)
 
@@ -9,7 +10,18 @@ message(STATUS "LIBRARY INSTALL BIN LOCATION: ${INSTALL_LIB_DIR}")
 
 set_pretty_filenames()
 
+# The database requires sqlite3
+FetchContent_Declare(
+  sqlite3
+  URL https://www.sqlite.org/2023/sqlite-amalgamation-3420000.zip
+  URL_HASH MD5=eb9a6e56044bc518e6705521a1a929ed
+)
+if (NOT sqlite3_POPULATED)
+  FetchContent_Populate(sqlite3)
+endif()
+
 add_library(DCSModuleCore ${LIB_TYPE}
+  ${sqlite3_SOURCE_DIR}/sqlite3.c
   src/memory.cpp
   src/threading.cpp
   src/db.cpp
@@ -25,7 +37,7 @@ add_library(DCSModuleCore ${LIB_TYPE}
 # https://slproweb.com/download/Win64OpenSSL-1_1_1s.exe
 find_package(OpenSSL 1.1.1 REQUIRED)
 
-include_directories("${OPENSSL_INCLUDE_DIR}")
+include_directories("${OPENSSL_INCLUDE_DIR}" "${sqlite3_SOURCE_DIR}")
 target_link_libraries(DCSModuleCore DCSModuleUtils ${OPENSSL_LIBRARIES})
 
 set_target_properties(DCSModuleCore PROPERTIES

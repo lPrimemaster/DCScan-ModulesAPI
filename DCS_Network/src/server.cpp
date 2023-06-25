@@ -171,9 +171,7 @@ static bool Authenticate(SOCKET client)
 	LOG_DEBUG("Attempt to login with username: %s", (char*)username_buff);
 
 	// Get this user name's password hash
-	DB::LoadDefaultDB();
-	DB::LoadUsers();
-	DB::User user = DB::GetUser((const char*)username_buff);
+	RDB::User user = RDB::GetUser((const char*)username_buff);
 	if(std::string(user.u) == "INVALID_USER")
 	{
 		SendErrorToClient(client, "Incorrect username or password.");
@@ -204,6 +202,7 @@ static bool Authenticate(SOCKET client)
 		}
 	}
 
+	RDB::SetAuthenticatedUser(&user);
 	return true;
 }
 
@@ -410,6 +409,8 @@ bool DCS::Network::Server::StartThread(Socket client)
 
 void DCS::Network::Server::StopThread(Socket client, StopMode mode)
 {
+	RDB::SetAuthenticatedUser(nullptr);
+
 	if (server_receive_thread != nullptr)
 	{
 		if (mode == StopMode::WAIT)

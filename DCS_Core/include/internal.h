@@ -16,7 +16,7 @@
  * 
  * \internal
  * 
- * \brief Internal file eposing multiple functionalities (see specific documentation of members in this file.
+ * \brief Internal file exposing multiple functionalities (see specific documentation of members in this file.
  *
  * \author Cesar Godinho
  *
@@ -71,90 +71,177 @@ namespace DCS
 		DCS_INTERNAL_TEST void DestroyPool(TPool* pool);
 	}
 
-	/**
-	 * \internal 
-	 * \brief Database holding usernames, passwords, permissions, etc.
-	 * 
-	 * The database files and functions are thread-safe.
-	 */
-
 	// TODO : Add a value database for any persistent settings (offsets)
 	// C1 Offset to 180 -> -120.637650 deg
 	// C2 Offset to 180 ->  -90.526640 deg
-	namespace DB // TODO : Add user login statistics / trace
+	namespace RDB
 	{
-#pragma pack( push )
-		// NOTE : Using a salt is nice but requires to send the plain text password which is okay but such security is not needed.
-		// Just ensure the user has a strong password.
+		/**
+		 * \internal
+		 * \brief Enumerates the database currently supported data types.
+		 */
+		enum class EntryType
+		{
+			TEXT,
+			INT,
+			REAL,
+			DATE,
+			BLOB
+		};
+
+#define FOREACH_OPTYPE(LOGOP) \
+	LOGOP(VAR_CREATE)		  \
+	LOGOP(VAR_UPDATE)		  \
+	LOGOP(VAR_DELETE)		  \
+	LOGOP(USR_CREATE)		  \
+	LOGOP(USR_DELETE)		  \
+
+#define GENERATE_ENUM(ENUM) ENUM,
+#define GENERATE_STRING(STRING) #STRING,
+		enum class LogOperation
+		{
+			FOREACH_OPTYPE(GENERATE_ENUM)
+		};
+
+		static const char* LogOperationNames[] = 
+		{
+			FOREACH_OPTYPE(GENERATE_STRING)
+		};
+#undef FOREACH_OPTYPE
+#undef GENERATE_ENUM
+#undef GENERATE_STRING
 
 		/**
 		 * \internal
-		 * \brief Structure that holds everything thats is (or will be) related with a single user.
+		 * \brief Open the realtime database.
+		 */
+		DCS_INTERNAL_TEST void OpenDatabase();
+
+		/**
+		 * \internal
+		 * \brief Close the realtime database.
+		 */
+		DCS_INTERNAL_TEST void CloseDatabase();
+
+		/**
+		 * \internal
+		 * \brief Query database entries for a given table and statements.
+		 */
+		DCS_INTERNAL_TEST void QueryEntries(const std::string& table,
+											const std::string& column,
+											const std::string& statement,
+											EntryType type,
+											void* data);
+
+		/**
+		 * \internal
+		 * \brief Write a variable to the database.
+		 */
+		DCS_INTERNAL_TEST void WriteVariable(const char* name, const char* value, const char* descriptor = nullptr);
+		
+		/**
+		 * \internal
+		 * \brief Write a variable to the database.
+		 */
+		DCS_INTERNAL_TEST void WriteVariable(const char* name, f64 value, const char* descriptor = nullptr);
+
+		/**
+		 * \internal
+		 * \brief Write a variable to the database (as system).
+		 */
+		DCS_INTERNAL_TEST void WriteVariableSys(const char* name, const char* value, const char* descriptor = nullptr);
+		
+		/**
+		 * \internal
+		 * \brief Write a variable to the database (as system).
+		 */
+		DCS_INTERNAL_TEST void WriteVariableSys(const char* name, f64 value, const char* descriptor = nullptr);
+
+		/**
+		 * \internal
+		 * \brief Read a variable from the database.
+		 */
+		DCS_INTERNAL_TEST std::string ReadVariable(const char* name);
+		
+		/**
+		 * \internal
+		 * \brief Get a variable's description from the database.
+		 */
+		DCS_INTERNAL_TEST std::string GetVariableDescriptor(const char* name);
+
+		/**
+		 * \internal
+		 * \brief Delete a variable from the database.
+		 */
+		DCS_INTERNAL_TEST void DeleteVariable(const char* name);
+		
+		/**
+		 * \internal
+		 * \brief Read a variable from the database (as system).
+		 */
+		DCS_INTERNAL_TEST void DeleteVariableSys(const char* name);
+
+		/**
+		 * \internal
+		 * \brief Logs database events.
+		 */
+		DCS_INTERNAL_TEST void LogEventUser(LogOperation op, const char* what);
+		
+		/**
+		 * \internal
+		 * \brief Logs database events (as system).
+		 */
+		DCS_INTERNAL_TEST void LogEventSystem(LogOperation op, const char* what);
+
+		/**
+		 * \internal
+		 * \brief Creates default Database tables.
+		 */
+		DCS_INTERNAL_TEST void CreateTables();
+
+		/**
+		 * \internal
+		 * \brief Structure that holds everything thats is related to a single user.
 		 */
 		struct User
 		{
 			char u[32]; ///< Holds the username.
 			u8   p[32]; ///< Holds the sha-256 of the password.
 		};
-#pragma pack( pop )
 
 		/**
 		 * \internal
-		 * \brief Opens the default database file in the disk.
-		 */
-		DCS_INTERNAL_TEST void LoadDefaultDB();
-
-		/**
-		 * \internal
-		 * \brief Closes the default database file in the disk.
-		 */
-		DCS_INTERNAL_TEST void CloseDB();
-
-		/**
-		 * \internal
-		 * \brief Loads all the users stored in the default database file handle to a memory location.
-		 */
-		DCS_INTERNAL_TEST void LoadUsers();
-
-		/**
-		 * \internal
-		 * \brief Adds an user to the default database file handle and memory location.
+		 * \brief Adds a user to the database.
 		 */
 		DCS_INTERNAL_TEST void AddUser(const char* username, const char* password);
 
 		/**
 		 * \internal
-		 * \brief Removes an existing user from the default database file handle and memory location.
+		 * \brief Removes an existing user from the database.
 		 */
-		DCS_INTERNAL_TEST void RemoveUserByUsername(const char* username);
+		DCS_INTERNAL_TEST void RemoveUser(const char* username);
 
 		/**
 		 * \internal
-		 * \brief Finds an existing user index from the memory location.
-		 * \return User index in the database.
-		 */
-		DCS_INTERNAL_TEST u64  FindUserByUsername(const char* username);
-
-		/**
-		 * \internal
-		 * \brief Finds an existing user from the memory location.
+		 * \brief Finds an existing user from the database.
 		 * \return User struct of the found user.
 		 */
 		DCS_INTERNAL_TEST User GetUser(const char* username);
 
 		/**
 		 * \internal
-		 * \brief Gets a read only copy of the database memory location.
+		 * \brief Gets a read only copy of the database users.
 		 * \return Array of all the User structs in the database.
 		 */
-		DCS_INTERNAL_TEST const User* GetAllUsers();
+		DCS_INTERNAL_TEST const std::vector<User> GetAllUsers();
 
 		/**
 		 * \internal
-		 * \brief Gets the user count in the database memory location.
-		 * \return Array of all the User structs in the database.
+		 * \brief Sets the current authenticated user server-side.
+		 * This function does not grant privileges to the user.
+		 * \param user The user to set as authenticated.
 		 */
-		DCS_INTERNAL_TEST u64  GetUserCount();
+		DCS_INTERNAL_TEST void SetAuthenticatedUser(const User* user);
 	}
 
 	namespace Auth

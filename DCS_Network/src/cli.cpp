@@ -130,9 +130,6 @@ static void CommandRegistry()
 	});
 
 	Command("addusr", "Creates a new remote user in the server database.", [](bool* brk) {
-		DCS::DB::LoadDefaultDB();
-		DCS::DB::LoadUsers();
-
 		std::string username;
 		std::string password;
 		std::string password_v;
@@ -158,41 +155,34 @@ static void CommandRegistry()
 		}
 		else
 		{
-			DCS::DB::AddUser(username.c_str(), password.c_str());
+			DCS::RDB::AddUser(username.c_str(), password.c_str());
 		}
 	});
 
 	Command("delusr", "Deletes an existing user from the database.", [](bool* brk) {
-		DCS::DB::LoadDefaultDB();
-		DCS::DB::LoadUsers();
-
 		std::string username;
 
 		std::cout << "Insert username: ";
 		std::cin >> username;
 
-		DCS::DB::User u = DCS::DB::GetUser(username.c_str());
+		DCS::RDB::User u = DCS::RDB::GetUser(username.c_str());
 
-		if(u.u == "INVALID_USER")
+		if(std::string(u.u) == "INVALID_USER")
 		{
 			LOG_ERROR("Username %s not found. Aborting...", username.c_str());
 		}
 		else
 		{
-			DCS::DB::RemoveUserByUsername(username.c_str());
+			DCS::RDB::RemoveUser(username.c_str());
 		}
 	});
 
 	Command("lstusr", "Lists all the users present in the database.", [](bool* brk) {
-		DCS::DB::LoadDefaultDB();
-		DCS::DB::LoadUsers();
-
-		DCS::u64 uc = DCS::DB::GetUserCount();
-		const DCS::DB::User* users = DCS::DB::GetAllUsers();
+		const std::vector<DCS::RDB::User> users = DCS::RDB::GetAllUsers();
 
 		LOG_MESSAGE("Users in database:");
 
-		for(DCS::u64 i = 0; i < uc; i++)
+		for(DCS::u64 i = 0; i < users.size(); i++)
 		{
 			LOG_MESSAGE("User %u: %s.", i, users[i].u);
 		}
@@ -232,6 +222,4 @@ void DCS::CLI::Spin()
 			LOG_MESSAGE("Type \"help\" to see the valid commands.");
 		}
 	}
-
-	DCS::DB::CloseDB();
 }
