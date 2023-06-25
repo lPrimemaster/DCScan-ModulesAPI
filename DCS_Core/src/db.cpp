@@ -502,3 +502,8 @@ void DCS::RDB::SetAuthenticatedUser(const User* user)
         authenticated_username.shrink_to_fit();
     }
 }
+
+const std::string DCS::RDB::GetAuthenticatedUsername()
+{
+    return authenticated_username;
+}

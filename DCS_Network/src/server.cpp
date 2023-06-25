@@ -203,6 +203,7 @@ static bool Authenticate(SOCKET client)
 	}
 
 	RDB::SetAuthenticatedUser(&user);
+	RDB::LogEventSystem(RDB::LogOperation::NETWORK, ("User " + std::string(user.u) + " : Connected.").c_str());
 	return true;
 }
 
@@ -409,6 +410,7 @@ bool DCS::Network::Server::StartThread(Socket client)
 
 void DCS::Network::Server::StopThread(Socket client, StopMode mode)
 {
+	RDB::LogEventSystem(RDB::LogOperation::NETWORK, ("User " + RDB::GetAuthenticatedUsername() + " : Disconnected.").c_str());
 	RDB::SetAuthenticatedUser(nullptr);
 
 	if (server_receive_thread != nullptr)

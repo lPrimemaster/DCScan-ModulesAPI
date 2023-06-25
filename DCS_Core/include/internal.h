@@ -95,6 +95,7 @@ namespace DCS
 	LOGOP(VAR_DELETE)		  \
 	LOGOP(USR_CREATE)		  \
 	LOGOP(USR_DELETE)		  \
+	LOGOP(NETWORK)			  \
 
 #define GENERATE_ENUM(ENUM) ENUM,
 #define GENERATE_STRING(STRING) #STRING,
@@ -242,6 +243,13 @@ namespace DCS
 		 * \param user The user to set as authenticated.
 		 */
 		DCS_INTERNAL_TEST void SetAuthenticatedUser(const User* user);
+
+		/**
+		 * \internal
+		 * \brief Gets the current server-side authenticated username.
+		 * \return Ther authenticated user.
+		 */
+		DCS_INTERNAL_TEST const std::string GetAuthenticatedUsername();
 	}
 
 	namespace Auth
