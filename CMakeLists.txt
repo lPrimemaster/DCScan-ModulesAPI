@@ -1,5 +1,5 @@
 # Project is migrating to cmake generator
-# (c) 2018 - 2020 César Godinho
+# (c) 2018 - 2023 César Godinho
 # Licensed under the MIT License
 
 cmake_minimum_required(VERSION 3.12)

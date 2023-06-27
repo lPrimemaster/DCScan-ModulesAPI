@@ -83,6 +83,7 @@ namespace DCS
 			}
 			Vector(Vector<T>&& vector)
 			{
+				destroy();
 				vector.data = data;
 				vector.max_size = max_size;
 				vector.end = end;

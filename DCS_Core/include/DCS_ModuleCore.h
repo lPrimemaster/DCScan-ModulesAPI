@@ -20,6 +20,87 @@
 
 namespace DCS
 {
+	/**
+	 * \brief Handles database I/O.
+	 */
+	namespace Database
+	{
+		/**
+		 * \brief Enumerates the diferent modes of database handling. System or User.
+		 */
+		enum class Authority
+		{
+			SYS, ///< I/O Operations as system.
+			USER ///< I/O Operations as the logged in user.
+		};
+
+		/**
+		 * \brief Open the backend database handle.
+		 */
+		DCS_API void Open();
+
+		/**
+		 * \brief Close the backend database handle.
+		 */
+		DCS_API void Close();
+
+		/**
+		 * \brief Reloads the database and invalidates it's internal memory cache.
+		 * \ingroup calls
+		 */
+		DCS_REGISTER_CALL(void)
+		DCS_API void InvalidateCache();
+
+		/**
+		 * \brief Read an f64 value from the database.
+		 * \param variable The variable name (key) in the database.
+		 * \return The variable's value.
+		 * \ingroup calls
+		 */
+		DCS_REGISTER_CALL(DCS::f64, DCS::Utils::BasicString)
+		const DCS_API f64 ReadValuef64(Utils::BasicString variable);
+
+		/**
+		 * \brief Read a DCS::Utils::BasicString value from the database.
+		 * \param variable The variable name (key) in the database.
+		 * \return The variable's value.
+		 * \ingroup calls
+		 */
+		DCS_REGISTER_CALL(DCS::Utils::BasicString, DCS::Utils::BasicString)
+		const DCS_API Utils::BasicString ReadValueString(Utils::BasicString variable);
+
+		/**
+		 * \brief Write/Update an f64 value to/from the database.
+		 * \param auth What type of write is being performed.
+		 * \param variable The variable name (key) in the database.
+		 * \param value The value to write.
+		 * \param description The entry's description. (Optional)
+		 * \ingroup calls
+		 */
+		DCS_REGISTER_CALL(void, DCS::Database::Authority, DCS::Utils::BasicString, DCS::f64, DCS::Utils::BasicString)
+		DCS_API void WriteValuef64(Authority auth, Utils::BasicString variable, f64 value, Utils::BasicString description);
+
+		/**
+		 * \brief Write/Update an f64 value to/from the database.
+		 * \param auth What type of write is being performed.
+		 * \param variable The variable name (key) in the database.
+		 * \param value The value to write.
+		 * \param description The entry's description. (Optional)
+		 * \ingroup calls
+		 */
+		DCS_REGISTER_CALL(void, DCS::Database::Authority, DCS::Utils::BasicString, DCS::Utils::BasicString, DCS::Utils::BasicString)
+		DCS_API void WriteValueString(Authority auth, Utils::BasicString variable, Utils::BasicString value, Utils::BasicString description);
+
+		/**
+		 * \brief Delete an f64 value from the database.
+		 * \param auth What type of deletion is being performed.
+		 * \param variable The variable name (key) in the database.
+		 * \ingroup calls
+		 */
+		DCS_REGISTER_CALL(void, DCS::Database::Authority, DCS::Utils::BasicString)
+		DCS_API void DeleteValue(Authority auth, Utils::BasicString variable);
+	}
+
 	namespace Memory
 	{
 		// class CircularBuffer

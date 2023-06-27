@@ -187,6 +187,10 @@ void DCS::ENC::EIB7SoftModeLoopStart(f64 sigperiods[NUM_OF_AXIS])
                         edata.axis[i] = eadata;
                     }
 
+                    // Get offsets from the database
+                    edata.axis[1].calpos += Database::ReadValuef64({"Geometric_AngleOffsetC1"});
+                    edata.axis[3].calpos += Database::ReadValuef64({"Geometric_AngleOffsetC2"});
+
                     if(edata.numAxis > 0)
                     {
                         outbound_data_queue.push(edata);

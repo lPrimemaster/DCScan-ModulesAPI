@@ -17,7 +17,7 @@ void DCS::Core::PID::setTargetAndBias(f64 target, f64 bias)
         LOG_WARNING("Setting target to '0.0'.");
         LOG_WARNING("Setting   bias to '0.0'.");
         this->target = 0.0f;
-        this->bias = 0.0f;;
+        this->bias = 0.0f;
         return;
     }
 

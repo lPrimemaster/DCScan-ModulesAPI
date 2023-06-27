@@ -30,7 +30,7 @@ void DCS::Control::SetPIDControlVariables(UnitTarget target, DCS::Utils::BasicSt
 #ifndef NO_ENCODER_AVAILABLE
 	// Just overwrite the old pid system. This will delete the integral term, but maybe that can be
 	// a plus when testing some values for the gains.
-	pid_targets.insert_or_assign(std::to_string(static_cast<int>(target)) + group.buffer, PositionCorrector::PIDParams(Kp, Ki, Kd, -50.0, 50.0, 0.0, encoder_axis));
+	pid_targets.insert_or_assign(std::to_string(static_cast<int>(target)) + group.buffer, PositionCorrector::PIDParams(Kp, Ki, Kd, -200.0, 200.0, 0.0, encoder_axis));
 	pid_targets_working.insert_or_assign(std::to_string(static_cast<int>(target)) + group.buffer, false);
 
 	// TODO: Check if the encoder_axis is available (if != -1)
@@ -56,7 +56,7 @@ void DCS::Control::MoveAbsolutePID(UnitTarget target, DCS::Utils::BasicString gr
 	
 	if(pid_target.ax == -1)
 	{
-		LOG_ERROR("Custom PID controller is not yet available for internal encoder motors");
+		LOG_ERROR("Custom PID controller is not yet available for internal encoder motors.");
 		return;
 	}
 

@@ -1,14 +1,25 @@
 #include "../include/internal.h"
+#include "../include/DCS_ModuleCore.h"
 #include <memory>
+#include <filesystem>
+#include <unordered_map>
 #include <sqlite3.h>
 
 static std::string authenticated_username;
-
+static std::unordered_map<std::string, std::string> db_var_cache;
 static sqlite3* realtime_db;
 
 void DCS::RDB::OpenDatabase()
 {
-    if(sqlite3_open("rdb.db", &realtime_db))
+#ifdef WIN32
+    std::string appdata_env = std::getenv("LocalAppData");
+#else
+    std::string appdata_env = std::getenv("HOME");
+#endif
+    std::string database_path = appdata_env + "/DCScan";
+    std::filesystem::create_directory(database_path);
+
+    if(sqlite3_open((database_path + "/rdb.db").c_str(), &realtime_db))
     {
         LOG_ERROR("Can't open database: %s", sqlite3_errmsg(realtime_db));
     }
@@ -506,4 +517,111 @@ void DCS::RDB::SetAuthenticatedUser(const User* user)
 const std::string DCS::RDB::GetAuthenticatedUsername()
 {
     return authenticated_username;
+}
+
+void DCS::Database::Open()
+{
+    RDB::OpenDatabase();
+}
+
+void DCS::Database::Close()
+{
+    RDB::CloseDatabase();
+}
+
+void DCS::Database::InvalidateCache()
+{
+    db_var_cache.clear();
+}
+
+const DCS::f64 DCS::Database::ReadValuef64(Utils::BasicString variable)
+{
+    if(db_var_cache.find(variable.buffer) == db_var_cache.end())
+    {
+        std::string value = RDB::ReadVariable(variable.buffer);
+        if(value.empty())
+        {
+            LOG_WARNING("Could not read database variable : %s", variable.buffer);
+            return 0.0;
+        }
+        db_var_cache[variable.buffer] = value;
+    }
+    return std::atof(db_var_cache[variable.buffer].c_str());
+}
+
+const DCS::Utils::BasicString DCS::Database::ReadValueString(Utils::BasicString variable)
+{
+    if(db_var_cache.find(variable.buffer) == db_var_cache.end())
+    {
+        std::string value = RDB::ReadVariable(variable.buffer);
+        if(value.empty())
+        {
+            LOG_WARNING("Could not read database variable : %s", variable.buffer);
+            return { "\0" };
+        }
+        db_var_cache[variable.buffer] = value;
+    }
+    Utils::BasicString out;
+    memcpy(out.buffer, db_var_cache[variable.buffer].c_str(), db_var_cache[variable.buffer].size() + 1);
+    return out;
+}
+
+void DCS::Database::WriteValuef64(Authority auth, Utils::BasicString variable, f64 value, Utils::BasicString description)
+{
+    switch (auth)
+    {
+    case Authority::SYS:
+        RDB::WriteVariableSys(variable.buffer, value, description.buffer);
+        break;
+    case Authority::USER:
+        RDB::WriteVariable(variable.buffer, value, description.buffer);
+        break;
+    }
+
+    // Invalidate the cache entry even if the write fails
+    auto it = db_var_cache.find(variable.buffer);
+    if(it != db_var_cache.end())
+    {
+        db_var_cache.erase(it);
+    }
+}
+
+void DCS::Database::WriteValueString(Authority auth, Utils::BasicString variable, Utils::BasicString value, Utils::BasicString description)
+{
+    switch (auth)
+    {
+    case Authority::SYS:
+        RDB::WriteVariableSys(variable.buffer, value.buffer, description.buffer);
+        break;
+    case Authority::USER:
+        RDB::WriteVariable(variable.buffer, value.buffer, description.buffer);
+        break;
+    }
+
+    // Invalidate the cache entry even if the write fails
+    auto it = db_var_cache.find(variable.buffer);
+    if(it != db_var_cache.end())
+    {
+        db_var_cache.erase(it);
+    }
+}
+
+void DCS::Database::DeleteValue(Authority auth, Utils::BasicString variable)
+{
+    switch (auth)
+    {
+    case Authority::SYS:
+        RDB::DeleteVariableSys(variable.buffer);
+        break;
+    case Authority::USER:
+        RDB::DeleteVariable(variable.buffer);
+        break;
+    }
+
+    // Invalidate the cache entry even if the delete fails
+    auto it = db_var_cache.find(variable.buffer);
+    if(it != db_var_cache.end())
+    {
+        db_var_cache.erase(it);
+    }
 }
