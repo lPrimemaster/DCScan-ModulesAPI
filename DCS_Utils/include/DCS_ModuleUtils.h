@@ -86,15 +86,15 @@ namespace DCS
 				destroy();
 				vector.data = data;
 				vector.max_size = max_size;
-				vector.end = end;
+				vector.end_offset = end_offset;
 			}
 			Vector(const Vector<T>& vector)
 			{
 				destroy();
 				data = (T*)malloc(vector.max_size * sizeof(T));
-				memcpy(data, vector.data, vector.end * sizeof(T));
+				memcpy(data, vector.data, vector.end_offset * sizeof(T));
 				max_size = vector.max_size;
-				end = vector.end;
+				end_offset = vector.end_offset;
 			}
 
 			/**
@@ -131,11 +131,11 @@ namespace DCS
 			template<typename... Args>
 			inline void emplace(Args&&... args)
 			{
-				if(end >= max_size)
+				if(end_offset >= max_size)
 				{
 					reallocate();
 				}
-				new (data + end++) T(std::forward<Args>(args)...);
+				new (data + end_offset++) T(std::forward<Args>(args)...);
 			}
 
 			/**
@@ -161,7 +161,7 @@ namespace DCS
 			 */
 			inline size_t size() const
 			{
-				return end;
+				return end_offset;
 			}
 
 			/**
@@ -172,10 +172,20 @@ namespace DCS
 				return max_size;
 			}
 
+			inline T* begin()
+			{
+				return data;
+			}
+
+			inline T* end()
+			{
+				return data + end_offset;
+			}
+
 		private:
 			inline void destroy()
 			{
-				for(size_t i = 0; i < end; i++)
+				for(size_t i = 0; i < end_offset; i++)
 				{
 					data[i].~T();
 				}
@@ -218,7 +228,7 @@ namespace DCS
 
 			T* data = nullptr;
 			size_t max_size = 0;
-			size_t end = 0;
+			size_t end_offset = 0;
 		};
 
 		/**
@@ -235,9 +245,9 @@ namespace DCS
 			String(const char* text);
 
 			/**
-			 * \brief Create a String object from pointer begin and end.
+			 * \brief Create a String object from pointer and size.
 			 */
-			String(const char* begin, const char* end);
+			String(const char* ptr, const size_t size);
 
 			String(const String& s);
 
@@ -263,6 +273,11 @@ namespace DCS
 			static inline const String From(T val)
 			{
 				return String(std::to_string(val).c_str());
+			}
+
+			inline const f64 tof64() const
+			{
+				return std::atof(buffer);
 			}
 
 			/**

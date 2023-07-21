@@ -16,11 +16,11 @@ DCS::Utils::String::String(const char* text)
 	}
 }
 
-DCS::Utils::String::String(const char* begin, const char* end)
+DCS::Utils::String::String(const char* ptr, const size_t size)
 {
-	buffer_size = (size_t)(end - begin) + 1;
+	buffer_size = size;
 
-	buffer = (char*)malloc(sizeof(char) * buffer_size);
+	buffer = (char*)malloc(sizeof(char) * (buffer_size + 1));
 
 	if (buffer == nullptr)
 	{
@@ -28,7 +28,7 @@ DCS::Utils::String::String(const char* begin, const char* end)
 	}
 	else
 	{
-		memcpy(buffer, begin, buffer_size - 1);
+		memcpy(buffer, ptr, buffer_size);
 		buffer[buffer_size] = '\0';
 	}
 }
@@ -88,13 +88,11 @@ DCS::Utils::Vector<DCS::Utils::String> DCS::Utils::String::split(const char sepa
 	{
 		if(buffer[i] == separator)
 		{
-			output.emplace(&buffer[offset], &buffer[i]);
+			output.emplace(&buffer[offset], (size_t)(i - offset));
 			offset = i + 1;
 		}
 	}
-	output.emplace(&buffer[offset], &buffer[buffer_size]);
+	output.emplace(&buffer[offset], (size_t)(buffer_size - offset));
 
-	// Not sure if the NRVO would work automatically here
-	// Added move, even though, it might be superfluous
-	return std::move(output);
+	return output;
 }
