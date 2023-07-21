@@ -255,7 +255,7 @@ bool DCS::Network::Server::StartThread(Socket client)
 					// Push message to buffer
 					Message::SetCopyIdAndCode(msg, buffer);
 
-					LOG_DEBUG("Server received opcode: %u", msg.op);
+					LOG_DEBUG("Server received opcode: %u [%x]", msg.op, msg.ptr);
 
 					// Decide what to do with the data
 					switch (static_cast<Message::InternalOperation>(msg.op))
@@ -410,9 +410,6 @@ bool DCS::Network::Server::StartThread(Socket client)
 
 void DCS::Network::Server::StopThread(Socket client, StopMode mode)
 {
-	RDB::LogEventSystem(RDB::LogOperation::NETWORK, ("User " + RDB::GetAuthenticatedUsername() + " : Disconnected.").c_str());
-	RDB::SetAuthenticatedUser(nullptr);
-
 	if (server_receive_thread != nullptr)
 	{
 		if (mode == StopMode::WAIT)
@@ -427,6 +424,9 @@ void DCS::Network::Server::StopThread(Socket client, StopMode mode)
 		{
 			stop_forced.store(true);
 		}
+
+		RDB::LogEventSystem(RDB::LogOperation::NETWORK, ("User " + RDB::GetAuthenticatedUsername() + " : Disconnected.").c_str());
+		RDB::SetAuthenticatedUser(nullptr);
 
 		CloseSocketConnection((SOCKET)client);
 
