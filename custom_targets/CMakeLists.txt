@@ -17,7 +17,7 @@ target_link_libraries(EncoderPrecTest DCSModuleUtils DCSModuleCore DCSModuleNetw
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/")
 find_package(LibNIDAQmx REQUIRED)
 add_executable(DAQLocalTest src/local_daq_test.cpp)
-include_directories(${LIBNIDAQMX_INCLUDE_DIR})
+target_include_directories(DAQLocalTest PRIVATE ${LIBNIDAQMX_INCLUDE_DIR})
 target_link_libraries(DAQLocalTest DCSModuleUtils ${LIBNIDAQMX_LIBRARY})
 
 # find_package(EIB7 REQUIRED)
@@ -33,8 +33,17 @@ target_link_libraries(PIDTest DCSModuleUtils DCSModuleAcquisition DCSModuleCore 
 add_executable(RDBTest src/rdb_test.cpp)
 target_link_libraries(RDBTest DCSModuleUtils DCSModuleCore)
 
+# CIDAQ Testing
+add_executable(CIDAQTest src/ci_daq_test.cpp)
+target_include_directories(CIDAQTest PRIVATE ${LIBNIDAQMX_INCLUDE_DIR})
+target_link_libraries(CIDAQTest DCSModuleUtils ${LIBNIDAQMX_LIBRARY})
+
+# String Testing
+add_executable(StringTest src/string_test.cpp)
+target_link_libraries(StringTest DCSModuleUtils)
+
 add_custom_target(CTARGETS)
-add_dependencies(CTARGETS EncoderPrecTest DAQLocalTest EIBTest PIDTest RDBTest)
+add_dependencies(CTARGETS EncoderPrecTest DAQLocalTest EIBTest PIDTest RDBTest CIDAQTest StringTest)
 
 # Copy the libs dll
 # add_custom_command(TARGET EncoderPrecTest 
