@@ -46,15 +46,16 @@ namespace DCS
 
         /**
          * \internal
-         * \brief Internally checks for n voltage data points.
-         * \todo Implement.
-         * \param totalCount Total counts got from the NIDAQmx since counter task start.
-         * \param diffCount Count difference from last emission of the event.
+         * \param taskHandle NIDAQmx handle.
+         * \param everyNsamplesEventType NIDAQmx event type.
+         * \param nSamples Number of samples to call recurring upon.
+         * \param callbackData Back-end custom data passing to the NIDAQmx thread.
          * \return DCS::i32 Returns 0 upon no error.
-         * \todo Implement.
+         * 
+         * \ingroup events
          */
-        //DCS_REGISTER_EVENT
-        //DCS::i32 CounterEvent(DCS::u64 totalCount, DCS::u64 diffCount);
+        DCS_REGISTER_EVENT
+        DCS::i32 CountEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData);
 
         /**
          * \internal
@@ -104,22 +105,6 @@ namespace DCS
 
         /**
          * \internal
-         * \brief Holds data from a single VoltageEvent callback.
-         */
-        struct DCS_INTERNAL_TEST InternalVoltageData
-        {
-            f64 ptr[INTERNAL_SAMP_SIZE];
-            Math::CountResult cr;
-
-            Timer::Timestamp timestamp;
-            u64 deterministicET;
-
-            f64 measured_angle;
-            f64 predicted_angle;
-        };
-
-        /**
-         * \internal
          * \brief Get all the system present devices.
          */
         DCS_INTERNAL_TEST void GetDevices(char* buffer, u32 size);
@@ -132,15 +117,27 @@ namespace DCS
 
         /**
          * \internal
-         * \brief Setup a task (timing, channels, etc.) via NIDAQmx API.
+         * \brief Setup an AI task (timing, channels, etc.) via NIDAQmx API.
          */
-        DCS_INTERNAL_TEST void SetupTask(InternalTask* t, const char* clk_source, DCS::f64 clk, DCS::u64 num_samp, NIDataCallback func);
+        DCS_INTERNAL_TEST void SetupTaskAI(InternalTask* t, const char* clk_source, DCS::f64 clk, DCS::u64 num_samp, NIDataCallback func);
 
+        /**
+         * \internal
+         * \brief Setup a CI task (timing, channels, etc.) via NIDAQmx API.
+         */
+        DCS_INTERNAL_TEST void SetupTaskCI(InternalTask* t, const char* clk_source, DCS::f64 clk, DCS::u64 num_samp, NIDataCallback func);
+
+        /**
+         * \internal
+         * \brief Setup a PTG task (timing, channels, etc.) via NIDAQmx API.
+         */
+        DCS_INTERNAL_TEST void SetupTaskPTG(InternalTask* t, DCS::u64 buffer_sz);
+        
         /**
          * \internal
          * \brief Add a channel to a task via NIDAQmx API.
          */
-        DCS_INTERNAL_TEST void AddTaskChannel(InternalTask* t, const char* channel_name, ChannelType type, ChannelRef ref, ChannelLimits lims, const char* virtual_channel_name = nullptr);
+        DCS_INTERNAL_TEST void AddTaskChannel(InternalTask* t, const char* channel_name, ChannelType type, ChannelRef ref, ChannelLimits lims, const char* virtual_channel_name = nullptr, DCS::f64 implicit_rate = 0.0);
 
         /**
          * \internal
@@ -164,19 +161,19 @@ namespace DCS
          * \internal
          * \brief Get last internal voltage data for the DCS system and pop from memory.
          */
-        DCS_INTERNAL_TEST DCS::DAQ::InternalVoltageData GetLastDCS_IVD();
+        DCS_INTERNAL_TEST DCS::DAQ::EventData GetLastDCS_IVD();
 
         /**
          * \internal
          * \brief Get last internal voltage data for the MCA system and pop from memory.
          */
-        DCS_INTERNAL_TEST DCS::DAQ::InternalVoltageData GetLastMCA_IVD();
+        DCS_INTERNAL_TEST DCS::DAQ::EventData GetLastMCA_IVD();
 
         /**
          * \internal
          * \brief Get last internal voltage data for the Clinometer system and pop from memory.
          */
-        DCS_INTERNAL_TEST DCS::DAQ::InternalVoltageData GetLastClinometer_IVD();
+        DCS_INTERNAL_TEST DCS::DAQ::EventData GetLastClinometer_IVD();
 
         /**
          * \internal

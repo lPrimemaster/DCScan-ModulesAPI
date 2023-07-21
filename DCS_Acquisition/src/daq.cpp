@@ -58,7 +58,7 @@ void DCS::DAQ::CreateTask(InternalTask* t, const char* name)
     }
 }
 
-void DCS::DAQ::SetupTask(InternalTask* t, const char* clk_source, DCS::f64 clk, DCS::u64 num_samp, NIDataCallback func)
+void DCS::DAQ::SetupTaskAI(InternalTask* t, const char* clk_source, DCS::f64 clk, DCS::u64 num_samp, NIDataCallback func)
 {
     DCS::f64 maxrate;
 	DCS::i32 err = DAQmxGetSampClkMaxRate(t->ni_opaque_handler, &maxrate);
@@ -110,19 +110,67 @@ void DCS::DAQ::SetupTask(InternalTask* t, const char* clk_source, DCS::f64 clk, 
     }
 }
 
-void DCS::DAQ::AddTaskChannel(InternalTask* t, const char* channel_name, ChannelType type, ChannelRef ref, ChannelLimits lims, const char* virtual_channel_name)
+void DCS::DAQ::SetupTaskCI(InternalTask* t, const char* clk_source, DCS::f64 clk, DCS::u64 num_samp, NIDataCallback func)
+{   
+    t->clock_edge  = DAQmx_Val_Rising;
+    t->clock_rate  = clk;
+    t->sample_mode = DAQmx_Val_ContSamps;
+    t->num_samples = num_samp;
+    t->acq_callback = func;
+
+    DCS::i32 err = DAQmxCfgSampClkTiming(t->ni_opaque_handler, clk_source, t->clock_rate, t->clock_edge, t->sample_mode, t->num_samples);
+
+    if(!HandleNiError(err))
+    {
+        LOG_ERROR("Error setting device clock timing settings.");
+        DAQmxClearTask(t->ni_opaque_handler);
+        return;
+    }
+
+    err = DAQmxRegisterEveryNSamplesEvent(t->ni_opaque_handler, DAQmx_Val_Acquired_Into_Buffer, (DCS::u32)t->num_samples, 0, t->acq_callback, t->taskData);
+	if (!HandleNiError(err))
+	{
+		LOG_ERROR("Error setting callback function for task.");
+        DAQmxClearTask(t->ni_opaque_handler);
+        return;
+	}
+
+    if(t->err_callback != nullptr)
+    {
+        err = DAQmxRegisterDoneEvent(t->ni_opaque_handler, 0, t->err_callback, nullptr);
+        if (!HandleNiError(err))
+        {
+            LOG_ERROR("Error setting termination callback function for task.");
+        }
+    }
+}
+
+void DCS::DAQ::SetupTaskPTG(InternalTask* t, DCS::u64 buffer_sz)
+{
+    DCS::i32 err = DAQmxCfgImplicitTiming(t->ni_opaque_handler, DAQmx_Val_ContSamps, buffer_sz);
+    if(!HandleNiError(err))
+    {
+        LOG_ERROR("Error setting ptg task.");
+        DAQmxClearTask(t->ni_opaque_handler);
+        return;
+    }
+}
+
+void DCS::DAQ::AddTaskChannel(InternalTask* t, const char* channel_name, ChannelType type, ChannelRef ref, ChannelLimits lims, const char* virtual_channel_name, DCS::f64 implicit_rate)
 {
     switch (type)
     {
     case ChannelType::Voltage:
     {
-        DCS::i32 err = DAQmxCreateAIVoltageChan(t->ni_opaque_handler, 
-                                                channel_name, 
-                                                virtual_channel_name, 
-                                                DCS::Utils::toUnderlyingType(ref),
-                                                lims.min, lims.max,
-                                                DAQmx_Val_Volts,
-                                                NULL);
+        DCS::i32 err = DAQmxCreateAIVoltageChan(
+            t->ni_opaque_handler, 
+            channel_name, 
+            virtual_channel_name, 
+            DCS::Utils::toUnderlyingType(ref),
+            lims.min, lims.max,
+            DAQmx_Val_Volts,
+            NULL
+        );
         
         if(!HandleNiError(err))
         {
@@ -135,16 +183,47 @@ void DCS::DAQ::AddTaskChannel(InternalTask* t, const char* channel_name, Channel
 
     case ChannelType::Counter:
     {
-        DCS::i32 err = DAQmxCreateCICountEdgesChan(t->ni_opaque_handler,
-                                                channel_name,
-                                                virtual_channel_name,
-                                                DAQmx_Val_Falling,
-                                                0,
-                                                DAQmx_Val_CountUp);
+        DCS::i32 err = DAQmxCreateCICountEdgesChan(
+            t->ni_opaque_handler,
+            channel_name,
+            virtual_channel_name,
+            DAQmx_Val_Rising,
+            0,
+            DAQmx_Val_CountUp
+        );
         
         if(!HandleNiError(err))
         {
             LOG_ERROR("Error setting virtual counter channel.");
+            DAQmxClearTask(t->ni_opaque_handler);
+            return;
+        }
+    }
+    break;
+
+    case ChannelType::PTGen:
+    {
+        if(implicit_rate <= 0.0)
+        {
+            LOG_ERROR("PTG channel requires an implicit generation rate on channel creation.");
+            LOG_ERROR("Error setting virtual PTG channel.");
+            break;
+        }
+
+        DCS::i32 err = DAQmxCreateCOPulseChanFreq(
+            t->ni_opaque_handler,
+            channel_name,
+            virtual_channel_name,
+            DAQmx_Val_Hz,
+            DAQmx_Val_Low,
+            0.0,
+            implicit_rate,
+            0.5
+        );
+
+        if(!HandleNiError(err))
+        {
+            LOG_ERROR("Error setting virtual PTG channel.");
             DAQmxClearTask(t->ni_opaque_handler);
             return;
         }

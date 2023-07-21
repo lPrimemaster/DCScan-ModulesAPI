@@ -32,7 +32,9 @@ namespace DCS
         {
             None,    ///< No channel.
             Voltage, ///< A voltage channel.
-            Counter  ///< A counter channel. Freq out for outputs.
+            Digital, ///< A digital channel.
+            Counter, ///< A counter channel. Freq out for outputs.
+            PTGen    ///< A Pulse train generator channel (AKA signal generator).
         };
 
         /**
@@ -58,6 +60,37 @@ namespace DCS
         {
             DCS::f64 min = -10.0; ///< Minimum DAQ accepted value.
             DCS::f64 max =  10.0; ///< Maximum DAQ accepted value.
+        };
+
+        /**
+         * \brief Channel count increment behaviour.
+        */
+        enum class ChannelCountRef
+        {
+            CountUp = 10128, ///< Count up from 0.
+            CountDown = 10124 ///< Count down from defined value.
+        };
+
+        /**
+         * \brief Holds data from a single (Voltage/Count)Event callback.
+         */
+        struct DCS_INTERNAL_TEST EventData
+        {
+            Math::CountResult counts;                      ///< Counts from the main detector this event.
+            u64               counts_delta;                ///< Count difference this event (ideally zero).
+            Timer::Timestamp  timestamp_wall;              ///< CPU time for this event.
+            u64               timestamp_real;              ///< Hardware time for this event.
+            f64               angle_c1;                    ///< Crystal 1 rotation measurement for this event.
+            f64               angle_c2;                    ///< Crystal 2 rotation measurement for this event.
+            f64               angle_table;                 ///< Table rotation measurement for this event.
+            f64               angle_detector;              ///< Detector rotation measurement for this event.
+            f64               angle_eqv_bragg;             ///< Calculated bragg angle for this event.
+            f64               temp_c1;                     ///< Crystal 1 temperature measurement for this event.
+            f64               temp_c2;                     ///< Crystal 2 temperature measurement for this event.
+            f64               lattice_spacing_uncorrected; ///< Lattice spacing value for this event (fixed depending on crystal type).
+            f64               lattice_spacing_corrected;   ///< Lattice spacing value for this event (temperature corrected).
+            u64               bin_number_uncorrected;      ///< Bin id where this will land.
+            u64               bin_number_corrected;        ///< Bin id where this will land (temperature corrected).
         };
 
         /**
@@ -88,7 +121,6 @@ namespace DCS
          */
         struct DCS_API ClinometerEventData
         {
-            // TODO
             f64 list_cliX[500];
             f64 list_cliY[500];
             DCS::Timer::Timestamp timestamp;
@@ -111,9 +143,9 @@ namespace DCS
          * to be divided by all channels. E.g. create two new channels via DCS::DAQ::NewAIVChannel with a total of 1000 S/s will
          * retsult in a total of 500 S/s per channel being offseted in the SV_EVT_DCS_DAQ_VoltageEvent event.
          * 
-         * The new added channel will only take effect when a new acquisition is started via StartAIAcquisition.
+         * The new added channel will only take effect when a new acquisition starts via StartAIAcquisition.
          * 
-         * \param name The frindly name to give to this channel.
+         * \param name The friendly name to give to this channel.
          * \param channel_name The hardware name of the channel in the DAQ (e.g. PXI_slot2/ai0).
          * \param ref The channel reference settings. Refer to the ChannelRef enum.
          * \param lim The channel voltage limits. Refer to the ChannelLimits enum.
@@ -133,7 +165,7 @@ namespace DCS
          * \ingroup calls
          */
         DCS_REGISTER_CALL(void, DCS::Utils::BasicString)
-        DCS_API void DeleteAIVChannel(DCS::Utils::BasicString name);
+        DCS_API void DeleteChannel(DCS::Utils::BasicString name);
 
         /**
          * \brief Starts the AI (Analog Input) data acquisition.
@@ -142,12 +174,13 @@ namespace DCS
          * All other events related to this, such as the main engine-detector setup for energy analisys will also
          * start to acquire when this function is called.
          * 
+         * \param clock_trigger_channel The hardware name of the trigger channel to use as a clock source.
          * \param samplerate The sample rate to use for all channels combined.
          * 
          * \ingroup calls
          */
-        DCS_REGISTER_CALL(void, DCS::f64)
-        DCS_API void StartAIAcquisition(DCS::f64 samplerate);
+        DCS_REGISTER_CALL(void, DCS::Utils::BasicString, DCS::f64)
+        DCS_API void StartAIAcquisition(DCS::Utils::BasicString clock_trigger_channel, DCS::f64 samplerate);
 
         /**
          * \brief Stops the AI (Analog Input) data acquisition.
@@ -160,6 +193,60 @@ namespace DCS
          */
         DCS_REGISTER_CALL(void)
         DCS_API void StopAIAcquisition();
+
+        /**
+         * \brief Creates a new counter in channel to add to the acquisition stage.
+         * 
+         * 
+         * The new added channel will only take effect when a new acquisition starts via StartCIAcquisition.
+         * 
+         * \param name The friendly name to give to this channel.
+         * \param channel_name The hardware name of the channel in the DAQ (e.g. PXI_slot2/ctr0).
+         * \param ref The channel count reference settings. Refer to the ChannelCountRef enum.
+         * 
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(void, DCS::Utils::BasicString, DCS::Utils::BasicString, DCS::DAQ::ChannelCountRef)
+        DCS_API void NewCIChannel(DCS::Utils::BasicString name, DCS::Utils::BasicString channel_name, ChannelCountRef ref);
+
+        /**
+         * \brief Creates a new pulse train generator channel to add to the acquisition stage.
+         * 
+         * 
+         * The new added channel will only take effect when a new acquisition starts via StartCIAcquisition.
+         * 
+         * \param name The friendly name to give to this channel.
+         * \param channel_name The hardware name of the channel in the DAQ (e.g. PXI_slot2/PFI2).
+         * \param pulse_out The hardware name of the channel where the generated pulse will be. Usually refer to the manual for the used NI unit.
+         * \param rate The channel pulse rate to generate in Hz (50% duty cycled).
+         * 
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(void, DCS::Utils::BasicString, DCS::Utils::BasicString, DCS::f64)
+        DCS_API void NewPTGChannel(DCS::Utils::BasicString name, DCS::Utils::BasicString channel_name, f64 rate);
+
+        /**
+         * \brief Starts the CI (Counter Input) data acquisition.
+         * 
+         * All the added channels will start to acquire its value to the SV_EVT_DCS_DAQ_CountEvent event. 
+         * 
+         * \param clock_trigger_channel The hardware name of the trigger channel to use as a clock source.
+         * \param pause_trigger_channel The hardware name of the digital I/O channel to use as a pause trigger for the count event. Pass "NONE" to disable.
+         * \param reset_trigger_channel The hardware name of the digital I/O channel to use as a reset trigger for the count event. Pass "NONE" to disable.
+         * \param rate The counter rate (should be the same as in the clock_trigger_channel hardware channel).
+         * 
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(void, DCS::Utils::BasicString, DCS::Utils::BasicString, DCS::Utils::BasicString, DCS::f64)
+        DCS_API void StartCIAcquisition(DCS::Utils::BasicString clock_trigger_channel, DCS::Utils::BasicString pause_trigger_channel, DCS::Utils::BasicString reset_trigger_channel, f64 rate);
+
+        /**
+         * \brief Stops the CI (Counter Input) data acquisition.
+         * 
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(void)
+        DCS_API void StopCIAcquisition();
 
         /**
          * \brief Starts the DI (Digital Input) data acquisition.
