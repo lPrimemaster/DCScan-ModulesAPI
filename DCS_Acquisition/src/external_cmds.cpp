@@ -167,10 +167,10 @@ DCS::i32 DCS::DAQ::CountEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEvent
 
     DAQmxReadCounterU32(taskHandle, -1, DAQmx_Val_WaitInfinitely, counts, INTERNAL_SAMP_SIZE, &samples_per_channel, NULL);
 
-    data.counts.num_detected = counts[INTERNAL_SAMP_SIZE - 1] - count_task_last_count;
+    data.counts.num_detected = static_cast<DCS::u64>(counts[INTERNAL_SAMP_SIZE - 1]) - count_task_last_count;
     data.counts_delta        = counts[INTERNAL_SAMP_SIZE - 1] - counts[0];
     data.timestamp_wall      = count_task_timer.getTimestamp();
-    task_time_real          += (u64)(INTERNAL_SAMP_SIZE / count_task_rate);
+    task_time_real          += (u64)((INTERNAL_SAMP_SIZE / count_task_rate) * 1E9f);
     data.timestamp_real      = task_time_real;
 #ifdef NO_ENCODER_AVAILABLE
     data.angle_c1       = std::atof(Control::IssueGenericCommandResponse(Control::UnitTarget::ESP301, {"1PA?"}).buffer);
