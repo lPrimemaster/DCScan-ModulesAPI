@@ -113,6 +113,14 @@ void DCS::Control::MoveAbsolutePID(UnitTarget target, DCS::Utils::BasicString gr
 #endif //ENCODER_AVAILABLE
 }
 
+void DCS::Control::MoveRelative(UnitTarget target, DCS::Utils::BasicString group, f64 target_position)
+{
+	DCS::Utils::BasicString relative_move_command;
+	std::string cmd = std::string("GroupMoveRelative(" + std::string(group.buffer) + ".Pos," + std::to_string(target_position) + ")");
+	memcpy(relative_move_command.buffer, cmd.c_str(), cmd.size() + 1);
+	IssueGenericCommandResponse(target, relative_move_command);
+}
+
 void DCS::Control::MoveAbsolutePIDChanged(PIDStatusGroup status_group)
 {	
 	DCS_EMIT_EVT((DCS::u8*)&status_group, sizeof(PIDStatusGroup));

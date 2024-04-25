@@ -12,6 +12,13 @@ int main()
     
     // DCS::RDB::WriteVariableSys("Geometric_AngleOffsetC1", 120.637650 + 180, "Calibration offset for the crystal 1 engine encoder (deg).");
     // DCS::RDB::WriteVariableSys("Geometric_AngleOffsetC2",  90.526640 + 180, "Calibration offset for the crystal 2 engine encoder (deg).");
+
+    DCS::RDB::WriteVariableSys("Geometric_AngleOffsetC1", 0.0, "Calibration offset for the crystal 1 engine encoder (deg).");
+    DCS::RDB::WriteVariableSys("Geometric_AngleOffsetC2", 0.0, "Calibration offset for the crystal 2 engine encoder (deg).");
+    
+    DCS::RDB::WriteVariableSys("Geometric_LastKnownPosC1", 0.0, "The last known position for Crystal 1.");
+    DCS::RDB::WriteVariableSys("Geometric_LastKnownPosC2", 0.0, "The last known position for Crystal 2.");
+
     // DCS::RDB::WriteVariableSys("Geometric_AngleOffsetT",  120.0, "Calibration offset for the table angle (deg).");
     // DCS::RDB::WriteVariableSys("Geometric_AngleOffsetD",    0.0, "Calibration offset for the detector angle (deg).");
 

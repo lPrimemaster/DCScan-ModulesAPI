@@ -15,6 +15,7 @@
 static EIB7_HANDLE eib;
 static std::thread* eib_loop = nullptr;
 static std::atomic<bool> eib_loop_running;
+static std::atomic<bool> waiting_for_ref = false;
 
 static DCS::Utils::SMessageQueue<DCS::ENC::EncoderData> outbound_data_queue;
 
@@ -77,7 +78,7 @@ void DCS::ENC::InitEIB7Encoder(const char* hostname, i8 axes)
         if(CheckError(EIB7InitAxis(axis[i],
                 EIB7_IT_Incremental_11u,
                 EIB7_EC_Rotary,
-                EIB7_RM_None,          /* reference marks not used */
+                EIB7_RM_One,
                 0,                    /* reference marks not used */
                 0,                    /* reference marks not used */
                 EIB7_HS_None,
@@ -90,7 +91,7 @@ void DCS::ENC::InitEIB7Encoder(const char* hostname, i8 axes)
         ))) return;
 
         if(CheckError(EIB7SetTimestamp(axis[i], EIB7_MD_Enable))) return;
-        if(CheckError(EIB7StartRef(axis[i], EIB7_RP_RefPos2))) return;
+        // if(CheckError(EIB7StartRef(axis[i], EIB7_RP_RefPos1))) return;
         
         if(CheckError(EIB7AddDataPacketSection(packet, packetIndex++, regions[i], EIB7_PDF_StatusWord | EIB7_PDF_PositionData | EIB7_PDF_Timestamp | EIB7_PDF_ReferencePos))) return;
         
@@ -121,8 +122,77 @@ void DCS::ENC::EIB7SoftModeLoopStart(f64 sigperiods[NUM_OF_AXIS])
             u32 entries;
             void* field;
             u32 sz;
+            bool referencing[NUM_OF_AXIS] = {true, true, true, true};
+            bool referencingtot = true;
             f64 isigperiods[NUM_OF_AXIS] = {s0, s1, s2, s3};
 
+            // Run the ref loop for the encoders
+            for(i8 i = 0; i < NUM_OF_AXIS; i++)
+            {
+                if(!(inited_axes & (1 << i))) continue;
+                CheckError(EIB7ClearRefStatus(axis[i]));
+                CheckError(EIB7StartRef(axis[i], EIB7_RP_RefPos1)); // Assuming 1 ref pos only
+            }
+
+            LOG_DEBUG("Waiting to calibrate encoderers...");
+            waiting_for_ref.store(true);
+            while(referencingtot && eib_loop_running.load())
+            {
+                EIB7_ERR error = EIB7ReadFIFOData(eib, udp_data, 1, &entries, 0);
+                if(error == EIB7_FIFOOverflow)
+                {
+                    LOG_WARNING("EIB7 FIFO queue overflow. Clearing.");
+                    EIB7ClearFIFO(eib);
+                }
+
+                if(entries > 0)
+                {
+                    for(i32 i = 0; i < NUM_OF_AXIS; i++)
+                    {
+                        if(!(inited_axes & (1 << i)))
+                        {
+                            referencing[i] = false;
+                            continue;
+                        }
+                        CheckError(EIB7GetDataFieldPtr(eib, udp_data,
+                            regions[i],
+                            EIB7_PDF_StatusWord,
+                            &field,
+                            &sz));
+                        unsigned short status = *(unsigned short *)field;
+
+                        if((status & (1 << 8)))
+                        {
+                            
+                            if(referencing[i])
+                            {
+                                CheckError(EIB7GetDataFieldPtr(eib, udp_data,
+                                    regions[i],
+                                    EIB7_PDF_ReferencePos,
+                                    &field,
+                                    &sz));
+                                ENCODER_POSITION ref = *(ENCODER_POSITION *)field;
+                                LOG_MESSAGE("Encoder %d head referenced. [ref: %lld]", i, ref);
+                            }
+                            referencing[i] = false;
+                        }
+                    }
+
+                    referencingtot = false;
+                    for(i32 i = 0; i < NUM_OF_AXIS; i++)
+                    {
+                        if(referencing[i])
+                        {
+                            referencingtot = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            waiting_for_ref.store(false);
+            LOG_MESSAGE("Encoder referencing done!");
+
+            // Run the main loop for the encoders
             while(eib_loop_running.load())
             {
                 EncoderAxisData eadata;
@@ -173,19 +243,24 @@ void DCS::ENC::EIB7SoftModeLoopStart(f64 sigperiods[NUM_OF_AXIS])
                         // read ref
                         CheckError(EIB7GetDataFieldPtr(eib, udp_data, 
                                     regions[i], 
-                                    EIB7_PDF_ReferencePos, 
+                                    EIB7_PDF_ReferencePos,
                                     &field, &sz));
                         i64* posVal = (i64*)field;
                         eadata.ref[0] = posVal[0];
                         eadata.ref[1] = posVal[1];
 
+                        eadata.position -= eadata.ref[0];
                         CheckError(EIB7IncrPosToDouble(eadata.position, &eadata.calpos));
                         eadata.calpos *= 360.0 / isigperiods[i];
 
                         eadata.axis = (i8)i + 1;
 
                         edata.axis[i] = eadata;
-                    }
+                    }   
+
+                    // TODO: This might become a problem, keep it under watch
+                    Database::WriteValuef64(Database::Authority::SYS, {"Geometric_LastKnownPosC1"}, edata.axis[1].calpos, {"The last known position for Crystal 1."});
+                    Database::WriteValuef64(Database::Authority::SYS, {"Geometric_LastKnownPosC2"}, edata.axis[3].calpos, {"The last known position for Crystal 2."});
 
                     // Get offsets from the database
                     edata.axis[1].calpos += Database::ReadValuef64({"Geometric_AngleOffsetC1"});
@@ -261,6 +336,11 @@ DCS::ENC::EncoderData DCS::ENC::InspectLastEncoderValues()
 DCS::u32 DCS::ENC::GetTriggerPeriod()
 {
     return TRIGGER_PERIOD;
+}
+
+DCS::u8 DCS::ENC::EncoderNeedsRefRun()
+{
+    return waiting_for_ref.load() ? 1 : 0;
 }
 
 void DCS::ENC::Init(const char* ip, i8 axis, f64 sigperiods[NUM_OF_AXIS])

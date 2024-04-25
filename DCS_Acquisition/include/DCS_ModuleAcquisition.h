@@ -386,6 +386,14 @@ namespace DCS
         DCS_API u32 GetTriggerPeriod();
 
         /**
+         * \brief Returns If the encoders need a ref run.
+         * 
+         * \ingroup calls
+        */
+        DCS_REGISTER_CALL(DCS::u8)
+        DCS_API u8 EncoderNeedsRefRun();
+
+        /**
          * \brief Initializes the rotary encoder API.
          * \param ip The rotary encoder LAN ip address.
          * \param axis The axis to enable. Bit flags type: b0 - axis1, b1 - axis2, ... => e.g. 0b0101 enables axis 1 and 3
