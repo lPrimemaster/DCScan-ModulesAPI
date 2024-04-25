@@ -212,28 +212,28 @@ void DCS::RDB::WriteVariable(const char* name, f64 value, const char* descriptor
 void DCS::RDB::WriteVariableSys(const char* name, const char* value, const char* descriptor)
 {
     std::string what = std::string(name) + "=" + value;
-    if(DCS::RDB::ReadVariable(name).empty())
-    {
-        LogEventSystem(LogOperation::VAR_CREATE, what.c_str());
-    }
-    else
-    {
-        LogEventSystem(LogOperation::VAR_UPDATE, what.c_str());
-    }
+    // if(DCS::RDB::ReadVariable(name).empty())
+    // {
+    //     LogEventSystem(LogOperation::VAR_CREATE, what.c_str());
+    // }
+    // else
+    // {
+    //     LogEventSystem(LogOperation::VAR_UPDATE, what.c_str());
+    // }
     InsertEntry("VARIABLES", "NAME,VALUE,DESCRIPTOR", name, value, descriptor);
 }
 
 void DCS::RDB::WriteVariableSys(const char* name, f64 value, const char* descriptor)
 {
     std::string what = std::string(name) + "=" + std::to_string(value);
-    if(DCS::RDB::ReadVariable(name).empty())
-    {
-        LogEventSystem(LogOperation::VAR_CREATE, what.c_str());
-    }
-    else
-    {
-        LogEventSystem(LogOperation::VAR_UPDATE, what.c_str());
-    }
+    // if(DCS::RDB::ReadVariable(name).empty())
+    // {
+    //     LogEventSystem(LogOperation::VAR_CREATE, what.c_str());
+    // }
+    // else
+    // {
+    //     LogEventSystem(LogOperation::VAR_UPDATE, what.c_str());
+    // }
     InsertEntry("VARIABLES", "NAME,VALUE,DESCRIPTOR", name, std::to_string(value).c_str(), descriptor);
 }
 
