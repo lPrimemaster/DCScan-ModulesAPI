@@ -194,6 +194,21 @@ namespace DCS
         DCS_INTERNAL_TEST void NotifyUnblockEventLoop();
     }
 
+    namespace Temp
+    {
+        /**
+         * \internal
+         * \brief Starts the temperature listener loop
+         */
+        DCS_INTERNAL_TEST void StartEventLoop();
+
+        /**
+         * \internal
+         * \brief Stops the temperature listener loop
+         */
+        DCS_INTERNAL_TEST void StopEventLoop();
+    }
+
 #ifndef NO_ENCODER_AVAILABLE
     namespace ENC
     {

@@ -27,6 +27,7 @@ add_library(DCSModuleAcquisition ${LIB_TYPE}
   src/daq.cpp
   src/external_cmds.cpp
   src/global_evts.cpp
+  src/temperature.cpp
   ${ENCODER_SRC}
 
   ../config/exports.h

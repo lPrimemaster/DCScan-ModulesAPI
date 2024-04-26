@@ -337,6 +337,41 @@ namespace DCS
         DCS_API void ClinometerEvent();
     }
 
+    /**
+     * \brief Exposes Temperature functionalities of the API to the end user.
+     */
+    namespace Temp
+    {
+        /** 
+         * \brief Struct for encoder soft realtime mode data (per axis).
+         */
+        struct DCS_API TemperatureData
+        {
+            f64 crystals[2]; //< Temperature data for both crystals
+        };
+
+        /**
+         * \brief Returns the last value output from the angular encoder.
+         * 
+         * Returns EncoderData with zero numAxis if failed.
+         * 
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(DCS::Temp::TemperatureData)
+        DCS_API TemperatureData InspectLastTemperatureValues();
+
+        /**
+         * \brief Initializes the rotary encoder API.
+         * \param com_port The temperature module serial port.
+         */
+        DCS_API void Init(const char* com_port);
+
+        /**
+         * \brief Cleans up the temperature gathering API.
+         */
+        DCS_API void Terminate();
+    }
+
 #ifndef NO_ENCODER_AVAILABLE
 #define DCS_MODULE_ENCODER
     /**
