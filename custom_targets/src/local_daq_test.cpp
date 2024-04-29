@@ -2,6 +2,7 @@
 #include <iostream>
 #include <chrono>
 #include <NIDAQmx.h>
+#include <cstring>
 
 #define DAQmxErrChk(functionCall) if( DAQmxFailed(error=(functionCall)) ) goto Error; else
 

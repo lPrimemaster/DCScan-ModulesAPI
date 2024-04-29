@@ -348,4 +348,4 @@ namespace DCS
 	}
 }
 
-#endif _DCS_NETWORK_H
+#endif //_DCS_NETWORK_H

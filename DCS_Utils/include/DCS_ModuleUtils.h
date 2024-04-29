@@ -26,16 +26,16 @@
 
 
 #ifdef SOURCE_PATH_SIZE
-#define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, __VA_ARGS__) ///< Alias to DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, __VA_ARGS__)
+#define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, ##__VA_ARGS__) ///< Alias to DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, __VA_ARGS__)
 #else 
-#define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__, msg, __VA_ARGS__) ///< Alias to DCS::Utils::Logger::lvl(__FILE__, msg, __VA_ARGS__)
+#define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__, msg, ##__VA_ARGS__) ///< Alias to DCS::Utils::Logger::lvl(__FILE__, msg, __VA_ARGS__)
 #endif
 
-#define LOG_DEBUG(msg, ...) LOG_LVL(Debug, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Debug, msg, __VA_ARGS__)
-#define LOG_MESSAGE(msg, ...) LOG_LVL(Message, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Message, msg, __VA_ARGS__)
-#define LOG_WARNING(msg, ...) LOG_LVL(Warning, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Warning, msg, __VA_ARGS__)
-#define LOG_ERROR(msg, ...) LOG_LVL(Error, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Error, msg, __VA_ARGS__)
-#define LOG_CRITICAL(msg, ...) LOG_LVL(Critical, msg, __VA_ARGS__) ///< Alias to LOG_LVL(Critical, msg, __VA_ARGS__)
+#define LOG_DEBUG(msg, ...) LOG_LVL(Debug, msg, ##__VA_ARGS__) ///< Alias to LOG_LVL(Debug, msg, __VA_ARGS__)
+#define LOG_MESSAGE(msg, ...) LOG_LVL(Message, msg, ##__VA_ARGS__) ///< Alias to LOG_LVL(Message, msg, __VA_ARGS__)
+#define LOG_WARNING(msg, ...) LOG_LVL(Warning, msg, ##__VA_ARGS__) ///< Alias to LOG_LVL(Warning, msg, __VA_ARGS__)
+#define LOG_ERROR(msg, ...) LOG_LVL(Error, msg, ##__VA_ARGS__) ///< Alias to LOG_LVL(Error, msg, __VA_ARGS__)
+#define LOG_CRITICAL(msg, ...) LOG_LVL(Critical, msg, ##__VA_ARGS__) ///< Alias to LOG_LVL(Critical, msg, __VA_ARGS__)
 
 #define ENUM_FLAG_OPERATOR(T,X) inline T operator X (T lhs, T rhs) { return (T) (static_cast<std::underlying_type_t <T>>(lhs) X static_cast<std::underlying_type_t <T>>(rhs)); } 
 #define ENUM_FLAGS(T) \
@@ -222,7 +222,7 @@ namespace DCS
 
 				if(data == nullptr)
 				{
-					LOG_CRITICAL("Failed to allocate memory for Vector<T>.");
+					// LOG_CRITICAL("Failed to allocate memory for Vector<T>.");
 				}
 			}
 
@@ -480,4 +480,4 @@ namespace DCS
 	}
 }
 
-#endif _DCS_UTILS_H
+#endif //_DCS_UTILS_H

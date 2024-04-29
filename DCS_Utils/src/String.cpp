@@ -1,4 +1,5 @@
 #include "../include/DCS_ModuleUtils.h"
+#include <cstring>
 
 DCS::Utils::String::String(const char* text)
 {

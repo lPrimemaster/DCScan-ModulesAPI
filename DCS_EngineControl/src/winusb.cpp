@@ -2,9 +2,9 @@
 
 #include <Usb100.h>
 #include <Setupapi.h>
-#include <strsafe.h>
 #include <cfgmgr32.h>
 #include <tchar.h>
+#include <strsafe.h>
 #include <devpkey.h>
 
 typedef struct _DEVICE_DATA {

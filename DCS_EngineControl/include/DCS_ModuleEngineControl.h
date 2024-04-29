@@ -182,4 +182,4 @@ namespace DCS
 	}
 }
 
-#endif _DCS_ENGINECONTROL_H
+#endif //_DCS_ENGINECONTROL_H

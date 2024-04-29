@@ -35,6 +35,8 @@ add_library(DCSModuleAcquisition ${LIB_TYPE}
   include/internal.h
   )
 
+target_compile_options(DCSModuleAcquisition PRIVATE "-fpermissive")
+
 if(EIB7_FOUND)
   include_directories("${LIBNIDAQMX_INCLUDE_DIR}" "${EIB7_INCLUDE_DIR}")
   target_link_libraries(DCSModuleAcquisition DCSModuleUtils DCSModuleNetwork "${LIBNIDAQMX_LIBRARY}" "${EIB7_LIBRARY}")

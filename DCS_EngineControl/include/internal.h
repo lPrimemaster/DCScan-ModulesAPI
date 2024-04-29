@@ -195,7 +195,7 @@ namespace DCS
 			 * \internal
 			 * \brief Command to an axis with string arguments.
 			 */
-			template<>
+			// template<>
 			Command(Control::UnitTarget target, const char* cmd, u16 axis, const char* argument)
 			{
 				this->target = target;
@@ -243,7 +243,7 @@ namespace DCS
 			 * \internal
 			 * \brief Command with string arguments.
 			 */
-			template<>
+			// template<>
 			Command(Control::UnitTarget target, const char* cmd, const char* argument)
 			{
 				this->target = target;

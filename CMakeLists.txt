@@ -27,7 +27,9 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE STRING " " FORCE)
 
 # Do not hide any production important warnings (MSVC only)
 # /W4 and /Wall are just nonsensical
-set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /W3")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /W3")
+endif()
 
 function(set_pretty_filenames)
 	string(LENGTH "${CMAKE_CURRENT_SOURCE_DIR}/" SOURCE_PATH_SIZE)

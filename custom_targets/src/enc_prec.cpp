@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iterator>
 #include <sstream>
+#include <cstring>
 
 #include "../../DCS_Network/include/DCS_ModuleNetwork.h"
 #include "../../DCS_Utils/include/DCS_ModuleUtils.h"

@@ -365,8 +365,9 @@ const DCS::Registry::SVParams DCS::Registry::SVParams::GetParamsFromData(const u
 			break;
 		$0
 		default:
-			__assume(0); // Hint the compiler to optimize a jump table even further disregarding arg_code checks
-		}
+			// __assume(0); // Hint the compiler to optimize a jump table even further disregarding arg_code checks
+		    break;
+        }
 	}
 	return DCS::Registry::SVParams(func_code, args);
 }
@@ -389,8 +390,9 @@ DCS::Registry::SVReturn DCS::Registry::Execute(DCS::Registry::SVParams params)
 		break;
 	$1
 	default:
-		__assume(0); // Hint the compiler to optimize a jump table even further disregarding func_code checks
-	}
+		// __assume(0); // Hint the compiler to optimize a jump table even further disregarding func_code checks
+	    break;
+    }
 	return ret;
 }
 

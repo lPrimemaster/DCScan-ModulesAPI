@@ -350,4 +350,4 @@ namespace DCS
 	}
 }
 
-#endif _DCS_CORE_H
+#endif //_DCS_CORE_H

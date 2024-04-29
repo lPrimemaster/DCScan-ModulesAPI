@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <unordered_map>
 #include <sqlite3.h>
+#include <cstring>
 
 static std::string authenticated_username;
 static std::unordered_map<std::string, std::string> db_var_cache;

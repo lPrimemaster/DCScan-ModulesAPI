@@ -35,7 +35,8 @@ add_library(DCSModuleCore ${LIB_TYPE}
 
 
 # https://slproweb.com/download/Win64OpenSSL-1_1_1s.exe
-find_package(OpenSSL 1.1.1 REQUIRED)
+# find_package(OpenSSL REQUIRED PATH "C:/Program Files/OpenSSL-Win64")
+find_package(OpenSSL REQUIRED)
 
 include_directories("${OPENSSL_INCLUDE_DIR}" "${sqlite3_SOURCE_DIR}")
 target_link_libraries(DCSModuleCore DCSModuleUtils ${OPENSSL_LIBRARIES})

@@ -444,4 +444,4 @@ namespace DCS
 #endif //NO_ENCODER_AVAILABLE
 }
 
-#endif _DCS_ACQ_H
+#endif //_DCS_ACQ_H

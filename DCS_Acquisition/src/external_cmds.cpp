@@ -6,6 +6,7 @@
 
 #include <queue>
 #include <atomic>
+#include <cstring>
 
 #include <NIDAQmx.h>
 

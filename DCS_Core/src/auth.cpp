@@ -3,6 +3,7 @@
 #include <openssl/aes.h>
 #include <openssl/sha.h>
 #include <openssl/rand.h>
+#include <cstring>
 
 static bool cRandInit = false;
 
