@@ -35,7 +35,9 @@ add_library(DCSModuleAcquisition ${LIB_TYPE}
   include/internal.h
   )
 
-target_compile_options(DCSModuleAcquisition PRIVATE "-fpermissive")
+if(NOT (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC"))
+    target_compile_options(DCSModuleAcquisition PRIVATE "-fpermissive")
+endif()
 
 if(EIB7_FOUND)
   include_directories("${LIBNIDAQMX_INCLUDE_DIR}" "${EIB7_INCLUDE_DIR}")

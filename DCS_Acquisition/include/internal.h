@@ -200,7 +200,7 @@ namespace DCS
          * \internal
          * \brief Starts the temperature listener loop
          */
-        DCS_INTERNAL_TEST void StartEventLoop();
+        DCS_INTERNAL_TEST void StartEventLoop(const char* com_port);
 
         /**
          * \internal

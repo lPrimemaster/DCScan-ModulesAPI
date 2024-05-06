@@ -8,6 +8,8 @@ project(DCSModulesAPI VERSION 1.0.0 DESCRIPTION "DCS sub project containing all 
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(CMAKE_LIBS_SOURCE_DIR "")
 
 function(add_libTargetSubDir sd)

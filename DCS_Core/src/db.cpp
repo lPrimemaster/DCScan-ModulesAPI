@@ -523,6 +523,7 @@ const std::string DCS::RDB::GetAuthenticatedUsername()
 void DCS::Database::Open()
 {
     RDB::OpenDatabase();
+    RDB::CreateTables();
 }
 
 void DCS::Database::Close()

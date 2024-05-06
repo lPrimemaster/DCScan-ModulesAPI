@@ -47,5 +47,5 @@ install(TARGETS DCSModuleNetwork
   COMPONENT dev)
 
 # Install modified headers
-install(FILES "${CMAKE_BINARY_DIR}/gen/DCS_Network/include/DCS_ModuleNetwork.h" 
+install(FILES "${CMAKE_BINARY_DIR}/gen/DCS_Network/include/DCS_ModuleNetwork.h" "${CMAKE_SOURCE_DIR}/config/rpc.h"
   DESTINATION "${INSTALL_INCLUDE_DIR}/DCS_Network/include")

@@ -7,6 +7,9 @@
 # Leave visual studio code out as well
 .vscode/
 
+# clang cache
+.cache/
+
 # Ignore cmake generator files created at build time
 *.cmake
 *.stamp
@@ -21,6 +24,13 @@
 
 # No need to track the config files
 /config/registry.*
+/config/rpc.h
 
 # Don't track python cache
 __pycache__/
+
+# Don't track cmake compile commands
+compile_commands.json
+
+# And settings
+CMakeSettings.json
