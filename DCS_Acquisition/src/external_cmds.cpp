@@ -173,6 +173,8 @@ DCS::i32 DCS::DAQ::CountEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEvent
     data.timestamp_wall      = count_task_timer.getTimestamp();
     task_time_real          += (u64)((INTERNAL_SAMP_SIZE / count_task_rate) * 1E9f);
     data.timestamp_real      = task_time_real;
+
+    // Get the crystals position this frame
 #ifdef NO_ENCODER_AVAILABLE
     data.angle_c1       = std::atof(Control::IssueGenericCommandResponse(Control::UnitTarget::ESP301, {"1PA?"}).buffer);
     data.angle_c2       = std::atof(Control::IssueGenericCommandResponse(Control::UnitTarget::ESP301, {"2PA?"}).buffer);
@@ -191,9 +193,13 @@ DCS::i32 DCS::DAQ::CountEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEvent
         { "GroupPositionCurrentGet(Detector.Pos, double*)" }
     ).buffer).split(',')[1].tof64() + Database::ReadValuef64({"Geometric_AngleOffsetD"});
 #endif
+
+    // Get the temperature this frame
+    Temp::TemperatureData temp = Temp::InspectLastTemperatureValues();
+    data.temp_c1                     = temp.crystals[0];
+    data.temp_c2                     = temp.crystals[1];
+
     data.angle_eqv_bragg             = 0.0; // TODO
-    data.temp_c1                     = 0.0; // TODO
-    data.temp_c2                     = 0.0; // TODO
     data.lattice_spacing_uncorrected = 0.0; // TODO
     data.lattice_spacing_corrected   = 0.0; // TODO
     data.bin_number_uncorrected      = 0;   // TODO

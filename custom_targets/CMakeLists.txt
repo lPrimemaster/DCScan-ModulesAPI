@@ -1,11 +1,14 @@
 # Propagate target definitions to the custom executables build step
 foreach(t ${CONF_TARGETS})
-  get_target_property(TDef ${t} COMPILE_DEFINITIONS)
-  if(TDef)
-    foreach(d ${TDef})
-      add_definitions("-D${d}")
-    endforeach()
-  endif()
+    get_target_property(TDef ${t} COMPILE_DEFINITIONS)
+    if(TDef)
+        foreach(d ${TDef})
+            # But ignore SOURCE_PATH_SIZE
+            if(NOT ${d} MATCHES "SOURCE_PATH_SIZE=*")
+                add_definitions("-D${d}")
+            endif()
+        endforeach()
+    endif()
 endforeach()
 
 # Encoder test precision client target

@@ -8,13 +8,12 @@ add_definitions(-DAPI_EXPORT)
 message(STATUS "LIBRARY TYPE SET TO: ${LIB_TYPE}")
 message(STATUS "LIBRARY INSTALL BIN LOCATION: ${INSTALL_LIB_DIR}")
 
-set_pretty_filenames()
-
 # The database requires sqlite3
 FetchContent_Declare(
   sqlite3
   URL https://www.sqlite.org/2023/sqlite-amalgamation-3420000.zip
   URL_HASH MD5=eb9a6e56044bc518e6705521a1a929ed
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 if (NOT sqlite3_POPULATED)
   FetchContent_Populate(sqlite3)
@@ -33,6 +32,7 @@ add_library(DCSModuleCore ${LIB_TYPE}
   include/DCS_ModuleCore.h
   )
 
+set_pretty_filenames(DCSModuleCore)
 
 # https://slproweb.com/download/Win64OpenSSL-1_1_1s.exe
 # find_package(OpenSSL REQUIRED PATH "C:/Program Files/OpenSSL-Win64")
@@ -41,9 +41,9 @@ find_package(OpenSSL REQUIRED)
 include_directories("${OPENSSL_INCLUDE_DIR}" "${sqlite3_SOURCE_DIR}")
 target_link_libraries(DCSModuleCore DCSModuleUtils ${OPENSSL_LIBRARIES})
 
-set_target_properties(DCSModuleCore PROPERTIES
-  PUBLIC_HEADER "include/DCS_ModuleCore.h"
-  ) #;${CMAKE_CURRENT_BINARY_DIR}/config.h")
+# set_target_properties(DCSModuleCore PROPERTIES
+#   PUBLIC_HEADER "include/DCS_ModuleCore.h"
+#   ) #;${CMAKE_CURRENT_BINARY_DIR}/config.h")
 
 install(TARGETS DCSModuleCore
   # Add the DCSModuleCore library to the "export-set"

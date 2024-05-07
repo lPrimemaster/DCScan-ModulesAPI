@@ -1,4 +1,3 @@
-#pragma once
 #include <thread>
 #include "../include/DCS_ModuleCore.h"
 #include "../include/internal.h"

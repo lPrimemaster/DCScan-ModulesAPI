@@ -44,7 +44,7 @@ if __name__ == '__main__':
                 lst[i-1:] = plist
 
         # Save lst to temp directory in build
-        match = re.match(".*(DCS_.+?include.)(.+\.h)", fnm)
+        match = re.match(".*(DCS_.+?include.)(.+\\.h)", fnm)
         gen_dir = f'{build_dir}/gen/{match.group(1)}'
         Path(gen_dir).mkdir(parents=True, exist_ok=True)
         with open(f'{gen_dir}/{match.group(2)}', 'w') as w:

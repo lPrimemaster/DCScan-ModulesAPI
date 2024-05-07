@@ -431,6 +431,7 @@ def handleArgs():
 
 
 def cleanFiles(compdef: list[str]):
+    compdef_clean = [(c.split('=')[0] if '=' in c else c) for c in compdef]
     blst = []
     for fnm in filenames:
         lst = []
@@ -450,7 +451,7 @@ def cleanFiles(compdef: list[str]):
             if not ns:
                 continue
 
-            plist = checkBlockActive(lst[i - 1:], compdef)
+            plist = checkBlockActive(lst[i - 1:], compdef_clean)
             if plist:
                 lst[i - 1:] = plist
                 # lst[i - 1:] = plist
@@ -501,7 +502,7 @@ def getTokenSymbols(all_files):
                 func.append('::'.join(f_prefix) + '::' + v.split('(')[-2].split(' ')[-1])
 
                 # Get function return and params
-                f_raw_types = [y.strip() for y in re.findall('\((.*?)\)', v, re.DOTALL)[0].split(',')]
+                f_raw_types = [y.strip() for y in re.findall('\\((.*?)\\)', v, re.DOTALL)[0].split(',')]
                 if f_raw_types[0] != 'void':
                     return_type.append(f_raw_types[0])
                 else:
@@ -665,9 +666,6 @@ for evt in evt_name:
     evt_map.append('{' + defi + ', false}')
     evt_f_map.append('{"' + evt_func[number-1] + '", ' + defi + '}')
     number += 1
-
-# rpc_calls = []
-# for 
 
 with open(curr_dir + '/config/registry.h', 'w') as f:
     f.write(HEADER)

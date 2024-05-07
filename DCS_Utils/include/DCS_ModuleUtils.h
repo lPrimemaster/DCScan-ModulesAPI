@@ -1,6 +1,7 @@
 #ifndef _DCS_UTILS_H
 #define _DCS_UTILS_H
 
+#include <stdint.h>
 #pragma once
 #include "../../config/exports.h"
 #include <iostream>
@@ -26,7 +27,7 @@
 
 
 #ifdef SOURCE_PATH_SIZE
-#define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, ##__VA_ARGS__) ///< Alias to DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, __VA_ARGS__)
+#define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(&__FILE__[SOURCE_PATH_SIZE], msg, ##__VA_ARGS__) ///< Alias to DCS::Utils::Logger::lvl(__FILE__ + SOURCE_PATH_SIZE, msg, __VA_ARGS__)
 #else 
 #define LOG_LVL(lvl, msg, ...) DCS::Utils::Logger::lvl(__FILE__, msg, ##__VA_ARGS__) ///< Alias to DCS::Utils::Logger::lvl(__FILE__, msg, __VA_ARGS__)
 #endif
@@ -48,16 +49,16 @@ enum class T
 
 namespace DCS
 {
-	typedef signed long long i64; ///< Equivalent to int64_t.
-	typedef unsigned long long u64; ///< Equivalent to uint64_t.
-	typedef signed long i32; ///< Equivalent to int32_t.
-	typedef unsigned long u32; ///< Equivalent to uint32_t.
-	typedef short i16; ///< Equivalent to int16_t.
-	typedef unsigned short u16; ///< Equivalent to uint16_t.
-	typedef signed char i8; ///< Equivalent to int8_t.
-	typedef unsigned char u8; ///< Equivalent to uint8_t.
+	typedef int64_t  i64; ///< Equivalent to int64_t.
+	typedef uint64_t u64; ///< Equivalent to uint64_t.
+	typedef int32_t  i32; ///< Equivalent to int32_t.
+	typedef uint32_t u32; ///< Equivalent to uint32_t.
+	typedef int16_t  i16; ///< Equivalent to int16_t.
+	typedef uint16_t u16; ///< Equivalent to uint16_t.
+	typedef int8_t   i8;  ///< Equivalent to int8_t.
+	typedef uint8_t  u8;  ///< Equivalent to uint8_t.
 
-	typedef float f32; ///< Equivalent to float.
+	typedef float  f32; ///< Equivalent to float.
 	typedef double f64; ///< Equivalent to double.
 
 	/**

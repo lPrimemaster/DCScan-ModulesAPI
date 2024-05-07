@@ -2,15 +2,16 @@ function(NEWTEST DNAME EXECUTABLE)
 	add_executable(${EXECUTABLE} src/${EXECUTABLE}.cpp include/DCS_Assert.h)
 	target_link_libraries(${EXECUTABLE} DCSModuleUtils DCSModuleCore DCSModuleNetwork DCSModuleEngineControl DCSModuleAcquisition)
 	add_test(${DNAME} ${EXECUTABLE})
+    set_pretty_filenames(${EXECUTABLE})
 endfunction()
 
 function(NEWTEST_WITH_HEADER DNAME EXECUTABLE)
 	add_executable(${EXECUTABLE} src/${EXECUTABLE}.cpp src/${EXECUTABLE}.h include/DCS_Assert.h)
 	target_link_libraries(${EXECUTABLE} DCSModuleUtils DCSModuleCore DCSModuleNetwork DCSModuleEngineControl DCSModuleAcquisition)
 	add_test(${DNAME} ${EXECUTABLE})
+    set_pretty_filenames(${EXECUTABLE})
 endfunction()
 
-set_pretty_filenames()
 
 set(BDEST ${CMAKE_CURRENT_BINARY_DIR}/Release)
 

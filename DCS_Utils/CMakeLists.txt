@@ -7,8 +7,6 @@ add_definitions(-DAPI_EXPORT)
 message(STATUS "LIBRARY TYPE SET TO: ${LIB_TYPE}")
 message(STATUS "LIBRARY INSTALL BIN LOCATION: ${INSTALL_LIB_DIR}")
 
-set_pretty_filenames()
-
 add_library(DCSModuleUtils ${LIB_TYPE}
   src/Logger.cpp
   src/internal.cpp
@@ -19,9 +17,11 @@ add_library(DCSModuleUtils ${LIB_TYPE}
   ../config/exports.h
   )
 
-set_target_properties(DCSModuleUtils PROPERTIES
-  PUBLIC_HEADER "include/DCS_ModuleUtils.h"
-  ) #;${CMAKE_CURRENT_BINARY_DIR}/config.h")
+set_pretty_filenames(DCSModuleUtils)
+
+# set_target_properties(DCSModuleUtils PROPERTIES
+#   PUBLIC_HEADER "include/DCS_ModuleUtils.h"
+#   ) #;${CMAKE_CURRENT_BINARY_DIR}/config.h")
 
 install(TARGETS DCSModuleUtils
   # Add the DCSModuleUtils library to the "export-set"

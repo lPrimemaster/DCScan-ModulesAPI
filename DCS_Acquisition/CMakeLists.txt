@@ -8,7 +8,6 @@ add_definitions(-DAPI_EXPORT)
 message(STATUS "LIBRARY TYPE SET TO: ${LIB_TYPE}")
 message(STATUS "LIBRARY INSTALL BIN LOCATION: ${INSTALL_LIB_DIR}")
 
-set_pretty_filenames()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
@@ -35,6 +34,8 @@ add_library(DCSModuleAcquisition ${LIB_TYPE}
   include/internal.h
   )
 
+set_pretty_filenames(DCSModuleAcquisition)
+
 if(NOT (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC"))
     target_compile_options(DCSModuleAcquisition PRIVATE "-fpermissive")
 endif()
@@ -48,9 +49,9 @@ else()
   target_link_libraries(DCSModuleAcquisition DCSModuleUtils DCSModuleNetwork "${LIBNIDAQMX_LIBRARY}")
 endif()
 
-set_target_properties(DCSModuleAcquisition PROPERTIES
-  PUBLIC_HEADER "include/DCS_ModuleAcquisition.h"
-  ) #;${CMAKE_CURRENT_BINARY_DIR}/config.h")
+# set_target_properties(DCSModuleAcquisition PROPERTIES
+#   PUBLIC_HEADER "include/DCS_ModuleAcquisition.h"
+#   ) #;${CMAKE_CURRENT_BINARY_DIR}/config.h")
 
 install(TARGETS DCSModuleAcquisition
   # Add the DCSModuleAcquisition library to the "export-set"

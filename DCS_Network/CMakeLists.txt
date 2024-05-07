@@ -7,8 +7,6 @@ add_definitions(-DAPI_EXPORT)
 message(STATUS "LIBRARY TYPE SET TO: ${LIB_TYPE}")
 message(STATUS "LIBRARY INSTALL BIN LOCATION: ${INSTALL_LIB_DIR}")
 
-set_pretty_filenames()
-
 #find_package(OpenSSL REQUIRED)
 
 add_library(DCSModuleNetwork STATIC
@@ -27,6 +25,8 @@ add_library(DCSModuleNetwork STATIC
   include/DCS_ModuleNetwork.h
   )
 
+set_pretty_filenames(DCSModuleNetwork)
+
 target_link_libraries(DCSModuleNetwork DCSModuleCore DCSModuleUtils DCSModuleEngineControl DCSModuleAcquisition ws2_32)
 #target_link_libraries(DCSModuleNetwork INTERFACE OpenSSL::SSL)
 #target_link_libraries(DCSModuleNetwork INTERFACE OpenSSL::Crypto)
@@ -34,9 +34,9 @@ target_link_libraries(DCSModuleNetwork DCSModuleCore DCSModuleUtils DCSModuleEng
 #target_include_directories(DCSModuleNetwork BEFORE INTERFACE $<BUILD_INTERFACE:${OPENSSL_PREFIX}/usr/local/include>)
 #target_include_directories(DCSModuleNetwork BEFORE INTERFACE $<BUILD_INTERFACE:${OPENSSL_PREFIX}/usr/local/include>)
 
-set_target_properties(DCSModuleNetwork PROPERTIES
-  PUBLIC_HEADER "include/DCS_ModuleNetwork.h"
-  ) #;${CMAKE_CURRENT_BINARY_DIR}/config.h")
+# set_target_properties(DCSModuleNetwork PROPERTIES
+#   PUBLIC_HEADER "include/DCS_ModuleNetwork.h"
+#   ) #;${CMAKE_CURRENT_BINARY_DIR}/config.h")
 
 install(TARGETS DCSModuleNetwork
   # Add the DCSModuleNetwork library to the "export-set"

@@ -33,12 +33,10 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /W3")
 endif()
 
-function(set_pretty_filenames)
+function(set_pretty_filenames target)
 	string(LENGTH "${CMAKE_CURRENT_SOURCE_DIR}/" SOURCE_PATH_SIZE)
-	add_definitions("-DSOURCE_PATH_SIZE=${SOURCE_PATH_SIZE}")
+    target_compile_definitions(${target} PRIVATE "SOURCE_PATH_SIZE=${SOURCE_PATH_SIZE}")
 endfunction()
-
-set_pretty_filenames()
 
 # Enable testing (DISABLE THIS FOR RELEASE)
 option(BUILD_TESTS "Build tests" OFF)
@@ -104,7 +102,7 @@ else()
   add_libTargetSubDirNamingOnly(DCS_Acquisition)
 endif()
 
-string (REPLACE ";" " " CMAKE_LIBS_SOURCE_DIR "${CMAKE_LIBS_SOURCE_DIR}")
+string(REPLACE ";" " " CMAKE_LIBS_SOURCE_DIR "${CMAKE_LIBS_SOURCE_DIR}")
 
 # ===================== #
 # Start DCSGen.py setup #
@@ -114,11 +112,18 @@ string (REPLACE ";" " " CMAKE_LIBS_SOURCE_DIR "${CMAKE_LIBS_SOURCE_DIR}")
 set(TARGET_DEFINES_DCSGEN "")
 foreach(t ${CONF_TARGETS})
   get_target_property(TDef ${t} COMPILE_DEFINITIONS)
+  set(TDefDisplay "")
   if(TDef)
-    message( STATUS "Found Target with restrictions: ${t} (${TDef})")
     foreach(d ${TDef})
-      list(APPEND TARGET_DEFINES_DCSGEN ${d})
+      # But ignore SOURCE_PATH_SIZE
+      if(NOT ${d} MATCHES "SOURCE_PATH_SIZE=*")
+        list(APPEND TARGET_DEFINES_DCSGEN ${d})
+        list(APPEND TDefDisplay ${d})
+      endif()
     endforeach()
+    if(TDefDisplay)
+      message(STATUS "Found Target with restrictions: ${t} (${TDefDisplay})")
+    endif()
   endif()
 endforeach()
 
@@ -138,7 +143,7 @@ execute_process(COMMAND python scripts/DCSGen.py "${TARGET_DEFINES_DCSGEN}"
 option(BUILD_DOC "Build documentation" ON)
 
 # Check if Doxygen is installed
-find_package(Doxygen)
+find_package(Doxygen QUIET)
 if(BUILD_DOC)
   if (DOXYGEN_FOUND)
       # Set input and output files
