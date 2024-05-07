@@ -57,10 +57,12 @@ void DCS::Auth::SHA256Str(const char *string, DCS::u8 hash[SHA256_DIGEST_LENGTH]
         return;
     }
 
-    SHA256_CTX sha256;
-    SHA256_Init(&sha256);
-    SHA256_Update(&sha256, string, strlen(string));
-    SHA256_Final(hash, &sha256);
+    EVP_MD_CTX* mdctx = EVP_MD_CTX_new();
+    const EVP_MD* md = EVP_sha256();
+    EVP_DigestInit_ex(mdctx, md, NULL);
+    EVP_DigestUpdate(mdctx, string, strlen(string));
+    EVP_DigestFinal_ex(mdctx, hash, 0);
+    EVP_MD_CTX_destroy(mdctx);
 }
 
 void DCS::Auth::HexStringifyBytes(char* out, DCS::u8* hash, DCS::u64 size)
