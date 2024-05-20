@@ -157,7 +157,7 @@ namespace DCS
 		/**
 		 * \brief Move the specified positioner group / axis relative to the current position.
 		 *
-		 * Moves a positioner / axis arelative to the current position.
+		 * Moves a positioner / axis relative to the current position.
 		 * 
 		 *
 		 * \param target The stage to target.
@@ -169,6 +169,22 @@ namespace DCS
 		 */
 		DCS_REGISTER_CALL(void, DCS::Control::UnitTarget, DCS::Utils::BasicString, DCS::f64)
 		DCS_API void MoveRelative(UnitTarget target, DCS::Utils::BasicString group, f64 target_position);
+
+        /**
+		 * \brief Move the specified positioner group / axis to the current position.
+		 *
+		 * Moves a positioner / axis to the current position.
+		 * 
+		 *
+		 * \param target The stage to target.
+		 * \param group The name of the positioner for the XPS-RLD controller, or the axis number for the ESP301-G.
+		 * \param target_position The target position to move to. 
+		 * 
+		 * 
+		 * \ingroup calls
+		 */
+		DCS_REGISTER_CALL(void, DCS::Control::UnitTarget, DCS::Utils::BasicString, DCS::f64)
+        DCS_API void MoveAbsolute(UnitTarget target, DCS::Utils::BasicString group, f64 target_position);
 
 		/**
 		 * \brief Gets called when the move absolute pid controller status changes.
