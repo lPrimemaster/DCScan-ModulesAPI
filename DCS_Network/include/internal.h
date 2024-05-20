@@ -22,7 +22,7 @@
 /**
  * \internal
  */
-#define _GET_F_NAME() __FUNCTION__
+#define _GET_F_NAME() __func__
 
 /**
   * \internal

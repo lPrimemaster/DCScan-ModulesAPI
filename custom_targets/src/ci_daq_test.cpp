@@ -15,6 +15,7 @@ int main(void)
 	DAQmxErrChk (DAQmxCreateTask("L2",&taskHandle));
 	DAQmxErrChk (DAQmxCreateCICountEdgesChan(taskHandle,"PXI1Slot8/ctr0","",DAQmx_Val_Rising,0,DAQmx_Val_CountUp));
 	DAQmxErrChk (DAQmxCfgSampClkTiming(taskHandle,"/PXI1Slot8/PFI32",1000.0,DAQmx_Val_Rising,DAQmx_Val_ContSamps,1000));
+    // DAQmxErrChk (DAQmxSetCICountEdgesTerm(taskHandle, "PXI1Slot8/ctr0", "/PXI1Slot8/PFI28"));
 	// DAQmxErrChk (DAQmxCfgSampClkTiming(taskHandle,"OnBoardClock",100000.0,DAQmx_Val_Rising,DAQmx_Val_ContSamps,1000));
 	
 	DAQmxErrChk (DAQmxCreateTask("L",&taskHandle2));
