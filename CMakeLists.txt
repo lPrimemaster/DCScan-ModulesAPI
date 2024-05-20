@@ -42,9 +42,15 @@ endfunction()
 option(BUILD_TESTS "Build tests" OFF)
 option(INTERNAL_DOCS "Generate internal documentation" OFF)
 option(CI_DOC_GENERATE "Generate documentation only for CI." OFF)
+option(FAKE_DATA "Send fake data to the frontend instead." OFF)
 
 if(BUILD_TESTS)
   add_definitions(-DENABLE_TESTING)
+endif()
+
+if(FAKE_DATA)
+    add_definitions(-DFAKE_DATA)
+    message(WARNING "Sending fake data to the frontend. Test mode only!!!")
 endif()
 
 if(INTERNAL_DOCS)
