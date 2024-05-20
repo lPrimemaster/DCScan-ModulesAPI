@@ -3,6 +3,7 @@
 #include "../include/internal.h"
 #include "../../DCS_Network/include/internal.h"
 #include "../../DCS_Utils/include/internal.h"
+#include "DCS_Utils/include/DCS_ModuleUtils.h"
 
 #include <queue>
 #include <atomic>
@@ -167,6 +168,41 @@ DCS::i32 DCS::DAQ::CountEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEvent
     DCS::i32 samples_per_channel;
 
     DAQmxReadCounterU32(taskHandle, -1, DAQmx_Val_WaitInfinitely, counts, INTERNAL_SAMP_SIZE, &samples_per_channel, NULL);
+
+#ifdef FAKE_DATA
+    data.counts.num_detected = 0;
+    data.counts_delta        = 0;
+    data.timestamp_wall      = count_task_timer.getTimestamp();
+    task_time_real          += (u64)((INTERNAL_SAMP_SIZE / count_task_rate) * 1E9f);
+    data.timestamp_real      = task_time_real;
+
+    data.angle_c1       = 0.0;
+    data.angle_c2       = 0.0;
+    data.angle_detector = 0.0;
+    data.angle_table    = 0.0;
+
+    data.temp_c1                     = 0.0;
+    data.temp_c2                     = 0.0;
+
+    data.angle_eqv_bragg             = 0.0; // TODO
+    data.lattice_spacing_uncorrected = 0.0; // TODO
+    data.lattice_spacing_corrected   = 0.0; // TODO
+    data.bin_number_uncorrected      = 0;   // TODO
+    data.bin_number_corrected        = 0;   // TODO
+
+    LOG_WARNING("Sending fake data!");
+
+    // push to dcs
+    if(DCS::Registry::CheckEvent(SV_EVT_DCS_DAQ_DCSCountEvent))
+    {
+        pushToDCSTask(data);
+    }
+    
+    LOG_DEBUG("GNU fname: %s", GET_F_NAME());
+
+    DCS_EMIT_EVT((DCS::u8*)counts, INTERNAL_SAMP_SIZE * sizeof(u32));
+    return 0;
+#endif
 
     data.counts.num_detected = static_cast<DCS::u64>(counts[INTERNAL_SAMP_SIZE - 1]) - count_task_last_count;
     data.counts_delta        = counts[INTERNAL_SAMP_SIZE - 1] - counts[0];

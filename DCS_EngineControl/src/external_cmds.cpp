@@ -3,6 +3,7 @@
 #include "../../DCS_Core/include/internal.h"
 #include "../../DCS_Acquisition/include/DCS_ModuleAcquisition.h"
 #include "../../DCS_Network/include/internal.h"
+#include "DCS_Utils/include/DCS_ModuleUtils.h"
 
 #include <unordered_map>
 
@@ -80,7 +81,12 @@ void DCS::Control::MoveAbsolutePID(UnitTarget target, DCS::Utils::BasicString gr
 		// Make to passes to make sure we are on the right spot
 		for(i32 i = 0; i < 2; i++)
 		{
-			while(std::abs(error) > 0.00005)
+            // Use a timeout if error does not resolve or there is an issue with the motors sent command
+            std::chrono::seconds timeout = std::chrono::seconds(10);
+            std::chrono::seconds duration = std::chrono::seconds(0);
+            std::chrono::time_point tp = std::chrono::high_resolution_clock::now();
+
+			while(std::abs(error) > 0.00005 && duration < timeout)
 			{
 				pid_target.pid.setTargetAndBias(target_position, 0.0);
 				f64 relative_move = pid_target.pid.calculate(pos);
@@ -89,7 +95,8 @@ void DCS::Control::MoveAbsolutePID(UnitTarget target, DCS::Utils::BasicString gr
 				DCS::Utils::BasicString relative_move_command;
 				std::string cmd = std::string("GroupMoveRelative(" + std::string(group.buffer) + ".Pos," + std::to_string(relative_move) + ")");
 				memcpy(relative_move_command.buffer, cmd.c_str(), cmd.size() + 1);
-
+                
+                // TODO: (César): Check response for errors
 				IssueGenericCommandResponse(target, relative_move_command);
 				
 				std::this_thread::sleep_for(std::chrono::microseconds(wait_interval));
@@ -98,6 +105,8 @@ void DCS::Control::MoveAbsolutePID(UnitTarget target, DCS::Utils::BasicString gr
 				error = target_position - pos;
 
 				LOG_DEBUG("PID Info - T: %.6lf P: %.6lf E: %.6lf", target_position, pos, error);
+
+                duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - tp);
 			}
 
 			std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -119,6 +128,29 @@ void DCS::Control::MoveRelative(UnitTarget target, DCS::Utils::BasicString group
 	std::string cmd = std::string("GroupMoveRelative(" + std::string(group.buffer) + ".Pos," + std::to_string(target_position) + ")");
 	memcpy(relative_move_command.buffer, cmd.c_str(), cmd.size() + 1);
 	IssueGenericCommandResponse(target, relative_move_command);
+}
+
+void DCS::Control::MoveAbsolute(UnitTarget target, DCS::Utils::BasicString group, f64 target_position)
+{
+#ifndef NO_ENCODER_AVAILABLE
+    // Use PID target to get the encoder axis for this UnitTarget
+    std::string target_id = std::to_string(static_cast<int>(target)) + group.buffer;
+	auto pid_target_it = pid_targets.find(target_id);
+    i8 enc_ax = pid_target_it->second.ax - 1;
+
+    f64 pos = ENC::InspectLastEncoderValues().axis[enc_ax].calpos;
+    f64 relative_move = pos - target_position;
+    
+    relative_move *= pid_target_it->second.pid.getKpSign();
+
+    std::string cmd = std::string("GroupMoveRelative(" + std::string(group.buffer) + ".Pos," + std::to_string(relative_move) + ")");
+
+	DCS::Utils::BasicString relative_move_command;
+	memcpy(relative_move_command.buffer, cmd.c_str(), cmd.size() + 1);
+	IssueGenericCommandResponse(target, relative_move_command);
+#else
+    LOG_ERROR("MoveAbsolute not implemented for internal encoders.");
+#endif
 }
 
 void DCS::Control::MoveAbsolutePIDChanged(PIDStatusGroup status_group)
