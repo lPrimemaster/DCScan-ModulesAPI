@@ -42,3 +42,8 @@ DCS::f64 DCS::Core::PID::calculate(f64 value, f64 dt)
     le = e;
     return std::clamp(P + I + D + bias, min, max);
 }
+
+DCS::i8 DCS::Core::PID::getKpSign()
+{
+    return Kp >= 0.0 ? 1 : -1;
+}

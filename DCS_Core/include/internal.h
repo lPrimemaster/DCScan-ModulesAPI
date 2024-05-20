@@ -314,6 +314,8 @@ namespace DCS
 
 			f64 calculate(f64 value, f64 dt);
 
+            i8 getKpSign();
+
 		private:
 			f64 min;
 			f64 max;
