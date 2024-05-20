@@ -417,7 +417,6 @@ namespace DCS
          * All functions called within this mode are made synchronously.
          * To call them asynchronously use the Registry direct calls.
          */
-
 $0
     }
 }
@@ -524,13 +523,17 @@ def getTokenSymbols(all_files):
 
 
 def make_rpc_func(fname, name, params, ret_type):
+    fname_z = fname
     if len(params) > 0:
         fname += ','
     params_names = ', '.join(['p'+str(i) for i in range(len(params))])
     params_str = ', '.join([ptype for i, ptype in enumerate(params)])
     ret_statement = 'return *reinterpret_cast<'+ret_type+'*>(r.ptr);' if ret_type else 'return;'
-
+    
     out = '''
+        /**
+         * \\brief A synchronous call to `$fname_z`.
+         */
         inline $ret_type $name($params_str)
         {
             unsigned char buffer[1024];
@@ -548,6 +551,7 @@ def make_rpc_func(fname, name, params, ret_type):
     out = out.replace('$params_str', params_str)
     out = out.replace('$params_names', params_names)
     out = out.replace('$name', name)
+    out = out.replace('$fname_z', fname_z)  # NOTE: (César) : Order matters here
     out = out.replace('$fname', fname)
     return out
 
@@ -664,7 +668,7 @@ for evt in evt_name:
     defi = 'SV_EVT_' + evt
     evt_def.append('#define '+ defi + ' ' + hex(number) + ' ///< A event refering to `' + evt_func[number-1] + '` \\ingroup evt_id')
     evt_map.append('{' + defi + ', false}')
-    evt_f_map.append('{"' + evt_func[number-1] + '", ' + defi + '}')
+    evt_f_map.append('{"' + evt_func[number-1].split('::')[-1] + '", ' + defi + '}')
     number += 1
 
 with open(curr_dir + '/config/registry.h', 'w') as f:
