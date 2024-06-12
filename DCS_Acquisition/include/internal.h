@@ -194,6 +194,16 @@ namespace DCS
         DCS_INTERNAL_TEST void NotifyUnblockEventLoop();
     }
 
+    namespace MControl
+    {
+        struct MeasurementRoutineData;
+        /**
+         * \internal
+         * \brief Starts the measurement control routine in increment timebased mode
+         */
+        DCS_INTERNAL_TEST void StartMeasurementIncTimebased(const MeasurementRoutineData& data);
+    }
+
     namespace Temp
     {
         /**

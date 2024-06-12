@@ -3,13 +3,17 @@
 #include "../include/internal.h"
 #include "../../DCS_Network/include/internal.h"
 #include "../../DCS_Utils/include/internal.h"
+#include "DCS_EngineControl/include/DCS_ModuleEngineControl.h"
 #include "DCS_Utils/include/DCS_ModuleUtils.h"
 
+#include <chrono>
 #include <queue>
 #include <atomic>
 #include <cstring>
 
 #include <NIDAQmx.h>
+#include <ratio>
+#include <thread>
 
 #undef max
 
@@ -62,6 +66,12 @@ static std::condition_variable cli_cv;
 static DCS::u64 task_time_real;
 
 static std::atomic<DCS::u16> MCA_NumChannels = 2048;
+
+static std::atomic<bool> measurement_control_running = false;
+static std::atomic<bool> measurement_control_paused = false;
+static std::atomic<DCS::i64> measurement_control_current_bin = -1;
+static std::atomic<DCS::f64> measurement_control_current_bin_time = 0.0;
+static std::atomic<DCS::i64> measurement_total_bins = 0;
 
 // NOTE : Using circular buffer instead of allocating memory every time (?)
 //static DCS::Memory::CircularBuffer crb(INTERNAL_SAMP_SIZE, 32);
@@ -187,8 +197,9 @@ DCS::i32 DCS::DAQ::CountEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEvent
     data.angle_eqv_bragg             = 0.0; // TODO
     data.lattice_spacing_uncorrected = 0.0; // TODO
     data.lattice_spacing_corrected   = 0.0; // TODO
-    data.bin_number_uncorrected      = 0;   // TODO
+    data.bin_number_uncorrected      = MControl::GetCurrentBin();
     data.bin_number_corrected        = 0;   // TODO
+    data.bin_time                    = MControl::GetCurrentBinTime();
 
     LOG_WARNING("Sending fake data!");
 
@@ -238,8 +249,9 @@ DCS::i32 DCS::DAQ::CountEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEvent
     data.angle_eqv_bragg             = 0.0; // TODO
     data.lattice_spacing_uncorrected = 0.0; // TODO
     data.lattice_spacing_corrected   = 0.0; // TODO
-    data.bin_number_uncorrected      = 0;   // TODO
+    data.bin_number_uncorrected      = MControl::GetCurrentBin();
     data.bin_number_corrected        = 0;   // TODO
+    data.bin_time                    = MControl::GetCurrentBinTime();
 
     count_task_last_count = counts[INTERNAL_SAMP_SIZE - 1];
 
@@ -604,4 +616,146 @@ void DCS::DAQ::NotifyUnblockEventLoop()
     mca_cv.notify_one();
     dcs_cv.notify_one();
     cli_cv.notify_one();
+}
+
+void DCS::MControl::StartMeasurementIncTimebased(const MeasurementRoutineData& data)
+{
+    if(!measurement_control_running.load())
+    {
+        measurement_control_running.store(true);
+        std::thread([](MeasurementRoutineData data) {
+            // Orquestrate everything into it's starting position!
+            // The detector does not need PID movement
+            DCS::Control::MoveAbsolute(Control::UnitTarget::XPSRLD4, { "Detector" }, data.detector_ref);
+
+            // THe table does not need PID movement
+            DCS::Control::MoveAbsolute(Control::UnitTarget::XPSRLD4, { "Table" }, data.table_ref);
+
+            // C1 and C2 use PID for precise position control
+            DCS::Control::MoveAbsolutePID(Control::UnitTarget::XPSRLD4, { "Crystal1" }, data.c1_ref);
+            DCS::Control::MoveAbsolutePID(Control::UnitTarget::XPSRLD4, { "Crystal2" }, data.c2_start);
+
+            // Wait a few moments to stabilize
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+
+            // Ready to start the control subroutine
+            // Run every few milliseconds (ideally a factor of ~10 lower than the bin time)
+            measurement_total_bins = static_cast<i64>(std::abs(data.c2_stop - data.c2_start) / data.bin_width);
+            const f64 sign       = (data.c2_stop >= data.c2_start) ? 1.0 : -1.0;
+            const i64 bin_nanos  = static_cast<i64>(data.bin_time * 1E9);
+            Timer::SystemTimer timer;
+            while(measurement_control_current_bin.load() < measurement_total_bins)
+            {
+                timer.start();
+                measurement_control_current_bin++;
+                CurrentMeasurementProgressChangedEvent();
+                i64 tleft = bin_nanos - timer.getNanoseconds();
+                while(tleft > 1000) // 1 us increments
+                {
+                    std::this_thread::sleep_for(std::chrono::nanoseconds(1000));
+
+                    // Check if we want to stop
+                    if(!measurement_control_running.load()) break;
+
+                    i64 curr_nanos = timer.getNanoseconds();
+
+                    // Only update time left if we are not paused
+                    if(!measurement_control_paused.load())
+                    {
+                        tleft = bin_nanos - curr_nanos;
+                    }
+                    
+                    measurement_control_current_bin_time.store(curr_nanos / 1E9);
+                }
+
+                // Check if we want to stop
+                if(!measurement_control_running.load()) break;
+
+                // For now we can use a relative move approach and see how good it is
+                DCS::Control::MoveRelative(Control::UnitTarget::XPSRLD4, { "Crystal2" }, data.bin_width * sign);
+            }
+            measurement_control_current_bin.store(-1);
+            measurement_control_current_bin_time.store(0.0);
+            measurement_control_running.store(false);
+        }, data).detach();
+    }
+    else
+    {
+        LOG_WARNING("A measurement service is already running.");
+    }
+}
+
+void DCS::MControl::StartMeasurementControlRoutine(MeasurementRoutineData data)
+{
+    // The measurement and control service is running on a different thread
+    // We should be able to start/stop/pause this service whenever necessary
+    // This function handles the starting part
+
+    switch(data.mode)
+    {
+    case MeasurementRoutineMode::INC_TIME_BASED:
+        StartMeasurementIncTimebased(data);
+        break;
+    case MeasurementRoutineMode::INC_EVENT_BASED:
+        LOG_WARNING("Incemental Event Based Measurement Control is not available.");
+        break;
+    case MeasurementRoutineMode::SWP_TIME_BASED:
+        LOG_WARNING("Sweep Time Based Measurement Control is not available.");
+        break;
+    default:
+        LOG_ERROR("Unknown MeasurementRoutineMode.");
+        break;
+    }
+}
+
+DCS_API void DCS::MControl::StopMeasurementControlRoutine()
+{
+    if(measurement_control_running.load())
+    {
+        measurement_control_running.store(false);
+    }
+    else
+    {
+        LOG_WARNING("No Measurement Control Routine is running.");
+    }
+}
+
+DCS_API void DCS::MControl::PauseMeasurementControlRoutine()
+{
+    if(measurement_control_running.load())
+    {
+        measurement_control_paused.store(true);
+    }
+    else
+    {
+        LOG_WARNING("No Measurement Control Routine is running.");
+    }
+}
+
+DCS_API void DCS::MControl::ResumeMeasurementControlRoutine()
+{
+    if(measurement_control_running.load() && measurement_control_paused.load())
+    {
+        measurement_control_paused.store(false);
+    }
+    else
+    {
+        LOG_WARNING("No Measurement Control Routine is paused.");
+    }
+}
+
+DCS_API DCS::i64 DCS::MControl::GetCurrentBin()
+{
+    return measurement_control_current_bin.load();
+}
+
+DCS_API DCS::f64 DCS::MControl::GetCurrentBinTime()
+{
+    return measurement_control_current_bin_time.load();
+}
+
+DCS_API DCS::i64 DCS::MControl::GetCurrentMeasurementProgress()
+{
+    const i64 progress = ((measurement_control_current_bin.load() + 1) / measurement_total_bins.load()) * 100;
+    return progress < 0 ? 0 : progress;
 }

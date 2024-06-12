@@ -91,6 +91,7 @@ namespace DCS
             f64               lattice_spacing_corrected;   ///< Lattice spacing value for this event (temperature corrected).
             u64               bin_number_uncorrected;      ///< Bin id where this will land.
             u64               bin_number_corrected;        ///< Bin id where this will land (temperature corrected).
+            f64               bin_time;                    ///< Bin time where this will land.
         };
 
         /**
@@ -335,6 +336,105 @@ namespace DCS
          */
         DCS_REGISTER_EVENT
         DCS_API void ClinometerEvent();
+    }
+
+    /**
+     * \brief Exposes Measurement Control functionalities to the API to the end user.
+     */
+    namespace MControl
+    {
+        /**
+         * \brief Measurement control routine behaviour.
+        */
+        enum class MeasurementRoutineMode
+        {
+            INC_EVENT_BASED,
+            INC_TIME_BASED,
+            SWP_TIME_BASED
+        };
+
+        /*
+         * \brief Holds the data to start a measuremnt control routine.
+         */
+        struct DCS_API MeasurementRoutineData
+        {
+            f64 detector_ref;            ///< The detector's relative position for this measurement.
+            f64 table_ref;               ///< The table's relative position for this measurement.
+            f64 c1_ref;                  ///< The crystal1's relative position for this measurement.
+            f64 c2_start;                ///< The crystal2's relative start position for this measurement.
+            f64 c2_stop;                 ///< The crystal2's relative stop position for this measurement.
+            MeasurementRoutineMode mode; ///< The motor control mode.
+            f64 bin_width;               ///< The width for each bin (in deg).
+            f64 bin_time;                ///< The time for each bin (INC_TIME_BASED only).
+            u32 bin_events;              ///< The events for each bin (INC_EVENT_BASED only).
+        };
+
+        /**
+         * \brief Starts the measurement subroutine with the specified parameters.
+         *
+         * \param data The values to configure a measurement control routine.
+         *
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(void, DCS::MControl::MeasurementRoutineData)
+        DCS_API void StartMeasurementControlRoutine(MeasurementRoutineData data);
+
+        /**
+         * \brief Stops the measurement subroutine.
+         *
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(void)
+        DCS_API void StopMeasurementControlRoutine();
+
+        /**
+         * \brief Pauses the measurement subroutine.
+         * The routine still runs in background. Hanging on the current bin until resumend.
+         *
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(void)
+        DCS_API void PauseMeasurementControlRoutine();
+
+        /**
+         * \brief Resumes the measurement subroutine.
+         *
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(void)
+        DCS_API void ResumeMeasurementControlRoutine();
+
+        /**
+         * \brief Gets the current internal bin count.
+         *
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(DCS::i64)
+        DCS_API DCS::i64 GetCurrentBin();
+    
+        /**
+         * \brief Gets the current internal bin time.
+         *
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(DCS::f64)
+        DCS_API DCS::f64 GetCurrentBinTime();
+
+        /**
+         * \brief Gets the current measuremnt progress percentage.
+         *
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(DCS::i64)
+        DCS_API DCS::i64 GetCurrentMeasurementProgress();
+
+        /**
+         * \brief Callback whenever the current measuremnt progress changes
+         *
+         * \ingroup events
+         */
+        DCS_REGISTER_EVENT
+        DCS_API void CurrentMeasurementProgressChangedEvent();
     }
 
     /**

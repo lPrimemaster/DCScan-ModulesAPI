@@ -115,3 +115,9 @@ void DCS::DAQ::ClinometerEvent()
         // DCS_EMIT_EVT((DCS::u8*)&evt_data, sizeof(ClinometerEventData)); // HACK : This can operate with a move ctor instead
     }
 }
+
+void DCS::MControl::CurrentMeasurementProgressChangedEvent()
+{
+    i64 progress = GetCurrentMeasurementProgress();
+    DCS_EMIT_EVT((DCS::u8*)&progress, sizeof(i64));
+}
