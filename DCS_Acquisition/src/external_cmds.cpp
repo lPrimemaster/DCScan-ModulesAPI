@@ -6,6 +6,7 @@
 #include "DCS_EngineControl/include/DCS_ModuleEngineControl.h"
 #include "DCS_Utils/include/DCS_ModuleUtils.h"
 
+#include <algorithm>
 #include <chrono>
 #include <queue>
 #include <atomic>
@@ -34,6 +35,7 @@ struct VirtualChannel
 };
 
 static std::map<std::string, VirtualChannel> virtual_channels;
+static std::map<int, int> virtual_channels_acq_order;
 
 static DCS::DAQ::InternalTask voltage_task;
 static DCS::Timer::SystemTimer voltage_task_timer;
@@ -112,6 +114,38 @@ static void pushToClinometerEvt(DCS::DAQ::EventData& data)
     cli_cv.notify_one();
 }
 
+static void SetVirtualChannelsIndices()
+{
+    virtual_channels_acq_order.clear();
+    std::vector<int> channels;
+    for(const auto& vc : virtual_channels)
+    {
+        if(vc.second.type == DCS::DAQ::ChannelType::Voltage)
+        {
+            size_t nidx = vc.second.channel_name.find_last_not_of("0123456789");
+            channels.push_back(std::atoi(vc.second.channel_name.substr(nidx + 1).c_str()));
+        }
+    }
+    std::sort(channels.begin(), channels.end());
+
+    for(int i = 0; i < static_cast<int>(channels.size()); i++)
+    {
+        virtual_channels_acq_order.emplace(channels[i], i);
+    }
+}
+
+static DCS::f64* GetSamplesOffsetForChannel(DCS::f64* samples, int chan)
+{
+    // BUG: (César) : All this just works with an even number of channels
+    //                Because `INTERNAL_SAMP_SIZE` is 1000 (this should be a dynamic value instead)
+    if(virtual_channels_acq_order.find(chan) == virtual_channels_acq_order.end())
+    {
+        LOG_ERROR("Channel %d was requested, but is not on the current task.", chan);
+        return samples; // Avoid return nullptr
+    }
+    return &samples[(INTERNAL_SAMP_SIZE/virtual_channels_acq_order.size())*virtual_channels_acq_order[chan]];
+}
+
 void DCS::DAQ::Init()
 {
     LOG_DEBUG("DAQ Services Running.");
@@ -145,7 +179,11 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     
     DAQmxReadAnalogF64(taskHandle, -1, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, INTERNAL_SAMP_SIZE, &samples_per_channel, NULL);
 
-    data.counts = DCS::Math::countArrayPeak(samples, INTERNAL_SAMP_SIZE, 0.2, 10.0, 0.0); // Copy data.cr
+    // data.counts = DCS::Math::countArrayPeak(samples, samples_per_channel, 0.2, 10.0, 0.0); // Copy data.cr
+
+    // TODO: (César) : Create a server-side function to set which channel is which
+    data.tilt_c1[0] = DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, 1), samples_per_channel);
+    data.tilt_c1[1] = DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, 2), samples_per_channel);
 
     // push to dcs
     if(DCS::Registry::CheckEvent(SV_EVT_DCS_DAQ_DCSCountEvent))
@@ -162,7 +200,6 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     // push to clinometer display
     if(DCS::Registry::CheckEvent(SV_EVT_DCS_DAQ_ClinometerEvent))
     {
-        // memcpy(data.ptr, samples, INTERNAL_SAMP_SIZE * sizeof(f64));
         pushToClinometerEvt(data);
     }
 
@@ -209,8 +246,6 @@ DCS::i32 DCS::DAQ::CountEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEvent
         pushToDCSTask(data);
     }
     
-    LOG_DEBUG("GNU fname: %s", GET_F_NAME());
-
     DCS_EMIT_EVT((DCS::u8*)counts, INTERNAL_SAMP_SIZE * sizeof(u32));
     return 0;
 #endif
@@ -325,6 +360,7 @@ void DCS::DAQ::StartAIAcquisition(DCS::Utils::BasicString clock_trigger_channel,
         }
 
         // Always use the internal clock for continuous acquisition
+        SetVirtualChannelsIndices();
         SetupTaskAI(&voltage_task, clock_trigger_channel.buffer, voltage_task_rate, INTERNAL_SAMP_SIZE / CountVirtualChannelsOfType(DCS::DAQ::ChannelType::Voltage), VoltageEvent);
         StartTask(&voltage_task);
         voltage_task_timer.start();
@@ -648,7 +684,7 @@ void DCS::MControl::StartMeasurementIncTimebased(const MeasurementRoutineData& d
             {
                 timer.start();
                 measurement_control_current_bin++;
-                CurrentMeasurementProgressChangedEvent();
+                DCS_EMIT CurrentMeasurementProgressChangedEvent();
                 i64 tleft = bin_nanos - timer.getNanoseconds();
                 while(tleft > 1000) // 1 us increments
                 {
@@ -677,6 +713,7 @@ void DCS::MControl::StartMeasurementIncTimebased(const MeasurementRoutineData& d
             measurement_control_current_bin.store(-1);
             measurement_control_current_bin_time.store(0.0);
             measurement_control_running.store(false);
+            DCS_EMIT MeasurementControlRoutineEnded();
         }, data).detach();
     }
     else
@@ -756,6 +793,6 @@ DCS_API DCS::f64 DCS::MControl::GetCurrentBinTime()
 
 DCS_API DCS::i64 DCS::MControl::GetCurrentMeasurementProgress()
 {
-    const i64 progress = ((measurement_control_current_bin.load() + 1) / measurement_total_bins.load()) * 100;
+    const i64 progress = (measurement_control_current_bin.load() * 100) / measurement_total_bins.load();
     return progress < 0 ? 0 : progress;
 }

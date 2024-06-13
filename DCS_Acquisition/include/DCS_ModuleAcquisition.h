@@ -87,6 +87,8 @@ namespace DCS
             f64               angle_eqv_bragg;             ///< Calculated bragg angle for this event.
             f64               temp_c1;                     ///< Crystal 1 temperature measurement for this event.
             f64               temp_c2;                     ///< Crystal 2 temperature measurement for this event.
+            f64               tilt_c1[2];                  ///< Crystal 1 tilt x,y pair for this event.
+            f64               tilt_c2[2];                  ///< Crystal 2 tilt x,y pair for this event.
             f64               lattice_spacing_uncorrected; ///< Lattice spacing value for this event (fixed depending on crystal type).
             f64               lattice_spacing_corrected;   ///< Lattice spacing value for this event (temperature corrected).
             u64               bin_number_uncorrected;      ///< Bin id where this will land.
@@ -122,8 +124,8 @@ namespace DCS
          */
         struct DCS_API ClinometerEventData
         {
-            f64 list_cliX[500];
-            f64 list_cliY[500];
+            f64 c1[2];
+            f64 c2[2];
             DCS::Timer::Timestamp timestamp;
         };
 
@@ -435,6 +437,14 @@ namespace DCS
          */
         DCS_REGISTER_EVENT
         DCS_API void CurrentMeasurementProgressChangedEvent();
+
+        /**
+         * \brief Callback whenever the current measuremnt ends
+         *
+         * \ingroup events
+         */
+        DCS_REGISTER_EVENT
+        DCS_API void MeasurementControlRoutineEnded();
     }
 
     /**

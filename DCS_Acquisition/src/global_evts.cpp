@@ -2,6 +2,7 @@
 #include "../../DCS_Core/include/DCS_ModuleCore.h"
 #include "../include/internal.h"
 #include "../../DCS_Network/include/internal.h"
+#include "DCS_Utils/include/DCS_ModuleUtils.h"
 
 #include <queue>
 #include <thread>
@@ -92,27 +93,26 @@ void DCS::DAQ::ClinometerEvent()
 {
     while(evt_loop_sig.load())
     {
-        // EventData ivd = GetLastClinometer_IVD();
+        EventData ivd = GetLastClinometer_IVD();
 
-        // if(ivd.counts.num_detected == std::numeric_limits<u64>::max())
-        // {
-        //     continue;
-        // }
+        if(ivd.counts.num_detected == std::numeric_limits<u64>::max())
+        {
+            continue;
+        }
 
-        // ClinometerEventData evt_data;
-        // constexpr f64 max_angle = 10.0;
-        // constexpr f64 min_angle = -10.0;
-        // constexpr f64 range_angle = max_angle - min_angle;
+        ClinometerEventData evt_data;
+        constexpr f64 max_angle = 10.0;
+        constexpr f64 min_angle = -10.0;
+        constexpr f64 range_angle = max_angle - min_angle;
 
-        // for (int i = 0 ; i < 500 ; ++i)
-        // {
-        //     evt_data.list_cliX[i] = 0.2f*ivd.ptr[i]*range_angle + min_angle;
-        //     evt_data.list_cliY[i] = 0.2f*ivd.ptr[i+500]*range_angle + min_angle;
-            
-        // }
-        // evt_data.timestamp = ivd.timestamp_wall;
-        
-        // DCS_EMIT_EVT((DCS::u8*)&evt_data, sizeof(ClinometerEventData)); // HACK : This can operate with a move ctor instead
+        for(int i = 0; i < 2; i++)
+        {
+            evt_data.c1[i] = 0.2 * ivd.tilt_c1[i] * range_angle + min_angle;
+            evt_data.c2[i] = 0.2 * ivd.tilt_c2[i] * range_angle + min_angle;
+        }
+        evt_data.timestamp = ivd.timestamp_wall;
+
+        DCS_EMIT_EVT((DCS::u8*)&ivd, sizeof(ClinometerEventData)); // HACK : This can operate with a move ctor instead
     }
 }
 
@@ -120,4 +120,9 @@ void DCS::MControl::CurrentMeasurementProgressChangedEvent()
 {
     i64 progress = GetCurrentMeasurementProgress();
     DCS_EMIT_EVT((DCS::u8*)&progress, sizeof(i64));
+}
+
+void DCS::MControl::MeasurementControlRoutineEnded()
+{
+    DCS_EMIT_EVT((DCS::u8*)0, 0);
 }
