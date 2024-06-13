@@ -112,7 +112,7 @@ void DCS::DAQ::ClinometerEvent()
         }
         evt_data.timestamp = ivd.timestamp_wall;
 
-        DCS_EMIT_EVT((DCS::u8*)&ivd, sizeof(ClinometerEventData)); // HACK : This can operate with a move ctor instead
+        DCS_EMIT_EVT((DCS::u8*)&evt_data, sizeof(ClinometerEventData)); // HACK : This can operate with a move ctor instead
     }
 }
 

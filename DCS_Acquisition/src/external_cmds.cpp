@@ -179,7 +179,7 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
     
     DAQmxReadAnalogF64(taskHandle, -1, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, INTERNAL_SAMP_SIZE, &samples_per_channel, NULL);
 
-    // data.counts = DCS::Math::countArrayPeak(samples, samples_per_channel, 0.2, 10.0, 0.0); // Copy data.cr
+    data.counts = DCS::Math::countArrayPeak(GetSamplesOffsetForChannel(samples, 3), samples_per_channel, 0.2, 10.0, 0.0); // Copy data.cr
 
     // TODO: (César) : Create a server-side function to set which channel is which
     data.tilt_c1[0] = DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, 1), samples_per_channel);
