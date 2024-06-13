@@ -347,6 +347,16 @@ namespace DCS
 		 * \return A DCS::Math::CountResult struct with data of analyzed array.
 		 */
 		CountResult countArrayPeak(f64* arr, u64 size, f64 vlo, f64 vhi, f64 vth);
+
+        /**
+         * \brief Averages an f64 array.
+         *
+         * \param arr The data array to average.
+         * \param size The sife of the data array.
+         *
+         * \return The average value of the array.
+         */
+        DCS::f64 averageArray(f64* arr, u64 size);
 	}
 }
 

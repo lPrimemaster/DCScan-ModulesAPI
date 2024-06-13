@@ -1,4 +1,5 @@
 #include "../include/DCS_ModuleCore.h"
+#include "DCS_Utils/include/DCS_ModuleUtils.h"
 #include <iostream>
 #include <functional>
 #include <algorithm>
@@ -165,4 +166,14 @@ DCS::Math::CountResult DCS::Math::countArrayPeak(f64* arr, u64 size, f64 vlo, f6
     #endif
 
     return result;
+}
+
+DCS::f64 DCS::Math::averageArray(f64 *arr, u64 size)
+{
+    f64 sum = 0.0;
+    for(u64 i = 0; i < size; i++)
+    {
+        sum += arr[i];
+    }
+    return sum / size;
 }
