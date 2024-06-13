@@ -94,6 +94,13 @@
   */
 #define DCS_REGISTER_EVENT
 
+/**
+ * \brief Prepend this to an event call on the server side.
+ *
+ * This is simply a comodity for source code events ease of detection.
+ */
+#define DCS_EMIT
+
 #ifdef SHARED
 #ifdef API_EXPORT
 /**
