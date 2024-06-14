@@ -16,6 +16,7 @@
 
 // TODO : Pass config values to a config section for ease of modification
 #define INTERNAL_SAMP_SIZE 1000
+#define INTERNAL_VCHAN_SIZE 100
 #define INTERNAL_ADC_MAX_CHAN 65535
 #define INTERNAL_ADC_MAX_CLK 250000.0
 

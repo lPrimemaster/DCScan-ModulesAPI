@@ -14,12 +14,14 @@
 
 #include <NIDAQmx.h>
 #include <ratio>
+#include <string>
 #include <thread>
 
 #undef max
 
 struct VirtualChannel
 {
+    std::string internal_name;
     std::string channel_name;
     DCS::DAQ::ChannelType type;
 
@@ -35,13 +37,15 @@ struct VirtualChannel
 };
 
 static std::map<std::string, VirtualChannel> virtual_channels;
-static std::map<int, int> virtual_channels_acq_order;
+static std::map<std::string, int> virtual_channels_acq_order;
 
 static DCS::DAQ::InternalTask voltage_task;
 static DCS::Timer::SystemTimer voltage_task_timer;
 static DCS::f64 voltage_task_rate;
 static bool voltage_task_running = false;
 static bool voltage_task_inited = false;
+static DCS::u64 voltage_channels_dynamic_size = 0;
+static DCS::f64* voltage_samples = nullptr;
 
 static DCS::DAQ::InternalTask count_task;
 static DCS::Timer::SystemTimer count_task_timer;
@@ -74,9 +78,6 @@ static std::atomic<bool> measurement_control_paused = false;
 static std::atomic<DCS::i64> measurement_control_current_bin = -1;
 static std::atomic<DCS::f64> measurement_control_current_bin_time = 0.0;
 static std::atomic<DCS::i64> measurement_total_bins = 0;
-
-// NOTE : Using circular buffer instead of allocating memory every time (?)
-//static DCS::Memory::CircularBuffer crb(INTERNAL_SAMP_SIZE, 32);
 
 // TODO : Create a global SendErrorToClient (also, check if it is being called from server-side only)
 
@@ -118,32 +119,34 @@ static void SetVirtualChannelsIndices()
 {
     virtual_channels_acq_order.clear();
     std::vector<int> channels;
+    std::map<int, std::string> internal_name_map;
     for(const auto& vc : virtual_channels)
     {
         if(vc.second.type == DCS::DAQ::ChannelType::Voltage)
         {
             size_t nidx = vc.second.channel_name.find_last_not_of("0123456789");
             channels.push_back(std::atoi(vc.second.channel_name.substr(nidx + 1).c_str()));
+            internal_name_map.emplace(channels.back(), vc.second.internal_name);
         }
     }
     std::sort(channels.begin(), channels.end());
 
     for(int i = 0; i < static_cast<int>(channels.size()); i++)
     {
-        virtual_channels_acq_order.emplace(channels[i], i);
+        virtual_channels_acq_order.emplace(internal_name_map[channels[i]], i);
     }
 }
 
-static DCS::f64* GetSamplesOffsetForChannel(DCS::f64* samples, int chan)
+static DCS::f64* GetSamplesOffsetForChannel(DCS::f64* samples, std::string internal_name)
 {
     // BUG: (César) : All this just works with an even number of channels
     //                Because `INTERNAL_SAMP_SIZE` is 1000 (this should be a dynamic value instead)
-    if(virtual_channels_acq_order.find(chan) == virtual_channels_acq_order.end())
+    if(virtual_channels_acq_order.find(internal_name) == virtual_channels_acq_order.end())
     {
-        LOG_ERROR("Channel %d was requested, but is not on the current task.", chan);
-        return samples; // Avoid return nullptr
+        LOG_ERROR("Event %s was requested, but does not have an associated channel.", internal_name.c_str());
+        return samples; // Avoid returning nullptr
     }
-    return &samples[(INTERNAL_SAMP_SIZE/virtual_channels_acq_order.size())*virtual_channels_acq_order[chan]];
+    return &samples[INTERNAL_VCHAN_SIZE * virtual_channels_acq_order[internal_name]];
 }
 
 void DCS::DAQ::Init()
@@ -159,31 +162,26 @@ void DCS::DAQ::Terminate()
     voltage_task_inited = false;
 }
 
-// NOTE : This works because only one channel is being used. If more channels are used, this needs to be refactored.
 DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData)
 {
     EventData data;
-    DCS::f64 samples[INTERNAL_SAMP_SIZE];
+    DCS::f64* samples = voltage_samples;
     DCS::i32 samples_per_channel;
 
     // Software TS
     data.timestamp_wall = voltage_task_timer.getTimestamp();
 
-    // TODO : Maybe try a more predictive approach if this is not good enough
-    // IMPORTANT : To ensure usability take params -> (Nbuff / Fsamp) * Vtheta = delta_theta_min
-    //             For this case -> (1000 / 100'000) * ([estimated?]~100 mdeg/s) = 1 mdeg uncertainty per buffer
     // TODO : Create a way to check for the ESP301 handle without any overhead. (Store value perhaps)
-    //data.measured_angle = atof(DCS::Control::IssueGenericCommandResponse(DCS::Control::UnitTarget::ESP301, { "2TP?" }).buffer);
-    // TODO : Channels not in the task also queue in the buffer?  
-    // TODO : Cout peaks in a separate thread if it gets slow in the live callback (FIFO Style as always =])
     
-    DAQmxReadAnalogF64(taskHandle, -1, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, INTERNAL_SAMP_SIZE, &samples_per_channel, NULL);
+    DAQmxReadAnalogF64(taskHandle, -1, DAQmx_Val_WaitInfinitely, DAQmx_Val_GroupByChannel, samples, voltage_channels_dynamic_size, &samples_per_channel, NULL);
 
-    data.counts = DCS::Math::countArrayPeak(GetSamplesOffsetForChannel(samples, 3), samples_per_channel, 0.2, 10.0, 0.0); // Copy data.cr
-
-    // TODO: (César) : Create a server-side function to set which channel is which
-    data.tilt_c1[0] = DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, 1), samples_per_channel);
-    data.tilt_c1[1] = DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, 2), samples_per_channel);
+    data.counts = DCS::Math::countArrayPeak(GetSamplesOffsetForChannel(samples, "ACQ"), samples_per_channel, 0.2, 10.0, 0.0); // Copy data.cr
+    
+    // Clinometer data (raw)
+    data.tilt_c1[0] = DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, "CLX0"), samples_per_channel);
+    data.tilt_c1[1] = DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, "CLY0"), samples_per_channel);
+    data.tilt_c2[0] = DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, "CLX1"), samples_per_channel);
+    data.tilt_c2[1] = DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, "CLY1"), samples_per_channel);
 
     // push to dcs
     if(DCS::Registry::CheckEvent(SV_EVT_DCS_DAQ_DCSCountEvent))
@@ -203,8 +201,7 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
         pushToClinometerEvt(data);
     }
 
-    // NOTE : Maybe use named event to reduce cpu time finding event name
-    DCS_EMIT_EVT((DCS::u8*)samples, INTERNAL_SAMP_SIZE * sizeof(f64));
+    DCS_EMIT_EVT((DCS::u8*)samples, voltage_channels_dynamic_size * sizeof(f64));
     return 0;
 }
 
@@ -296,7 +293,6 @@ DCS::i32 DCS::DAQ::CountEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEvent
         pushToDCSTask(data);
     }
 
-    // NOTE : Maybe use named event to reduce cpu time finding event name
     DCS_EMIT_EVT((DCS::u8*)counts, INTERNAL_SAMP_SIZE * sizeof(u32));
     return 0;
 }
@@ -322,11 +318,39 @@ void DCS::DAQ::NewAIVChannel(DCS::Utils::BasicString name, DCS::Utils::BasicStri
 
     VirtualChannel vcd;
     vcd.channel_name = channel_name.buffer;
+    vcd.internal_name = "";
     vcd.ref = ref;
     vcd.lim = lim;
     vcd.type = ChannelType::Voltage;
 
     virtual_channels.emplace(std::string(name.buffer), vcd);
+}
+
+void DCS::DAQ::AssignEventAIVChannel(DCS::Utils::BasicString name, DCS::Utils::BasicString internal_name)
+{
+    std::string key;
+    for(auto& vc : virtual_channels)
+    {
+        if(vc.first == std::string(name.buffer))
+        {
+            key = vc.first;
+        }
+        else if(vc.second.internal_name == std::string(internal_name.buffer))
+        {
+            LOG_WARNING("Event %s already assigned to channel %s [%s].", internal_name.buffer, vc.first.c_str(), vc.second.channel_name.c_str());
+            LOG_WARNING("Swapping...");
+            virtual_channels[vc.first].internal_name.clear();
+        }
+    }
+
+    if(key.empty())
+    {
+        LOG_ERROR("Could not assign event %s to channel. Channel %s not found.", internal_name.buffer, name.buffer);
+        return;
+    }
+
+    virtual_channels[key].internal_name = internal_name.buffer;
+    LOG_DEBUG("Connecting channel %s [%s] to event %s.", key.c_str(), virtual_channels[key].channel_name.c_str(), internal_name.buffer);
 }
 
 void DCS::DAQ::DeleteChannel(DCS::Utils::BasicString name)
@@ -361,7 +385,9 @@ void DCS::DAQ::StartAIAcquisition(DCS::Utils::BasicString clock_trigger_channel,
 
         // Always use the internal clock for continuous acquisition
         SetVirtualChannelsIndices();
-        SetupTaskAI(&voltage_task, clock_trigger_channel.buffer, voltage_task_rate, INTERNAL_SAMP_SIZE / CountVirtualChannelsOfType(DCS::DAQ::ChannelType::Voltage), VoltageEvent);
+        voltage_channels_dynamic_size = INTERNAL_VCHAN_SIZE * CountVirtualChannelsOfType(DCS::DAQ::ChannelType::Voltage);
+        voltage_samples = new DCS::f64[voltage_channels_dynamic_size];
+        SetupTaskAI(&voltage_task, clock_trigger_channel.buffer, voltage_task_rate, voltage_channels_dynamic_size, VoltageEvent);
         StartTask(&voltage_task);
         voltage_task_timer.start();
         voltage_task_running = true;
@@ -379,6 +405,7 @@ void DCS::DAQ::StopAIAcquisition()
         LOG_DEBUG("Terminating voltage task.");
         ClearTask(&voltage_task);
         voltage_task_inited = false;
+        delete[] voltage_samples;
         StopEventLoop();
     }
     else

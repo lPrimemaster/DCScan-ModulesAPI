@@ -157,6 +157,18 @@ namespace DCS
          */
         DCS_REGISTER_CALL(void, DCS::Utils::BasicString, DCS::Utils::BasicString, DCS::DAQ::ChannelRef, DCS::DAQ::ChannelLimits)
         DCS_API void NewAIVChannel(DCS::Utils::BasicString name, DCS::Utils::BasicString channel_name, ChannelRef ref, ChannelLimits lim);
+        /**
+         * \brief Assigns an event to the specified virtual channel.
+         *
+         * One event only supports one channel. This is so we know the channel order on the sample buffer.
+         *
+         * \param name The name of the channel to assign to the event.
+         * \param internal_name The event that the channel is connected to. (e.g. ACQ, CLX0, CLX1)
+         *
+         * \ingroup calls
+         */
+        DCS_REGISTER_CALL(void, DCS::Utils::BasicString, DCS::Utils::BasicString)
+        DCS_API void AssignEventAIVChannel(DCS::Utils::BasicString name, DCS::Utils::BasicString internal_name);
 
         /**
          * \brief Deletes an existing voltage channel from the acquisition stage.
