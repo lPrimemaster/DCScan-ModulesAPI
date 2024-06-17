@@ -101,15 +101,10 @@ void DCS::DAQ::ClinometerEvent()
         }
 
         ClinometerEventData evt_data;
-        constexpr f64 max_angle = 10.0;
-        constexpr f64 min_angle = -10.0;
-        constexpr f64 range_angle = max_angle - min_angle;
-
-        for(int i = 0; i < 2; i++)
-        {
-            evt_data.c1[i] = 0.2 * ivd.tilt_c1[i] * range_angle + min_angle;
-            evt_data.c2[i] = 0.2 * ivd.tilt_c2[i] * range_angle + min_angle;
-        }
+        evt_data.c1[0] = ivd.tilt_c1[0];
+        evt_data.c1[1] = ivd.tilt_c1[1];
+        evt_data.c2[0] = ivd.tilt_c2[0];
+        evt_data.c2[1] = ivd.tilt_c2[1];
         evt_data.timestamp = ivd.timestamp_wall;
 
         DCS_EMIT_EVT((DCS::u8*)&evt_data, sizeof(ClinometerEventData)); // HACK : This can operate with a move ctor instead

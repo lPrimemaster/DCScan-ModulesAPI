@@ -162,6 +162,15 @@ void DCS::DAQ::Terminate()
     voltage_task_inited = false;
 }
 
+static DCS::f64 CliConvertVoltageToDeg(DCS::f64 level)
+{
+    // Converts [0.0, 5.0]V -> [-10, 10]deg
+    // These parameters are specific to our clinometers
+    constexpr DCS::f64 mul_a = 4.0;
+    constexpr DCS::f64 min_a = -10.0;
+    return level * mul_a + min_a;
+}
+
 DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEventType, DCS::u32 nSamples, void *callbackData)
 {
     EventData data;
@@ -177,11 +186,11 @@ DCS::i32 DCS::DAQ::VoltageEvent(TaskHandle taskHandle, DCS::i32 everyNsamplesEve
 
     data.counts = DCS::Math::countArrayPeak(GetSamplesOffsetForChannel(samples, "ACQ"), samples_per_channel, 0.2, 10.0, 0.0); // Copy data.cr
     
-    // Clinometer data (raw)
-    data.tilt_c1[0] = DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, "CLX0"), samples_per_channel);
-    data.tilt_c1[1] = DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, "CLY0"), samples_per_channel);
-    data.tilt_c2[0] = DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, "CLX1"), samples_per_channel);
-    data.tilt_c2[1] = DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, "CLY1"), samples_per_channel);
+    // Clinometer data
+    data.tilt_c1[0] = CliConvertVoltageToDeg(DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, "CLX0"), samples_per_channel));
+    data.tilt_c1[1] = CliConvertVoltageToDeg(DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, "CLY0"), samples_per_channel));
+    data.tilt_c2[0] = CliConvertVoltageToDeg(DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, "CLX1"), samples_per_channel));
+    data.tilt_c2[1] = CliConvertVoltageToDeg(DCS::Math::averageArray(GetSamplesOffsetForChannel(samples, "CLY1"), samples_per_channel));
 
     // push to dcs
     if(DCS::Registry::CheckEvent(SV_EVT_DCS_DAQ_DCSCountEvent))
@@ -387,7 +396,7 @@ void DCS::DAQ::StartAIAcquisition(DCS::Utils::BasicString clock_trigger_channel,
         SetVirtualChannelsIndices();
         voltage_channels_dynamic_size = INTERNAL_VCHAN_SIZE * CountVirtualChannelsOfType(DCS::DAQ::ChannelType::Voltage);
         voltage_samples = new DCS::f64[voltage_channels_dynamic_size];
-        SetupTaskAI(&voltage_task, clock_trigger_channel.buffer, voltage_task_rate, voltage_channels_dynamic_size, VoltageEvent);
+        SetupTaskAI(&voltage_task, clock_trigger_channel.buffer, voltage_task_rate, INTERNAL_VCHAN_SIZE, VoltageEvent);
         StartTask(&voltage_task);
         voltage_task_timer.start();
         voltage_task_running = true;
